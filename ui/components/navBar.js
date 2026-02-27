@@ -16,9 +16,9 @@ export function renderNavBar(){
   
 el.innerHTML = `
   <div class="nav">
-    <div class="nav-left"> Duc Ninh Haven </div>
-    <div class="nav-center">${getContext()}</div>
-    <div class="nav-right">
+    <div class="nav-bar nav-left"> Duc Ninh Haven </div>
+    <div class="nav-bar nav-center">${getContext()}</div>
+    <div class="nav-bar nav-right">
       <div id="langSwitch" class="lang-switch">
         <button data-lang="vi">VI</button> <button data-lang="en">EN</button>
       </div>

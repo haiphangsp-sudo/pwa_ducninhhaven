@@ -40,8 +40,20 @@ export const MENU = {
     type:"cart",
     items:{
 
-      coffee:{
-        label:{vi:"Cà phê",en:"Coffee"},
+      blackcoffee:{
+        label:{vi:"Cà phê đen",en:"Black Coffee"},
+        options:["hot","iced"],
+        defaultOption:"hot",
+        active:true
+      },
+      cappuccino:{
+        label:{vi:"Cà phê sữa",en:"Cappuccino"},
+        options:["hot","iced"],
+        defaultOption:"hot",
+        active:true
+      },
+      saltcoffee:{
+        label:{vi:"Cà phê muối",en:"Salt Coffee"},
         options:["hot","iced"],
         defaultOption:"hot",
         active:true
