@@ -9,7 +9,6 @@ body{
   height:100%;
   margin:0;
   overflow:hidden;   /* ngăn scroll toàn trang */
-  background:#e9e4da;
 }
 
 
@@ -21,11 +20,6 @@ body{
   flex-direction:column;
 }
 
-#contextBar{
-  padding:var(--space-3);
-  font-size:var(--font-xl);
-  font-weight:600;
-}
 
 #view{
   flex:1;
@@ -53,15 +47,6 @@ body{
   touch-action:manipulation;  /* giảm delay touch */
 }
 
-
-/* content mới là vùng scroll */
-#hubContent{
-  min-height:0;
-  overflow:auto;
-  -webkit-overflow-scrolling:touch;
-
-  overscroll-behavior:contain;
-}
 
 
 /* menu không scroll */

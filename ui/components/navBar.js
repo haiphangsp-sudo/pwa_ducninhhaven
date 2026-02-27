@@ -16,40 +16,19 @@ export function renderNavBar(){
   
 el.innerHTML = `
   <div class="nav">
-
-    <div class="nav-left">
-      <button id="navBack" class="nav-back">Haven</button>
-    </div>
-
-    <div class="nav-center">
-      ${getContext()}
-    </div>
-
+    <div class="nav-left"> Duc Ninh Haven </div>
+    <div class="nav-center">${getContext()}</div>
     <div class="nav-right">
-      <div class="nav-sub">${getTitle()}</div>
-
       <div id="langSwitch" class="lang-switch">
-        <button data-lang="vi">VI</button>
-        <button data-lang="en">EN</button>
+        <button data-lang="vi">VI</button> <button data-lang="en">EN</button>
       </div>
     </div>
-
   </div>`
   attachNavEvents();
 };
 
 /* ---------- helpers ---------- */
 
-function getTitle(){
-
-  if(UI.view.screen==="home")
-    return "Duc Ninh Haven";
-
-  if(UI.view.screen==="category")
-    return translate(MENU[UI.view.category].label);
-
-  return "";
-}
 
 
 function getContext(){
