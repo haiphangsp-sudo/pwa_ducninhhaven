@@ -40,28 +40,72 @@ export const MENU = {
     type:"cart",
     items:{
 
-      blackcoffee:{
-        label:{vi:"Cà phê đen",en:"Black Coffee"},
-        options:["hot","iced"],
-        defaultOption:"hot",
-        active:true
+    blackcoffee:{
+      label:{vi:"Cà phê đen",en:"Black Coffee"},
+      options:{
+        hot:{
+          label:{vi:"Nóng",en:"Hot"},
+          price:0,
+          active:true
+        },
+        iced:{
+          label:{vi:"Đá",en:"Iced"},
+          price:0,
+          active:true
+        }
       },
+      defaultOption:"hot",
+      active:true
+    },
       cappuccino:{
         label:{vi:"Cà phê sữa",en:"Cappuccino"},
-        options:["hot","iced"],
+        options:{
+        hot:{
+          label:{vi:"Nóng",en:"Hot"},
+          price:0,
+          active:true
+        },
+        iced:{
+          label:{vi:"Đá",en:"Iced"},
+          price:0,
+          active:true
+        }
+      },
         defaultOption:"hot",
         active:true
       },
       saltcoffee:{
         label:{vi:"Cà phê muối",en:"Salt Coffee"},
-        options:["hot","iced"],
+        options:{
+        hot:{
+          label:{vi:"Nóng",en:"Hot"},
+          price:0,
+          active:true
+        },
+        iced:{
+          label:{vi:"Đá",en:"Iced"},
+          price:0,
+          active:true
+        }
+      },
         defaultOption:"hot",
         active:true
       },
 
       tea:{
         label:{vi:"Trà",en:"Tea"},
-        options:["hot"],
+        options:{
+        hot:{
+          label:{vi:"Nóng",en:"Hot"},
+          price:0,
+          active:true
+        },
+        iced:{
+          label:{vi:"Đá",en:"Iced"},
+          price:0,
+          active:true
+        }
+      },
         defaultOption:"hot",
         active:true
       }
