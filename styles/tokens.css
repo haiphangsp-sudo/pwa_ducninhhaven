@@ -1,0 +1,33 @@
+/* styles/tokens.css */
+/*Design tokens (màu, spacing, radius, font scale)*/
+:root{
+
+  /* colors */
+  --bg: #F3F4F5;
+  --card: #FFFFFF;
+  --text: #1C1C1E;
+  --muted: #8E8E93;
+  --accent: #2F6FED;
+  --success: #2E7D32;
+  --error: #B00020;
+
+  /* elevation */
+  --shadow: 0 6px 18px rgba(0,0,0,0.08);
+
+  /* radius */
+  --radius-l: 20px;
+  --radius-m: 14px;
+
+  /* spacing */
+  --space-1: 8px;
+  --space-2: 16px;
+  --space-3: 24px;
+  --space-4: 32px;
+
+  /* typography */
+  --font-xl: 28px;
+  --font-l: 22px;
+  --font-m: 18px;
+  --font-s: 15px;
+
+}

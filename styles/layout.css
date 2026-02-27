@@ -1,0 +1,73 @@
+/* styles/layout.css */
+/* Bố cục màn hình*/
+body{
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  background:#e9e4da;
+  height:100%;
+  margin:0;
+  overflow:hidden;   /* ngăn scroll toàn trang */
+  background:#e9e4da;
+}
+
+
+#app{
+  max-width:720px;
+  margin:auto;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+}
+
+#contextBar{
+  padding:var(--space-3);
+  font-size:var(--font-xl);
+  font-weight:600;
+}
+
+#view{
+  flex:1;
+  padding:var(--space-2);
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:var(--space-2);
+}
+/* ======================================================
+   HUB ROOT — thiết bị chứ không phải page
+====================================================== */
+
+#hub{
+  position:relative;
+
+  display:grid;
+  grid-template-columns:88px 1fr;
+
+  height:calc(100dvh - 58px);
+  width:100%;
+
+  background:#e9e4da;
+
+  overflow:hidden;            /* không cho toàn layout cuộn */
+  touch-action:manipulation;  /* giảm delay touch */
+}
+
+
+/* content mới là vùng scroll */
+#hubContent{
+  min-height:0;
+  overflow:auto;
+  -webkit-overflow-scrolling:touch;
+
+  overscroll-behavior:contain;
+}
+
+
+/* menu không scroll */
+#hubMenu{
+  overflow:hidden;
+}
+.hidden{
+  display:none !important;
+}

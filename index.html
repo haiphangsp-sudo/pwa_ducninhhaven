@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="/icons/favicon.ico">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#2f4f3e">
+<link rel="apple-touch-icon" href="/icons/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Haven">
+<title>Duc Ninh Haven</title>
+<link rel="stylesheet" href="styles/tokens.css">
+<link rel="stylesheet" href="styles/layout.css">
+<link rel="stylesheet" href="styles/components.css">
+<link rel="stylesheet" href="styles/motion.css">
+<link rel="stylesheet" href="styles/hubMenu.css">
+<link rel="stylesheet" href="styles/hubContent.css">
+</head>
+<body>
+
+    <div id="app">
+        <div id="contextBar"></div>
+        <div id="view"></div>
+        
+        <div id="hub">
+            <aside id="hubMenu"></aside>
+            <section id="hubContent"></section>
+        </div>
+        <!-- ACK Overlay -->
+        <div id="ackOverlay" class="overlay hidden"></div>
+        <!-- Delivery Banner -->
+        <div id="deliveryStatus" class="delivery-banner hidden"></div>
+        <div id="recoveryBanner" class="recovery-banner hidden">
+            <span>Yêu cầu trước đó chưa gửi</span>
+            <button id="recoverySend">Gửi lại</button>
+            <button id="recoveryCancel">Bỏ</button>
+        </div>
+        <div id="cartBar" class="hidden"></div>
+    </div>
+
+    <script type="module" src="main.js"></script>
+</body>
+</html>
