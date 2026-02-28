@@ -49,31 +49,35 @@ function registerSW(){
 }
 
 /* ---------- BOOT ---------- */
-
 async function boot(){
 
-    checkVersion();
-    registerSW();
+  checkVersion();
+  registerSW();
 
-    subscribe(renderApp);
-    initLangSwitch();
-    const context = readContext();
+  await loadMenu();              // 1️⃣ nạp dữ liệu trước
 
-    dispatch("SET_CONTEXT", context);
-    dispatch("GO_HOME");
+  subscribe(renderApp);          // 2️⃣ sau đó mới cho phép render
+  initLangSwitch();
 
-    // KHÔNG tự chạy queue ở đây
+  const context = readContext();
+  dispatch("SET_CONTEXT", context);
+  dispatch("GO_HOME");
 
-    onNetworkChange((online)=>{
+  onNetworkChange((online)=>{
     if(online){
-        window.dispatchEvent(new Event("networkBack"));
+      window.dispatchEvent(new Event("networkBack"));
     }
-    });
-    await loadMenu();   // ← quan trọng
+  });
 
-  renderApp();
+  renderApp();                   // 3️⃣ render lần đầu khi đã có MENU
 }
 boot();
+window.addEventListener("visibilitychange", async ()=>{
+  if(document.visibilityState==="visible"){
+    await loadMenu();
+    renderApp();
+  }
+});
 
 
 ["touchstart","pointerdown","click"].forEach(evt=>{
