@@ -1,30 +1,39 @@
+
 import { kv } from "@vercel/kv";
 
 export const runtime = "edge";
 
-export default async function handler(req){
+export default async function handler(request){
 
-  if(req.method==="GET"){
-    const state = await kv.get("menuState") || {};
-    return Response.json(state);
+  const method = request.method;
+
+  try{
+
+    if(method === "GET"){
+      const state = await kv.get("menuState") ?? {};
+      return Response.json(state);
+    }
+
+    if(method === "POST"){
+      const patch = await request.json();
+
+      let state = await kv.get("menuState") ?? {};
+      state = deepMerge(state,patch);
+
+      await kv.set("menuState",state);
+      return Response.json({ok:true});
+    }
+
+    if(method === "DELETE"){
+      await kv.del("menuState");
+      return Response.json({ok:true});
+    }
+
+    return new Response("",{status:405});
+
+  }catch(e){
+    return Response.json({error:e.message},{status:500});
   }
-
-  if(req.method==="POST"){
-    const patch = await req.json();
-
-    let state = await kv.get("menuState") || {};
-    state = deepMerge(state,patch);
-
-    await kv.set("menuState",state);
-    return Response.json({ok:true});
-  }
-
-  if(req.method==="DELETE"){
-    await kv.del("menuState");
-    return Response.json({ok:true});
-  }
-
-  return new Response("",{status:405});
 }
 
 function deepMerge(base,patch){
