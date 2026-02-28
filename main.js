@@ -7,8 +7,7 @@ import { onNetworkChange } from "./services/network.js";
 import { CONFIG } from "./config.js";
 import { initLangSwitch } from "./ui/langController.js";
 import { resetIdleTimer } from "./core/idle.js";
-import { loadMenu } from "./core/menuStore.js";
-import { MENU } from "./data/menu.js";
+import { loadMenu, MENU } from "./core/menuStore.js";
 
 /* ---------- VERSION CONTROL ---------- */
 
