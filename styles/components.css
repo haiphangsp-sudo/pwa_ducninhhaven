@@ -141,3 +141,18 @@
     transform:translate(-50%,0);
   }
 }
+.menu-update-banner{
+  position:fixed;
+  top:60px;
+  left:50%;
+  transform:translateX(-50%);
+
+  background:#2f4f3e;
+  color:white;
+  padding:8px 14px;
+  border-radius:12px;
+
+  font-size:13px;
+  opacity:.95;
+  z-index:50;
+}

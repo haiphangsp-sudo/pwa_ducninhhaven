@@ -75,6 +75,13 @@ boot();
 window.addEventListener("visibilitychange", async ()=>{
   if(document.visibilityState==="visible"){
     await loadMenu();
+    const newHash = JSON.stringify(MENU);
+
+    if(window.__menuHash && window.__menuHash !== newHash){
+      showMenuUpdated();
+    }
+
+    window.__menuHash = newHash;
     renderApp();
   }
 });
@@ -83,3 +90,11 @@ window.addEventListener("visibilitychange", async ()=>{
 ["touchstart","pointerdown","click"].forEach(evt=>{
   document.addEventListener(evt, resetIdleTimer, {passive:true});
 });
+function showMenuUpdated(){
+  const el=document.createElement("div");
+  el.className="menu-update-banner";
+  el.textContent="Thực đơn vừa được cập nhật";
+  document.body.appendChild(el);
+
+  setTimeout(()=>el.remove(),2500);
+}
