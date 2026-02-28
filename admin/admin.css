@@ -14,3 +14,17 @@ body{
 .item{margin-left:16px;margin-top:8px}
 .opts{margin-left:22px;margin-top:4px}
 .opt{display:block;font-size:14px}
+#resetBtn{
+  border:none;
+  background:white;
+  padding:12px 16px;
+  min-width:110px;
+  border-radius:14px;
+  font-size:15px;
+  font-weight:500;
+  box-shadow:
+    0 1px 4px rgba(0,0,0,.12),
+    0 1px 0 rgba(255,255,255,.8) inset;
+  cursor:pointer;
+  transition:all .15s ease;
+}
