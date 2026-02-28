@@ -39,14 +39,17 @@ self.addEventListener("fetch", event=>{
   /* never cache POST */
   if(event.request.method==="POST") return;
 
-  /* ---- RUNTIME DATA: always network ---- */
-  if(url.pathname.includes("/data/menu.json")){
-    event.respondWith(
-      fetch(event.request, {cache:"no-store"})
-        .catch(()=>caches.match("./data/menu.json"))
-    );
-    return;
-  }
+  /* ---- API & RUNTIME DATA: always network ---- */
+if(
+  url.pathname.startsWith("/api/") ||
+  url.pathname.includes("/data/menu.json")
+){
+  event.respondWith(
+    fetch(event.request,{cache:"no-store"})
+      .catch(()=>new Response("{}",{status:200}))
+  );
+  return;
+}
 
   /* ---- DEFAULT: cache first ---- */
   event.respondWith(
