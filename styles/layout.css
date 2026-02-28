@@ -56,3 +56,9 @@ body{
 .hidden{
   display:none !important;
 }
+
+.option-btn.disabled{
+  opacity:.35;
+  pointer-events:none;
+  filter:grayscale(90%);
+}
