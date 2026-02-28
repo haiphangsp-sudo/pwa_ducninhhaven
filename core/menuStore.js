@@ -19,3 +19,15 @@ export async function loadMenu(){
   /* 4. merge */
   MENU = deepMerge(base,state);
 }
+function deepMerge(base,patch){
+  const out = structuredClone(base);
+
+  for(const k in patch){
+    if(typeof patch[k]==="object" && patch[k]!==null && !Array.isArray(patch[k])){
+      out[k]=deepMerge(out[k]||{},patch[k]);
+    }else{
+      out[k]=patch[k];
+    }
+  }
+  return out;
+}

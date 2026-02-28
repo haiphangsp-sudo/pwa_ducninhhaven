@@ -1,30 +1,28 @@
-import fs from "fs/promises";
-
-const PATH = "./public/data/menu.state.json";
+import { kv } from "@vercel/kv";
 
 export default async function handler(req,res){
 
-  if(req.method!=="POST")
-    return res.status(405).end();
+  if(req.method==="GET"){
+    const state = await kv.get("menuState") || {};
+    return res.status(200).json(state);
+  }
 
-  try{
+  if(req.method==="POST"){
+    const patch=req.body;
 
-    const patch = req.body;
-
-    let state={};
-    try{
-      state = JSON.parse(await fs.readFile(PATH,"utf8"));
-    }catch{}
-
+    let state = await kv.get("menuState") || {};
     deepMerge(state,patch);
 
-    await fs.writeFile(PATH,JSON.stringify(state,null,2));
-
-    res.status(200).json({ok:true});
-
-  }catch(e){
-    res.status(500).json({error:e.message});
+    await kv.set("menuState",state);
+    return res.status(200).json({ok:true});
   }
+
+  if(req.method==="DELETE"){
+    await kv.del("menuState");
+    return res.status(200).json({ok:true});
+  }
+
+  res.status(405).end();
 }
 
 function deepMerge(base,patch){
