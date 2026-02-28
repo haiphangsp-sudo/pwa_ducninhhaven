@@ -1,18 +1,31 @@
+// core/menuStore.js
 export let MENU = {};
+
+const OVERRIDE_KEY = "menuOverride";
 
 export async function loadMenu(){
 
-  try{
-    const res = await fetch("/data/menu.json",{
-      cache:"no-store"
-    });
+  const res = await fetch("/data/menu.json",{cache:"no-store"});
+  const base = await res.json();
 
-    if(!res.ok) throw new Error("Menu load failed");
+  const override = JSON.parse(localStorage.getItem(OVERRIDE_KEY)||"{}");
 
-    MENU = await res.json();
+  MENU = deepMerge(base, override);
+}
 
-  }catch(err){
-    console.error("MENU ERROR:",err);
-    MENU = {};
+/* merge đơn giản */
+function deepMerge(base, patch){
+  for(const k in patch){
+    if(typeof patch[k]==="object" && base[k])
+      base[k]=deepMerge(base[k],patch[k]);
+    else
+      base[k]=patch[k];
   }
+  return base;
+}
+
+export function saveOverride(patch){
+  const current = JSON.parse(localStorage.getItem(OVERRIDE_KEY)||"{}");
+  deepMerge(current,patch);
+  localStorage.setItem(OVERRIDE_KEY,JSON.stringify(current));
 }
