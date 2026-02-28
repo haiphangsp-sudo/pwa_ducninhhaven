@@ -70,23 +70,26 @@ async function boot(){
   });
 
   renderApp();                   // 3️⃣ render lần đầu khi đã có MENU
+  window.__menuHash = JSON.stringify(MENU);
 }
 boot();
 window.addEventListener("visibilitychange", async ()=>{
-  if(document.visibilityState==="visible"){
-    await loadMenu();
-    renderApp();
-    const newHash = JSON.stringify(MENU);
 
-    if(window.__menuHash && window.__menuHash !== newHash){
-      showMenuUpdated();
-    }
+  if(document.visibilityState!=="visible") return;
 
-    window.__menuHash = newHash;
-    
+  const oldHash = window.__menuHash;   // 1. nhớ menu cũ
+
+  await loadMenu();                    // 2. nạp menu mới
+  renderApp();
+
+  const newHash = JSON.stringify(MENU); // 3. so sánh sau khi nạp
+
+  if(oldHash && oldHash !== newHash){
+    showMenuUpdated();
   }
-});
 
+  window.__menuHash = newHash;         // 4. lưu lại
+});
 
 ["touchstart","pointerdown","click"].forEach(evt=>{
   document.addEventListener(evt, resetIdleTimer, {passive:true});
