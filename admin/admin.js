@@ -3,9 +3,8 @@ import { loadMenu, MENU } from "../core/menuStore.js";
 /* ===== LOGIN GATE ===== */
 
 async function ensureLogin(){
-
+  let pin = localStorage.getItem("admin_pin");
   const expire = Number(localStorage.getItem("admin_pin_expire"));
-
 if(expire && Date.now() < expire)
   return;
 
