@@ -68,6 +68,11 @@ async function boot(){
       window.dispatchEvent(new Event("networkBack"));
     }
   });
+  if("serviceWorker" in navigator){
+  navigator.serviceWorker.register("/sw.js").then(reg=>{
+    reg.update();
+  });
+}
 
   renderApp();                   // 3️⃣ render lần đầu khi đã có MENU
   window.__menuHash = JSON.stringify(MENU);
