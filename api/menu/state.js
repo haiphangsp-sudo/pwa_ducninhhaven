@@ -1,3 +1,7 @@
+// api/menu/state.js
+// API route for menu state management (admin only).
+// State được lưu trên KV với key "menuState".
+
 import { kv } from "@vercel/kv";
 if(req.headers["x-admin-pin"] !== process.env.ADMIN_PIN){
   return res.status(401).json({error:"Unauthorized"});
