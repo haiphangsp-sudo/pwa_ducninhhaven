@@ -7,12 +7,16 @@ export async function loadMenu(){
 
   const res = await fetch("/data/menu.json",{cache:"no-store"});
   const base = await res.json();
-
   const override = JSON.parse(localStorage.getItem(OVERRIDE_KEY)||"{}");
 
   MENU = deepMerge(base, override);
 }
 
+export function saveOverride(patch){
+  const current = JSON.parse(localStorage.getItem(OVERRIDE_KEY)||"{}");
+  deepMerge(current,patch);
+  localStorage.setItem(OVERRIDE_KEY,JSON.stringify(current));
+}
 /* merge đơn giản */
 function deepMerge(base, patch){
   for(const k in patch){
@@ -22,10 +26,4 @@ function deepMerge(base, patch){
       base[k]=patch[k];
   }
   return base;
-}
-
-export function saveOverride(patch){
-  const current = JSON.parse(localStorage.getItem(OVERRIDE_KEY)||"{}");
-  deepMerge(current,patch);
-  localStorage.setItem(OVERRIDE_KEY,JSON.stringify(current));
 }
