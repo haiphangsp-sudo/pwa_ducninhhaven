@@ -79,10 +79,6 @@ async function boot(){
 ["touchstart","pointerdown","click"].forEach(evt=>{
   document.addEventListener(evt, resetIdleTimer, {passive:true});
 });
-
-}
-boot();
-
 setInterval(async ()=>{
 
   const old = JSON.stringify(MENU);
@@ -93,6 +89,8 @@ setInterval(async ()=>{
     renderApp();
 
 },10000);
+
+
 window.addEventListener("visibilitychange", async ()=>{
 
   if(document.visibilityState!=="visible") return;
@@ -119,3 +117,7 @@ window.addEventListener("visibilitychange", async ()=>{
   setTimeout(()=>el.remove(),2500);
 }
 });
+
+}
+boot();
+
