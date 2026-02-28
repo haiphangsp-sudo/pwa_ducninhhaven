@@ -1,6 +1,6 @@
 // main.js
 //Điểm vào duy nhất của app.
-import { subscribe, setState } from "./core/state.js";
+import { subscribe } from "./core/state.js";
 import { dispatch } from "./core/events.js";
 import { renderApp } from "./ui/renderApp.js";
 import { onNetworkChange } from "./services/network.js";
@@ -53,7 +53,17 @@ async function boot(){
   checkVersion();
   registerSW();
 
-  await loadMenu();              // 1️⃣ nạp dữ liệu trước
+  try{
+    await loadMenu();
+  }catch(e){
+    document.body.innerHTML = `
+      <pre style="padding:20px;color:#b00020">
+        MENU CONFIG ERROR
+
+        ${e.message}
+      </pre>`;
+    throw e;
+  }            // 1️⃣ nạp dữ liệu trước
 
   subscribe(renderApp);          // 2️⃣ sau đó mới cho phép render
   initLangSwitch();
