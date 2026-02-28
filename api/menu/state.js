@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 import { kv } from "@vercel/kv";
+=======
+>>>>>>> fb3d741 (cuoi)
 
+import { kv } from "@vercel/kv";
+export const runtime = "edge";
 export default async function handler(req,res){
 
   if(req.method==="GET"){
