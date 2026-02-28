@@ -75,8 +75,24 @@ async function boot(){
 
   renderApp();                   // 3️⃣ render lần đầu khi đã có MENU
   window.__menuHash = JSON.stringify(MENU);
+
+["touchstart","pointerdown","click"].forEach(evt=>{
+  document.addEventListener(evt, resetIdleTimer, {passive:true});
+});
+
 }
 boot();
+
+setInterval(async ()=>{
+
+  const old = JSON.stringify(MENU);
+
+  await loadMenu();
+
+  if(old !== JSON.stringify(MENU))
+    renderApp();
+
+},10000);
 window.addEventListener("visibilitychange", async ()=>{
 
   if(document.visibilityState!=="visible") return;
@@ -93,12 +109,8 @@ window.addEventListener("visibilitychange", async ()=>{
   }
 
   window.__menuHash = newHash;         // 4. lưu lại
-});
 
-["touchstart","pointerdown","click"].forEach(evt=>{
-  document.addEventListener(evt, resetIdleTimer, {passive:true});
-});
-function showMenuUpdated(){
+  function showMenuUpdated(){
   const el=document.createElement("div");
   el.className="menu-update-banner";
   el.textContent="Thực đơn vừa được cập nhật";
@@ -106,3 +118,4 @@ function showMenuUpdated(){
 
   setTimeout(()=>el.remove(),2500);
 }
+});

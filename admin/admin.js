@@ -64,12 +64,20 @@ function bindEvents(){
       }
       ref[path.at(-1)]=cb.checked;
 
-      saveOverride(patch);
+      cb.onchange = ()=> saveState(patch);
     };
   });
 
-  document.getElementById("resetBtn").onclick=()=>{
-    localStorage.removeItem("menuOverride");
+  document.getElementById("resetBtn").onclick=async()=>{
+    await fetch("/api/menu/state",{method:"DELETE"});
     location.reload();
   };
+}
+async function saveState(patch){
+  await fetch("/api/menu/state",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify(patch)
+  });
+
 }
