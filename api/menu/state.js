@@ -1,5 +1,7 @@
 import { kv } from "@vercel/kv";
-
+if(req.headers["x-admin-pin"] !== process.env.ADMIN_PIN){
+  return res.status(401).json({error:"Unauthorized"});
+}
 export default async function handler(req,res){
 
   try{

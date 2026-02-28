@@ -82,3 +82,11 @@ async function saveState(patch){
   });
 
 }
+await fetch("/api/menu/state",{
+  method:"POST",
+  headers:{
+    "Content-Type":"application/json",
+    "x-admin-pin": localStorage.getItem("admin_pin")
+  },
+  body:JSON.stringify(patch)
+});
