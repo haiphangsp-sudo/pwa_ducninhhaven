@@ -75,6 +75,7 @@ boot();
 window.addEventListener("visibilitychange", async ()=>{
   if(document.visibilityState==="visible"){
     await loadMenu();
+    renderApp();
     const newHash = JSON.stringify(MENU);
 
     if(window.__menuHash && window.__menuHash !== newHash){
@@ -82,7 +83,7 @@ window.addEventListener("visibilitychange", async ()=>{
     }
 
     window.__menuHash = newHash;
-    renderApp();
+    
   }
 });
 
