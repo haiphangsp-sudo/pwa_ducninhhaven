@@ -1,6 +1,6 @@
 // ui/renderCategory.js
 
-import { MENU } from "../data/menu.js";
+import { MENU } from "../core/menuStore.js";
 import { actionAddToCart, actionSendInstant } from "../core/dispatcher.js";
 import { translate } from "./utils/translate.js";
 

@@ -7,6 +7,8 @@ import { onNetworkChange } from "./services/network.js";
 import { CONFIG } from "./config.js";
 import { initLangSwitch } from "./ui/langController.js";
 import { resetIdleTimer } from "./core/idle.js";
+import { loadMenu } from "./core/menuStore.js";
+
 
 /* ---------- VERSION CONTROL ---------- */
 
@@ -48,7 +50,7 @@ function registerSW(){
 
 /* ---------- BOOT ---------- */
 
-function boot(){
+async function boot(){
 
     checkVersion();
     registerSW();
@@ -67,7 +69,9 @@ function boot(){
         window.dispatchEvent(new Event("networkBack"));
     }
     });
+    await loadMenu();   // ← quan trọng
 
+  renderApp();
 }
 boot();
 

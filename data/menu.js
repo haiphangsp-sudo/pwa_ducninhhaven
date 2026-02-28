@@ -26,7 +26,18 @@ export const MENU = {
 
       breakfast:{
         label:{vi:"Bữa sáng",en:"Breakfast"},
-        options:["default"],
+        options:{
+        chicken_pho:{
+          label:{vi:"Phở gà",en:"Chicken Pho"},
+          price:0,
+          active:true
+        },
+        pan_bread:{
+          label:{vi:"Bánh mì chảo",en:"Pan bread"},
+          price:0,
+          active:true
+        }
+      },
         defaultOption:"default",
         active:true
       }

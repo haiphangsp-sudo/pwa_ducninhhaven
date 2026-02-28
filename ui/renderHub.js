@@ -1,7 +1,7 @@
 // ui/renderHub.js
 
 import { UI } from "../core/state.js";
-import { MENU } from "../data/menu.js";
+import { MENU } from "../core/menuStore.js";
 import { dispatch } from "../core/events.js";
 import { translate } from "./utils/translate.js";
 import { renderCategory } from "./renderCategory.js";

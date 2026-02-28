@@ -1,0 +1,151 @@
+{
+  "intro":{
+    "label":{"vi":"Giới thiệu","en":"Introduction"},
+    "modes":["room","table"],
+    "type":"article",
+    "items":{
+      "article_1":{
+        "label":{"vi":"tieu de 1","en":"hello"},
+        "content":{"vi":"noi dung 1","en":"noi dung one"}
+      },
+      "article_2":{
+        "label":{"vi":"tieu de 2","en":"abc"},
+        "content":{"vi":"noi dung 2","en":"dfg"}
+      }
+    }
+  },
+
+  "food":{
+    "label":{"vi":"Bữa ăn","en":"Food"},
+    "modes":["room","table"],
+    "type":"cart",
+    "items":{
+
+      "breakfast":{
+        "label":{"vi":"Bữa sáng","en":"Breakfast"},
+        "options":{
+        "chicken_pho":{
+          "label":{"vi":"Phở gà","en":"Chicken Pho"},
+          "price":0,
+          "active":true
+        },
+        "pan_bread":{
+          "label":{"vi":"Bánh mì chảo","en":"Pan bread"},
+          "price":0,
+          "active":true
+        }
+      },
+        "defaultOption":"default",
+        "active":true
+      }
+
+    }
+  },
+
+  "drink":{
+    "label":{"vi":"Thức uống","en":"Drinks"},
+    "modes":["room","table"],
+    "type":"cart",
+    "items":{
+
+      "blackcoffee":{
+      "label":{"vi":"Cà phê đen","en":"Black Coffee"},
+      "options":{
+        "hot":{
+          "label":{"vi":"Nóng","en":"Hot"},
+          "price":0,
+          "active":true
+        },
+        "iced":{
+          "label":{"vi":"Đá","en":"Iced"},
+          "price":0,
+          "active":true
+        }
+      },
+      "defaultOption":"hot",
+      "active":true
+    },
+      "cappuccino":{
+        "label":{"vi":"Cà phê sữa","en":"Cappuccino"},
+        "options":{
+        "hot":{
+          "label":{"vi":"Nóng","en":"Hot"},
+          "price":0,
+          "active":true
+        },
+        "iced":{
+          "label":{"vi":"Đá","en":"Iced"},
+          "price":0,
+          "active":true
+        }
+      },
+        "defaultOption":"hot",
+        "active":true
+      },
+      "saltcoffee":{
+        "label":{"vi":"Cà phê muối","en":"Salt Coffee"},
+        "options":{
+        "hot":{
+          "label":{"vi":"Nóng","en":"Hot"},
+          "price":0,
+          "active":true
+        },
+        "iced":{
+          "label":{"vi":"Đá","en":"Iced"},
+          "price":0,
+          "active":true
+        }
+      },
+        "defaultOption":"hot",
+        "active":true
+      },
+
+      "tea":{
+        "label":{"vi":"Trà","en":"Tea"},
+        "options":{
+            "hot":{
+                "label":{"vi":"Nóng","en":"Hot"},
+                "price":0,
+                "active":true
+            },
+            "iced":{
+                "label":{"vi":"Đá","en":"Iced"},
+                "price":0,
+                "active":true
+            }
+      },
+        "defaultOption":"hot",
+        "active":true
+      }
+
+    }
+  },
+
+  "service":{
+    "label":{"vi":"Dịch vụ phòng","en":"Room service"},
+    "modes":["room"],
+    "type":"instant",
+    "items":{
+      "cleaning":{
+        "label":{"vi":"Dọn phòng","en":"Housekeeping"},
+        "active":true
+      },
+      "footbath":{
+        "label":{"vi":"Ngâm chân","en":"Foot bath"},
+        "active":true
+      }
+    }
+  },
+
+  "help":{
+    "label":{"vi":"Hỗ trợ","en":"Assistance"},
+    "modes":["room"],
+    "type":"instant",
+    "items":{
+      "support":{
+        "label":{"vi":"Gọi lễ tân","en":"Contact reception"},
+        "active":true
+      }
+    }
+  }
+}

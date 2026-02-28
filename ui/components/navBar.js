@@ -2,7 +2,6 @@
 
 import { UI } from "../../core/state.js";
 import { dispatch } from "../../core/events.js";
-import { MENU } from "../../data/menu.js";
 import { translate } from "../utils/translate.js";
 import { initLangSwitch } from "../langController.js";
 

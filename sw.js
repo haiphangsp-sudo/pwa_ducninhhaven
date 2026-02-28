@@ -1,6 +1,6 @@
 // sw.js
 //Offline-first static caching (không cache POST).
-const CACHE_NAME = "haven-static-v1";
+const CACHE_NAME = "haven-static-v2";
 
 const STATIC_ASSETS = [
   "./",
@@ -30,15 +30,26 @@ self.addEventListener("activate",event=>{
   );
 });
 
-self.addEventListener("fetch",event=>{
+self.addEventListener("fetch", event=>{
 
-  if(event.request.method==="POST"){
-    return; // never cache POST
+  const url = new URL(event.request.url);
+
+  /* never cache POST */
+  if(event.request.method==="POST") return;
+
+  /* ---- RUNTIME DATA: always network ---- */
+  if(url.pathname.includes("/data/menu.json")){
+    event.respondWith(
+      fetch(event.request, {cache:"no-store"})
+        .catch(()=>caches.match("./data/menu.json"))
+    );
+    return;
   }
 
+  /* ---- DEFAULT: cache first ---- */
   event.respondWith(
     caches.match(event.request)
-      .then(response=>response || fetch(event.request))
+      .then(res=>res || fetch(event.request))
   );
 
 });

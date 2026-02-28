@@ -1,6 +1,6 @@
 // data/helpers.js
 //Hàm đọc menu theo mode (lọc hiển thị).
-import { MENU } from "./menu.js";
+import { MENU } from "../core/menuStore.js";
 
 export function getCategoriesForMode(mode){
 
