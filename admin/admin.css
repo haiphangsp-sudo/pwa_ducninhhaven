@@ -18,7 +18,8 @@ body{
 .item{margin-left:16px;margin-top:8px}
 .opts{margin-left:22px;margin-top:4px}
 .opt{display:block;font-size:14px}
-#resetBtn{
+
+.btn{
   border:none;
   background:white;
   padding:12px 16px;

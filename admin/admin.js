@@ -4,9 +4,12 @@ import { loadMenu, MENU } from "../core/menuStore.js";
 
 async function ensureLogin(){
 
-  let pin = localStorage.getItem("admin_pin");
-  if(pin) return;
+  const expire = Number(localStorage.getItem("admin_pin_expire"));
 
+if(expire && Date.now() < expire)
+  return;
+
+localStorage.removeItem("admin_pin");
   pin = prompt("Nhập mã quản trị");
 
   const r = await fetch("/api/admin/login",{
@@ -17,6 +20,7 @@ async function ensureLogin(){
 
   if(r.ok){
     localStorage.setItem("admin_pin",pin);
+    localStorage.setItem("admin_pin_expire", Date.now() + 15*60*1000);
   }else{
     alert("Sai mã");
     location.reload();
@@ -106,6 +110,10 @@ function bindEvents(){
     });
     location.reload();
   };
+  const lo = document.getElementById("logoutBtn");
+  if(lo){
+    lo.onclick = logout;
+  }
 }
 
 /* ===== API ===== */
@@ -125,4 +133,10 @@ async function saveState(patch){
     localStorage.removeItem("admin_pin");
     location.reload();
   }
+}
+
+function logout(){
+  localStorage.removeItem("admin_pin");
+  localStorage.removeItem("admin_pin_expire");
+  location.reload();
 }

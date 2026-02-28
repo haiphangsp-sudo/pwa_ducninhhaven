@@ -7,7 +7,7 @@ export async function loadMenu(){
   /* 1. tải menu chuẩn */
   const base = await fetch("/data/menu.json",{cache:"no-store"}).then(r=>r.json());
 
-  /* 2. kiểm tra schema (đặt tại đây) */
+  /* 2. kiểm tra schema */
   validateMenu(base);
 
   /* 3. tải state vận hành */
