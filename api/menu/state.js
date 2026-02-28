@@ -1,7 +1,6 @@
-<<<<<<< HEAD
+
 import { kv } from "@vercel/kv";
-=======
->>>>>>> fb3d741 (cuoi)
+
 
 import { kv } from "@vercel/kv";
 export const runtime = "edge";
