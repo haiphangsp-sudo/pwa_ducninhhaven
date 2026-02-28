@@ -1,8 +1,36 @@
-
 import { loadMenu, MENU } from "../core/menuStore.js";
+
+/* ===== LOGIN GATE ===== */
+
+async function ensureLogin(){
+
+  let pin = localStorage.getItem("admin_pin");
+  if(pin) return;
+
+  pin = prompt("Nhập mã quản trị");
+
+  const r = await fetch("/api/admin/login",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify({pin})
+  });
+
+  if(r.ok){
+    localStorage.setItem("admin_pin",pin);
+  }else{
+    alert("Sai mã");
+    location.reload();
+  }
+}
+
+await ensureLogin();
+
+/* ===== LOAD ===== */
 
 await loadMenu();
 render();
+
+/* ===== UI ===== */
 
 function render(){
 
@@ -49,44 +77,52 @@ function render(){
   bindEvents();
 }
 
+/* ===== EVENTS ===== */
+
 function bindEvents(){
 
   document.querySelectorAll("input[type=checkbox]").forEach(cb=>{
     cb.onchange = async ()=>{
 
-  const path = cb.dataset.path.split(".");
-  const patch = {};
+      const path = cb.dataset.path.split(".");
+      const patch = {};
 
-  let ref = patch;
-  for(let i=0;i<path.length-1;i++){
-    ref[path[i]]={};
-    ref=ref[path[i]];
-  }
+      let ref = patch;
+      for(let i=0;i<path.length-1;i++){
+        ref[path[i]]={};
+        ref=ref[path[i]];
+      }
 
-  ref[path.at(-1)] = cb.checked;
+      ref[path.at(-1)] = cb.checked;
 
-  await saveState(patch);   // gọi trực tiếp
-};
+      await saveState(patch);
+    };
   });
 
   document.getElementById("resetBtn").onclick=async()=>{
-    await fetch("/api/menu/state",{method:"DELETE"});
+    await fetch("/api/menu/state",{
+      method:"DELETE",
+      headers:{ "x-admin-pin": localStorage.getItem("admin_pin") }
+    });
     location.reload();
   };
 }
+
+/* ===== API ===== */
+
 async function saveState(patch){
-  await fetch("/api/menu/state",{
+
+  const r = await fetch("/api/menu/state",{
     method:"POST",
-    headers:{"Content-Type":"application/json"},
+    headers:{
+      "Content-Type":"application/json",
+      "x-admin-pin": localStorage.getItem("admin_pin")
+    },
     body:JSON.stringify(patch)
   });
 
+  if(r.status===401){
+    localStorage.removeItem("admin_pin");
+    location.reload();
+  }
 }
-await fetch("/api/menu/state",{
-  method:"POST",
-  headers:{
-    "Content-Type":"application/json",
-    "x-admin-pin": localStorage.getItem("admin_pin")
-  },
-  body:JSON.stringify(patch)
-});
