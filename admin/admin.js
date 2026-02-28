@@ -1,5 +1,5 @@
 
-import { loadMenu, MENU, saveOverride } from "../core/menuStore.js";
+import { loadMenu, MENU } from "../core/menuStore.js";
 
 await loadMenu();
 render();
@@ -52,20 +52,21 @@ function render(){
 function bindEvents(){
 
   document.querySelectorAll("input[type=checkbox]").forEach(cb=>{
-    cb.onchange=()=>{
+    cb.onchange = async ()=>{
 
-      const path=cb.dataset.path.split(".");
-      const patch={};
+  const path = cb.dataset.path.split(".");
+  const patch = {};
 
-      let ref=patch;
-      for(let i=0;i<path.length-1;i++){
-        ref[path[i]]={};
-        ref=ref[path[i]];
-      }
-      ref[path.at(-1)]=cb.checked;
+  let ref = patch;
+  for(let i=0;i<path.length-1;i++){
+    ref[path[i]]={};
+    ref=ref[path[i]];
+  }
 
-      cb.onchange = ()=> saveState(patch);
-    };
+  ref[path.at(-1)] = cb.checked;
+
+  await saveState(patch);   // gọi trực tiếp
+};
   });
 
   document.getElementById("resetBtn").onclick=async()=>{
