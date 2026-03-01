@@ -8,7 +8,7 @@ import { CONFIG } from "./config.js";
 import { initLangSwitch } from "./ui/langController.js";
 import { resetIdleTimer } from "./core/idle.js";
 import { loadMenu, MENU } from "./core/menuStore.js";
-
+import { detectRecovery } from "./core/queue.js";
 /* ---------- VERSION CONTROL ---------- */
 
 function checkVersion(){
@@ -31,8 +31,8 @@ function readContext(){
   const params = new URLSearchParams(location.search);
 
   return {
-    mode: params.get("mode") || "room",
-    place: params.get("place") || "Oliver"
+    mode: params.get("mode"),
+    place: params.get("place")
   };
 
 }
@@ -127,7 +127,8 @@ window.addEventListener("visibilitychange", async ()=>{
   setTimeout(()=>el.remove(),2500);
 }
 });
-
+  
+detectRecovery();
 }
 boot();
 
