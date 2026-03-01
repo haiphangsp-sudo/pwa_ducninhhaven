@@ -20,7 +20,7 @@ el.innerHTML = `
   </div>`;
   initLangSwitch();
   renderContextBar();
-  document.querySelector(".nav-center").onclick=openPlacePicker;
+  
 };
 
 /* ---------- helpers ---------- */
