@@ -12,6 +12,12 @@ function showApp(){
   document.getElementById("adminApp").style.display="";
   document.getElementById("adminBtn").style.display="";
 }
+function hideApp(){
+  document.getElementById("adminLock").style.display="";
+  document.getElementById("adminApp").style.display="none";
+  document.getElementById("adminBtn").style.display="none";
+}
+
 
 async function doLogin(){
 
@@ -124,8 +130,7 @@ function bindEvents(){
     location.reload();
   };
   const lo = document.getElementById("logoutBtn");
-  document.getElementById("adminBtn").style.display="none";
-  lo.onclick = logout;
+    lo.onclick = logout;
 }
 
 /* ===== API ===== */
@@ -150,5 +155,6 @@ async function saveState(patch){
 function logout(){
   localStorage.removeItem("admin_pin");
   localStorage.removeItem("admin_pin_expire");
+  hideApp();
   location.reload();
 }
