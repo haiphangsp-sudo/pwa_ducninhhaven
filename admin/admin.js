@@ -123,7 +123,7 @@ function bindEvents(){
   });
 
   document.getElementById("resetBtn").onclick=async()=>{
-    await fetch("/api/menu/state",{
+    await fetch("/api/admin/state",{
       method:"DELETE",
       headers:{ "x-admin-pin": localStorage.getItem("admin_pin") }
     });
