@@ -1,28 +1,23 @@
-// ui/renderAck.js
-// Blocking acknowledgement (hiển thị rất ngắn)
-
 import { UI, setState } from "../core/state.js";
+import { t } from "../data/i18n.js";
 
-let timer = null;
+let timer=null;
 
 export function renderAck(){
 
-  const el = document.getElementById("ackOverlay");
+  const el=document.getElementById("ackOverlay");
   if(!el) return;
 
-  if(UI.ack.state === "hidden"){
+  if(UI.ack.state==="hidden"){
     el.classList.add("hidden");
     return;
   }
 
   el.classList.remove("hidden");
-  el.innerText = "Đã ghi nhận yêu cầu";
+  el.innerText=t("ack"); // chỉ xác nhận thao tác
 
-  if(timer) clearTimeout(timer);
-
-  timer = setTimeout(()=>{
-    setState({
-      ack:{ state:"hidden" }
-    });
-  },1500);
+  clearTimeout(timer);
+  timer=setTimeout(()=>{
+    setState({ ack:{state:"hidden"} });
+  },700);
 }

@@ -46,9 +46,8 @@ export function enqueue(payload){
   });
 
   saveQueue(queue);
-
+  setState({ ack:{state:"show"} });
   emitDelivery("pending");
-
   if(!processing) processQueue();
 }
 

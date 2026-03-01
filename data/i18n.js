@@ -24,6 +24,10 @@ delivery:{
     vi:"Đang gửi yêu cầu...",
     en:"Sending request..."
   },
+  ack:{
+  vi:"Đã nhận thao tác",
+  en:"Registered"
+},
   sent:{
     vi:"Đã gửi tới bếp",
     en:"Sent to kitchen"
