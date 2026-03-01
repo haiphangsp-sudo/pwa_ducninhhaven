@@ -16,7 +16,7 @@ export function renderApp(){
   renderCartBar();
   initLangSwitch();
   renderAck();
-  
+
   // UI hệ thống (không phụ thuộc view)
   
   setDeliveryState("idle");
