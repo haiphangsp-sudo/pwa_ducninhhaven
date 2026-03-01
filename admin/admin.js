@@ -53,7 +53,7 @@ function render(){
   const root=document.getElementById("adminApp");
 
   root.innerHTML = Object.entries(MENU).map(([catKey,cat])=>`
-  <button class="btn" id="resetBtn">Khôi phục mặc định</button>
+  
   <section class="cat">
     <label class="cat-title">
       <input type="checkbox" data-path="${catKey}.active" ${cat.active!==false?"checked":""}>
