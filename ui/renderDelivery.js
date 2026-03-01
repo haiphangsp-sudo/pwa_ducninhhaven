@@ -1,28 +1,29 @@
-// ui/renderDelivery.js
-// Non-blocking delivery status banner
+import { t } from "../data/i18n.js";
 
-import { UI } from "../core/state.js";
+let state="idle";
 
-export function renderDelivery(){
+export function setDeliveryState(s){
+  state=s;
+  render();
+}
 
-  const el = document.getElementById("deliveryStatus");
+function render(){
+
+  const el=document.getElementById("deliveryBanner");
   if(!el) return;
 
-  const state = UI.delivery.state;
-
-  if(state === "idle"){
+  if(state==="idle"){
     el.classList.add("hidden");
     return;
   }
 
+  el.textContent=t(`delivery.${state}`);
   el.classList.remove("hidden");
 
-  if(state === "pending")
-    el.innerText = "Đang gửi đến bếp…";
-
-  if(state === "sending")
-    el.innerText = "Đang thử lại…";
-
-  if(state === "stalled")
-    el.innerText = "Mạng yếu — sẽ tự gửi khi có mạng";
+  // chỉ trạng thái lỗi mới cho tương tác
+  if(state==="failed"){
+    el.onclick=()=>window.dispatchEvent(new Event("resumeQueue"));
+  }else{
+    el.onclick=null;
+  }
 }

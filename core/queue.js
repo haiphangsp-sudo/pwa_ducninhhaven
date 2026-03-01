@@ -1,15 +1,12 @@
 // core/queue.js
-// Offline-first persistent queue (transaction-safe)
-
 import { sendRequest } from "../services/api.js";
 import { setState } from "./state.js";
 import { getRetryDelay } from "../services/retryPolicy.js";
 
 const STORAGE_KEY = "haven_queue";
 
-let processing = false;
-let retryTimer = null;
-let waitingRetry = false;
+let processing=false;
+let retryTimer=null;
 
 /* ---------------- STORAGE ---------------- */
 
@@ -17,52 +14,62 @@ export function loadQueue(){
   return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
 }
 
-export function saveQueue(queue){
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(queue));
+export function saveQueue(q){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(q));
+}
+
+/* ---------------- STATE HELPERS ---------------- */
+
+function emitDelivery(state,extra={}){
+  setState({
+    delivery:{ state, ...extra }
+  });
+}
+
+function emitRecovery(state){
+  setState({
+    recovery:{ state }
+  });
 }
 
 /* ---------------- ENQUEUE ---------------- */
 
 export function enqueue(payload){
 
-  const queue = loadQueue();
+  const queue=loadQueue();
 
   queue.push({
-    id: payload.id,
+    id:payload.id,
     payload,
-    retries: 0,
-    createdAt: Date.now()
+    retries:0,
+    createdAt:Date.now()
   });
 
   saveQueue(queue);
 
-  setState({
-    delivery:{state:"pending"}
-  });
+  emitDelivery("pending");
 
-  if(!processing && !waitingRetry)
-    processQueue();
+  if(!processing) processQueue();
 }
 
 /* ---------------- PROCESS ---------------- */
 
 export async function processQueue(){
 
-  if(processing || waitingRetry) return;
+  if(processing) return;
 
-  processing = true;
-
-  let queue = loadQueue();
-
-  if(queue.length){
-    setState({
-      delivery:{ state:"sending" }
-    });
+  const queue=loadQueue();
+  if(!queue.length){
+    emitDelivery("idle");
+    return;
   }
+
+  processing=true;
+  emitDelivery("sending");
 
   while(queue.length){
 
-    const req = queue[0];
+    const req=queue[0];
 
     try{
 
@@ -71,10 +78,9 @@ export async function processQueue(){
       queue.shift();
       saveQueue(queue);
 
-      if(queue.length===0){
-        setState({
-          delivery:{state:"idle"}
-        });
+      if(!queue.length){
+        emitDelivery("sent");
+        setTimeout(()=>emitDelivery("idle"),2000);
       }
 
     }catch(e){
@@ -82,55 +88,36 @@ export async function processQueue(){
       req.retries++;
       saveQueue(queue);
 
-      setState({
-        delivery:{
-          state: req.retries>=3 ? "stalled" : "sending",
-          retries: req.retries
-        }
-      });
+      emitDelivery("failed",{retries:req.retries});
 
-      const delay = getRetryDelay(req.retries);
+      const delay=getRetryDelay(req.retries);
 
-      waitingRetry = true;
-      processing = false;
-
-      if(retryTimer) clearTimeout(retryTimer);
-
-      retryTimer = setTimeout(()=>{
-        retryTimer = null;
-        waitingRetry = false;
-        processQueue();
-      }, delay);
-
+      processing=false;
+      retryTimer=setTimeout(processQueue,delay);
       return;
     }
   }
 
-  processing = false;
+  processing=false;
+}
+
+/* ---------------- RECOVERY DETECT ---------------- */
+
+export function detectRecovery(){
+  if(loadQueue().length){
+    emitRecovery("found");
+  }
 }
 
 /* ---------------- EVENTS ---------------- */
 
-// user chọn "Gửi lại"
-window.addEventListener("resumeQueue", ()=>{
-  waitingRetry = false;
-  if(!processing) processQueue();
+window.addEventListener("resumeQueue",()=>{
+  emitRecovery("sending");
+  processQueue();
 });
 
-// mạng quay lại
-window.addEventListener("networkBack", ()=>{
-  const queue = loadQueue();
-
-  if(queue.length){
-
-    if(retryTimer){
-      clearTimeout(retryTimer);
-      retryTimer = null;
-    }
-
-    waitingRetry = false;
-
-    if(!processing)
-      processQueue();
+window.addEventListener("networkBack",()=>{
+  if(loadQueue().length){
+    processQueue();
   }
 });

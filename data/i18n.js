@@ -1,7 +1,42 @@
 // data/i18n.js
 //Toàn bộ chữ hiển thị cho khách.
 export const STRINGS = {
-
+recovery:{
+  found:{
+    vi:"Bạn có yêu cầu chưa gửi. Chạm để gửi lại.",
+    en:"Unsent request found. Tap to resend."
+  },
+  sending:{
+    vi:"Đang gửi lại...",
+    en:"Resending..."
+  },
+  done:{
+    vi:"Đã gửi thành công",
+    en:"Sent successfully"
+  },
+  discarded:{
+    vi:"Đã huỷ yêu cầu",
+    en:"Request discarded"
+  }
+},
+delivery:{
+  pending:{
+    vi:"Đang gửi yêu cầu...",
+    en:"Sending request..."
+  },
+  sent:{
+    vi:"Đã gửi tới bếp",
+    en:"Sent to kitchen"
+  },
+  delivered:{
+    vi:"Đã hoàn tất",
+    en:"Completed"
+  },
+  failed:{
+    vi:"Không gửi được — sẽ thử lại",
+    en:"Failed — will retry"
+  }
+},
   context_room:{
     vi:"Phòng",
     en:"Room"
