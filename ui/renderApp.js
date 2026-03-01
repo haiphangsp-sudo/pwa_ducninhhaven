@@ -3,8 +3,8 @@
 
 import { renderCartBar } from "./renderCart.js";
 import { renderAck } from "./renderAck.js";
-import { renderDelivery } from "./renderDelivery.js";
-import { renderRecovery } from "./renderRecovery.js";
+import { setDeliveryState } from "./renderDelivery.js";
+import { setRecoveryState } from "./renderRecovery.js";
 import { initLangSwitch } from "./langController.js";
 import { renderNavBar } from "./components/navBar.js";
 import { renderHub } from "./renderHub.js";
@@ -18,7 +18,7 @@ export function renderApp(){
 
   // UI hệ thống (không phụ thuộc view)
   renderAck();
-  renderDelivery();
-  renderRecovery();
+  setDeliveryState("idle");
+  setRecoveryState("idle");
 }
 

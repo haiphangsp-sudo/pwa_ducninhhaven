@@ -127,8 +127,7 @@ window.addEventListener("visibilitychange", async ()=>{
   setTimeout(()=>el.remove(),2500);
 }
 });
-  
-detectRecovery();
+  detectRecovery();
 }
 boot();
 
