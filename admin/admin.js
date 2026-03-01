@@ -137,7 +137,7 @@ function bindEvents(){
 
 async function saveState(patch){
 
-  const r = await fetch("/api/menu/state",{
+  const r = await fetch("/api/admin/state",{
     method:"POST",
     headers:{
       "Content-Type":"application/json",
