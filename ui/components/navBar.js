@@ -24,7 +24,7 @@ el.innerHTML = `
         <button data-lang="vi">VI</button> <button data-lang="en">EN</button>
       </div>
     </div>
-  </div>`
+  </div>`;
   initLangSwitch();
   renderContextBar();
   document.querySelector(".nav-center").onclick=openPlacePicker;
