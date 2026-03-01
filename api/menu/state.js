@@ -11,9 +11,17 @@ export default async function handler(req,res){
   try{
 
     if(req.method==="GET"){
-      const state = await kv.get("menuState") ?? {};
-      return res.status(200).json(state);
-    }
+  let state = await kv.get("menuState");
+
+  if(typeof state === "string"){
+    try{ state = JSON.parse(state); }
+    catch{ state = {}; }
+  }
+
+  if(!state || typeof state!=="object")
+    state = {};
+  return res.status(200).json(state);
+}
 
     if(req.method==="POST"){
       const patch = req.body ?? {};
@@ -21,7 +29,7 @@ export default async function handler(req,res){
       let state = await kv.get("menuState") ?? {};
       state = deepMerge(state,patch);
 
-      await kv.set("menuState",state);
+      await kv.set("menuState", JSON.stringify(state));
       return res.status(200).json({ok:true});
     }
 
