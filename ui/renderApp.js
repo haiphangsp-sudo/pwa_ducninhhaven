@@ -15,9 +15,10 @@ export function renderApp(){
   renderHub();
   renderCartBar();
   initLangSwitch();
-
-  // UI hệ thống (không phụ thuộc view)
   renderAck();
+  
+  // UI hệ thống (không phụ thuộc view)
+  
   setDeliveryState("idle");
   setRecoveryState("idle");
 }

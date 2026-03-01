@@ -4,6 +4,9 @@ import { UI } from "../../core/state.js";
 import { dispatch } from "../../core/events.js";
 import { translate } from "../utils/translate.js";
 import { initLangSwitch } from "../langController.js";
+import { getContext } from "../core/context.js";
+import { PLACES } from "../data/places.js";
+import { t } from "../data/i18n.js";
 
 export function renderNavBar(){
 
@@ -24,6 +27,8 @@ el.innerHTML = `
     </div>
   </div>`
   attachNavEvents();
+  renderContextBar();
+  document.querySelector(".nav-center").onclick=openPlacePicker;
 };
 
 /* ---------- helpers ---------- */
@@ -31,7 +36,7 @@ el.innerHTML = `
 
 
 function getContext(){
-  const key = UI.context.mode==="room" ? "context_room" : "context_table";
+  const key = UI.context.mode;
   return `${translate(key)} ${UI.context.place}`;
 }
 
@@ -43,4 +48,31 @@ function attachNavEvents(){
   }
 
   initLangSwitch();
+}
+
+
+function renderContextBar(){
+
+  const el=document.querySelector(".nav-center");
+  if(!el) return;
+
+  const ctx=getContext();
+
+  if(!ctx){
+    el.innerHTML=`<span class="no-context">${t("choose_place")}</span>`;
+    return;
+  }
+
+  const label = PLACES[ctx.type+"s"][ctx.id].label;
+
+  el.innerHTML=`
+    <span class="ctx-icon">${icon(ctx.type)}</span>
+    <span class="ctx-label">${t(label)}</span>
+  `;
+}
+
+function icon(type){
+  if(type==="room") return "🛏";
+  if(type==="table") return "🍽";
+  return "📍";
 }
