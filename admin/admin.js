@@ -1,33 +1,46 @@
 import { loadMenu, MENU } from "../core/menuStore.js";
 
 /* ===== LOGIN GATE ===== */
-
-async function ensureLogin(){
-  let pin = localStorage.getItem("admin_pin");
+function hasSession(){
+  const pin = localStorage.getItem("admin_pin");
   const expire = Number(localStorage.getItem("admin_pin_expire"));
-if(expire && Date.now() < expire)
-  return;
+  return pin && expire && Date.now() < expire;
+}
 
-localStorage.removeItem("admin_pin");
-  pin = prompt("Nhập mã quản trị");
+function showApp(){
+  document.getElementById("adminLock").style.display="none";
+  document.getElementById("adminApp").style.display="";
+}
+
+async function doLogin(){
+
+  const pin = prompt("Nhập mã quản trị");
+  if(!pin) return;
 
   const r = await fetch("/api/admin/login",{
     method:"POST",
     headers:{ "Content-Type":"application/json" },
-    body: JSON.stringify({pin})
+    body: JSON.stringify({ pin })
   });
 
   if(r.ok){
     localStorage.setItem("admin_pin",pin);
-    localStorage.setItem("admin_pin_expire", Date.now() + 15*60*1000);
+    localStorage.setItem("admin_pin_expire",Date.now()+2*60*60*1000);
+    showApp();
+    await loadMenu();
+    render();
   }else{
     alert("Sai mã");
-    location.reload();
   }
 }
 
-await ensureLogin();
+document.getElementById("loginBtn").onclick = doLogin;
 
+if(hasSession()){
+  showApp();
+  await loadMenu();
+  render();
+}
 /* ===== LOAD ===== */
 
 await loadMenu();
@@ -37,10 +50,10 @@ render();
 
 function render(){
 
-  const root=document.getElementById("adminMenu");
+  const root=document.getElementById("adminApp");
 
   root.innerHTML = Object.entries(MENU).map(([catKey,cat])=>`
-
+  <button class="btn" id="resetBtn">Khôi phục mặc định</button>
   <section class="cat">
     <label class="cat-title">
       <input type="checkbox" data-path="${catKey}.active" ${cat.active!==false?"checked":""}>
