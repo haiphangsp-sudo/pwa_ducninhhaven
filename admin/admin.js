@@ -10,7 +10,7 @@ function hasSession(){
 function showApp(){
   document.getElementById("adminLock").style.display="none";
   document.getElementById("adminApp").style.display="";
-  document.getElementById("adminBtn").style.display="none";
+  document.getElementById("adminBtn").style.display="";
 }
 
 async function doLogin(){
