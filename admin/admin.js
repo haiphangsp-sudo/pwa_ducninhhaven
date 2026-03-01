@@ -10,6 +10,7 @@ function hasSession(){
 function showApp(){
   document.getElementById("adminLock").style.display="none";
   document.getElementById("adminApp").style.display="";
+  document.getElementById("adminBtn").style.display="none";
 }
 
 async function doLogin(){
@@ -123,7 +124,7 @@ function bindEvents(){
     location.reload();
   };
   const lo = document.getElementById("logoutBtn");
-  document.getElementById("adminBtn").style.display="";
+  document.getElementById("adminBtn").style.display="none";
   lo.onclick = logout;
 }
 
