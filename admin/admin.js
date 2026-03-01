@@ -123,9 +123,8 @@ function bindEvents(){
     location.reload();
   };
   const lo = document.getElementById("logoutBtn");
-  if(lo){
-    lo.onclick = logout;
-  }
+  document.getElementById("adminBtn").style.display="";
+  lo.onclick = logout;
 }
 
 /* ===== API ===== */
