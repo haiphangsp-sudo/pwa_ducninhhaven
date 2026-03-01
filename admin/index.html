@@ -16,18 +16,21 @@
 </head>
 <body>
   <header class="admin-header">
-  <div id="adminLock" class="admin-lock">
-    <div class="lock-box">
+  <div class="admin-lock">
+    <div id="adminLock" class="lock-box">
       <h2>Quản trị</h2>
       <button class="btn" id="loginBtn">Đăng nhập</button>
       <button class="btn" id="logoutBtn">Thoát quản trị</button>
+    </div>
+    <div class="lock-box">
+      <button class="btn" id="resetBtn">Khôi phục mặc định</button>
     </div>
   </div>
     
   </header>
 
   <div id="adminApp" style="display:none">
-    <button class="btn" id="resetBtn">Khôi phục mặc định</button>
+    
   </div>
   <script type="module" src="./admin.js"></script>
 </body>
