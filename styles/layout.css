@@ -62,3 +62,15 @@ body{
   pointer-events:none;
   filter:grayscale(90%);
 }
+.ack-dot{
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  background:#2f4f3e;
+  animation:ack .5s ease;
+}
+
+@keyframes ack{
+  from{transform:scale(.5);opacity:.4}
+  to{transform:scale(1.4);opacity:0}
+}

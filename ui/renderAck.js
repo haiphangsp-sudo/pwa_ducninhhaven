@@ -12,10 +12,9 @@ export function renderAck(){
     el.classList.add("hidden");
     return;
   }
-
+  el.innerHTML = '<div class="ack-dot"></div>';
   el.classList.remove("hidden");
-  el.innerText=t("ack"); // chỉ xác nhận thao tác
-
+  
   clearTimeout(timer);
   timer=setTimeout(()=>{
     setState({ ack:{state:"hidden"} });
