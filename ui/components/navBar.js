@@ -1,7 +1,6 @@
 // ui/components/navBar.js
 
 import { UI } from "../../core/state.js";
-import { dispatch } from "../../core/events.js";
 import { translate } from "../utils/translate.js";
 import { initLangSwitch } from "../langController.js";
 import { getContext } from "../core/context.js";
@@ -26,29 +25,13 @@ el.innerHTML = `
       </div>
     </div>
   </div>`
-  attachNavEvents();
+  initLangSwitch();
   renderContextBar();
   document.querySelector(".nav-center").onclick=openPlacePicker;
 };
 
 /* ---------- helpers ---------- */
 
-
-
-function getContext(){
-  const key = UI.context.mode;
-  return `${translate(key)} ${UI.context.place}`;
-}
-
-function attachNavEvents(){
-
-  const back = document.getElementById("navBack");
-  if(back){
-    back.onclick = ()=>dispatch("GO_HOME");
-  }
-
-  initLangSwitch();
-}
 
 
 function renderContextBar(){
