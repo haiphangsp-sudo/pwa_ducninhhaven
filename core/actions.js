@@ -35,7 +35,7 @@ export function sendInstant(action){
   }
 
   enqueue({
-    target:place.id,
+    target:place,
     action,
     ts:Date.now()
   });
