@@ -35,7 +35,7 @@ function renderCenter(){
   const ctx = getContext();
 
   if(!ctx){
-    el.innerHTML = `<span class="no-context">${translate("choose_place")}</span>`;
+    el.innerHTML = `<span class="no-context">${translate("select_place")}</span>`;
     return;
   }
 

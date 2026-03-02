@@ -29,7 +29,7 @@ export function renderCartBar(){
 
   let label;
   if(!ctx)
-    label=t("choose_place");
+    label=t("select_place");
   else
     label=t("send_order");
 

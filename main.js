@@ -10,6 +10,7 @@ import { resetIdleTimer } from "./core/idle.js";
 import { loadMenu, MENU } from "./core/menuStore.js";
 import { detectRecovery } from "./core/queue.js";
 import { resolvePlace, setContext, getContext } from "./core/context.js";
+import { initPlacePicker } from "./ui/components/placePicker.js";
 
 /* ---------- VERSION ---------- */
 
@@ -89,7 +90,7 @@ async function boot(){
   applyURLContext();        // ← thay cho dispatch SET_CONTEXT
 
   renderApp();
-
+  initPlacePicker();
   detectRecovery();
 
   onNetworkChange(online=>{

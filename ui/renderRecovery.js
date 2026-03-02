@@ -1,3 +1,6 @@
+// ui/renderRecovery.js
+// Banner hiển thị khi phát hiện có yêu cầu chưa gửi (do mất mạng hoặc đóng app đột ngột)
+
 import { t } from "../data/i18n.js";
 
 let state="idle";

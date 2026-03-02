@@ -1,10 +1,7 @@
 // data/i18n.js
 //Toàn bộ chữ hiển thị cho khách.
 export const STRINGS = {
-  choose_place:{
-  vi:"Chọn vị trí phục vụ",
-  en:"Select service location"
-},
+  
 recovery:{
   found:{
     vi:"Bạn có yêu cầu chưa gửi. Chạm để gửi lại.",
@@ -50,10 +47,10 @@ send_order:{
   vi:"Gửi yêu cầu",
   en:"Send request"
 },
-choose_place:{
-  vi:"Chọn vị trí trước",
-  en:"Select location"
-},
+select_place:{vi:"Chọn vị trí phục vụ",en:"Select service location"},
+table:{vi:"Bàn",en:"Tables"},
+area:{vi:"Khu vực",en:"Areas"},
+
   sending:{
     vi:"Đang gửi yêu cầu…",
     en:"Sending request…"
