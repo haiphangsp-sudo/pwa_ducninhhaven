@@ -1,5 +1,4 @@
 import { UI, setState } from "../core/state.js";
-import { t } from "../data/i18n.js";
 
 let timer=null;
 
