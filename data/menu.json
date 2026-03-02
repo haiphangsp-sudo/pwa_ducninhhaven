@@ -1,7 +1,7 @@
 {
   "intro":{
     "label":{"vi":"Giới thiệu","en":"Introduction"},
-    "modes":["room","table"],
+    "allow":["room","table","area"],
     "type":"article",
     "active":true,
     "items":{
@@ -20,7 +20,7 @@
 
   "food":{
     "label":{"vi":"Bữa ăn","en":"Food"},
-    "modes":["room","table"],
+    "allow":["room","table","area"],
     "type":"cart",
     "active":true,
     "items":{
@@ -46,7 +46,7 @@
 
   "drink":{
     "label":{"vi":"Thức uống","en":"Drinks"},
-    "modes":["room","table"],
+    "allow":["room","table","area"],
     "type":"cart",
     "active":true,
     "items":{
@@ -96,7 +96,7 @@
 
   "service":{
     "label":{"vi":"Dịch vụ phòng","en":"Room service"},
-    "modes":["room"],
+    "allow":["room"],
     "type":"instant",
     "active":true,
     "items":{
@@ -107,7 +107,7 @@
 
   "help":{
     "label":{"vi":"Hỗ trợ","en":"Assistance"},
-    "modes":["room"],
+    "allow":["room","area"],
     "type":"instant",
     "active":true,
     "items":{

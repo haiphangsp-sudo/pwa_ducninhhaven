@@ -1,5 +1,6 @@
 import { MENU } from "../core/menuStore.js";
-import { actionAddToCart, actionSendInstant } from "../core/dispatcher.js";
+import { addToCart, sendInstant } from "../core/actions.js";
+import { getContext } from "../core/context.js";
 import { translate } from "./utils/translate.js";
 
 /* ========================================================= */
@@ -7,8 +8,7 @@ import { translate } from "./utils/translate.js";
 export function renderCategory(root, key){
 
   const category = MENU[key];
-
-  if(!category || category.active===false){
+  if(!category || !allowed(category)){
     root.innerHTML="";
     return;
   }
@@ -58,7 +58,10 @@ function renderInstant(root, category){
     `).join("");
 
   root.querySelectorAll(".instant-btn").forEach(btn=>{
-    btn.onclick=()=>actionSendInstant(btn.dataset.key);
+    btn.onclick=()=>sendInstant({
+      kind:"service",
+      code:btn.dataset.key
+    });
   });
 }
 
@@ -89,16 +92,28 @@ function renderCartPanel(root, category, categoryKey){
           <div class="item-options">${options}</div>
         </div>
       `;
-
     }).join("");
 
   root.querySelectorAll(".option-btn:not(.disabled)").forEach(btn=>{
     btn.onclick=()=>{
-      actionAddToCart({
+      addToCart({
         category:btn.dataset.category,
         item:btn.dataset.item,
         option:btn.dataset.option
       });
     };
   });
+}
+
+/* ========================================================= */
+
+function allowed(node){
+
+  if(node.active===false) return false;
+  if(!node.allow) return true;
+
+  const ctx=getContext();
+  if(!ctx) return false;
+
+  return node.allow.includes(ctx.type);
 }
