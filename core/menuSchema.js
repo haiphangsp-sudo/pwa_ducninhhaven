@@ -1,3 +1,5 @@
+// core/menuSchema.js
+//   Định nghĩa schema cho menu, đảm bảo menu tải về có cấu trúc đúng để app hoạt động ổn định    
 
 
 

@@ -1,3 +1,9 @@
+// core/actions.js
+//   Các hành động chính của app, bao gồm thêm vào giỏ hàng, gửi yêu cầu đến server, v.v.
+//   Các component sẽ gọi các hàm này để thực hiện hành động, thay vì thao tác trực tiếp với state hoặc queue
+
+
+
 import { UI, setState } from "./state.js";
 import { enqueue } from "./queue.js";
 import { getContext } from "./context.js";

@@ -1,4 +1,6 @@
 // core/queue.js
+//   Hệ thống queue để gửi yêu cầu đến server một cách tuần tự, tránh trùng lặp và đảm bảo độ tin cậy
+
 import { sendRequest } from "../services/api.js";
 import { setState } from "./state.js";
 import { getRetryDelay } from "../services/retryPolicy.js";
