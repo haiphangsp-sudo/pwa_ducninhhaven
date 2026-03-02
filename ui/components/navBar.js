@@ -9,7 +9,7 @@ export function renderNavBar(){
 
   el.innerHTML = `
     <div class="nav">
-      <div class="nav-bar nav-left">Duc Ninh Haven</div>
+      <div class="nav-bar nav-left">Haven</div>
       <div class="nav-bar nav-center"></div>
       <div class="nav-bar nav-right">
         <div id="langSwitch" class="lang-switch">
