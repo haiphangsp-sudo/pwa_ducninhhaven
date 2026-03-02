@@ -54,7 +54,6 @@ export function enqueue(payload){
 }
 
 /* ---------------- PROCESS ---------------- */
-
 export async function processQueue(){
 
   if(processing) return;
@@ -71,10 +70,22 @@ export async function processQueue(){
   while(queue.length){
 
     const req=queue[0];
+    const job=req.payload;
 
     try{
 
-      await sendRequest(req.payload);
+      // BUILD PAYLOAD CHUẨN CHO API
+      const order={
+        id:"ORD-"+job.ts,
+        place:job.target,
+        mode:"service",
+        category:job.payload?.category || job.action?.kind || "",
+        item:job.payload?.item || job.action?.code || "",
+        option:job.payload?.option || "",
+        qty:job.payload?.qty || 1
+      };
+
+      await sendRequest(order);
 
       queue.shift();
       saveQueue(queue);
