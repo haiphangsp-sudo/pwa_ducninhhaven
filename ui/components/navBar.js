@@ -1,7 +1,7 @@
 import { initLangSwitch } from "../langController.js";
 import { getContext } from "../../core/context.js";
 import { PLACES } from "../../data/places.js";
-import { t } from "../../data/i18n.js";
+import { translate } from "../utils/translate.js";
 
 export function renderNavBar(){
 
@@ -35,15 +35,16 @@ function renderCenter(){
   const ctx = getContext();
 
   if(!ctx){
-    el.innerHTML = `<span class="no-context">${t("choose_place")}</span>`;
+    el.innerHTML = `<span class="no-context">${translate("choose_place")}</span>`;
     return;
   }
 
   const place = PLACES[ctx.type+"s"][ctx.id];
-
+//<span class="ctx-label">${t(place.label)}</span>
   el.innerHTML = `
     <span class="ctx-icon">${icon(ctx.type)}</span>
-    <span class="ctx-label">${t(place.label)}</span>
+    <span class="ctx-label">${translate(place)}</span>
+
   `;
 }
 
