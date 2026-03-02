@@ -41,12 +41,10 @@ function renderCenter(){
   }
 
   const place = PLACES[ctx.type+"s"][ctx.id];
-//<span class="ctx-label">${t(place.label)}</span>
   el.innerHTML = `
     <span class="ctx-icon">${icon(ctx.type)}</span>
-    <span class="ctx-label">${translate(place)}</span>
     <span class="ctx-label">${t(place.label)}</span>
-
+    <span class="ctx-label">${translate(place.label)}</span>
   `;
 }
 
