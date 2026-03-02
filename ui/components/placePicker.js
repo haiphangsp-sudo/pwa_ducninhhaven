@@ -3,7 +3,7 @@
 
 import { PLACES } from "../../data/places.js";
 import { setContext } from "../../core/context.js";
-import { t } from "../../data/i18n.js";
+import { translate } from "../utils/translate.js";
 
 let el=null;
 
@@ -16,7 +16,7 @@ export function initPlacePicker(){
   el.innerHTML=`
     <div class="picker-backdrop"></div>
     <div class="picker-panel">
-      <h3>${t("select_place")}</h3>
+      <h3>${translate("select_place")}</h3>
 
       <div class="picker-group" data-type="area"></div>
       <div class="picker-group" data-type="table"></div>
