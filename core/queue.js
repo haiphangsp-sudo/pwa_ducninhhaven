@@ -76,7 +76,8 @@ export async function processQueue(){
 
       // BUILD PAYLOAD CHUẨN CHO API
       const order={
-        id:"ORD-"+job.ts,
+        //id:"ORD-"+job.ts,
+        id:crypto.randomUUID(),
         place:job.target,
         mode:"service",
         category:job.payload?.category || job.action?.kind || "",
