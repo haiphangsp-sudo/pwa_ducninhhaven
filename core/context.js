@@ -82,24 +82,28 @@ export function setActive(place){
 export function getContext(){
 
   const ctx=load();
-
   if(!ctx.anchor && !ctx.active) return null;
 
   const now=Date.now();
 
-  // anchor expire
-  if(ctx.anchor && now-ctx.anchor.ts>ANCHOR_TTL)
+  let changed=false;
+
+  if(ctx.anchor && now-ctx.anchor.ts>ANCHOR_TTL){
     ctx.anchor=null;
+    changed=true;
+  }
 
-  // active expire
-  if(ctx.active && now-ctx.active.ts>ACTIVE_TTL)
+  if(ctx.active && now-ctx.active.ts>ACTIVE_TTL){
     ctx.active=null;
+    changed=true;
+  }
 
-  // nếu active mất nhưng còn anchor → quay về phòng
-  if(!ctx.active && ctx.anchor)
+  if(!ctx.active && ctx.anchor){
     ctx.active={...ctx.anchor,ts:now};
+    changed=true;
+  }
 
-  save(ctx);
+  
   return ctx;
 }
 
@@ -112,4 +116,11 @@ export function getActivePlace(){
 
 export function getAnchor(){
   return getContext()?.anchor || null;
+}
+export function normalizeContext(){
+
+  const ctx=getContext();
+  if(!ctx) return;
+
+  save(ctx);
 }

@@ -10,7 +10,7 @@ import { initLangSwitch } from "./ui/langController.js";
 import { resetIdleTimer } from "./core/idle.js";
 import { loadMenu, MENU } from "./core/menuStore.js";
 import { detectRecovery } from "./core/queue.js";
-import { resolvePlace, setAnchor } from "./core/context.js";
+import { resolvePlace, setAnchor, normalizeContext } from "./core/context.js";
 import { initPlacePicker } from "./ui/components/placePicker.js";
 
 /* ---------- VERSION ---------- */
@@ -90,7 +90,7 @@ async function boot(){
   await loadMenu();
 
   applyURLContext();   // ← phải chạy trước render
-
+  normalizeContext(); // đảm bảo context được lưu lại với timestamp mới, tránh bị xoá do TTL
   subscribe(renderApp);
   initLangSwitch();
   initPlacePicker();
