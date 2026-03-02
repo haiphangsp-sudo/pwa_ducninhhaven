@@ -46,11 +46,11 @@ function renderGroup(type,data){
   if(!group) return;
 
   group.innerHTML=`
-    <div class="picker-title">${t(type)}</div>
+    <div class="picker-title">${translate(type)}</div>
     <div class="picker-list">
       ${Object.entries(data).map(([id,p])=>
         `<button data-id="${id}" data-type="${type}">
-          ${t(p.label)}
+          ${translate(p.label)}
         </button>`
       ).join("")}
     </div>
