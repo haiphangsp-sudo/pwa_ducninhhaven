@@ -1,4 +1,5 @@
 import { PLACES } from "../data/places.js";
+import { updateNavContext } from "../ui/components/navBar.js";
 
 const KEY="haven_context";
 
@@ -16,6 +17,8 @@ export function setContext(ctx){
     ...ctx,
     ts:Date.now()
   }));
+  updateNavContext();
+  window.dispatchEvent(new Event("contextChanged"));
 }
 
 export function getContext(){
