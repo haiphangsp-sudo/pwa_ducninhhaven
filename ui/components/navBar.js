@@ -2,7 +2,6 @@ import { initLangSwitch } from "../langController.js";
 import { getContext } from "../../core/context.js";
 import { PLACES } from "../../data/places.js";
 import { translate } from "../utils/translate.js";
-import { t } from "../../data/i18n.js";
 
 export function renderNavBar(){
 
@@ -43,7 +42,6 @@ function renderCenter(){
   const place = PLACES[ctx.type+"s"][ctx.id];
   el.innerHTML = `
     <span class="ctx-icon">${icon(ctx.type)}</span>
-    <span class="ctx-label">${t(place)}</span>
     <span class="ctx-label">${translate(place.label)}</span>
   `;
 }
