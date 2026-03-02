@@ -3,7 +3,7 @@
 //   Các component sẽ gọi các hàm này để thực hiện hành động, thay vì thao tác trực tiếp với state hoặc queue
 
 
-
+import { getActivePlace } from "./context.js";
 import { UI, setState } from "./state.js";
 import { enqueue } from "./queue.js";
 import { getContext } from "./context.js";
@@ -35,7 +35,7 @@ export function sendInstant(action){
   }
 
   enqueue({
-    target:ctx,
+    target:place.id,
     action,
     ts:Date.now()
   });
@@ -44,16 +44,16 @@ export function sendInstant(action){
 }
 
 export function sendCart(){
+const place = getActivePlace();
 
-  const ctx=getContext();
-  if(!ctx){
-    window.dispatchEvent(new Event("openPlacePicker"));
-    return;
-  }
+if(!place){
+  window.dispatchEvent(new Event("openPlacePicker"));
+  return;
+}
 
   UI.cart.items.forEach(item=>{
     enqueue({
-      target:ctx,
+      target:place.id,
       action:{kind:"order",code:item.item},
       payload:item,
       ts:Date.now()
