@@ -41,7 +41,6 @@ export function enqueue(payload){
   const queue=loadQueue();
 
   queue.push({
-    id:payload.id,
     payload,
     retries:0,
     createdAt:Date.now()
@@ -74,20 +73,36 @@ export async function processQueue(){
 
     try{
 
-      // BUILD PAYLOAD CHUẨN CHO API
-      const order={
-        //id:"ORD-"+job.ts,
-        id:crypto.randomUUID(),
-        place:job.target,
-        mode:"service",
-        category:job.payload?.category || job.action?.kind || "",
-        item:job.payload?.item || job.action?.code || "",
-        option:job.payload?.option || "",
-        qty:job.payload?.qty || 1
-      };
+      // BUILD PAYLOAD CHUẨN CHO API (supports multi-item order)
 
-      await sendRequest(order);
+let body;
 
+if(job.action?.kind==="order" && Array.isArray(job.payload?.items)){
+
+  // MULTI ITEMS ORDER
+  body={
+    id:crypto.randomUUID(),
+    place:job.target,
+    mode:"service",
+    category:"order",
+    items:job.payload.items
+  };
+
+}else{
+
+  // SINGLE ACTION (service / instant)
+  body={
+    id:crypto.randomUUID(),
+    place:job.target,
+    mode:"service",
+    category:job.action?.kind || "",
+    item:job.action?.code || "",
+    option:job.payload?.option || "",
+    qty:job.payload?.qty || 1
+  };
+}
+
+await sendRequest(body);
       queue.shift();
       saveQueue(queue);
 
