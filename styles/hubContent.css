@@ -149,3 +149,8 @@
 #hubContent::-webkit-scrollbar-track{
   background:transparent;
 }
+.no-context-hint::after{
+  content:" • chọn vị trí để đặt";
+  opacity:.5;
+  font-size:.9em;
+}

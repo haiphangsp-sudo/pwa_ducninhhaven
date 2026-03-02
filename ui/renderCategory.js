@@ -1,3 +1,6 @@
+// ui/renderCategory.js 
+// Hiển thị nội dung bên phải trong hub, dựa trên category đã chọn
+
 import { MENU } from "../core/menuStore.js";
 import { addToCart, sendInstant } from "../core/actions.js";
 import { getContext } from "../core/context.js";
@@ -9,12 +12,9 @@ export function renderCategory(root, key){
 
   const category = MENU[key];
   if(!category){
-  root.innerHTML="";
-  return;
-}
-
-const enabled = allowed(category);
-root.classList.toggle("locked", !enabled);
+    root.innerHTML="";
+    return;
+  }
 
   root.innerHTML="";
 
@@ -49,6 +49,7 @@ function renderArticle(root, category){
 }
 
 /* ========================================================= */
+/* instant: gọi dịch vụ */
 
 function renderInstant(root, category){
 
@@ -61,17 +62,23 @@ function renderInstant(root, category){
     `).join("");
 
   root.querySelectorAll(".instant-btn").forEach(btn=>{
-    btn.onclick = ()=>{
-      if(!enabled){
+    btn.onclick=()=>{
+      const ctx=getContext();
+      if(!ctx){
         window.dispatchEvent(new Event("openPlacePicker"));
         return;
       }
-      sendInstant({kind:"service",code:btn.dataset.key});
+
+      sendInstant({
+        kind:"service",
+        code:btn.dataset.key
+      });
     };
   });
 }
 
 /* ========================================================= */
+/* cart: thêm món */
 
 function renderCartPanel(root, category, categoryKey){
 
@@ -102,10 +109,12 @@ function renderCartPanel(root, category, categoryKey){
 
   root.querySelectorAll(".option-btn:not(.disabled)").forEach(btn=>{
     btn.onclick=()=>{
-      if(!allowed(category)){
+      const ctx=getContext();
+      if(!ctx){
         window.dispatchEvent(new Event("openPlacePicker"));
         return;
       }
+
       addToCart({
         category:btn.dataset.category,
         item:btn.dataset.item,
@@ -113,17 +122,4 @@ function renderCartPanel(root, category, categoryKey){
       });
     };
   });
-}
-
-/* ========================================================= */
-
-function allowed(node){
-
-  if(node.active===false) return false;
-  if(!node.allow) return true;
-
-  const ctx=getContext();
-  if(!ctx) return false;
-
-  return node.allow.includes(ctx.type);
 }
