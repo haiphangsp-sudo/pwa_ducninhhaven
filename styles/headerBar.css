@@ -31,9 +31,7 @@
   height:52px;
    width: 100%;
 }
-.nav.nav-bar{
 
-}
 .nav-left{
   display:flex;
   align-items:center;
@@ -55,7 +53,6 @@
 .nav-center{
   text-align:center;
   font-size:17px;
-  font-weight:600;
   color:#2f4f3e;
   /* nhìn rõ từ xa */
   text-shadow:0 1px 0 rgba(255,255,255,.6);
@@ -63,7 +60,16 @@
   white-space:nowrap;
   overflow:hidden;
   text-overflow:ellipsis;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:.4rem;
+  font-weight:500;
+
 }
+.nav-center .ctx-icon{opacity:.7}
+.nav-center .no-context{opacity:.5}
+
 
 .nav-right{
   display:flex;
