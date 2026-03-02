@@ -42,22 +42,22 @@ export function sendInstant(action){
 
   setState({ack:{state:"show"}});
 }
-
 export function sendCart(){
-const place = getActivePlace();
 
-if(!place){
-  window.dispatchEvent(new Event("openPlacePicker"));
-  return;
-}
+  const place = getActivePlace();
 
-  UI.cart.items.forEach(item=>{
-    enqueue({
-      target:place.id,
-      action:{kind:"order",code:item.item},
-      payload:item,
+  if(!place){
+    window.dispatchEvent(new Event("openPlacePicker"));
+    return;
+  }
+
+  enqueue({
+    target:place.id,
+    action:{kind:"order"},
+    payload:{
+      items:UI.cart.items,
       ts:Date.now()
-    });
+    }
   });
 
   setState({
