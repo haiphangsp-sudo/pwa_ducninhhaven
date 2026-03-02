@@ -48,6 +48,7 @@ send_order:{
   en:"Send request"
 },
 select_place:{vi:"Chọn vị trí phục vụ",en:"Select service location"},
+room:{vi:"Phòng",en:"Room"},
 table:{vi:"Bàn",en:"Tables"},
 area:{vi:"Khu vực",en:"Areas"},
 
