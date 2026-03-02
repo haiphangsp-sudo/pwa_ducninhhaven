@@ -1,7 +1,7 @@
 // main.js
-//Điểm vào duy nhất của app.
+// entry point
+
 import { subscribe } from "./core/state.js";
-import { dispatch } from "./core/events.js";
 import { renderApp } from "./ui/renderApp.js";
 import { onNetworkChange } from "./services/network.js";
 import { CONFIG } from "./config.js";
@@ -9,10 +9,11 @@ import { initLangSwitch } from "./ui/langController.js";
 import { resetIdleTimer } from "./core/idle.js";
 import { loadMenu, MENU } from "./core/menuStore.js";
 import { detectRecovery } from "./core/queue.js";
-/* ---------- VERSION CONTROL ---------- */
+import { resolvePlace, setContext, getContext } from "./core/context.js";
+
+/* ---------- VERSION ---------- */
 
 function checkVersion(){
-
   const stored = localStorage.getItem("app_version");
 
   if(stored !== CONFIG.VERSION){
@@ -21,113 +22,86 @@ function checkVersion(){
       caches.keys().then(keys=>keys.forEach(k=>caches.delete(k)));
     }
   }
-
 }
 
-/* ---------- QR CONTEXT ---------- */
+/* ---------- READ QR ---------- */
 
-function readContext(){
+function applyURLContext(){
 
   const params = new URLSearchParams(location.search);
+  const placeId = params.get("place");
 
-  return {
-    mode: params.get("mode"),
-    place: params.get("place")
-  };
+  if(!placeId) return;
 
+  const ctx = resolvePlace(placeId.toLowerCase());
+  if(ctx) setContext(ctx);
 }
 
-/* ---------- SERVICE WORKER ---------- */
+/* ---------- SW ---------- */
 
 function registerSW(){
-
   if("serviceWorker" in navigator){
-    navigator.serviceWorker.register("./sw.js");
+    navigator.serviceWorker.register("/sw.js");
   }
+}
 
+/* ---------- MENU WATCH ---------- */
+
+async function watchMenu(){
+
+  window.__menuHash = JSON.stringify(MENU);
+
+  setInterval(async ()=>{
+    const old = window.__menuHash;
+
+    await loadMenu();
+    const next = JSON.stringify(MENU);
+
+    if(old !== next){
+      renderApp();
+      window.__menuHash = next;
+      showMenuUpdated();
+    }
+
+  },10000);
+}
+
+function showMenuUpdated(){
+  const el=document.createElement("div");
+  el.className="menu-update-banner";
+  el.textContent="Thực đơn vừa được cập nhật";
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),2500);
 }
 
 /* ---------- BOOT ---------- */
+
 async function boot(){
 
   checkVersion();
   registerSW();
 
-  try{
-    await loadMenu();
-  }catch(e){
-    document.body.innerHTML = `
-      <pre style="padding:20px;color:#b00020">
-        MENU CONFIG ERROR
-
-        ${e.message}
-      </pre>`;
-    throw e;
-  }            // 1️⃣ nạp dữ liệu trước
-
-  subscribe(renderApp);          // 2️⃣ sau đó mới cho phép render
-  initLangSwitch();
-
-  const context = readContext();
-  dispatch("SET_CONTEXT", context);
-  dispatch("GO_HOME");
-
-  onNetworkChange((online)=>{
-    if(online){
-      window.dispatchEvent(new Event("networkBack"));
-    }
-  });
-  if("serviceWorker" in navigator){
-  navigator.serviceWorker.register("/sw.js").then(reg=>{
-    reg.update();
-  });
-}
-
-  renderApp();                   // 3️⃣ render lần đầu khi đã có MENU
-  window.__menuHash = JSON.stringify(MENU);
-
-["touchstart","pointerdown","click"].forEach(evt=>{
-  document.addEventListener(evt, resetIdleTimer, {passive:true});
-});
-setInterval(async ()=>{
-
-  const old = JSON.stringify(MENU);
-
   await loadMenu();
 
-  if(old !== JSON.stringify(MENU))
-    renderApp();
+  subscribe(renderApp);
+  initLangSwitch();
 
-},10000);
+  applyURLContext();        // ← thay cho dispatch SET_CONTEXT
 
-
-window.addEventListener("visibilitychange", async ()=>{
-
-  if(document.visibilityState!=="visible") return;
-
-  const oldHash = window.__menuHash;   // 1. nhớ menu cũ
-
-  await loadMenu();                    // 2. nạp menu mới
   renderApp();
 
-  const newHash = JSON.stringify(MENU); // 3. so sánh sau khi nạp
-
-  if(oldHash && oldHash !== newHash){
-    showMenuUpdated();
-  }
-
-  window.__menuHash = newHash;         // 4. lưu lại
-
-  function showMenuUpdated(){
-  const el=document.createElement("div");
-  el.className="menu-update-banner";
-  el.textContent="Thực đơn vừa được cập nhật";
-  document.body.appendChild(el);
-
-  setTimeout(()=>el.remove(),2500);
-}
-});
   detectRecovery();
-}
-boot();
 
+  onNetworkChange(online=>{
+    if(online)
+      window.dispatchEvent(new Event("networkBack"));
+  });
+
+  ["touchstart","pointerdown","click"].forEach(evt=>{
+    document.addEventListener(evt, resetIdleTimer, {passive:true});
+  });
+
+  watchMenu();
+}
+
+boot();
