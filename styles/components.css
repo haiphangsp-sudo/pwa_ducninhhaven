@@ -156,3 +156,25 @@
   opacity:.95;
   z-index:50;
 }
+.menu-item{ margin-bottom:18px }
+.item-title{ margin-bottom:6px }
+.item-options{ gap:8px }
+
+.item-title{
+  font-size:20px;
+  font-weight:600;
+  margin-bottom:10px;
+}
+
+.option-btn{
+  height:52px;
+  padding:0 18px;
+  border-radius:14px;
+  background:#f3f2ef;
+  font-weight:600;
+}
+
+.option-btn:active{
+  transform:scale(.96);
+  background:#e7e5e0;
+}
