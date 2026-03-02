@@ -109,6 +109,38 @@
   color:white;
   box-shadow:0 1px 3px rgba(0,0,0,.2);
 }
+.place-picker{
+  position:fixed; inset:0;
+  display:flex; align-items:center; justify-content:center;
+  z-index:50;
+}
+.place-picker.hidden{display:none}
+
+.picker-backdrop{
+  position:absolute; inset:0;
+  background:rgba(0,0,0,.35);
+}
+
+.picker-panel{
+  position:relative;
+  background:white;
+  padding:20px;
+  border-radius:14px;
+  width:min(420px,92%);
+}
+
+.picker-list{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+}
+
+.picker-list button{
+  padding:10px 14px;
+  border-radius:10px;
+  border:1px solid #ddd;
+  background:#fff;
+}
 @media (max-width:600px){
 
   .nav{
