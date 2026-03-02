@@ -1,4 +1,5 @@
 // main.js
+// Ứng dụng chính, khởi tạo và kết nối các phần với nhau
 // entry point
 
 import { subscribe } from "./core/state.js";
@@ -9,11 +10,11 @@ import { initLangSwitch } from "./ui/langController.js";
 import { resetIdleTimer } from "./core/idle.js";
 import { loadMenu, MENU } from "./core/menuStore.js";
 import { detectRecovery } from "./core/queue.js";
-import { resolvePlace, setContext, getContext } from "./core/context.js";
+import { resolvePlace, setAnchor } from "./core/context.js";
 import { initPlacePicker } from "./ui/components/placePicker.js";
 
 /* ---------- VERSION ---------- */
-
+// - Đảm bảo phiên bản SW khớp với phiên bản app
 function checkVersion(){
   const stored = localStorage.getItem("app_version");
 
@@ -26,20 +27,24 @@ function checkVersion(){
 }
 
 /* ---------- READ QR ---------- */
-
+// - Nếu URL có param "place", giải mã và lưu vào context để dùng cho các thao tác sau này (gửi yêu cầu, hiển thị ở nav, ...)
 function applyURLContext(){
 
   const params = new URLSearchParams(location.search);
   const placeId = params.get("place");
-
   if(!placeId) return;
 
-  const ctx = resolvePlace(placeId.toLowerCase());
-  if(ctx) setContext(ctx);
+  const place = resolvePlace(placeId.toLowerCase());
+  if(place){
+    setAnchor(place);
+  }
+
+  // quan trọng: xoá param để tránh reset khi reload
+  history.replaceState({}, "", location.pathname);
 }
 
 /* ---------- SW ---------- */
-
+// - Đăng ký Service Worker để hỗ trợ offline và background sync
 function registerSW(){
   if("serviceWorker" in navigator){
     navigator.serviceWorker.register("/sw.js");
@@ -47,7 +52,7 @@ function registerSW(){
 }
 
 /* ---------- MENU WATCH ---------- */
-
+// - Theo dõi thay đổi của menu (thông qua polling), nếu có thay đổi thì render lại app để cập nhật menu mới nhất
 async function watchMenu(){
 
   window.__menuHash = JSON.stringify(MENU);
@@ -76,7 +81,7 @@ function showMenuUpdated(){
 }
 
 /* ---------- BOOT ---------- */
-
+// - Hàm khởi động ứng dụng, chạy tất cả các thiết lập cần thiết và render giao diện lần đầu
 async function boot(){
 
   checkVersion();
@@ -84,13 +89,13 @@ async function boot(){
 
   await loadMenu();
 
+  applyURLContext();   // ← phải chạy trước render
+
   subscribe(renderApp);
   initLangSwitch();
-
-  applyURLContext();        // ← thay cho dispatch SET_CONTEXT
+  initPlacePicker();
 
   renderApp();
-  initPlacePicker();
   detectRecovery();
 
   onNetworkChange(online=>{

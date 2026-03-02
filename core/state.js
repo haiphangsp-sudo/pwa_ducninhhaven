@@ -1,50 +1,65 @@
+
+
 // core/state.js
-//Single source of truth.
+// Single source of truth.
+
 export const UI = {
-    lang:{
-        current:"vi"   // vi | en
-    },
-  context: {
-    mode: null,     // "room" | "table"
-    place: null
+
+  lang:{
+    current:"vi"
   },
+
+  /* ---------------- SERVICE CONTEXT ---------------- */
+
+  context:{
+    anchor:null,   // {type:"room|table|area", id:string}
+    active:null    // {type:"room|table|area", id:string}
+  },
+
+  /* ---------------- NAVIGATION ---------------- */
 
   view:{
-  panel:"intro"   // intro | food | drink | service | help
+    panel:"intro"
   },
 
-  cart: {
-    items: []       // {category,item,option,qty}
+  /* ---------------- CART ---------------- */
+
+  cart:{
+    items:[]
   },
 
-  // ACK overlay (blocking rất ngắn)
-  ack: {
-    state: "hidden"   // hidden | show
+  /* ---------------- ACK (tap feedback) ---------------- */
+
+  ack:{
+    state:"hidden"   // hidden | show
   },
 
-  // Delivery trạng thái nền
-  delivery: {
-    state: "idle",    // idle | pending | sending | stalled
-    retries: 0
+  /* ---------------- DELIVERY STATE MACHINE ---------------- */
+
+  delivery:{
+    state:"idle",    // idle | pending | sending | sent | failed
+    retries:0
   },
 
-  request: {
-    sending: false
+  /* ---------------- ERROR ---------------- */
+
+  error:{
+    active:false,
+    message:null
   },
 
-  error: {
-    active: false,
-    message: null
-  },
+  /* ---------------- IDLE ---------------- */
 
-  idle: {
-    timer: null,
-    timeoutMs: 60000
+  idle:{
+    timer:null,
+    timeoutMs:60000
   }
 
 };
 
-let listeners = [];
+/* ======================================================= */
+
+let listeners=[];
 
 export function subscribe(fn){
   listeners.push(fn);
@@ -52,19 +67,28 @@ export function subscribe(fn){
 
 export function setState(patch){
 
-  deepMerge(UI, patch);
+  deepMerge(UI,patch);
 
-  listeners.forEach(fn => fn(UI));
+  listeners.forEach(fn=>fn(UI));
 }
 
+/* ======================================================= */
 
-function deepMerge(target, source){
+function deepMerge(target,source){
   for(const key in source){
-    if(typeof source[key] === "object" && source[key] !== null){
-      if(!target[key]) target[key] = {};
-      deepMerge(target[key], source[key]);
-    } else {
-      target[key] = source[key];
+
+    const value=source[key];
+
+    if(
+      typeof value==="object" &&
+      value!==null &&
+      !Array.isArray(value)
+    ){
+      if(!target[key]) target[key]={};
+      deepMerge(target[key],value);
+
+    }else{
+      target[key]=value;
     }
   }
 }
