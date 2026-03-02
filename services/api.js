@@ -62,12 +62,13 @@ export async function sendRequest(payload) {
     throw new Error("invalid_json");
   }
 
-  if (data.status === "unauthorized") throw new Error("unauthorized");
-  if (data.status === "rate_limited") throw new Error("rate_limited");
-  if (data.status === "duplicate") return data;
+  if(data.status==="unauthorized") return {fatal:true};
+  if(data.status==="invalid") return {fatal:true};
+  if(data.status==="duplicate") return data;
+  if(data.status==="rate_limited") throw new Error("retry");
 
-  if (data.status !== "ok") {
-    throw new Error("unknown");
+  if(data.status!=="ok"){
+    throw new Error("retry");
   }
 
   markSuccess();

@@ -96,7 +96,12 @@ export async function processQueue(){
       }
 
     }catch(e){
-
+      if(e.message!=="retry"){
+      // lỗi logic → bỏ khỏi queue
+      queue.shift();
+      saveQueue(queue);
+      continue;
+      }
       req.retries++;
       saveQueue(queue);
 
