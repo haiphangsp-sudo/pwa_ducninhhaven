@@ -45,15 +45,14 @@ delivery:{
     en:"Failed — will retry"
   }
 },
-mode:{
-  room:{
-    vi:"Phòng",
-    en:"Room"
-  },
-  table:{
-    vi:"Bàn",
-    en:"Table"
-  }
+
+send_order:{
+  vi:"Gửi yêu cầu",
+  en:"Send request"
+},
+choose_place:{
+  vi:"Chọn vị trí trước",
+  en:"Select location"
 },
   sending:{
     vi:"Đang gửi yêu cầu…",

@@ -1,15 +1,21 @@
 // ui/renderCart.js
-//Thanh giỏ dưới cùng.
+// Thanh giỏ dưới cùng (state-driven)
+
 import { UI } from "../core/state.js";
-import { actionSendCart } from "../core/dispatcher.js";
+import { sendCart } from "../core/actions.js";
+import { getContext } from "../core/context.js";
 import { t } from "../data/i18n.js";
 
 export function renderCartBar(){
 
   const bar = document.getElementById("cartBar");
+  if(!bar) return;
+
+  /* ---------- no items ---------- */
 
   if(UI.cart.items.length===0){
     bar.classList.add("hidden");
+    bar.onclick=null;
     return;
   }
 
@@ -17,9 +23,29 @@ export function renderCartBar(){
 
   const count = UI.cart.items.reduce((a,b)=>a+b.qty,0);
 
-  bar.innerHTML = `
-    <div>${count} items · ${t("order")}</div>
+  /* ---------- label ---------- */
+
+  const ctx=getContext();
+
+  let label;
+  if(!ctx)
+    label=t("choose_place");
+  else
+    label=t("send_order");
+
+  bar.innerHTML=`
+    <div class="cart-label">
+      ${count} · ${label}
+    </div>
   `;
 
-  bar.onclick=actionSendCart;
+  /* ---------- interaction ---------- */
+
+  if(!ctx){
+    bar.onclick=()=>window.dispatchEvent(new Event("openPlacePicker"));
+    bar.classList.add("need-context");
+  }else{
+    bar.onclick=sendCart;
+    bar.classList.remove("need-context");
+  }
 }

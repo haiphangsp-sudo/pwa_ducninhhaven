@@ -1,0 +1,61 @@
+import { UI, setState } from "./state.js";
+import { enqueue } from "./queue.js";
+import { getContext } from "./context.js";
+
+/* ---------- CART ---------- */
+
+export function addToCart(item){
+
+  const existing = UI.cart.items.find(i =>
+    i.category===item.category &&
+    i.item===item.item &&
+    i.option===item.option
+  );
+
+  if(existing) existing.qty++;
+  else UI.cart.items.push({...item,qty:1});
+
+  setState({cart:{items:UI.cart.items}});
+}
+
+/* ---------- SEND ---------- */
+
+export function sendInstant(action){
+
+  const ctx=getContext();
+  if(!ctx){
+    window.dispatchEvent(new Event("openPlacePicker"));
+    return;
+  }
+
+  enqueue({
+    target:ctx,
+    action,
+    ts:Date.now()
+  });
+
+  setState({ack:{state:"show"}});
+}
+
+export function sendCart(){
+
+  const ctx=getContext();
+  if(!ctx){
+    window.dispatchEvent(new Event("openPlacePicker"));
+    return;
+  }
+
+  UI.cart.items.forEach(item=>{
+    enqueue({
+      target:ctx,
+      action:{kind:"order",code:item.item},
+      payload:item,
+      ts:Date.now()
+    });
+  });
+
+  setState({
+    ack:{state:"show"},
+    cart:{items:[]}
+  });
+}
