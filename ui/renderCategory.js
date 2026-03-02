@@ -8,10 +8,13 @@ import { translate } from "./utils/translate.js";
 export function renderCategory(root, key){
 
   const category = MENU[key];
-  if(!category || !allowed(category)){
-    root.innerHTML="";
-    return;
-  }
+  if(!category){
+  root.innerHTML="";
+  return;
+}
+
+const enabled = allowed(category);
+root.classList.toggle("locked", !enabled);
 
   root.innerHTML="";
 
@@ -58,10 +61,13 @@ function renderInstant(root, category){
     `).join("");
 
   root.querySelectorAll(".instant-btn").forEach(btn=>{
-    btn.onclick=()=>sendInstant({
-      kind:"service",
-      code:btn.dataset.key
-    });
+    btn.onclick = ()=>{
+      if(!enabled){
+        window.dispatchEvent(new Event("openPlacePicker"));
+        return;
+      }
+      sendInstant({kind:"service",code:btn.dataset.key});
+    };
   });
 }
 
@@ -96,6 +102,10 @@ function renderCartPanel(root, category, categoryKey){
 
   root.querySelectorAll(".option-btn:not(.disabled)").forEach(btn=>{
     btn.onclick=()=>{
+      if(!allowed(category)){
+        window.dispatchEvent(new Event("openPlacePicker"));
+        return;
+      }
       addToCart({
         category:btn.dataset.category,
         item:btn.dataset.item,

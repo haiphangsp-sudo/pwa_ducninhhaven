@@ -16,14 +16,9 @@ export function renderHub(){
 
   /* ---------- FILTER PANELS BY CAPABILITY ---------- */
 
-  const panels = Object.entries(MENU)
-    .filter(([,cat])=>{
-      if(cat.active===false) return false;
-      if(!cat.allow) return true;
-      if(!ctx) return false;
-      return cat.allow.includes(ctx.type);
-    })
-    .map(([key])=>key);
+  const panels = Object.keys(MENU);
+
+  
 
   /* ---------- AUTO FIX PANEL ---------- */
 
@@ -31,13 +26,19 @@ export function renderHub(){
   if(!panels.includes(panel)) panel = panels[0];
 
   /* ---------- MENU LEFT ---------- */
+menuEl.innerHTML = panels.map(key=>{
 
-  menuEl.innerHTML = panels.map(key=>`
-    <button class="hub-btn ${panel===key?"active":""}" data-key="${key}">
+  const cat = MENU[key];
+  const enabled = allowed(cat);
+
+  return `
+    <button class="hub-btn ${panel===key?"active":""} ${enabled?"":"disabled"}"
+            data-key="${key}">
       <span class="hub-icon">${ICONS[key] || ""}</span>
-      <span class="hub-label">${translate(MENU[key].label)}</span>
+      <span class="hub-label">${translate(cat.label)}</span>
     </button>
-  `).join("");
+  `;
+}).join("");
 
   menuEl.querySelectorAll("button").forEach(btn=>{
     btn.onclick = ()=>{
@@ -51,4 +52,10 @@ export function renderHub(){
     renderCategory(contentEl, panel);
   else
     contentEl.innerHTML="";
+}
+function allowed(node){
+  if(!node.allow) return true;
+  const ctx=getContext();
+  if(!ctx) return false;
+  return node.allow.includes(ctx.type);
 }

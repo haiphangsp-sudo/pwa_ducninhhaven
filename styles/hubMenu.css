@@ -104,4 +104,14 @@
   transform:scale(1.05);
   transition:transform .15s ease;
 }
+.locked{
+  opacity:.45;
+}
 
+.locked button{
+  pointer-events:auto;
+}
+
+.hub-btn.disabled{
+  opacity:.35;
+}
