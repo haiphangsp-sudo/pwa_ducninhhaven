@@ -1,5 +1,3 @@
-// ui/renderHub.js
-// Điều khiển hiển thị hub (menu + content) 
 
 
 import { UI } from "../core/state.js";
@@ -8,6 +6,7 @@ import { setState } from "../core/state.js";
 import { translate } from "./utils/translate.js";
 import { renderCategory } from "./renderCategory.js";
 import { ICONS } from "./icons.js";
+import { getContext } from "../core/context.js";
 
 export function renderHub(){
 
@@ -15,12 +14,18 @@ export function renderHub(){
   const contentEl = document.getElementById("hubContent");
   if(!menuEl || !contentEl) return;
 
-  const panels = Object.keys(MENU);
+  const ctx = getContext();
+  const anchorType = ctx?.anchor?.type;   // ← QUYỀN
+
+  const panels = Object.keys(MENU).filter(key=>{
+    const cat = MENU[key];
+    if(!cat.allow) return true;
+    if(!anchorType) return false;
+    return cat.allow.includes(anchorType);
+  });
 
   let panel = UI.view.panel;
   if(!panels.includes(panel)) panel = panels[0];
-
-  /* ---------- MENU ---------- */
 
   menuEl.innerHTML = panels.map(key=>`
     <button class="hub-btn ${panel===key?"active":""}"
@@ -35,8 +40,6 @@ export function renderHub(){
       setState({view:{panel:btn.dataset.key}});
     };
   });
-
-  /* ---------- CONTENT ---------- */
 
   renderCategory(contentEl, panel);
 }

@@ -15,16 +15,6 @@ export function renderCategory(root, key){
     root.innerHTML="";
     return;
   }
-  const ctx = getContext();
-  const type = ctx?.type;
-
-  if(category.allow && (!type || !category.allow.includes(type))){
-    root.innerHTML=`
-      <div class="category-locked">
-        ${translate({vi:"Không khả dụng cho vị trí của bạn.",en:"Not available for your location."})}
-      `;
-    return;
-  }
 
   root.innerHTML="";
 
