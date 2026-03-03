@@ -6,6 +6,7 @@
 import { initLangSwitch } from "../langController.js";
 import { getContext } from "../../core/context.js";
 import { translate } from "../utils/translate.js";
+import { PLACES } from "../../data/places.js";
 
 /* ===================================================== */
 
@@ -60,18 +61,9 @@ function render(){
 /* ===================================================== */
 /* CENTER: hiển thị nơi phục vụ hiện tại */
   
-  const el = document.querySelector(".nav-center button");
+    const el = document.querySelector(".nav-center button");
   
-  if(!el) return;
-  let label="select_place";
-  if(active){
-    if( active.type === "room"&&anchor?.type==="room"&&anchor.id === active.id){
-      label = "in_room";
-    }else{
-      label = active.id;
-    }
-  }
-    el.innerHTML = `<span class="loc-label">${translate(label)}</span>
+    el.innerHTML = `<span class="loc-label">${formatLocation(ctx)}</span>
       <span class="loc-arrow">▾</span>`;
 }
 
@@ -83,7 +75,20 @@ function icon(type){
   if(type === "area")  return "📍";
   return "👤";
 }
+function formatLocation(ctx){
+  if(!ctx?.active){// chưa có nơi phục vụ nào → khách vãng lai
+    return translate("select_place");
+  }
+  if(ctx.active.type === "room" && ctx.anchor?.type==="room" && ctx.active.id === ctx.anchor.id){
+    return translate("in_room");
+  }// ưu tiên hiển thị anchor nếu đang ở phòng, vì đó là nơi phục vụ chính
+  const {type,id} = ctx.active;
+  const group = type + "s";
+  const place = PLACES[group]?.[id];
+  if(!place) return id;
+  return translate(place.label);
 
+}
 /* ===================================================== */
 /* INTERACTION */
 
