@@ -1,4 +1,5 @@
-
+// renderHub.js
+// Chịu trách nhiệm render menu và nội dung của hub
 
 import { UI } from "../core/state.js";
 import { MENU } from "../core/menuStore.js";
@@ -15,14 +16,34 @@ export function renderHub(){
   if(!menuEl || !contentEl) return;
 
   const ctx = getContext();
-  const anchorType = ctx?.anchor?.type;   // ← QUYỀN
+
+  // ---- QUYỀN DỰA TRÊN ANCHOR, fallback sang ACTIVE ----
+  const anchorType =
+    ctx?.anchor?.type ||
+    ctx?.active?.type ||
+    null;
 
   const panels = Object.keys(MENU).filter(key=>{
     const cat = MENU[key];
+
+    // không có allow → luôn hiển thị
     if(!cat.allow) return true;
-    if(!anchorType) return false;
+
+    // chưa có anchor → coi như khách vãng lai
+    if(!anchorType){
+      return cat.allow.includes("table") ||
+             cat.allow.includes("area");
+    }
+
     return cat.allow.includes(anchorType);
   });
+
+  // fallback nếu vẫn rỗng (an toàn tuyệt đối)
+  if(!panels.length){
+    contentEl.innerHTML = "";
+    menuEl.innerHTML = "";
+    return;
+  }
 
   let panel = UI.view.panel;
   if(!panels.includes(panel)) panel = panels[0];
