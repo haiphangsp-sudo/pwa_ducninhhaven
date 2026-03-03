@@ -1,4 +1,6 @@
-import { setLanguage } from "../utils/translate.js";
+// ui/langController.js
+//  Quản lý chuyển đổi ngôn ngữ, lưu vào localStorage và trigger re-render app
+import { setLanguage } from "./utils/translate.js";
 import { setState } from "../core/state.js";
 
 export function initLangSwitch(){
