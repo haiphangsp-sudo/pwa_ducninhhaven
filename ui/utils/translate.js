@@ -1,6 +1,6 @@
 // ui/utils/translate.js
 
-import { t } from "../../data/i18n.js";
+import { STRINGS } from "../../data/i18n.js";
 
 export function translate(label){
 
@@ -14,4 +14,14 @@ export function translate(label){
   const lang = localStorage.getItem("haven_lang") || "vi";
 
   return label[lang] || label.vi || "";
+}
+
+let currentLang = "vi";
+
+export function setLanguage(lang){
+  currentLang = lang==="en" ? "en" : "vi";
+}
+
+function t(key){
+  return STRINGS[key]?.[currentLang] || key;
 }

@@ -1,4 +1,4 @@
-import { t } from "../data/i18n.js";
+import { translate } from "./utils/translate.js";
 
 let state="idle";
 
@@ -17,7 +17,7 @@ function render(){
     return;
   }
 
-  el.textContent=t(`delivery.${state}`);
+  el.textContent= translate(`delivery.${state}`);
   el.classList.remove("hidden");
 
   // chỉ trạng thái lỗi mới cho tương tác

@@ -87,13 +87,3 @@ area_guest:{vi:"Khách khu vực",en:"Area guest"},
   }
 
 };
-
-let currentLang = "vi";
-
-export function setLanguage(lang){
-  currentLang = lang==="en" ? "en" : "vi";
-}
-
-export function t(key){
-  return STRINGS[key]?.[currentLang] || key;
-}

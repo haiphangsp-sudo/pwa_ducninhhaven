@@ -4,7 +4,7 @@
 import { UI } from "../core/state.js";
 import { sendCart } from "../core/actions.js";
 import { getContext } from "../core/context.js";
-import { t } from "../data/i18n.js";
+import { translate } from "./utils/translate.js";
 
 export function renderCartBar(){
 
@@ -29,13 +29,13 @@ export function renderCartBar(){
 
   let label;
   if(!ctx)
-    label=t("select_place");
+    label="select_place";
   else
-    label=t("send_order");
+    label="send_order";
 
   bar.innerHTML=`
     <div class="cart-label">
-      ${count} · ${label}
+      ${count} · ${translate(label)}
     </div>
   `;
 

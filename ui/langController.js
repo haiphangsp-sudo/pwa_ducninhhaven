@@ -1,4 +1,4 @@
-import { setLanguage } from "../data/i18n.js";
+import { setLanguage } from "../utils/translate.js";
 import { setState } from "../core/state.js";
 
 export function initLangSwitch(){

@@ -1,7 +1,7 @@
 // ui/renderRecovery.js
 // Banner hiển thị khi phát hiện có yêu cầu chưa gửi (do mất mạng hoặc đóng app đột ngột)
 
-import { t } from "../data/i18n.js";
+import { translate } from "./utils/translate";
 
 let state="idle";
 
@@ -20,7 +20,7 @@ function render(){
     return;
   }
 
-  el.textContent=t(`recovery.${state}`);
+  el.textContent=translate(`recovery.${state}`);
   el.classList.remove("hidden");
 
   if(state==="found"){
