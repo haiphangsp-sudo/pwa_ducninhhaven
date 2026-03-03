@@ -6,7 +6,6 @@ import { subscribe } from "./core/state.js";
 import { renderApp } from "./ui/renderApp.js";
 import { onNetworkChange } from "./services/network.js";
 import { CONFIG } from "./config.js";
-import { initLangSwitch } from "./ui/langController.js";
 import { resetIdleTimer } from "./core/idle.js";
 import { loadMenu, MENU } from "./core/menuStore.js";
 import { detectRecovery } from "./core/queue.js";
@@ -102,7 +101,6 @@ async function boot(){
   applyURLContext();   // ← phải chạy trước render
   normalizeContext(); // đảm bảo context được lưu lại với timestamp mới, tránh bị xoá do TTL
   subscribe(renderApp);
-  initLangSwitch();
   initPlacePicker();
 
   renderApp();
