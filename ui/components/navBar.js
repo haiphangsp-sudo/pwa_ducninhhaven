@@ -39,7 +39,7 @@ export function renderNavBar(){
 
 
 function render(){
-  const labelLeft = "guest";
+  let labelLeft ="guest";
   const nl = document.querySelector(".nav-left");
   const ctx = getContext();
   const anchor = ctx?.anchor;
