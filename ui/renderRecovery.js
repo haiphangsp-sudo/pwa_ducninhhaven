@@ -1,7 +1,7 @@
 // ui/renderRecovery.js
 // Banner hiển thị khi phát hiện có yêu cầu chưa gửi (do mất mạng hoặc đóng app đột ngột)
 
-import { translate } from "./utils/translate";
+import { translate } from "./utils/translate.js";
 
 let state="idle";
 
