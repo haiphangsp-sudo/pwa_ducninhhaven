@@ -12,7 +12,7 @@ import { loadMenu, MENU } from "./core/menuStore.js";
 import { detectRecovery } from "./core/queue.js";
 import { resolvePlace, setAnchor, normalizeContext } from "./core/context.js";
 import { initPlacePicker } from "./ui/components/placePicker.js";
-import { getContext } from "./core/context.js";
+import { getContext,setActive } from "./core/context.js";
 
 /* ---------- VERSION ---------- */
 // - Đảm bảo phiên bản SW khớp với phiên bản app
