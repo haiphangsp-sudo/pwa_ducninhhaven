@@ -36,10 +36,13 @@ export function sendInstant(action){
   }
 
   enqueue({
+    type:"instant",
     target: ctx.active.id,
-    action,
-    payload:{},
-    ts:Date.now()
+    category: action.category,
+    item: action.code,
+    option: "",
+    qty: 1,
+    ts: Date.now()
   });
 
   setState({ack:{state:"show"}});
@@ -47,20 +50,18 @@ export function sendInstant(action){
 
 export function sendCart(){
 
-  const place = getActivePlace();
+  const ctx = getContext();
 
-  if(!place){
+  if(!ctx?.active){
     window.dispatchEvent(new Event("openPlacePicker"));
     return;
   }
 
   enqueue({
-    target:place.id,
-    action:{kind:"order"},
-    payload:{
-      items:UI.cart.items,
-      ts:Date.now()
-    }
+    type:"cart",
+    target: ctx.active.id,
+    items: UI.cart.items,
+    ts: Date.now()
   });
 
   setState({
