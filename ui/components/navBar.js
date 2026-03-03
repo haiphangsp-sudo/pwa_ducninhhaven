@@ -53,7 +53,8 @@ function render(){
     labelLeft="area_guest";
   }
 
-  nl.innerHTML = `<span class="identity-label">${translate(labelLeft)}</span>`;
+  nl.innerHTML = `<span class="identity-icon">${icon(anchor?.type)}</span>
+  <span class="identity-label">${translate(labelLeft)}</span>`;
 
 
 /* ===================================================== */
@@ -70,11 +71,8 @@ function render(){
       label = active.id;
     }
   }
-    el.innerHTML = `
-    <span class="loc-icon">${icon(anchor?.type)}</span>
-      <span class="loc-label">${translate(label)}</span>
-      <span class="loc-arrow">▾</span>
-    `;
+    el.innerHTML = `<span class="loc-label">${translate(label)}</span>
+      <span class="loc-arrow">▾</span>`;
 }
 
 /* ===================================================== */
@@ -83,7 +81,7 @@ function icon(type){
   if(type === "room")  return "🛏";
   if(type === "table") return "🍽";
   if(type === "area")  return "📍";
-  return "";
+  return "👤";
 }
 
 /* ===================================================== */
