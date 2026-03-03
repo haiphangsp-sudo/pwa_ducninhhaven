@@ -41,6 +41,7 @@ export function renderNavBar(){
 function renderCenter(){
 
   const el = document.querySelector(".nav-center");
+  const nl = document.querySelector(".nav-left");
   if(!el) return;
 
   const ctx = getContext();
@@ -66,6 +67,7 @@ function renderCenter(){
     `;
     return;
   }
+  nl.innerHTML = `${translate(place.label)} `;
   if( active.type === "room"&&
       anchor?.type==="room"&&   
       anchor.id === active.id
