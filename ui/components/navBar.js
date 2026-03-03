@@ -34,7 +34,7 @@ export function renderNavBar(){
   `;
   render();
   initLangSwitch();
-  bindCenterClick();
+  bindClick();
 }
 
 
@@ -48,13 +48,14 @@ function render(){
 
   if(anchor?.type==="room") {
     labelLeft=anchor.id;
-  }else if(anchor?.type==="table") {
-    labelLeft="table_guest";
-  }else if(anchor?.type==="area") {
-    labelLeft="area_guest";
-  }else{
-    labelLeft ="guest";
   }
+  if(anchor?.type==="table") {
+    labelLeft="table_guest";
+  }
+  if(anchor?.type==="area") {
+    labelLeft="area_guest";
+  }
+
   nl.innerHTML = `<span class="identity-label">${translate(labelLeft)}</span>`;
 
 
@@ -90,7 +91,7 @@ function icon(type){
 /* ===================================================== */
 /* INTERACTION */
 
-function bindCenterClick(){
+function bindClick(){
 
   const el = document.querySelector(".nav-center button");
   if(!el) return;
