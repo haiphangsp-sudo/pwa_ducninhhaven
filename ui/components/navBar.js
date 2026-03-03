@@ -17,11 +17,8 @@ export function renderNavBar(){
   el.innerHTML = `
     <div class="nav">
       <div class="nav-bar nav-left">Haven</div>
-
       <div class="nav-bar nav-center">
-        <button class="context-btn">
-          
-        </button>
+        <button class="location-btn"></button>
       </div>
 
       <div class="nav-bar nav-right">
@@ -74,8 +71,9 @@ function render(){
     }
   }
     el.innerHTML = `
-    <span class="ctx-icon">${icon(anchor?.type)}</span>
-      <span class="no-context">${translate(label)};</span>
+    <span class="loc-icon">${icon(anchor?.type)}</span>
+      <span class="loc-label">${translate(label)}</span>
+      <span class="loc-arrow">▾</span>
     `;
 }
 
