@@ -1,5 +1,7 @@
-// ui/renderCategory.js 
-// Hiển thị nội dung bên phải trong hub, dựa trên category đã chọn
+
+// ui/renderCategory.js
+// Render nội dung bên trong category khi chọn tab ở menu dưới cùng
+
 
 import { MENU } from "../core/menuStore.js";
 import { addToCart, sendInstant } from "../core/actions.js";
@@ -19,13 +21,23 @@ export function renderCategory(root, key){
   root.innerHTML="";
 
   switch(category.type){
-    case "article": return renderArticle(root, category);
-    case "instant": return renderInstant(root, category, key);
-    case "cart":    return renderCartPanel(root, category, key);
+
+    case "article":
+      return renderArticle(root, category);
+
+    case "instant":
+      return renderInstant(root, category, key);
+
+    case "cart":
+      return renderCartPanel(root, category, key);
+
+    default:
+      root.innerHTML="";
   }
 }
 
 /* ========================================================= */
+/* ARTICLE */
 
 function renderArticle(root, category){
 
@@ -49,39 +61,43 @@ function renderArticle(root, category){
 }
 
 /* ========================================================= */
-/* instant: gọi dịch vụ */
+/* INSTANT: service / help */
 
 function renderInstant(root, category, categoryKey){
 
   root.innerHTML = Object.entries(category.items || {})
     .filter(([,item])=>item.active!==false)
-    .map(([key,item])=>`
-      <button class="instant-btn" data-key="${key}">
+    .map(([itemKey,item])=>`
+      <button class="instant-btn"
+              data-category="${categoryKey}"
+              data-item="${itemKey}">
         ${translate(item.label)}
       </button>
     `).join("");
 
   root.querySelectorAll(".instant-btn").forEach(btn=>{
-  btn.onclick=()=>{
 
-    const ctx = getContext();
+    btn.onclick=()=>{
 
-    if(!ctx?.active){
-      window.dispatchEvent(new Event("openPlacePicker"));
-      return;
-    }
+      const ctx = getContext();
 
-    sendInstant({
-      kind:"instant",
-      category: category.key || categoryKey,  // truyền đúng panel
-      code: btn.dataset.key
-    });
-  };
-});
+      if(!ctx?.active){
+        window.dispatchEvent(new Event("openPlacePicker"));
+        return;
+      }
+
+      sendInstant({
+        kind:"instant",
+        category: btn.dataset.category,
+        code: btn.dataset.item
+      });
+    };
+
+  });
 }
 
 /* ========================================================= */
-/* cart: thêm món */
+/* CART: food / drink */
 
 function renderCartPanel(root, category, categoryKey){
 
@@ -92,12 +108,12 @@ function renderCartPanel(root, category, categoryKey){
       const title = translate(item.label);
 
       const options = Object.entries(item.options || {})
+        .filter(([,opt])=>opt.active!==false)
         .map(([optKey,opt])=>`
-          <button class="option-btn ${opt.active===false?"disabled":""}"
-            data-category="${categoryKey}"
-            data-item="${itemKey}"
-            data-option="${optKey}"
-            ${opt.active===false?"disabled":""}>
+          <button class="option-btn"
+                  data-category="${categoryKey}"
+                  data-item="${itemKey}"
+                  data-option="${optKey}">
             ${translate(opt.label)}
           </button>
         `).join("");
@@ -110,21 +126,23 @@ function renderCartPanel(root, category, categoryKey){
       `;
     }).join("");
 
-  root.querySelectorAll(".option-btn:not(.disabled)").forEach(btn=>{
-  btn.onclick=()=>{
+  root.querySelectorAll(".option-btn").forEach(btn=>{
 
-    const ctx = getContext();
+    btn.onclick=()=>{
 
-    if(!ctx?.active){
-      window.dispatchEvent(new Event("openPlacePicker"));
-      return;
-    }
+      const ctx = getContext();
 
-    addToCart({
-      category: btn.dataset.category,
-      item: btn.dataset.item,
-      option: btn.dataset.option
-    });
-  };
-});
+      if(!ctx?.active){
+        window.dispatchEvent(new Event("openPlacePicker"));
+        return;
+      }
+
+      addToCart({
+        category: btn.dataset.category,
+        item: btn.dataset.item,
+        option: btn.dataset.option
+      });
+    };
+
+  });
 }
