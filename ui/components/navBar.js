@@ -39,7 +39,7 @@ export function renderNavBar(){
 
 
 function render(){
-  let labelLeft;
+  let labelLeft="table_guest"; // mặc định là khách bàn, nếu không có anchor thì coi như khách vãng lai
   const nl = document.querySelector(".nav-left");
   if(!nl) return;
   const ctx = getContext();
