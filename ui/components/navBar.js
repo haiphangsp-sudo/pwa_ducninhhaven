@@ -41,6 +41,7 @@ export function renderNavBar(){
 function render(){
   let labelLeft;
   const nl = document.querySelector(".nav-left");
+  if(!nl) return;
   const ctx = getContext();
   const anchor = ctx?.anchor;
   const active = ctx?.active;
