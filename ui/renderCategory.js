@@ -20,7 +20,7 @@ export function renderCategory(root, key){
 
   switch(category.type){
     case "article": return renderArticle(root, category);
-    case "instant": return renderInstant(root, category);
+    case "instant": return renderInstant(root, category, key);
     case "cart":    return renderCartPanel(root, category, key);
   }
 }
@@ -51,7 +51,7 @@ function renderArticle(root, category){
 /* ========================================================= */
 /* instant: gọi dịch vụ */
 
-function renderInstant(root, category){
+function renderInstant(root, category, categoryKey){
 
   root.innerHTML = Object.entries(category.items || {})
     .filter(([,item])=>item.active!==false)
@@ -62,19 +62,22 @@ function renderInstant(root, category){
     `).join("");
 
   root.querySelectorAll(".instant-btn").forEach(btn=>{
-    btn.onclick=()=>{
-      const ctx=getContext();
-      if(!ctx){
-        window.dispatchEvent(new Event("openPlacePicker"));
-        return;
-      }
+  btn.onclick=()=>{
 
-      sendInstant({
-        kind:"service",
-        code:btn.dataset.key
-      });
-    };
-  });
+    const ctx = getContext();
+
+    if(!ctx?.active){
+      window.dispatchEvent(new Event("openPlacePicker"));
+      return;
+    }
+
+    sendInstant({
+      kind:"instant",
+      category: category.key || categoryKey,  // truyền đúng panel
+      code: btn.dataset.key
+    });
+  };
+});
 }
 
 /* ========================================================= */
@@ -108,18 +111,20 @@ function renderCartPanel(root, category, categoryKey){
     }).join("");
 
   root.querySelectorAll(".option-btn:not(.disabled)").forEach(btn=>{
-    btn.onclick=()=>{
-      const ctx=getContext();
-      if(!ctx){
-        window.dispatchEvent(new Event("openPlacePicker"));
-        return;
-      }
+  btn.onclick=()=>{
 
-      addToCart({
-        category:btn.dataset.category,
-        item:btn.dataset.item,
-        option:btn.dataset.option
-      });
-    };
-  });
+    const ctx = getContext();
+
+    if(!ctx?.active){
+      window.dispatchEvent(new Event("openPlacePicker"));
+      return;
+    }
+
+    addToCart({
+      category: btn.dataset.category,
+      item: btn.dataset.item,
+      option: btn.dataset.option
+    });
+  };
+});
 }
