@@ -102,7 +102,7 @@ export function getContext(){
     ctx.active={...ctx.anchor,ts:now};
     changed=true;
   }
-
+  if(changed) save(ctx);
   
   return ctx;
 }

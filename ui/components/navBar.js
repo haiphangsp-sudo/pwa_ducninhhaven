@@ -39,7 +39,7 @@ export function renderNavBar(){
 
 
 function render(){
-  let labelLeft ="guest";
+  let labelLeft;
   const nl = document.querySelector(".nav-left");
   const ctx = getContext();
   const anchor = ctx?.anchor;
@@ -47,12 +47,12 @@ function render(){
 
   if(anchor?.type==="room") {
     labelLeft=anchor.id;
-  }
-  if(anchor?.type==="table") {
+  }else if(anchor?.type==="table") {
     labelLeft="table_guest";
-  }
-  if(anchor?.type==="area") {
+  }else if(anchor?.type==="area") {
     labelLeft="area_guest";
+  }else{
+    labelLeft ="guest";
   }
   nl.innerHTML = `<span class="identity-label">${translate(labelLeft)}</span>`;
 
