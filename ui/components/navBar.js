@@ -5,7 +5,6 @@
 
 import { initLangSwitch } from "../langController.js";
 import { getContext } from "../../core/context.js";
-import { PLACES } from "../../data/places.js";
 import { translate } from "../utils/translate.js";
 
 /* ===================================================== */
@@ -19,7 +18,11 @@ export function renderNavBar(){
     <div class="nav">
       <div class="nav-bar nav-left">Haven</div>
 
-      <div class="nav-bar nav-center"></div>
+      <div class="nav-bar nav-center">
+        <button class="context-btn">
+          
+        </button>
+      </div>
 
       <div class="nav-bar nav-right">
         <div id="langSwitch" class="lang-switch">
@@ -29,58 +32,50 @@ export function renderNavBar(){
       </div>
     </div>
   `;
-
+  renderLeft();
   initLangSwitch();
   renderCenter();
   bindCenterClick();
+}
+/* ===================================================== */
+
+function renderLeft(){
+  const label = "guest";
+  const nl = document.querySelector(".nav-left");
+  if(anchor?.type==="room") {
+    label=anchor.id;
+  }
+  if(anchor?.type==="table") {
+    label="table_guest";
+  }
+  if(anchor?.type==="area") {
+    label="area_guest";
+  }
+  nl.innerHTML = `<span class="identity-label">${translate(label)}</span>`;
 }
 
 /* ===================================================== */
 /* CENTER: hiển thị nơi phục vụ hiện tại */
 
 function renderCenter(){
-
-  const el = document.querySelector(".nav-center");
-  const nl = document.querySelector(".nav-left");
-  if(!el) return;
-
   const ctx = getContext();
-  const active = ctx?.active;
-
-  if(!active){
-    el.innerHTML = `
-      <span class="no-context">
-        ${translate("select_place")}
-      </span>
-    `;
-    return;
-  }
-
-  const group = PLACES[active.type + "s"];
-  const place = group?.[active.id];
   const anchor = ctx?.anchor;
-  let label;
-  if(!place){
+  const active = ctx?.active;
+  const el = document.querySelector(".nav-center button");
+  
+  if(!el) return;
+  let label="select_place";
+  if(!active){
+    if( active.type === "room"&&anchor?.type==="room"&&anchor.id === active.id){
+      label = "in_room";
+    }else{
+      label = active.id;
+    }
+  }
     el.innerHTML = `
-      <span class="no-context">
-        ${translate("select_place")}
-      </span>
-    `;
-    return;
-  }
-  nl.innerHTML = `${translate(place.label)} `;
-  if( active.type === "room"&&
-      anchor?.type==="room"&&   
-      anchor.id === active.id
-  ){
-    label = "in_room";
-  }else{
-    label = place.label;
-  }
-  el.innerHTML = `
     <span class="ctx-icon">${icon(active.type)}</span>
-    <span class="ctx-label">${translate(label)}</span>
-  `;
+      <span class="no-context">${translate(label)};</span>
+    `;
 }
 
 /* ===================================================== */
@@ -97,7 +92,7 @@ function icon(type){
 
 function bindCenterClick(){
 
-  const el = document.querySelector(".nav-center");
+  const el = document.querySelector(".nav-center button");
   if(!el) return;
 
   el.onclick = ()=>{

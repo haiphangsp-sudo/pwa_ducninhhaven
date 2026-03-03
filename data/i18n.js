@@ -52,6 +52,9 @@ in_room:{vi:"Trong phòng",en:"In room"},
 room:{vi:"Phòng",en:"Room"},
 table:{vi:"Bàn",en:"Tables"},
 area:{vi:"Khu vực",en:"Areas"},
+guest:{vi:"Khách",en:"Guest"},
+table_guest:{vi:"Khách bàn",en:"Table guest"},
+area_guest:{vi:"Khách khu vực",en:"Area guest"},
 
   sending:{
     vi:"Đang gửi yêu cầu…",
