@@ -105,5 +105,5 @@ function bindCenterClick(){
 /* EXTERNAL REFRESH */
 
 export function updateNavContext(){
-  renderCenter();
+  render();
 }
