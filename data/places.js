@@ -1,9 +1,9 @@
 export const PLACES = {
 
   rooms:{
-    olive:{ label:{vi:"Phòng Olive",en:"Olive Room"} },
-    juniper:{ label:{vi:"Phòng Juniper",en:"Juniper Room"} },
-    cloud:{ label:{vi:"Phòng Cloud",en:"Cloud Room"} }
+    Olive:{ label:{vi:"Phòng Olive",en:"Olive Room"} },
+    Juniper:{ label:{vi:"Phòng Juniper",en:"Juniper Room"} },
+    Cloud:{ label:{vi:"Phòng Cloud",en:"Cloud Room"} }
   },
 
   tables:{
@@ -13,10 +13,11 @@ export const PLACES = {
   },
 
   areas:{
-    courtyard:{ label:{vi:"Sân giếng",en:"Courtyard"} },
-    pergola:{ label:{vi:"Pergola",en:"Pergola"} },
-    lounge:{ label:{vi:"Lounge",en:"Lounge"} },
-    dining:{ label:{vi:"Phòng ăn",en:"Dining room"} }
+    Courtyard:{ label:{vi:"Sân giếng",en:"Courtyard"} },
+    Pergola:{ label:{vi:"Pergola",en:"Pergola"} },
+    Lounge:{ label:{vi:"Lounge",en:"Lounge"} },
+    Dining:{ label:{vi:"Phòng ăn",en:"Dining room"} },
+    Garden:{ label:{vi:"Vườn",en:"Garden"} }
   }
 
 };
