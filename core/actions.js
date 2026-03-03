@@ -28,20 +28,23 @@ export function addToCart(item){
 
 export function sendInstant(action){
 
-  const ctx=getContext();
-  if(!ctx){
+  const ctx = getContext();
+
+  if(!ctx?.active){
     window.dispatchEvent(new Event("openPlacePicker"));
     return;
   }
 
   enqueue({
-    target:ctx.anchor.id,
+    target: ctx.active.id,
     action,
+    payload:{},
     ts:Date.now()
   });
 
   setState({ack:{state:"show"}});
 }
+
 export function sendCart(){
 
   const place = getActivePlace();

@@ -75,34 +75,36 @@ export async function processQueue(){
     try{
 
       // BUILD PAYLOAD CHUẨN CHO API (supports multi-item order)
-const ctx = getContext();
+      const ctx = getContext();
 const anchor = ctx?.anchor;
+const active = ctx?.active;
+
 let body;
 
 if(job.action?.kind==="order" && Array.isArray(job.payload?.items)){
 
-  // MULTI ITEMS ORDER
-  body={
-    id:crypto.randomUUID(),
-    place:job.target,
-    room:anchor?.type==="room" ? anchor.id : "",
+  body = {
+    id: crypto.randomUUID(),
+    place: active?.id || "",
+    placeType: active?.type || "",
+    room: anchor?.type==="room" ? anchor.id : "",
     mode:"service",
-    category:"order",
-    items:job.payload.items
+    category: job.payload.items[0]?.category || "food",
+    items: job.payload.items
   };
 
 }else{
 
-  // SINGLE ACTION (service / instant)
-  body={
-    id:crypto.randomUUID(),
-    place:job.target,
-    room:anchor?.type==="room" ? anchor.id : "",
+  body = {
+    id: crypto.randomUUID(),
+    place: active?.id || "",
+    placeType: active?.type || "",
+    room: anchor?.type==="room" ? anchor.id : "",
     mode:"service",
-    category:job.action?.kind || "",
-    item:job.action?.code || "",
-    option:job.payload?.option || "",
-    qty:job.payload?.qty || 1
+    category: job.action?.category || "",
+    item: job.action?.code || "",
+    option: job.payload?.option || "",
+    qty: job.payload?.qty || 1
   };
 }
 

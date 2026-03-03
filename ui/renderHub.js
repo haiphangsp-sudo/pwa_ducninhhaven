@@ -18,25 +18,24 @@ export function renderHub(){
   const ctx = getContext();
 
   // ---- QUYỀN DỰA TRÊN ANCHOR, fallback sang ACTIVE ----
-  const anchorType =
-    ctx?.anchor?.type ||
-    ctx?.active?.type ||
-    null;
+
+  const anchorType = ctx?.anchor?.type || null;
 
   const panels = Object.keys(MENU).filter(key=>{
-    const cat = MENU[key];
+  const cat = MENU[key];
 
-    // không có allow → luôn hiển thị
-    if(!cat.allow) return true;
+  if(!cat.active) return false;
 
-    // chưa có anchor → coi như khách vãng lai
-    if(!anchorType){
-      return cat.allow.includes("table") ||
-             cat.allow.includes("area");
-    }
+  if(!cat.allow) return true;
 
-    return cat.allow.includes(anchorType);
-  });
+  if(!anchorType){
+    // visitor mặc định chỉ xem được table/area
+    return cat.allow.includes("table") ||
+           cat.allow.includes("area");
+  }
+
+  return cat.allow.includes(anchorType);
+});
 
   // fallback nếu vẫn rỗng (an toàn tuyệt đối)
   if(!panels.length){
