@@ -75,7 +75,8 @@ export async function processQueue(){
     try{
 
       // BUILD PAYLOAD CHUẨN CHO API (supports multi-item order)
-
+const ctx = getContext();
+const anchor = ctx?.anchor;
 let body;
 
 if(job.action?.kind==="order" && Array.isArray(job.payload?.items)){
