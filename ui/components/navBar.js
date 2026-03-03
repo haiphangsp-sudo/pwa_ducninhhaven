@@ -66,7 +66,10 @@ function renderCenter(){
     `;
     return;
   }
-
+  if(active.type === "room"&&
+    active.anchor?.type==="room"){
+    place.label = `${translate("in_room")}`;
+  }
   el.innerHTML = `
     <span class="ctx-icon">${icon(active.type)}</span>
     <span class="ctx-label">${translate(place.label)}</span>
