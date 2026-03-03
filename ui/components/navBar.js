@@ -38,6 +38,12 @@ export function renderNavBar(){
   bindCenterClick();
 }
 /* ===================================================== */
+  const ctx = getContext();
+  const anchor = ctx?.anchor;
+  const active = ctx?.active;
+/* ===================================================== */
+
+
 
 function renderLeft(){
   const label = "guest";
@@ -58,9 +64,7 @@ function renderLeft(){
 /* CENTER: hiển thị nơi phục vụ hiện tại */
 
 function renderCenter(){
-  const ctx = getContext();
-  const anchor = ctx?.anchor;
-  const active = ctx?.active;
+  
   const el = document.querySelector(".nav-center button");
   
   if(!el) return;
