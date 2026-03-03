@@ -67,7 +67,7 @@ function render(){
   
   if(!el) return;
   let label="select_place";
-  if(!active){
+  if(active){
     if( active.type === "room"&&anchor?.type==="room"&&anchor.id === active.id){
       label = "in_room";
     }else{
