@@ -60,8 +60,6 @@ function render(){
 
 /* ===================================================== */
 /* CENTER: hiển thị nơi phục vụ hiện tại */
-
-
   
   const el = document.querySelector(".nav-center button");
   
@@ -75,7 +73,7 @@ function render(){
     }
   }
     el.innerHTML = `
-    <span class="ctx-icon">${icon(active.type)}</span>
+    <span class="ctx-icon">${icon(anchor?.type)}</span>
       <span class="no-context">${translate(label)};</span>
     `;
 }
