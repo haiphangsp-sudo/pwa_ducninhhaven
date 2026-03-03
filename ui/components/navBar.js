@@ -32,38 +32,35 @@ export function renderNavBar(){
       </div>
     </div>
   `;
-  renderLeft();
+  render();
   initLangSwitch();
-  renderCenter();
   bindCenterClick();
 }
-/* ===================================================== */
+
+
+function render(){
+  const labelLeft = "guest";
+  const nl = document.querySelector(".nav-left");
   const ctx = getContext();
   const anchor = ctx?.anchor;
   const active = ctx?.active;
-/* ===================================================== */
 
-
-
-function renderLeft(){
-  const label = "guest";
-  const nl = document.querySelector(".nav-left");
   if(anchor?.type==="room") {
-    label=anchor.id;
+    labelLeft=anchor.id;
   }
   if(anchor?.type==="table") {
-    label="table_guest";
+    labelLeft="table_guest";
   }
   if(anchor?.type==="area") {
-    label="area_guest";
+    labelLeft="area_guest";
   }
-  nl.innerHTML = `<span class="identity-label">${translate(label)}</span>`;
-}
+  nl.innerHTML = `<span class="identity-label">${translate(labelLeft)}</span>`;
+
 
 /* ===================================================== */
 /* CENTER: hiển thị nơi phục vụ hiện tại */
 
-function renderCenter(){
+
   
   const el = document.querySelector(".nav-center button");
   
