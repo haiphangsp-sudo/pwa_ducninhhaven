@@ -4,6 +4,7 @@
 import { sendRequest } from "../services/api.js";
 import { setState } from "./state.js";
 import { getRetryDelay } from "../services/retryPolicy.js";
+import { getContext } from "./context.js";
 
 const STORAGE_KEY = "haven_queue";
 
@@ -83,6 +84,7 @@ if(job.action?.kind==="order" && Array.isArray(job.payload?.items)){
   body={
     id:crypto.randomUUID(),
     place:job.target,
+    room:anchor?.type==="room" ? anchor.id : "",
     mode:"service",
     category:"order",
     items:job.payload.items
@@ -94,6 +96,7 @@ if(job.action?.kind==="order" && Array.isArray(job.payload?.items)){
   body={
     id:crypto.randomUUID(),
     place:job.target,
+    room:anchor?.type==="room" ? anchor.id : "",
     mode:"service",
     category:job.action?.kind || "",
     item:job.action?.code || "",
