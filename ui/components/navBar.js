@@ -59,6 +59,7 @@ function renderCenter(){
   const group = PLACES[active.type + "s"];
   const place = group?.[active.id];
   const anchor = ctx?.anchor;
+  let label;
   if(!place){
     el.innerHTML = `
       <span class="no-context">
@@ -72,11 +73,13 @@ function renderCenter(){
       anchor?.type==="room"&&   
       anchor.id === active.id
   ){
-    place.label = `${translate("in_room")}`;
+    label = "in_room";
+  }else{
+    label = place.label;
   }
   el.innerHTML = `
     <span class="ctx-icon">${icon(active.type)}</span>
-    <span class="ctx-label">${translate(place.label)}</span>
+    <span class="ctx-label">${translate(label)}</span>
   `;
 }
 
