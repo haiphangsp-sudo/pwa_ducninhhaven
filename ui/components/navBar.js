@@ -57,7 +57,7 @@ function renderCenter(){
 
   const group = PLACES[active.type + "s"];
   const place = group?.[active.id];
-
+  const anchor = ctx?.anchor;
   if(!place){
     el.innerHTML = `
       <span class="no-context">
