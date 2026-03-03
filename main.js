@@ -33,12 +33,18 @@ function applyURLContext(){
   const params = new URLSearchParams(location.search);
   const placeId = params.get("place");
   if(!placeId) return;
-
+  const resolved = resolvePlace(placeId);
+  if(!resolved) return;
+  const ctx = getContext();
+  const currentType = ctx?.anchor?.type || ctx?.active?.type;
+  const nextType = resolved.type;
+  setActive(resolved);
   const place = resolvePlace(placeId.toLowerCase());
-  if(place){
-    setAnchor(place);
+  if(!currentType){
+    setAnchor(resolved);
+  }else if(currentType !== "room" && nextType=="room"){
+    setAnchor(resolved);
   }
-
   // quan trọng: xoá param để tránh reset khi reload
   history.replaceState({}, "", location.pathname);
 }
