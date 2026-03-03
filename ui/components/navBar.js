@@ -66,8 +66,10 @@ function renderCenter(){
     `;
     return;
   }
-  if(active.type === "room"&&
-    active.anchor?.type==="room"){
+  if( active.type === "room"&&
+      anchor?.type==="room"&&   
+      anchor.id === active.id
+  ){
     place.label = `${translate("in_room")}`;
   }
   el.innerHTML = `
