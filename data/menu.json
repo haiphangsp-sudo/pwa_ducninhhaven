@@ -97,7 +97,7 @@
   "service":{
     "label":{"vi":"Dịch vụ phòng","en":"Room service"},
     "allow":["room"],
-    "type":"instant",
+    "type":"cart",
     "active":true,
     "items":{
       "cleaning":{
