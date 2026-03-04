@@ -14,8 +14,8 @@ export const PLACES = {
 
   areas:{
     Courtyard:{ label:{vi:"Sân giếng",en:"Courtyard"} },
-    Pergola:{ label:{vi:"Pergola",en:"Pergola"} },
-    Lounge:{ label:{vi:"Lounge",en:"Lounge"} },
+    Pergola:{ label:{vi:"Giàn Pergola",en:"Pergola"} },
+    Lounge:{ label:{vi:"Phòng chờ",en:"Lounge"} },
     Dining:{ label:{vi:"Phòng ăn",en:"Dining room"} },
     Garden:{ label:{vi:"Vườn",en:"Garden"} }
   }
