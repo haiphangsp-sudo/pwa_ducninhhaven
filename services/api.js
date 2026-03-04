@@ -8,30 +8,16 @@
 import { CONFIG } from "../config.js";
 import { isOnline, fetchWithTimeout } from "./network.js";
 import { markSuccess } from "./health.js";
-
 export async function sendRequest(payload) {
 
   if (!isOnline()) {
     throw new Error("offline");
   }
 
-  // Tạo body dạng form-urlencoded
-  const params = new URLSearchParams();
-
   const fullPayload = {
     ...payload,
     secret: CONFIG.API_SECRET
   };
-
-  Object.keys(fullPayload).forEach(key => {
-    const value = fullPayload[key];
-
-    if (Array.isArray(value)) {
-      params.append(key, JSON.stringify(value));
-    } else if (value !== undefined && value !== null) {
-      params.append(key, value);
-    }
-  });
 
   let res;
 
@@ -41,7 +27,10 @@ export async function sendRequest(payload) {
       CONFIG.API_ENDPOINT,
       {
         method: "POST",
-        body: params
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(fullPayload)
       },
       6000
     );
