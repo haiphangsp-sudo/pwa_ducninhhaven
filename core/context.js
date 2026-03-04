@@ -6,7 +6,7 @@ import { PLACES } from "../data/places.js";
 import { updateNavContext } from "../ui/components/navBar.js";
 
 const KEY="haven_context";
-const ACTIVE_TTL = 60*60*1000;      // 60 phút
+const ACTIVE_TTL = 30*60*1000;      // 60 phút
 const ANCHOR_TTL = 24*60*60*1000;   // 24 giờ
 
 /* -------------------------------------------------- */
