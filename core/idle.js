@@ -11,7 +11,6 @@ export function resetIdleTimer(){
 
     setState({
       view:{ panel:"intro" },
-      cart:{items:[]},
       ack:{state:"hidden"}   // chỉ đóng overlay xác nhận nếu còn
     });
 
