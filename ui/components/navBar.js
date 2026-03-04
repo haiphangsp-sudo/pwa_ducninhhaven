@@ -91,5 +91,17 @@ function bindClick(){
 /* EXTERNAL REFRESH */
 
 export function updateNavContext(){
-  updateText();
+  const identityIcon = document.querySelector(".identity-icon");
+  const identityLabel = document.querySelector(".identity-label");
+  const locLabel = document.querySelector(".loc-label");
+
+  if(!identityIcon || !identityLabel || !locLabel) return;
+
+  const ctx = getContext();
+  const anchor = ctx?.anchor;
+  const active = ctx?.active;
+
+  identityIcon.textContent = icon(anchor?.type);
+  identityLabel.textContent = translate(anchor?.type === "room" ? anchor.id : "table_guest");
+  locLabel.textContent = formatLocation(ctx);
 }
