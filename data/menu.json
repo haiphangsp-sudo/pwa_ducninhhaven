@@ -110,7 +110,8 @@
           "morning":{"label":{"vi":"Buổi sáng","en":"Morning"},"active":true},
           "afternoon":{"label":{"vi":"Buổi chiều","en":"Afternoon"},"active":true},
           "evening":{"label":{"vi":"Buổi tối","en":"Evening"},"active":true}
-        }
+        },
+        "defaultOption":"morning"
       }
     }
   },
