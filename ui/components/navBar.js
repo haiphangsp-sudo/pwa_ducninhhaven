@@ -8,8 +8,6 @@ import { PLACES } from "../../data/places.js";
 /* ===================================================== */
 
 export function renderNavBar(){
-  const el = document.getElementById("contextBar");
-  if(!el) return;
 
   let labelLeft="table_guest"; 
   const ctx = getContext();
@@ -26,27 +24,10 @@ export function renderNavBar(){
     labelLeft="area_guest";
   }
 
-  el.innerHTML = `
-    <div class="nav">
-      <div class="nav-bar nav-left">
-        <span class="identity-icon">${icon(anchor?.type)}</span>
-        <span class="identity-label">${translate(labelLeft)}</span>
-      </div>
-      <div class="nav-bar nav-center">
-        <button class="location-btn">
-          <span class="loc-label">${formatLocation(ctx)}</span>
-          <span class="loc-arrow">▾</span>
-        </button>
-      </div>
+  document.querySelector(".nav-left .identity-icon").textContent = icon(anchor?.type);
+  document.querySelector(".nav-left .identity-label").textContent = translate(labelLeft);
+  document.querySelector(".nav-center .loc-label").textContent = formatLocation(ctx);
 
-      <div class="nav-bar nav-right">
-        <div id="langSwitch" class="lang-switch">
-          <button data-lang="vi">VI</button>
-          <button data-lang="en">EN</button>
-        </div>
-      </div>
-    </div>
-  `;
   updateNavContext();
   initLangSwitch();
   bindClick();

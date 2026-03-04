@@ -11,41 +11,31 @@ export function renderCartBar(){
   const bar = document.getElementById("cartBar");
   if(!bar) return;
 
-  /* ---------- no items ---------- */
+  const count = UI.cart.items.reduce((a,b)=>a+b.qty,0);
 
-  if(UI.cart.items.length===0){
+  /* no items */
+
+  if(count===0){
     bar.classList.add("hidden");
-    bar.onclick=null;
     return;
   }
 
   bar.classList.remove("hidden");
 
-  const count = UI.cart.items.reduce((a,b)=>a+b.qty,0);
+  const ctx = getContext();
 
-  /* ---------- label ---------- */
+  const countEl = document.getElementById("cartCount");
+  const sendBtn = document.getElementById("cartSend");
 
-  const ctx=getContext();
-
-  let label;
-  if(!ctx)
-    label="select_place";
-  else
-    label="send_order";
-
-  bar.innerHTML=`
-    <div class="cart-label">
-      ${count} · ${translate(label)}
-    </div>
-  `;
-
-  /* ---------- interaction ---------- */
+  countEl.textContent = count;
 
   if(!ctx){
-    bar.onclick=()=>window.dispatchEvent(new Event("openPlacePicker"));
+    sendBtn.textContent = translate("select_place");
+    sendBtn.onclick = ()=>window.dispatchEvent(new Event("openPlacePicker"));
     bar.classList.add("need-context");
   }else{
-    bar.onclick=sendCart;
+    sendBtn.textContent = translate("send_order");
+    sendBtn.onclick = sendCart;
     bar.classList.remove("need-context");
   }
 }

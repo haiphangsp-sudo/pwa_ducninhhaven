@@ -23,7 +23,26 @@
 <body>
 
     <div id="app">
-        <div id="contextBar"></div>
+        <div id="contextBar">
+            <div class="nav">
+                <div class="nav-bar nav-left">
+                     <span class="identity-icon"></span>
+                    <span class="identity-label"></span>
+                </div>
+                <div class="nav-bar nav-center">
+                    <button class="location-btn">
+                        <span class="loc-label"></span>
+                        <span class="loc-arrow">▾</span>
+                    </button>
+                </div>
+                <div class="nav-bar nav-right">
+                    <div id="langSwitch" class="lang-switch">
+                    <button data-lang="vi">VI</button>
+                    <button data-lang="en">EN</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div id="hub">
             <aside id="hubMenu"></aside>
             <section id="hubContent"></section>
@@ -33,7 +52,13 @@
         <!-- Delivery Banner -->
         <div id="deliveryStatus" class="delivery-banner hidden"></div>
         <div id="recoveryBanner" class="recovery-banner hidden"></div>
-        <div id="cartBar" class="hidden"></div>
+        <div id="cartBar" class="cart-bar hidden">
+            <div class="cart-info">
+                <span class="cart-icon">🛒</span>
+                <span id="cartCount"></span>
+            </div>
+            <button id="cartSend" class="cart-send"></button>
+        </div>
     </div>
 
     <script type="module" src="main.js"></script>
