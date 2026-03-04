@@ -88,7 +88,6 @@ if(job.type==="cart"){
     place: active?.id || "",
     placeType: active?.type || "",
     room: anchor?.type==="room" ? anchor.id : "",
-    mode:"service",
     category: job.items[0]?.category || "",
     items: job.items
   };
@@ -100,7 +99,6 @@ if(job.type==="cart"){
     place: active?.id || "",
     placeType: active?.type || "",
     room: anchor?.type==="room" ? anchor.id : "",
-    mode:"service",
     category: job.category || "",
     item: job.item || "",
     option: job.option || "",
