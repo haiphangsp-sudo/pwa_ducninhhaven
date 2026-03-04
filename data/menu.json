@@ -100,8 +100,18 @@
     "type":"instant",
     "active":true,
     "items":{
-      "cleaning":{"label":{"vi":"Dọn phòng","en":"Housekeeping"},"active":true},
-      "footbath":{"label":{"vi":"Ngâm chân","en":"Foot bath"},"active":true}
+      "cleaning":{
+        "label":{"vi":"Dọn phòng","en":"Housekeeping"},
+        "active":true},
+      "footbath":{
+        "label":{"vi":"Ngâm chân","en":"Foot bath"},
+        "active":true,
+        "options":{
+          "morning":{"label":{"vi":"Buổi sáng","en":"Morning"},"active":true},
+          "afternoon":{"label":{"vi":"Buổi chiều","en":"Afternoon"},"active":true},
+          "evening":{"label":{"vi":"Buổi tối","en":"Evening"},"active":true}
+        }
+      }
     }
   },
 
