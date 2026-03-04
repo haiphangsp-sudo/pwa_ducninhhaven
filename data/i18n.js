@@ -55,7 +55,7 @@ area:{vi:"Khu vực",en:"Areas"},
 guest:{vi:"Khách",en:"Guest"},
 table_guest:{vi:"Khách bàn",en:"Table guest"},
 area_guest:{vi:"Khách khu vực",en:"Area guest"},
-
+haven:{vi:"Haven",en:"Haven"},
   sending:{
     vi:"Đang gửi yêu cầu…",
     en:"Sending request…"

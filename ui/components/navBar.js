@@ -63,13 +63,13 @@ function icon(type){
 
 function formatLocation(ctx){
 
-  const {type,id} = ctx.active;
-  const group = type + "s";
-  const place = PLACES[group]?.[id];
-
   if(!ctx?.active){
     return translate("select_place");
   }
+
+  const {type,id} = ctx.active;
+  const group = type + "s";
+  const place = PLACES[group]?.[id];
 
   if(ctx.active.type === "room" && ctx.anchor?.type==="room" && ctx.active.id === ctx.anchor.id){
     return translate("in_room");
@@ -105,18 +105,20 @@ export function updateNavContext(){
   const ctx = getContext();
   const anchor = ctx?.anchor;
   const active = ctx?.active;
-  let labelLeft="table_guest"; 
+  let labelLeft="haven"; 
   if(anchor?.type==="room") {
     labelLeft=anchor.id;
-  }
-  if(anchor?.type==="table") {
+  }else if(anchor?.type==="table") {
     labelLeft="table_guest";
-  }
-  if(anchor?.type==="area") {
+  }else if(anchor?.type==="area") {
     labelLeft="area_guest";
   }
   identityIcon.textContent = icon(anchor?.type);
-  //identityLabel.textContent = translate(anchor?.type === "room" ? anchor.id : "table_guest");
-  locLabel.textContent = formatLocation(ctx);
   identityLabel.textContent = translate(labelLeft);
+  //identityLabel.textContent = translate(anchor?.type === "room" ? anchor.id : anchor?.type === "table" ? "table_guest" : "area_guest");
+  if(!ctx){
+    locLabel.textContent = translate("select_place");
+  }else{
+    locLabel.textContent = formatLocation(ctx);
+  }
 }
