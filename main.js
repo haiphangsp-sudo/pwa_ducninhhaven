@@ -116,6 +116,7 @@ async function boot(){
   });
 
   watchMenu();
+  setInterval (updatteNavContext, 30000); // cập nhật context mỗi 30s để đảm bảo thông tin vị trí luôn mới nhất
 }
 
 boot();
