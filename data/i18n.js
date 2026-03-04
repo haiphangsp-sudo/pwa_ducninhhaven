@@ -26,8 +26,8 @@ delivery:{
     en:"Sending request..."
   },
   ack:{
-  vi:"Đã nhận thao tác",
-  en:"Registered"
+  vi:"Đã ghi nhận",
+  en:"Received"
 },
   sent:{
     vi:"Đã gửi tới bếp",
