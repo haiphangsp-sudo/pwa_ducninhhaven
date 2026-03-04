@@ -48,6 +48,7 @@ export function renderNavBar(){
       </div>
     </div>
   `;
+  updateNavContext();
   initLangSwitch();
   bindClick();
 }
@@ -61,15 +62,19 @@ function icon(type){
 }
 
 function formatLocation(ctx){
-  if(!ctx?.active){
-    return translate("select_place");
-  }
-  if(ctx.active.type === "room" && ctx.anchor?.type==="room" && ctx.active.id === ctx.anchor.id){
-    return translate("in_room");
-  }
+
   const {type,id} = ctx.active;
   const group = type + "s";
   const place = PLACES[group]?.[id];
+
+  if(!ctx?.active){
+    return translate("select_place");
+  }
+
+  if(ctx.active.type === "room" && ctx.anchor?.type==="room" && ctx.active.id === ctx.anchor.id){
+    return translate("in_room");
+  }
+  
   if(!place) return id;
   return translate(place.label);
 
@@ -100,8 +105,18 @@ export function updateNavContext(){
   const ctx = getContext();
   const anchor = ctx?.anchor;
   const active = ctx?.active;
-
+  let labelLeft="table_guest"; 
+  if(anchor?.type==="room") {
+    labelLeft=anchor.id;
+  }
+  if(anchor?.type==="table") {
+    labelLeft="table_guest";
+  }
+  if(anchor?.type==="area") {
+    labelLeft="area_guest";
+  }
   identityIcon.textContent = icon(anchor?.type);
-  identityLabel.textContent = translate(anchor?.type === "room" ? anchor.id : "table_guest");
+  //identityLabel.textContent = translate(anchor?.type === "room" ? anchor.id : "table_guest");
   locLabel.textContent = formatLocation(ctx);
+  identityLabel.textContent = translate(labelLeft);
 }
