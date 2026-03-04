@@ -5,14 +5,12 @@
     "type":"article",
     "active":true,
     "items":{
-      "article_1":{
-        "label":{"vi":"Tiêu đề 1","en":"Hello"},
-        "content":{"vi":"Nội dung 1","en":"Content one"},
-        "active":true
-      },
-      "article_2":{
-        "label":{"vi":"Tiêu đề 2","en":"ABC"},
-        "content":{"vi":"Nội dung 2","en":"DFG"},
+      "welcome":{
+        "label":{"vi":"Chào mừng","en":"Welcome"},
+        "content":{
+          "vi":"Chúng tôi hy vọng bạn có thời gian thư giãn tại Duc Ninh Haven.",
+          "en":"We hope you enjoy a relaxing stay at Duc Ninh Haven."
+        },
         "active":true
       }
     }
@@ -20,27 +18,21 @@
 
   "food":{
     "label":{"vi":"Bữa ăn","en":"Food"},
-    "allow":["room","table","area"],
+    "allow":["room","table"],
     "type":"cart",
     "active":true,
     "items":{
+
       "breakfast":{
         "label":{"vi":"Bữa sáng","en":"Breakfast"},
-        "defaultOption":"chicken_pho",
+        "defaultOption":"pho",
         "active":true,
         "options":{
-          "chicken_pho":{
-            "label":{"vi":"Phở gà","en":"Chicken Pho"},
-            "price":0,
-            "active":true
-          },
-          "pan_bread":{
-            "label":{"vi":"Bánh mì chảo","en":"Pan bread"},
-            "price":0,
-            "active":true
-          }
+          "pho":{"label":{"vi":"Phở gà","en":"Chicken Pho"},"price":0,"active":true},
+          "bread":{"label":{"vi":"Bánh mì chảo","en":"Pan bread"},"price":0,"active":true}
         }
       }
+
     }
   },
 
@@ -62,7 +54,7 @@
       },
 
       "cappuccino":{
-        "label":{"vi":"Cà phê sữa","en":"Cappuccino"},
+        "label":{"vi":"Cappuccino","en":"Cappuccino"},
         "defaultOption":"hot",
         "active":true,
         "options":{
@@ -97,22 +89,41 @@
   "service":{
     "label":{"vi":"Dịch vụ phòng","en":"Room service"},
     "allow":["room"],
+    "type":"instant",
+    "active":true,
+    "items":{
+
+      "cleaning":{
+        "label":{"vi":"Dọn phòng","en":"Housekeeping"},
+        "active":true
+      },
+
+      "laundry":{
+        "label":{"vi":"Giặt đồ","en":"Laundry service"},
+        "active":true
+      }
+
+    }
+  },
+
+  "spa":{
+    "label":{"vi":"Thư giãn","en":"Relax"},
+    "allow":["room"],
     "type":"cart",
     "active":true,
     "items":{
-      "cleaning":{
-        "label":{"vi":"Dọn phòng","en":"Housekeeping"},
-        "active":true},
+
       "footbath":{
-        "label":{"vi":"Ngâm chân","en":"Foot bath"},
+        "label":{"vi":"Ngâm chân thảo dược","en":"Herbal foot bath"},
+        "defaultOption":"evening",
         "active":true,
         "options":{
-          "morning":{"label":{"vi":"Buổi sáng","en":"Morning"},"active":true},
-          "afternoon":{"label":{"vi":"Buổi chiều","en":"Afternoon"},"active":true},
-          "evening":{"label":{"vi":"Buổi tối","en":"Evening"},"active":true}
-        },
-        "defaultOption":"morning"
+          "morning":{"label":{"vi":"Buổi sáng","en":"Morning"},"price":0,"active":true},
+          "afternoon":{"label":{"vi":"Buổi chiều","en":"Afternoon"},"price":0,"active":true},
+          "evening":{"label":{"vi":"Buổi tối","en":"Evening"},"price":0,"active":true}
+        }
       }
+
     }
   },
 
@@ -122,7 +133,12 @@
     "type":"instant",
     "active":true,
     "items":{
-      "support":{"label":{"vi":"Gọi lễ tân","en":"Contact reception"},"active":true}
+
+      "reception":{
+        "label":{"vi":"Gọi lễ tân","en":"Contact reception"},
+        "active":true
+      }
+
     }
   }
 }
