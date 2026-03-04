@@ -5,7 +5,7 @@ import { renderCartBar } from "./renderCart.js";
 import { renderAck } from "./renderAck.js";
 import { setDeliveryState } from "./renderDelivery.js";
 import { setRecoveryState } from "./renderRecovery.js";
-import { initLangSwitch } from "./langController.js";
+import { initLangSwitch } from "./utils/translate.js";
 import { renderNavBar } from "./components/navBar.js";
 import { renderHub } from "./renderHub.js";
 
