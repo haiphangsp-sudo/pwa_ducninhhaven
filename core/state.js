@@ -52,7 +52,7 @@ export const UI = {
 
   idle:{
     timer:null,
-    timeoutMs:60000
+    timeoutMs:180000
   }
 
 };

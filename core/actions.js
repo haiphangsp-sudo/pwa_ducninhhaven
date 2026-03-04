@@ -20,6 +20,11 @@ export function addToCart(item){
   if(existing) existing.qty++;
   else UI.cart.items.push({...item,qty:1});
 
+  localStorage.setItem(
+    "haven_cart",
+    JSON.stringify(UI.cart.items)
+  );
+
   setState({cart:{items:UI.cart.items}});
 }
 
@@ -71,4 +76,6 @@ export function sendCart(){
     ack:{state:"show"},
     cart:{items:[]}
   });
+
+  localStorage.removeItem("haven_cart");
 }

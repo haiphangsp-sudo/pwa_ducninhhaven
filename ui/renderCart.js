@@ -26,16 +26,20 @@ export function renderCartBar(){
 
   const countEl = document.getElementById("cartCount");
   const sendBtn = document.getElementById("cartSend");
-
+  const textOrder = "select_place";
   countEl.textContent = count;
 
   if(!ctx){
-    sendBtn.textContent = translate("select_place");
+    textOrder="select_place";
     sendBtn.onclick = ()=>window.dispatchEvent(new Event("openPlacePicker"));
     bar.classList.add("need-context");
   }else{
-    sendBtn.textContent = translate("send_order");
     sendBtn.onclick = sendCart;
     bar.classList.remove("need-context");
+    if(UI.delivery.state==="sending"){
+      textOrder="delivery.pending";
+    }
+    textOrder="send_order";
   }
+  sendBtn.innerText=translate(textOrder);
 }

@@ -90,6 +90,17 @@ function showMenuUpdated(){
   setTimeout(()=>el.remove(),2500);
 }
 
+// - Cập nhật context mới nhất lên NavBar mỗi khi có thay đổi
+function loadContext(){ 
+  window.addEventListener("contextchange", updateNavContext);
+}
+
+// - Lưu giỏ hàng vào localStorage để giữ nguyên khi reload trang
+function loadCart(){
+  const saved = localStorage.getItem("haven_cart");//
+  if(saved) UI.cart = JSON.parse(saved);
+}
+
 /* ---------- BOOT ---------- */
 // - Hàm khởi động ứng dụng, chạy tất cả các thiết lập cần thiết và render giao diện lần đầu
 async function boot(){
@@ -117,8 +128,8 @@ async function boot(){
   });
 
   watchMenu();
-
-  window.addEventListener("contextchange", updateNavContext);
+  loadContext();
+  loadCart();
 }
 
 boot();
