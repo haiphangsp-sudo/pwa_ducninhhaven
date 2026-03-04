@@ -44,15 +44,15 @@ function save(ctx){
 export function setAnchor(place){
 
   const ctx=load();
-
+  const now=Date.now();
   ctx.anchor={
     ...place,
-    ts:Date.now()
+    ts:now
   };
 
   ctx.active={
     ...place,
-    ts:Date.now()
+    ts:now
   };
 
   save(ctx);
@@ -87,21 +87,19 @@ export function getContext(){
   const now=Date.now();
 
   let changed=false;
-
+  // Xoá anchor nếu quá cũ, coi như khách quên quét QR code
   if(ctx.anchor && now-ctx.anchor.ts>ANCHOR_TTL){
     ctx.anchor=null;
+    ctx.active=null;
     changed=true;
   }
-
+// Xoá active nếu quá cũ, coi như khách quên chọn nơi phục vụ
   if(ctx.active && now-ctx.active.ts>ACTIVE_TTL){
     ctx.active=null;
     changed=true;
   }
 
-  if(!ctx.active && ctx.anchor){
-    ctx.active={...ctx.anchor,ts:now};
-    changed=true;
-  }
+
   if(changed) save(ctx);
   
   return ctx;
@@ -117,10 +115,32 @@ export function getActivePlace(){
 export function getAnchor(){
   return getContext()?.anchor || null;
 }
+
+// Chuẩn hoá lại context khi app load, để xoá những chỗ phục vụ đã quá cũ
 export function normalizeContext(){
 
   const ctx=getContext();
   if(!ctx) return;
 
   save(ctx);
+}
+//  Xoá context, ví dụ khi khách rời đi mà quên quét QR code để xoá anchor, hoặc quên chọn nơi phục vụ để xoá active. Hoặc đơn giản là để test.
+export function clearContext(){
+  localStorage.removeItem(KEY);
+  updateNavContext();
+  window.dispatchEvent(new Event("contextChanged"));
+}
+// Cập nhật giao diện nav bar theo context mới, ví dụ sau khi quét QR code hoặc chọn nơi phục vụ
+export function initContext(){
+  normalizeContext();
+  bindClick();
+}
+
+/* ===================================================== */
+
+export function needsPlaceSelection(){
+  const ctx=getContext();
+  if (!ctx) return true;
+  if (!ctx.anchor) return true;
+  return false;
 }
