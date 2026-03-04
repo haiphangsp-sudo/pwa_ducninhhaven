@@ -12,6 +12,7 @@ import { detectRecovery } from "./core/queue.js";
 import { resolvePlace, setAnchor, normalizeContext } from "./core/context.js";
 import { initPlacePicker } from "./ui/components/placePicker.js";
 import { getContext,setActive } from "./core/context.js";
+import { updateNavContext } from "../ui/components/navBar.js";
 
 /* ---------- VERSION ---------- */
 // - Đảm bảo phiên bản SW khớp với phiên bản app
@@ -116,6 +117,8 @@ async function boot(){
   });
 
   watchMenu();
+
+  window.addEventListener("contextchange", updateNavContext);
 }
 
 boot();
