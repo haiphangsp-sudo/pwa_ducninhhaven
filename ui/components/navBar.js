@@ -17,9 +17,15 @@ export function renderNavBar(){
 
   el.innerHTML = `
     <div class="nav">
-      <div class="nav-bar nav-left">Haven</div>
+      <div class="nav-bar nav-left">
+        <span class="identity-icon"></span>
+        <span class="identity-label"></span>
+      </div>
       <div class="nav-bar nav-center">
-        <button class="location-btn"></button>
+        <button class="location-btn">
+          <span class="loc-label"></span>
+          <span class="loc-arrow">▾</span>
+        </button>
       </div>
 
       <div class="nav-bar nav-right">
@@ -30,16 +36,14 @@ export function renderNavBar(){
       </div>
     </div>
   `;
-  render();
+  updateText();
   initLangSwitch();
   bindClick();
 }
 
-
-function render(){
-  let labelLeft="table_guest"; // mặc định là khách bàn, nếu không có anchor thì coi như khách vãng lai
-  const nl = document.querySelector(".nav-left");
-  if(!nl) return;
+// Cập nhật NAVBAR khi context thay đổi, ví dụ sau khi quét QR hoặc chọn nơi phục vụ mới
+function updateText(){
+  let labelLeft="table_guest"; 
   const ctx = getContext();
   const anchor = ctx?.anchor;
   const active = ctx?.active;
@@ -54,17 +58,9 @@ function render(){
     labelLeft="area_guest";
   }
 
-  nl.innerHTML = `<span class="identity-icon">${icon(anchor?.type)}</span>
-  <span class="identity-label">${translate(labelLeft)}</span>`;
-
-
-/* ===================================================== */
-/* CENTER: hiển thị nơi phục vụ hiện tại */
-  
-    const el = document.querySelector(".nav-center button");
-  
-    el.innerHTML = `<span class="loc-label">${formatLocation(ctx)}</span>
-      <span class="loc-arrow">▾</span>`;
+  document.querySelector(".identity-icon").textContent = icon(anchor?.type);
+  document.querySelector(".identity-label").textContent = translate(labelLeft);
+  document.querySelector(".loc-label").textContent = formatLocation(ctx);
 }
 
 /* ===================================================== */
@@ -106,5 +102,5 @@ function bindClick(){
 /* EXTERNAL REFRESH */
 
 export function updateNavContext(){
-  render();
+  updateText();
 }

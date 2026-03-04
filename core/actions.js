@@ -3,7 +3,6 @@
 //   Các component sẽ gọi các hàm này để thực hiện hành động, thay vì thao tác trực tiếp với state hoặc queue
 
 
-import { getActivePlace } from "./context.js";
 import { UI, setState } from "./state.js";
 import { enqueue } from "./queue.js";
 import { getContext } from "./context.js";
