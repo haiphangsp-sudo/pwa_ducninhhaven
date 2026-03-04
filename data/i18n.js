@@ -22,8 +22,8 @@ recovery:{
 },
 delivery:{
   pending:{
-    vi:"Đang gửi yêu cầu...",
-    en:"Sending request..."
+    vi:"Đang gửi...",
+    en:"Sending..."
   },
   ack:{
   vi:"Đã ghi nhận",
