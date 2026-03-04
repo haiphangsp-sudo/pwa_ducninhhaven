@@ -27,12 +27,14 @@ export function addToCart(item){
 
 export function sendInstant(action){
 
+  if(UI.ack.state!=="hidden") return; // tránh gửi nhiều
   const ctx = getContext();
 
   if(!ctx?.active){
     window.dispatchEvent(new Event("openPlacePicker"));
     return;
   }
+  setState({ack:{state:"show"}});
 
   enqueue({
     type:"instant",
@@ -44,17 +46,19 @@ export function sendInstant(action){
     ts: Date.now()
   });
 
-  setState({ack:{state:"show"}});
 }
 
 export function sendCart(){
 
+  if(UI.ack.state!=="hidden") return; // tránh gửi nhiều
   const ctx = getContext();
 
   if(!ctx?.active){
     window.dispatchEvent(new Event("openPlacePicker"));
     return;
   }
+
+  setState({ack:{state:"show"}});
 
   enqueue({
     type:"cart",

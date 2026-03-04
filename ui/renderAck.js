@@ -1,5 +1,8 @@
-import { UI, setState } from "../core/state.js";
+//  renderAck.js
+// ---------- ACKNOWLEDGEMENT RENDER ----------
 
+import { UI, setState } from "../core/state.js";
+import { translate } from "./utils/translate.js";
 let timer=null;
 
 export function renderAck(){
@@ -11,7 +14,7 @@ export function renderAck(){
     el.classList.add("hidden");
     return;
   }
-  el.innerHTML = '<div class="ack-dot"></div>';
+  el.innerHTML = `<div class="ack-dot">${translate("ack")}</div>`;
   el.classList.remove("hidden");
   
   clearTimeout(timer);
