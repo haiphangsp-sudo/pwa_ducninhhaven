@@ -20,5 +20,5 @@ export function renderAck(){
   clearTimeout(timer);
   timer=setTimeout(()=>{
     setState({ ack:{state:"hidden"} });
-  },700);
+  },1400);
 }
