@@ -8,7 +8,6 @@
 .cart-bar.hidden{
   transform:translateY(100%);
   opacity:0;
-  pointer-events:none;
 }
 .cart-info{
   font-size:15px;

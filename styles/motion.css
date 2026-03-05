@@ -1,8 +1,12 @@
 /* styles/motion.css */
 /* Chuyển động nhẹ, không gây khó chịu */
 
-.card{
-  transition:transform .15s ease, box-shadow .15s ease;
+cart-bar{
+  transition:transform .2s ease, opacity .2s ease;
+}
+.cart-bar.hidden{
+  transform:translateY(100%);
+  opacity:0;
 }
 
 /* ACK overlay fade nhanh */
