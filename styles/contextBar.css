@@ -88,8 +88,6 @@
   border-radius:8px;
   cursor:pointer;
   transition:all .15s ease;
-}:hover{
-  background:#dcd8cf;
 }
 
 .lang-switch button.active{
