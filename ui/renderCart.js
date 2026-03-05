@@ -4,7 +4,7 @@
 import { UI } from "../core/state.js";
 import { sendCart } from "../core/actions.js";
 import { getContext } from "../core/context.js";
-import { translate, getLanguage } from "./utils/translate.js";
+import { translate } from "./utils/translate.js";
 import { MENU } from "../core/menuStore.js";
 
 export function renderCartBar(){
@@ -72,9 +72,8 @@ function renderDrawer(){
 
   el.innerHTML="";
   UI.cart.items.forEach((i,index)=>{
-    const lang = getLanguage();
-    const ItemDrawer = MENU[i.category][i.item]["label"][lang];
-    const OptionDrawer = MENU[i.category][i.item][i.option]["label"][lang];
+    const ItemDrawer = translate(MENU[i.category][i.item].label);
+    const OptionDrawer = translate(MENU[i.category][i.item].options[i.option].label);
     const row=document.createElement("div");
     row.className="drawer-item";
     row.innerHTML=`
