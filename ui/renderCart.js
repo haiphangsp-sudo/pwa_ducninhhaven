@@ -104,7 +104,7 @@ document.addEventListener("click",(e)=>{
     UI.cart.items[i].qty++;
 
     renderDrawer();
-    renderCart();
+    renderCartBar();
 
   }
 
@@ -118,7 +118,7 @@ document.addEventListener("click",(e)=>{
       UI.cart.items.splice(i,1);
 
     renderDrawer();
-    renderCart();
+    renderCartBar();
 
   }
    document
