@@ -11,7 +11,11 @@ export function renderCartBar(){
   const bar = document.getElementById("cartBar");
   const Count = document.getElementById("cartCount");
   const total = UI.cart.items.reduce((a,b)=>a+b.qty,0);
-  Count.textContent = `${total} ${translate("cart_bar.items")}`;
+  if(total>1){
+    Count.textContent = `${total} ${translate("cart_bar.items")}`;
+  } else {
+    Count.textContent = `${total} ${translate("cart_bar.item")}`;
+  }
   const ctx = getContext();
 
   const cartBtn = document.getElementById("cartOpen");

@@ -47,6 +47,10 @@ cart_bar:{
     vi:"Giỏ hàng",
     en:"View cart"
   },
+  item:{
+    vi:"món",
+    en:"item"
+  },
   items:{
     vi:"món",
     en:"items"
