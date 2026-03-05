@@ -30,7 +30,7 @@ export function renderCartBar(){
   }
   
   if(!ctx){
-    textOpen="select_place";
+    textOpen="cart_bar.select_place";
     bar.classList.remove("hidden");
     cartBtn.onclick = ()=>window.dispatchEvent(new Event("openPlacePicker"));
     
@@ -45,7 +45,10 @@ export function renderCartBar(){
 // - Lưu giỏ hàng vào localStorage để giữ nguyên khi reload trang
 export function loadCart(){
   const saved = localStorage.getItem("haven_cart");//
-  if(saved) UI.cart = JSON.parse(saved);
+  if(saved) {
+    UI.cart = JSON.parse(saved);
+    renderCartBar();
+  }
 }
 
 export function openCartDrawer(){
@@ -62,34 +65,27 @@ function renderDrawer(){
     textOrder= "cart_bar.send_order";
   }
   document.getElementById("drawerSend").textContent = translate(textOrder);
-  document.getElementsByClassName(".drawer-title").textContent = translate("cart_bar.cart_title");
+  document.querySelector(".drawer-title").textContent = translate("cart_bar.cart_title");
 
   const el=document.getElementById("drawerItems");
 
   el.innerHTML="";
-
   UI.cart.items.forEach((i,index)=>{
-
     const row=document.createElement("div");
-
     row.className="drawer-item";
-
     row.innerHTML=`
-
       <div>
         <strong>${i.item}</strong>
         <div>${i.option}</div>
       </div>
-
       <div class="drawer-qty">
         <button data-i="${index}" class="qty-minus">−</button>
         <span>${i.qty}</span>
         <button data-i="${index}" class="qty-plus">+</button>
       </div>
-
     `;
-
-    el.appendChild(row);
+  });
+  el.appendChild(row);
     document.getElementById("drawerClose").onclick = closeCartDrawer;
 
     document.getElementById("drawerSend").onclick=()=>{ 
@@ -97,8 +93,6 @@ function renderDrawer(){
       closeCartDrawer();
       el.innerHTML="";
      };
-  });
-
 }
 
 export function closeCartDrawer(){
@@ -125,9 +119,12 @@ document.addEventListener("click",(e)=>{
 
     UI.cart.items[i].qty--;
 
-    if(UI.cart.items[i].qty<=0)
+    if(UI.cart.items[i].qty<=0){
       UI.cart.items.splice(i,1);
-
+    }
+    if(UI.cart.items.length==0){
+      closeCartDrawer();
+    }
     renderDrawer();
     renderCartBar();
 
