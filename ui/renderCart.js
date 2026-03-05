@@ -44,3 +44,18 @@ export function renderCartBar(){
   count.textContent = `${total} ${translate("cart_bar.items")}`;
   sendBtn.textContent=translate(textOrder);
 }
+export function openCartDrawer(){
+
+  const drawer=document.getElementById("cartDrawer");
+  drawer.classList.remove("hidden");
+
+  renderDrawer();
+
+}
+
+export function closeCartDrawer(){
+
+  document.getElementById("cartDrawer")
+    .classList.add("hidden");
+
+}
