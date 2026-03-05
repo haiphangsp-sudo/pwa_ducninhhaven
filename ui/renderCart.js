@@ -57,7 +57,7 @@ export function openCartDrawer(){
 }
 
 function renderDrawer(){
-  document.getElementsByClassName("drawer-title").textContent = translate("cart_bar.drawer_title");
+  document.getElementsByClassName("drawer-title")[0].textContent = translate("cart_bar.drawer_title");
   document.getElementById("drawerSend").textContent = translate("cart_bar.send_order");
   const el=document.getElementById("drawerItems");
 
