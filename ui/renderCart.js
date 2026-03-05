@@ -10,8 +10,7 @@ export function renderCartBar(){
 
   const bar = document.getElementById("cartBar");
   const count = document.getElementById("cartCount");
-  const items = UI.cart.items;
-  const total = items.reduce((a,b)=>a+b.qty,0);
+  const total = UI.cart.items.reduce((a,b)=>a+b.qty,0);
 
   //const count = UI.cart.items.reduce((a,b)=>a+b.qty,0);
 
