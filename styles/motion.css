@@ -39,3 +39,11 @@ cart-bar{
   from{transform:scale(.5);opacity:.4}
   to{transform:scale(1.4);opacity:0}
 }
+.cart-bounce{
+  animation:cartBounce .25s ease;
+}
+@keyframes cartBounce{
+  0%{transform:scale(1)}
+  50%{transform:scale(1.15)}
+  100%{transform:scale(1)}
+}

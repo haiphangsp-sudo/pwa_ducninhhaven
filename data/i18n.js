@@ -42,10 +42,15 @@ delivery:{
     en:"Failed — will retry"
   }
 },
-
-send_order:{
-  vi:"Gửi yêu cầu",
-  en:"Send request"
+cart_bar:{
+  items:{
+    vi:"món",
+    en:"items"
+  },
+  send_order:{
+    vi:"Gửi yêu cầu",
+    en:"Send request"
+  }
 },
 select_place:{vi:"Chọn vị trí phục vụ",en:"Select service location"},
 in_room:{vi:"Tại phòng",en:"In room"},

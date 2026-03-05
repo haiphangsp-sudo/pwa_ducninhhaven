@@ -26,6 +26,12 @@ export function addToCart(item){
   );
 
   setState({cart:{items:UI.cart.items}});
+  document.getElementById("cartBar")
+  ?.classList.add("cart-bounce");
+  setTimeout(()=>{
+    document.getElementById("cartBar")
+    ?.classList.remove("cart-bounce");
+  },250);
 }
 
 /* ---------- SEND ---------- */
