@@ -13,15 +13,6 @@ export function renderCartBar(){
 
   const count = UI.cart.items.reduce((a,b)=>a+b.qty,0);
 
-  /* no items */
-
-  if(count===0){
-    bar.classList.add("hidden");
-    return;
-  }
-
-  bar.classList.remove("hidden");
-
   const ctx = getContext();
 
   const countEl = document.getElementById("cartCount");
