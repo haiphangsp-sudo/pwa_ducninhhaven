@@ -78,8 +78,8 @@ function renderDrawer(){
     row.className="drawer-item";
     row.innerHTML=`
       <div>
-        <strong>${translate(MENU[ItemDrawer])}</strong>
-        <div>${translate(MENU[ItemDrawer][OptionDrawer])}</div>
+        <strong>${ItemDrawer}</strong>
+        <div>${OptionDrawer}</div>
       </div>
       <div class="drawer-qty">
         <button data-i="${index}" class="qty-minus">−</button>
