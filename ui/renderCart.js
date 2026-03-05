@@ -5,6 +5,7 @@ import { UI } from "../core/state.js";
 import { sendCart } from "../core/actions.js";
 import { getContext } from "../core/context.js";
 import { translate } from "./utils/translate.js";
+import { MENU } from "../core/menuStore.js";
 
 export function renderCartBar(){
 
@@ -73,13 +74,12 @@ function renderDrawer(){
   UI.cart.items.forEach((i,index)=>{
     const ItemDrawer = i.item;
     const OptionDrawer = i.option;
-    const nameDrawer = ItemDrawer + "." + OptionDrawer; 
     const row=document.createElement("div");
     row.className="drawer-item";
     row.innerHTML=`
       <div>
-        <strong>${translate(ItemDrawer)}</strong>
-        <div>${translate(nameDrawer)}</div>
+        <strong>${translate(MENU[ItemDrawer])}</strong>
+        <div>${translate(MENU[ItemDrawer][OptionDrawer])}</div>
       </div>
       <div class="drawer-qty">
         <button data-i="${index}" class="qty-minus">−</button>

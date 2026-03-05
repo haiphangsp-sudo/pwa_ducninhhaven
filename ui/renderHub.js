@@ -30,8 +30,7 @@ export function renderHub(){
 
   if(!anchorType){
     // visitor mặc định chỉ xem được table/area
-    return cat.allow.includes("table") ||
-           cat.allow.includes("area");
+    return cat.allow.includes("table") || cat.allow.includes("area");
   }
 
   return cat.allow.includes(anchorType);
