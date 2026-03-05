@@ -4,7 +4,7 @@
 import { UI } from "../core/state.js";
 import { sendCart } from "../core/actions.js";
 import { getContext } from "../core/context.js";
-import { translate } from "./utils/translate.js";
+import { translate, getLanguage } from "./utils/translate.js";
 import { MENU } from "../core/menuStore.js";
 
 export function renderCartBar(){
