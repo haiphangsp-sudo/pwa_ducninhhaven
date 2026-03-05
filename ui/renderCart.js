@@ -9,9 +9,9 @@ import { translate } from "./utils/translate.js";
 export function renderCartBar(){
 
   const bar = document.getElementById("cartBar");
-  const count = document.getElementById("cartCount");
+  const Count = document.getElementById("cartCount");
   const total = UI.cart.items.reduce((a,b)=>a+b.qty,0);
-
+  Count.textContent = `${total} ${translate("cart_bar.items")}`;
   const ctx = getContext();
 
   const cartBtn = document.getElementById("cartOpen");
@@ -27,13 +27,14 @@ export function renderCartBar(){
   
   if(!ctx){
     textOpen="select_place";
+    bar.classList.remove("hidden");
     cartBtn.onclick = ()=>window.dispatchEvent(new Event("openPlacePicker"));
     
   }else{
     cartBtn.onclick = openCartDrawer;
     textOpen="cart_bar.cart_title";
   }
-  count.textContent = `${total} ${translate("cart_bar.items")}`;
+  
   cartBtn.textContent=translate(textOpen);
 }
 

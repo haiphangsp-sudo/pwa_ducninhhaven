@@ -45,7 +45,7 @@ delivery:{
 cart_bar:{
   cart_title:{
     vi:"Giỏ hàng",
-    en:"Cart"
+    en:"View cart"
   },
   items:{
     vi:"món",
