@@ -4,16 +4,14 @@
 
 #hubMenu{
   background:linear-gradient(180deg,#ece7dd,#e4dfd4);
-
   padding:18px 10px;
-
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:flex-start;
   gap:18px;
-
   box-shadow:2px 0 8px rgba(0,0,0,.05) inset;
+  overflow:hidden;
 }
 
 
@@ -114,4 +112,10 @@
 
 .hub-btn.disabled{
   opacity:.35;
+}
+
+.option-btn.disabled{
+  opacity:.35;
+  pointer-events:none;
+  filter:grayscale(90%);
 }

@@ -30,3 +30,8 @@
     transform:translate(-50%,0);
   }
 }
+
+@keyframes ack{
+  from{transform:scale(.5);opacity:.4}
+  to{transform:scale(1.4);opacity:0}
+}

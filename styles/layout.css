@@ -11,6 +11,9 @@ body{
   overflow:hidden;   /* ngăn scroll toàn trang */
 }
 
+.hidden{
+  display:none !important;
+}
 
 #app{
   max-width:720px;
@@ -47,30 +50,10 @@ body{
   touch-action:manipulation;  /* giảm delay touch */
 }
 
-
-
-/* menu không scroll */
-#hubMenu{
-  overflow:hidden;
-}
-.hidden{
-  display:none !important;
-}
-
-.option-btn.disabled{
-  opacity:.35;
-  pointer-events:none;
-  filter:grayscale(90%);
-}
 .ack-dot{
   width:10px;
   height:10px;
   border-radius:50%;
   background:#2f4f3e;
   animation:ack .5s ease;
-}
-
-@keyframes ack{
-  from{transform:scale(.5);opacity:.4}
-  to{transform:scale(1.4);opacity:0}
 }

@@ -72,8 +72,6 @@
   flex-direction:column;
   gap:2px;
   justify-self:end;
-  display:flex;
-  align-items:center;
 }
 
 .nav-right .lang-switch{
@@ -104,7 +102,7 @@
   position:fixed; inset:0;
   display:flex; align-items:center; justify-content:center;
   z-index:50;
-}.hiden{display:none}
+}
 
 
 .picker-backdrop{
@@ -182,11 +180,6 @@
 
 .loc-arrow{
   opacity:.5;
-}
-
-.nav-right{
-  display:flex;
-  align-items:center;
 }
 
 .lang-switch button{
