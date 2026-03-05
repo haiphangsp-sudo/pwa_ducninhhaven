@@ -91,7 +91,7 @@ function renderDrawer(){
   });
   
     document.getElementById("drawerClose").onclick = closeCartDrawer;
-    document.getElementById("drawer-backdrop").onclick = closeCartDrawer;
+    document.querySelector(".drawer-backdrop").onclick = closeCartDrawer;
     document.getElementById("drawerSend").onclick=()=>{ 
       sendCart(); 
       closeCartDrawer();
