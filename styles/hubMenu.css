@@ -6,7 +6,7 @@
   background:linear-gradient(180deg,#ece7dd,#e4dfd4);
   padding:18px 10px;
   display:flex;
-  flex-direction:column;
+  flex-direction:row;
   align-items:center;
   justify-content:flex-start;
   gap:18px;
