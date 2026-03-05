@@ -85,7 +85,7 @@ function renderDrawer(){
     `;
 
     el.appendChild(row);
-
+    document.getElementById("drawerClose").onclick = closeCartDrawer;
   });
 
 }
