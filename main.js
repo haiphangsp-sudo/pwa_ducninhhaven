@@ -9,9 +9,8 @@ import { CONFIG } from "./config.js";
 import { resetIdleTimer } from "./core/idle.js";
 import { loadMenu, MENU } from "./core/menuStore.js";
 import { detectRecovery } from "./core/queue.js";
-import { resolvePlace, setAnchor, normalizeContext } from "./core/context.js";
+import { getContext, resolvePlace, setAnchor, setActive, normalizeContext } from "./core/context.js";
 import { initPlacePicker } from "./ui/components/placePicker.js";
-import { getContext,setActive } from "./core/context.js";
 import { updateNavContext } from "../ui/components/navBar.js";
 
 /* ---------- VERSION ---------- */
@@ -95,11 +94,6 @@ function loadContext(){
   window.addEventListener("contextchange", updateNavContext);
 }
 
-// - Lưu giỏ hàng vào localStorage để giữ nguyên khi reload trang
-function loadCart(){
-  const saved = localStorage.getItem("haven_cart");//
-  if(saved) UI.cart = JSON.parse(saved);
-}
 
 /* ---------- BOOT ---------- */
 // - Hàm khởi động ứng dụng, chạy tất cả các thiết lập cần thiết và render giao diện lần đầu
