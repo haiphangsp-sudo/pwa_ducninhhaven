@@ -52,7 +52,7 @@ export function sendInstant(action){
     target: ctx.active.id,
     category: action.category,
     item: action.code,
-    option: "",
+    option: "default",
     qty: 1,
     ts: Date.now()
   });
