@@ -43,6 +43,10 @@ delivery:{
   }
 },
 cart_bar:{
+  cart:{
+    vi:"Giỏ hàng",
+    en:"Cart"
+  },
   items:{
     vi:"món",
     en:"items"

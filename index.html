@@ -53,15 +53,27 @@
         <!-- Delivery Banner -->
         <div id="deliveryStatus" class="delivery-banner hidden"></div>
         <div id="recoveryBanner" class="recovery-banner hidden"></div>
-        <div id="cartBar" class="cart-bar">
+        <div id="cartBar" class="cart-bar hidden">
             <div class="cart-info">
                 <span class="cart-icon">🛒</span>
-                <span id="cartCount"></span>
+                <span id="cartCount">0</span>
             </div>
             <button id="cartSend" class="cart-send"></button>
         </div>
+        <div id="cartDrawer" class="cart-drawer hidden">
+            <div class="drawer-backdrop"></div>
+            <div class="drawer-panel">
+                <div class="drawer-header">
+                    <span class="drawer-title"></span>
+                    <button id="drawerClose">✕</button>
+                </div>
+                <div id="drawerItems" class="drawer-items"></div>
+                <div class="drawer-footer">
+                    <button id="drawerSend" class="drawer-send"></button>
+                </div>
+            </div>
+        </div>
     </div>
-
     <script type="module" src="main.js"></script>
 </body>
 </html>
