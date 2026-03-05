@@ -71,12 +71,15 @@ function renderDrawer(){
 
   el.innerHTML="";
   UI.cart.items.forEach((i,index)=>{
+    const ItemDrawer = i.item;
+    const OptionDrawer = i.option;
+    const nameDrawer = ItemDrawer + "." + OptionDrawer; 
     const row=document.createElement("div");
     row.className="drawer-item";
     row.innerHTML=`
       <div>
-        <strong>${i.item}</strong>
-        <div>${i.option}</div>
+        <strong>${translate(ItemDrawer)}</strong>
+        <div>${translate(nameDrawer)}</div>
       </div>
       <div class="drawer-qty">
         <button data-i="${index}" class="qty-minus">−</button>
