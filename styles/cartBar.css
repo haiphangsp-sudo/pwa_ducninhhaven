@@ -26,11 +26,15 @@
   background:white;
   border-top:1px solid #e5e5e5;
   box-shadow:0 -2px 8px rgba(0,0,0,0.05);
-  transition:transform .25s ease;
+  transition:transform .2s ease, opacity.2s ease;
   box-shadow:0 -2px 8px rgba(0,0,0,0.05);
   z-index:50;
 }
-
+.cart-bar.hidden{
+  transform:translateY(100%);
+  opacity:0;
+  pointer-events:none;
+}
 .cart-info{
   font-size:15px;
   font-weight:500;
