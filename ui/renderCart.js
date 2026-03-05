@@ -72,9 +72,9 @@ function renderDrawer(){
 
   el.innerHTML="";
   UI.cart.items.forEach((i,index)=>{
-    
-    const ItemDrawer = MENU[i.category][i.item][label].getLanguage();
-    const OptionDrawer = MENU[i.category][i.item][i.option][label].getLanguage();
+    const lang = getLanguage();
+    const ItemDrawer = MENU[i.category][i.item].label[lang];
+    const OptionDrawer = MENU[i.category][i.item][i.option].label[lang];
     const row=document.createElement("div");
     row.className="drawer-item";
     row.innerHTML=`
