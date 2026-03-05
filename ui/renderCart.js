@@ -72,8 +72,8 @@ function renderDrawer(){
 
   el.innerHTML="";
   UI.cart.items.forEach((i,index)=>{
-    const ItemDrawer = translate(MENU[i.category][i.item].label);
-    const OptionDrawer = translate(MENU[i.category][i.item].options[i.option].label);
+    const ItemDrawer = translate(MENU[i.category].items[i.item].label);
+    const OptionDrawer = translate(MENU[i.category].items[i.item].options[i.option].label);
     const row=document.createElement("div");
     row.className="drawer-item";
     row.innerHTML=`
