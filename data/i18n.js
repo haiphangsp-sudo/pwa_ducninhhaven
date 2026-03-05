@@ -43,7 +43,7 @@ delivery:{
   }
 },
 cart_bar:{
-  drawer_title:{
+  cart_title:{
     vi:"Giỏ hàng",
     en:"Cart"
   },

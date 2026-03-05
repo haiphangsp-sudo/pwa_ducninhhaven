@@ -14,10 +14,10 @@ export function renderCartBar(){
 
   const ctx = getContext();
 
-  const sendBtn = document.getElementById("cartSend");
-  sendBtn.disabled = total===0;
-  let textOrder = "select_place";
-  //countEl.textContent = count;
+  const cartBtn = document.getElementById("cartOpen");
+
+  let textOpen = "";
+
   if(total==0){
     bar.classList.add("hidden");
     return;
@@ -26,19 +26,15 @@ export function renderCartBar(){
   }
   
   if(!ctx){
-    textOrder="select_place";
-    sendBtn.onclick = ()=>window.dispatchEvent(new Event("openPlacePicker"));
-    bar.classList.add("need-context");
+    textOpen="select_place";
+    cartBtn.onclick = ()=>window.dispatchEvent(new Event("openPlacePicker"));
+    
   }else{
-    sendBtn.onclick = sendCart;
-    bar.classList.remove("need-context");
-    if(UI.delivery.state==="sending"){
-      textOrder="delivery.pending";
-    }
-    textOrder="cart_bar.send_order";
+    cartBtn.onclick = openCartDrawer;
+    textOpen="cart_bar.cart_title";
   }
   count.textContent = `${total} ${translate("cart_bar.items")}`;
-  sendBtn.textContent=translate(textOrder);
+  cartBtn.textContent=translate(textOpen);
 }
 
 // - Lưu giỏ hàng vào localStorage để giữ nguyên khi reload trang
@@ -57,8 +53,15 @@ export function openCartDrawer(){
 }
 
 function renderDrawer(){
-  document.getElementsByClassName(".drawer-title").textContent = translate("cart_bar.drawer_title");
-  document.getElementById("drawerSend").textContent = translate("cart_bar.send_order");
+  let textOrder="";
+  if(UI.delivery.state==="sending"){
+    textOrder="delivery.pending";
+  }else{
+    textOrder= "cart_bar.send_order";
+  }
+  document.getElementById("drawerSend").textContent = translate(textOrder);
+  document.getElementsByClassName(".drawer-title").textContent = translate("cart_bar.cart_title");
+
   const el=document.getElementById("drawerItems");
 
   el.innerHTML="";
@@ -86,6 +89,7 @@ function renderDrawer(){
 
     el.appendChild(row);
     document.getElementById("drawerClose").onclick = closeCartDrawer;
+    document.getElementById("drawerSend").onclick=sendCart;
   });
 
 }
@@ -122,11 +126,12 @@ document.addEventListener("click",(e)=>{
     renderCartBar();
 
   }
-   document
-  .getElementById("drawerSend")
-  .onclick=sendCart;
+   
 });
 
 document
   .getElementById("cartBar")
   .onclick=openCartDrawer;
+
+
+  
