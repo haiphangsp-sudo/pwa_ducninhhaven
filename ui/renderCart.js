@@ -12,11 +12,8 @@ export function renderCartBar(){
   const count = document.getElementById("cartCount");
   const total = UI.cart.items.reduce((a,b)=>a+b.qty,0);
 
-  //const count = UI.cart.items.reduce((a,b)=>a+b.qty,0);
-
   const ctx = getContext();
 
-  //const countEl = document.getElementById("cartCount");
   const sendBtn = document.getElementById("cartSend");
   sendBtn.disabled = total===0;
   let textOrder = "select_place";
