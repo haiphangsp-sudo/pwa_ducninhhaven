@@ -72,15 +72,14 @@ function renderDrawer(){
 
   el.innerHTML="";
   UI.cart.items.forEach((i,index)=>{
-    const categoryDrawer = i.category;
-    const ItemDrawer = i.item;
-    const OptionDrawer = i.option;
+    const ItemDrawer = MENU[i.category][i.item].label;
+    const OptionDrawer = MENU[i.category][i.item][i.option].label;
     const row=document.createElement("div");
     row.className="drawer-item";
     row.innerHTML=`
       <div>
-        <strong>${categoryDrawer}</strong>
-        <div>${OptionDrawer}</div>
+        <strong>${translate(ItemDrawer)}</strong>
+        <div>${translate(OptionDrawer)}</div>
       </div>
       <div class="drawer-qty">
         <button data-i="${index}" class="qty-minus">−</button>
