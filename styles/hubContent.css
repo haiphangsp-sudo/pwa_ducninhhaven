@@ -2,18 +2,6 @@
    HUB CONTENT AREA
 ========================================================= */
 
-#hubContent{
-  background:#f8f5ef;
-  overflow:auto;
-  min-height:0;
-  display:flex;
-  flex-direction:column;
-  gap:28px;
-  overflow:auto;
-  -webkit-overflow-scrolling:touch;
-  overscroll-behavior:contain;
-}
-
 /* =========================================================
    ARTICLE PANEL (intro/help)
 ========================================================= */
