@@ -6,7 +6,12 @@ const STATIC_ASSETS = [
   "./",
   "./index.html",
   "./main.js",
-  "./config.js"
+  "./config.js",
+  "render*.js",
+  "ui/*.js",
+  "core/*.js",
+  "./i18n.js",
+  "./manifest.json"
 ];
 
 self.addEventListener("install",event=>{
@@ -21,11 +26,7 @@ self.addEventListener("activate",event=>{
   event.waitUntil(
     caches.keys().then(keys=>
       Promise.all(
-        keys.map(key=>{
-          if(key!==CACHE_NAME){
-            return caches.delete(key);
-          }
-        })
+        keys.filter(key=>key!==CACHE_NAME).map(key=>caches.delete(key))
       )
     )
   );
@@ -40,21 +41,30 @@ self.addEventListener("fetch", event=>{
   if(event.request.method==="POST") return;
 
   /* ---- API & RUNTIME DATA: always network ---- */
-if(
-  url.pathname.startsWith("/api/") ||
-  url.pathname.includes("/data/menu.json")
-){
-  event.respondWith(
-    fetch(event.request,{cache:"no-store"})
-      .catch(()=>new Response("{}",{status:200}))
-  );
-  return;
-}
+  if(
+    url.pathname.endsWith(".png") ||
+    url.pathname.endsWith(".svg") ||
+    url.pathname.startsWith("/api/") ||
+    url.pathname.includes("/data/menu.json")
+  ){
+    event.respondWith(
+      fetch(event.request,{cache:"no-store"})
+        .catch(()=>new Response("{}",{status:200}))
+    );
+    return;
+  }
 
   /* ---- DEFAULT: cache first ---- */
   event.respondWith(
     caches.match(event.request)
-      .then(res=>res || fetch(event.request))
+      .then(res=> {
+        if(res) return res;
+        return fetch(event.request).then(net=>{
+          const clone = net.clone();
+          caches.open(CACHE_NAME).then(cache=>cache.put(event.request,clone));
+          return net;
+        });
+      })
   );
 
 });
