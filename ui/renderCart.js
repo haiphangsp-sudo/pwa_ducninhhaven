@@ -41,5 +41,5 @@ export function renderCartBar(){
     }
     textOrder="send_order";
   }
-  sendBtn.innerText=translate(textOrder);
+  sendBtn.textContent=translate(textOrder);
 }
