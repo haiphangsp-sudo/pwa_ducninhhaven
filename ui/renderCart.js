@@ -53,9 +53,78 @@ export function openCartDrawer(){
 
 }
 
+function renderDrawer(){
+
+  const el=document.getElementById("drawerItems");
+
+  el.innerHTML="";
+
+  UI.cart.items.forEach((i,index)=>{
+
+    const row=document.createElement("div");
+
+    row.className="drawer-item";
+
+    row.innerHTML=`
+
+      <div>
+        <strong>${i.item}</strong>
+        <div>${i.option}</div>
+      </div>
+
+      <div class="drawer-qty">
+        <button data-i="${index}" class="qty-minus">−</button>
+        <span>${i.qty}</span>
+        <button data-i="${index}" class="qty-plus">+</button>
+      </div>
+
+    `;
+
+    el.appendChild(row);
+
+  });
+
+}
+
 export function closeCartDrawer(){
 
   document.getElementById("cartDrawer")
     .classList.add("hidden");
 
 }
+
+document.addEventListener("click",(e)=>{
+
+  if(e.target.classList.contains("qty-plus")){
+
+    const i=e.target.dataset.i;
+    UI.cart.items[i].qty++;
+
+    renderDrawer();
+    renderCart();
+
+  }
+
+  if(e.target.classList.contains("qty-minus")){
+
+    const i=e.target.dataset.i;
+
+    UI.cart.items[i].qty--;
+
+    if(UI.cart.items[i].qty<=0)
+      UI.cart.items.splice(i,1);
+
+    renderDrawer();
+    renderCart();
+
+  }
+   document
+  .getElementById("drawerSend")
+  .onclick=sendCart;
+});
+
+document
+  .getElementById("cartBar")
+  .onclick=openCartDrawer;
+
+ 
