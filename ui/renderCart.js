@@ -26,7 +26,7 @@ export function renderCartBar(){
 
   const countEl = document.getElementById("cartCount");
   const sendBtn = document.getElementById("cartSend");
-  const textOrder = "select_place";
+  let textOrder = "select_place";
   countEl.textContent = count;
 
   if(!ctx){
