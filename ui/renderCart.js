@@ -72,8 +72,8 @@ function renderDrawer(){
 
   el.innerHTML="";
   UI.cart.items.forEach((i,index)=>{
-    const ItemDrawer = MENU[i.category][i.item].label;
-    const OptionDrawer = MENU[i.category][i.item][i.option].label;
+    const ItemDrawer = MENU[i.category][i.item][label];
+    const OptionDrawer = MENU[i.category][i.item][i.option][label];
     const row=document.createElement("div");
     row.className="drawer-item";
     row.innerHTML=`
