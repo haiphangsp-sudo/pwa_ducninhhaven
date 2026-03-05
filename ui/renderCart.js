@@ -84,8 +84,9 @@ function renderDrawer(){
         <button data-i="${index}" class="qty-plus">+</button>
       </div>
     `;
+    el.appendChild(row);
   });
-  el.appendChild(row);
+  
     document.getElementById("drawerClose").onclick = closeCartDrawer;
 
     document.getElementById("drawerSend").onclick=()=>{ 
