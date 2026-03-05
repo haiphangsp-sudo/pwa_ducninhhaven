@@ -123,7 +123,6 @@ async function boot(){
 
   watchMenu();
   loadContext();
-  loadCart();
 }
 
 boot();

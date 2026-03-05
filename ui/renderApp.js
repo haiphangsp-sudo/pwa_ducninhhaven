@@ -1,7 +1,7 @@
 // ui/renderApp.js
 // Điểm vào duy nhất để render.
 
-import { renderCartBar } from "./renderCart.js";
+import { renderCartBar ,loadCart} from "./renderCart.js";
 import { renderAck } from "./renderAck.js";
 import { setDeliveryState } from "./renderDelivery.js";
 import { setRecoveryState } from "./renderRecovery.js";
@@ -18,7 +18,7 @@ export function renderApp(){
   renderAck();
 
   // UI hệ thống (không phụ thuộc view)
-  
+  loadCart();
   setDeliveryState("idle");
   setRecoveryState("idle");
 }

@@ -44,6 +44,13 @@ export function renderCartBar(){
   count.textContent = `${total} ${translate("cart_bar.items")}`;
   sendBtn.textContent=translate(textOrder);
 }
+
+// - Lưu giỏ hàng vào localStorage để giữ nguyên khi reload trang
+export function loadCart(){
+  const saved = localStorage.getItem("haven_cart");//
+  if(saved) UI.cart = JSON.parse(saved);
+}
+
 export function openCartDrawer(){
 
   const drawer=document.getElementById("cartDrawer");
@@ -126,5 +133,3 @@ document.addEventListener("click",(e)=>{
 document
   .getElementById("cartBar")
   .onclick=openCartDrawer;
-
- 
