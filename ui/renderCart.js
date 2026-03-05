@@ -50,11 +50,8 @@ export function loadCart(){
 
 export function openCartDrawer(){
 
-  const drawer=document.getElementById("cartDrawer");
-  drawer.classList.remove("hidden");
-
   renderDrawer();
-
+  document.getElementById("cartDrawer").classList.remove("hidden");
 }
 
 function renderDrawer(){
@@ -94,15 +91,19 @@ function renderDrawer(){
 
     el.appendChild(row);
     document.getElementById("drawerClose").onclick = closeCartDrawer;
-    document.getElementById("drawerSend").onclick=sendCart;
+
+    document.getElementById("drawerSend").onclick=()=>{ 
+      sendCart(); 
+      closeCartDrawer();
+      el.innerHTML="";
+     };
   });
 
 }
 
 export function closeCartDrawer(){
 
-  document.getElementById("cartDrawer")
-    .classList.add("hidden");
+  document.getElementById("cartDrawer").classList.add("hidden");
 
 }
 
@@ -133,10 +134,5 @@ document.addEventListener("click",(e)=>{
   }
    
 });
-
-document
-  .getElementById("cartBar")
-  .onclick=openCartDrawer;
-
 
   
