@@ -72,13 +72,14 @@ function renderDrawer(){
 
   el.innerHTML="";
   UI.cart.items.forEach((i,index)=>{
+    const categoryDrawer = i.category;
     const ItemDrawer = i.item;
     const OptionDrawer = i.option;
     const row=document.createElement("div");
     row.className="drawer-item";
     row.innerHTML=`
       <div>
-        <strong>${ItemDrawer}</strong>
+        <strong>${categoryDrawer}</strong>
         <div>${OptionDrawer}</div>
       </div>
       <div class="drawer-qty">
