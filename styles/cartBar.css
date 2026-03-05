@@ -7,8 +7,6 @@
 }
 
 #cartBar{
-  position:sticky;
-  color:white;
   margin:var(--space-2);
   border-radius:var(--radius-l);
   text-align:center;
