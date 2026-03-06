@@ -17,9 +17,9 @@ export function addToCart(item){
     i.option===item.option
   );
 
-  if(existing) existing.qty++;
-  else UI.cart.items.push({...item,qty:1.0});
-
+  //if(existing) existing.qty++;
+  //else UI.cart.items.push({...item,qty:1.0});
+  UI.cart.items.push({...item,qty:1.0});
   localStorage.setItem(
     "haven_cart",
     JSON.stringify(UI.cart.items)
