@@ -67,7 +67,6 @@
   display:flex;
   justify-content:flex-end;
   align-items:center;
-  gap:14px;
   flex-direction:column;
   gap:2px;
   justify-self:end;
