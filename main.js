@@ -21,9 +21,12 @@ function checkVersion(){
   if(stored !== CONFIG.VERSION){
     localStorage.setItem("app_version", CONFIG.VERSION);
     if("caches" in window){
-      caches.keys().then(keys=>keys.forEach(k=>caches.delete(k)));
+      caches.keys().then(keys=>{
+        keys.forEach(k=>caches.delete(k));
+      });
     }
   }
+  location.reload();
 }
 
 /* ---------- READ QR ---------- */
