@@ -85,24 +85,26 @@ if(job.type==="cart"){
 
   body = {
     id: crypto.randomUUID(),
-    place: active?.id || "",
-    placeType: active?.type || "",
+    place: active?.id,
+    placeType: active?.type,
     room: anchor?.type==="room" ? anchor.id : "",
-    category: job.items[0]?.category || "",
-    items: job.items
+    category: job.items[0]?.category,
+    items: job.items,
+    type: job.type
   };
 
 }else{
 
   body = {
     id: crypto.randomUUID(),
-    place: active?.id || "",
-    placeType: active?.type || "",
+    place: active?.id,
+    placeType: active?.type,
     room: anchor?.type==="room" ? anchor.id : "",
-    category: job.category || "",
-    item: job.item || "",
-    option: job.option || "",
-    qty: job.qty || 1
+    category: job.category,
+    item: job.item,
+    option: job.option,
+    qty: job.qty,
+    type: job.type
   };
 }
 

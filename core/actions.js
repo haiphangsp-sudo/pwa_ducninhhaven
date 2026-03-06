@@ -12,7 +12,7 @@ import { getContext } from "./context.js";
 export function addToCart(item){
 
   UI.cart.items.push({...item,qty:1.0});
-  UI.cart.items.push({...item,type:"cart"});
+  UI.cart.items.push({...item,type:iemt.type});
   localStorage.setItem(
     "haven_cart",
     JSON.stringify(UI.cart.items)
@@ -41,7 +41,7 @@ export function sendInstant(action){
   setState({ack:{state:"show"}});
 
   enqueue({
-    type:"instant",
+    type: active.type,
     target: ctx.active.id,
     category: action.category,
     item: action.code,
@@ -65,7 +65,6 @@ export function sendCart(){
   setState({ack:{state:"show"}});
 
   enqueue({
-    type:"cart",
     target: ctx.active.id,
     items: UI.cart.items,
     ts: Date.now()
