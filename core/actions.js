@@ -10,7 +10,7 @@ import { getContext } from "./context.js";
 /* ---------- CART ---------- */
 
 export function addToCart(item){
-  UI.cart.items.push({...item,qty:item.qty+1.0});
+  UI.cart.items.push({...item,qty:item.qty});
   UI.cart.items.push({...item,type:item.type});
   localStorage.setItem(
     "haven_cart",
