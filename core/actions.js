@@ -17,7 +17,8 @@ export function addToCart(item){
   );
 
   if(existing) existing.qty++;
-  else UI.cart.items.push({...item,qty:1});
+  else UI.cart.items.push({...item,qty:1.0});
+
   localStorage.setItem(
     "haven_cart",
     JSON.stringify(UI.cart.items)
@@ -46,7 +47,6 @@ export function sendInstant(action){
   setState({ack:{state:"show"}});
 
   enqueue({
-    type: active.type,
     target: ctx.active.id,
     category: action.category,
     item: action.code,
