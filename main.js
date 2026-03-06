@@ -26,7 +26,7 @@ function checkVersion(){
       });
     }
   }
-  location.reload();
+  //location.reload();
   document.querySelector(".app-version").textContent = `v${CONFIG.VERSION}`;
 }
 
