@@ -21,8 +21,6 @@ export function renderCartBar(){
 
   const cartBtn = document.getElementById("cartOpen");
 
-  let textOpen = "";
-
   if(total==0){
     bar.classList.add("hidden");
     return;
@@ -31,16 +29,15 @@ export function renderCartBar(){
   }
   
   if(!ctx){
-    textOpen="cart_bar.select_place";
+    cartBtn.textContent=translate("cart_bar.select_place");
     bar.classList.remove("hidden");
     cartBtn.onclick = ()=>window.dispatchEvent(new Event("openPlacePicker"));
     
   }else{
+    cartBtn.textContent=translate("cart_bar.cart_title");
     cartBtn.onclick = openCartDrawer;
-    textOpen="cart_bar.cart_title";
   }
   
-  cartBtn.textContent=translate(textOpen);
 }
 
 // - Lưu giỏ hàng vào localStorage để giữ nguyên khi reload trang
