@@ -56,7 +56,7 @@ function applyURLContext(){
 // - Đăng ký Service Worker để hỗ trợ offline và background sync
 function registerSW(){
   if("serviceWorker" in navigator){
-    navigator.serviceWorker.register("/sw.js");
+    navigator.serviceWorker.register("/sw.js?v="+CONFIG.VERSION);
   }
 }
 
