@@ -25,8 +25,8 @@ function checkVersion(){
         keys.forEach(k=>caches.delete(k));
       });
     }
+    location.reload();
   }
-  //location.reload();
   document.querySelector(".app-version").textContent = `v${CONFIG.VERSION}`;
 }
 
