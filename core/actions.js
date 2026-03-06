@@ -11,15 +11,8 @@ import { getContext } from "./context.js";
 
 export function addToCart(item){
 
-  const existing = UI.cart.items.find(i =>
-    i.category===item.category &&
-    i.item===item.item &&
-    i.option===item.option
-  );
-
-  //if(existing) existing.qty++;
-  //else UI.cart.items.push({...item,qty:1.0});
   UI.cart.items.push({...item,qty:1.0});
+  UI.cart.items.push({...item,type:"cart"});
   localStorage.setItem(
     "haven_cart",
     JSON.stringify(UI.cart.items)
