@@ -47,6 +47,7 @@ export function sendInstant(action){
   setState({ack:{state:"show"}});
 
   enqueue({
+    type:"instant",
     target: ctx.active.id,
     category: action.category,
     item: action.code,
@@ -70,6 +71,7 @@ export function sendCart(){
   setState({ack:{state:"show"}});
 
   enqueue({
+    type:"cart",
     target: ctx.active.id,
     items: UI.cart.items,
     ts: Date.now()
