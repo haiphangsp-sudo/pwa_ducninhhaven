@@ -10,13 +10,14 @@ import { getContext } from "./context.js";
 /* ---------- CART ---------- */
 
 export function addToCart(item){
-  const found = UI.cart.items.find (i=>{
-    i.category === item.category, i.option === item.option, i.items === item.items
-  });
-  if (found) {
-    const qty = item.qty + i
-    UI.cart.items.push({...item,qty});
-  }
+  const existing = UI.cart.items.find(i =>
+    i.category===item.category &&
+    i.item===item.item &&
+    i.option===item.option
+  );
+
+  if(existing) existing.qty++;
+  else UI.cart.items.push({...item,qty:1});
   localStorage.setItem(
     "haven_cart",
     JSON.stringify(UI.cart.items)
