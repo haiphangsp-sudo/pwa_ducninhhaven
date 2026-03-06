@@ -138,6 +138,8 @@ function renderCartPanel(root, category, categoryKey){
       }
 
       addToCart({
+        type: btn.dataset.type,
+        qty: 1.0,
         category: btn.dataset.category,
         item: btn.dataset.item,
         option: btn.dataset.option
