@@ -61,7 +61,6 @@ function renderArticle(root, category){
 }
 
 /* ========================================================= */
-/* INSTANT: service / help */
 
 function renderInstant(root, category, categoryKey){
 
@@ -87,7 +86,8 @@ function renderInstant(root, category, categoryKey){
       }
 
       sendInstant({
-        kind:"instant",
+        qty: 1.0,
+        type:"instant",
         category: btn.dataset.category,
         code: btn.dataset.item
       });
@@ -97,7 +97,6 @@ function renderInstant(root, category, categoryKey){
 }
 
 /* ========================================================= */
-/* CART: food / drink */
 
 function renderCartPanel(root, category, categoryKey){
 
