@@ -53,7 +53,7 @@ export function sendInstant(action){
     category: action.category,
     item: action.code,
     option: "default",
-    qty: 1,
+    qty: 1.0,
     ts: Date.now()
   });
 
