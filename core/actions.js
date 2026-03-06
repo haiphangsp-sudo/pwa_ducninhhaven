@@ -18,7 +18,7 @@ export function addToCart(item){
   );
 
   if(existing) existing.qty++;
-  else UI.cart.items.push({...item,qty:1});
+  else UI.cart.items.push({...item,qty:1.0});
 
   localStorage.setItem(
     "haven_cart",
