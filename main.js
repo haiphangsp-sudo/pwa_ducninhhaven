@@ -27,6 +27,7 @@ function checkVersion(){
     }
   }
   //location.reload();
+  document.querySelector(".app-version").textContent = `v${CONFIG.VERSION}`;
 }
 
 /* ---------- READ QR ---------- */
