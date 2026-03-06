@@ -58,9 +58,20 @@ function applyURLContext(){
 /* ---------- SW ---------- */
 // - Đăng ký Service Worker để hỗ trợ offline và background sync
 function registerSW(){
-  if("serviceWorker" in navigator){
-    navigator.serviceWorker.register("/sw.js?v="+CONFIG.VERSION);
-  }
+  if(!"serviceWorker" in navigator) return;
+    navigator.serviceWorker.register("/sw.js?v="+CONFIG.VERSION).then(reg=>{
+      reg.addEventListener("updatefound", ()=>{
+        const newSW = reg.installing;
+        newSW.addEventListener("statechange", ()=>{
+          if(newSW.state === "installed" && navigator.serviceWorker.controller){
+            // Có SW mới, reload để cập nhật
+            location.reload();
+          }
+        });
+      });
+    }).catch(err=>{
+      console.error("SW registration failed:", err);
+    });
 }
 
 /* ---------- MENU WATCH ---------- */
