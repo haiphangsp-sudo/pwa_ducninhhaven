@@ -6,11 +6,6 @@ const STATIC_ASSETS = [
   "./",
   "./index.html",
   "./main.js",
-  "./config.js",
-  "render*.js",
-  "ui/*.js",
-  "core/*.js",
-  "./i18n.js",
   "./manifest.json"
 ];
 
