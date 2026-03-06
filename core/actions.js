@@ -10,8 +10,13 @@ import { getContext } from "./context.js";
 /* ---------- CART ---------- */
 
 export function addToCart(item){
-  UI.cart.items.push({...item,qty:item.qty});
-  UI.cart.items.push({...item,type:item.type});
+  const found = UI.cart.items.find (i=>{
+    i.category === item.category, i.option === item.option, i.items === item.items
+  });
+  if (found) {
+    const qty = item.qty + i
+    UI.cart.items.push({...item,qty});
+  }
   localStorage.setItem(
     "haven_cart",
     JSON.stringify(UI.cart.items)
