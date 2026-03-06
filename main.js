@@ -11,7 +11,7 @@ import { loadMenu, MENU } from "./core/menuStore.js";
 import { detectRecovery } from "./core/queue.js";
 import { getContext, resolvePlace, setAnchor, setActive, normalizeContext } from "./core/context.js";
 import { initPlacePicker } from "./ui/components/placePicker.js";
-import { updateNavContext } from "../ui/components/navBar.js";
+import { updateNavContext } from "./ui/components/navBar.js"
 
 /* ---------- VERSION ---------- */
 // - Đảm bảo phiên bản SW khớp với phiên bản app
@@ -26,7 +26,7 @@ function checkVersion(){
       });
     }
   }
-  //location.reload();
+  location.reload();
   document.querySelector(".app-version").textContent = `v${CONFIG.VERSION}`;
 }
 
@@ -53,7 +53,7 @@ function applyURLContext(){
     setAnchor(resolved);
   }
   // quan trọng: xoá param để tránh reset khi reload
-  //history.replaceState({}, "", location.pathname);
+  history.replaceState({}, "", location.pathname);
 }
 
 /* ---------- SW ---------- */
