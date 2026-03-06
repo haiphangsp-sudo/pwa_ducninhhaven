@@ -89,8 +89,7 @@ if(job.type==="cart"){
     placeType: active?.type,
     room: anchor?.type==="room" ? anchor.id : "",
     category: job.items[0]?.category,
-    items: job.items,
-    type: job.type
+    items: job.items
   };
 
 }else{
@@ -102,9 +101,7 @@ if(job.type==="cart"){
     room: anchor?.type==="room" ? anchor.id : "",
     category: job.category,
     item: job.item,
-    option: job.option,
-    qty: job.qty,
-    type: job.type
+    option: job.option
   };
 }
 
