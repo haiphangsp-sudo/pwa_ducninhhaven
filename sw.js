@@ -6,6 +6,7 @@ const STATIC_ASSETS = [
   "./",
   "./index.html",
   "./main.js",
+  "./config.js",
   "./manifest.json"
 ];
 
@@ -51,8 +52,7 @@ self.addEventListener("fetch", event=>{
 
   /* ---- DEFAULT: cache first ---- */
   event.respondWith(
-    caches.match(event.request)
-      .then(res=> {
+    caches.match(event.request).then(res=> {
         if(res) return res;
         return fetch(event.request).then(net=>{
           const clone = net.clone();

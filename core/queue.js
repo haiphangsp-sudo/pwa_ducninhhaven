@@ -87,11 +87,11 @@ let body;
 if(job.type==="cart"){
 
   body = {
-    type: job.type,
+    type: "cart",
     id: crypto.randomUUID(),
     place: active?.id,
     placeType: active?.type,
-    room: anchor?.type==="room" ? anchor.id : "",
+    room: anchor?.type==="room" ? anchor.id : "Guest",
     category: job.items[0]?.category,
     items: job.items
   };
@@ -103,7 +103,7 @@ if(job.type==="cart"){
     id: crypto.randomUUID(),
     place: active?.id,
     placeType: active?.type,
-    room: anchor?.type==="room" ? anchor.id : "",
+    room: anchor?.type==="room" ? anchor.id : "Guest",
     category: job.category,
     item: job.item,
     option: job.option
