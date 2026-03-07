@@ -42,14 +42,17 @@ export function enqueue(payload){
   const queue=loadQueue();
 
   queue.push({
+    id: payload.id,
     payload,
     retries:0,
     createdAt:Date.now()
   });
 
   saveQueue(queue);
+
   setState({ ack:{state:"show"} });
   emitDelivery("pending");
+
   if(!processing) processQueue();
 }
 
@@ -84,6 +87,7 @@ let body;
 if(job.type==="cart"){
 
   body = {
+    type: job.type,
     id: crypto.randomUUID(),
     place: active?.id,
     placeType: active?.type,
@@ -95,6 +99,7 @@ if(job.type==="cart"){
 }else{
 
   body = {
+    type: job.type,
     id: crypto.randomUUID(),
     place: active?.id,
     placeType: active?.type,
