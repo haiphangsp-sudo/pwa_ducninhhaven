@@ -36,15 +36,16 @@ export function renderCategory(root, key){
       root.innerHTML="";
   }
 }
- function ensureActive(){
-  const ctx = getContext();
 
-      if(!ctx?.active){
-        window.dispatchEvent(new Event("openPlacePicker"));
-        return false;
-      }
-      return true;
- }
+function ensureActive(){
+const ctx = getContext();
+
+    if(!ctx?.active){
+      window.dispatchEvent(new Event("openPlacePicker"));
+      return false;
+    }
+    return true;
+}
 /* ========================================================= */
 /* ARTICLE */
 
