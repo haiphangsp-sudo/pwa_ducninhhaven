@@ -70,7 +70,7 @@ export function sendCart(){
 
   enqueue({
     id: ctx.active.id,
-    type: active.type,
+    type: ctx.active.type,
     target: ctx.active.id,
     items: structuredClone(UI.cart.items),
     ts: Date.now()
