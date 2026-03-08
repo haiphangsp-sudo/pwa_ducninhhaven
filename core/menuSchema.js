@@ -10,7 +10,7 @@ export function validateMenu(menu){
   for(const [catKey,cat] of Object.entries(menu)){
 
     req(cat,"label",catKey);
-    req(cat,"type",catKey);
+    req(cat,"ui",catKey);
     req(cat,"active",catKey);
     req(cat,"items",catKey);
 
