@@ -48,7 +48,7 @@ export function sendInstant(action){
   setState({ack:{state:"show"}});
 
   enqueue({
-    actionType: action.type,
+    type: action.type,
     place: ctx.active.id,
     placeType: ctx.active.type,
     category: action.category,
@@ -70,7 +70,6 @@ export function sendCart(){
   }
 
   enqueue({
-    actionType:"cart",
     place: ctx.active.id,
     placeType: ctx.active.type,
     items: structuredClone(UI.cart.items)
