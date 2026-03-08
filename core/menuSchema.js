@@ -15,7 +15,7 @@ export function validateMenu(menu){
     req(cat,"items",catKey);
 
     if(!["article","cart","instant"].includes(cat.ui))
-      errors.push(`${catKey}: invalid type`);
+      errors.push(`${catKey}: invalid ui`);
 
     for(const [itemKey,item] of Object.entries(cat.items||{})){
 
