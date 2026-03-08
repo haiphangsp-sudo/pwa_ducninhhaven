@@ -14,7 +14,7 @@ export function validateMenu(menu){
     req(cat,"active",catKey);
     req(cat,"items",catKey);
 
-    if(!["article","cart","instant"].includes(cat.type))
+    if(!["article","cart","instant"].includes(cat.ui))
       errors.push(`${catKey}: invalid type`);
 
     for(const [itemKey,item] of Object.entries(cat.items||{})){
@@ -22,7 +22,7 @@ export function validateMenu(menu){
       req(item,"label",`${catKey}.${itemKey}`);
       req(item,"active",`${catKey}.${itemKey}`);
 
-      if(cat.type==="cart"){
+      if(cat.ui==="cart"){
         req(item,"options",`${catKey}.${itemKey}`);
         req(item,"defaultOption",`${catKey}.${itemKey}`);
 
@@ -35,7 +35,7 @@ export function validateMenu(menu){
         }
       }
 
-      if(cat.type==="article"){
+      if(cat.ui==="article"){
         req(item,"content",`${catKey}.${itemKey}`);
       }
     }
