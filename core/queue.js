@@ -42,7 +42,8 @@ export function enqueue(payload){
   const queue=loadQueue();
 
   queue.push({
-    id: payload.id,
+    id: crypto.randomUUID(),
+    type: payload.type,
     payload,
     retries:0,
     createdAt:Date.now()
@@ -87,20 +88,19 @@ let body;
 if(job.type==="cart"){
 
   body = {
-    type: "cart",
-    id: crypto.randomUUID(),
+    id: job.id,
+    type: job.type,
     place: active?.id,
     placeType: active?.type,
     room: anchor?.type==="room" ? anchor.id : "Guest",
-    category: job.items[0]?.category,
     items: job.items
   };
 
 }else{
 
   body = {
+    id: job.id,
     type: job.type,
-    id: crypto.randomUUID(),
     place: active?.id,
     placeType: active?.type,
     room: anchor?.type==="room" ? anchor.id : "Guest",

@@ -47,12 +47,13 @@ export function sendInstant(action){
   setState({ack:{state:"show"}});
 
   enqueue({
-    type:"instant",
+    id: active.id,
+    type: active.type,
     target: ctx.active.id,
     category: action.category,
     item: action.code,
-    option: "default",
-    qty: 1.0,
+    option: action.option,
+    qty: 1,
     ts: Date.now()
   });
 
@@ -68,10 +69,9 @@ export function sendCart(){
     return;
   }
 
-  setState({ack:{state:"show"}});
-
   enqueue({
-    type:"cart",
+    id: active.id,
+    type: active.type,
     target: ctx.active.id,
     items: UI.cart.items,
     ts: Date.now()
@@ -79,7 +79,7 @@ export function sendCart(){
 
   setState({
     ack:{state:"show"},
-    cart:{items:[]}
+    cart:{items:structuredClone(UI.cart.items)}
   });
 
   localStorage.removeItem("haven_cart");
