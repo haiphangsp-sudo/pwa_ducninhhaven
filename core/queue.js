@@ -1,49 +1,42 @@
-// core/queue.js
-//   Hệ thống queue để gửi yêu cầu đến server một cách tuần tự, tránh trùng lặp và đảm bảo độ tin cậy
+
 
 import { sendRequest } from "../services/api.js";
 import { setState } from "./state.js";
 import { getRetryDelay } from "../services/retryPolicy.js";
 import { getContext } from "./context.js";
 
-const STORAGE_KEY = "haven_queue";
+const STORAGE_KEY="haven_queue";
 
 let processing=false;
-let retryTimer=null;
 
-/* ---------------- STORAGE ---------------- */
+/* ---------- STORAGE ---------- */
 
-export function loadQueue(){
-  return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+function loadQueue(){
+  return JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]");
 }
 
-export function saveQueue(q){
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(q));
+function saveQueue(q){
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(q));
 }
 
-/* ---------------- STATE HELPERS ---------------- */
+/* ---------- STATE ---------- */
 
 function emitDelivery(state,extra={}){
-  setState({
-    delivery:{ state, ...extra }
-  });
+  setState({delivery:{state,...extra}});
 }
 
 function emitRecovery(state){
-  setState({
-    recovery:{ state }
-  });
+  setState({recovery:{state}});
 }
 
-/* ---------------- ENQUEUE ---------------- */
+/* ---------- ENQUEUE ---------- */
 
 export function enqueue(payload){
 
   const queue=loadQueue();
 
   queue.push({
-    id: crypto.randomUUID(),
-    type: payload.type,
+    id:crypto.randomUUID(),
     payload,
     retries:0,
     createdAt:Date.now()
@@ -51,18 +44,19 @@ export function enqueue(payload){
 
   saveQueue(queue);
 
-  setState({ ack:{state:"show"} });
   emitDelivery("pending");
 
   if(!processing) processQueue();
 }
 
-/* ---------------- PROCESS ---------------- */
+/* ---------- PROCESS ---------- */
+
 export async function processQueue(){
 
   if(processing) return;
 
-  const queue=loadQueue();
+  let queue=loadQueue();
+
   if(!queue.length){
     emitDelivery("idle");
     return;
@@ -78,39 +72,39 @@ export async function processQueue(){
 
     try{
 
-      // BUILD PAYLOAD CHUẨN CHO API (supports multi-item order)
-      const ctx = getContext();
-      const anchor = ctx?.anchor;
-      const active = ctx?.active;
+      const ctx=getContext();
+      const anchor=ctx?.anchor;
 
-let body;
+      let body;
 
-if(job.type==="cart"){
+      if(job.type==="cart"){
 
-  body = {
-    id: req.id,
-    type: job.type,
-    place: active?.id,
-    placeType: active?.type,
-    room: anchor?.type==="room" ? anchor.id : "Guest",
-    items: job.items
-  };
+        body={
+          id:req.id,
+          type:"cart",
+          place:job.place,
+          placeType:job.placeType,
+          room:anchor?.type==="room"?anchor.id:"Guest",
+          items:job.items
+        };
 
-}else{
+      }else{
 
-  body = {
-    id: job.id,
-    type: job.type,
-    place: active?.id,
-    placeType: active?.type,
-    room: anchor?.type==="room" ? anchor.id : "Guest",
-    category: job.category,
-    item: job.item,
-    option: job.option
-  };
-}
+        body={
+          id:req.id,
+          type:"instant",
+          place:job.place,
+          placeType:job.placeType,
+          room:anchor?.type==="room"?anchor.id:"Guest",
+          category:job.category,
+          item:job.item,
+          option:job.option
+        };
 
-await sendRequest(body);
+      }
+
+      await sendRequest(body);
+
       queue.shift();
       saveQueue(queue);
 
@@ -120,12 +114,13 @@ await sendRequest(body);
       }
 
     }catch(e){
+
       if(e.message!=="retry"){
-      // lỗi logic → bỏ khỏi queue
-      queue.shift();
-      saveQueue(queue);
-      continue;
+        queue.shift();
+        saveQueue(queue);
+        continue;
       }
+
       req.retries++;
       saveQueue(queue);
 
@@ -134,7 +129,7 @@ await sendRequest(body);
       const delay=getRetryDelay(req.retries);
 
       processing=false;
-      retryTimer=setTimeout(processQueue,delay);
+      setTimeout(processQueue,delay);
       return;
     }
   }
@@ -142,7 +137,7 @@ await sendRequest(body);
   processing=false;
 }
 
-/* ---------------- RECOVERY DETECT ---------------- */
+/* ---------- RECOVERY ---------- */
 
 export function detectRecovery(){
   if(loadQueue().length){
@@ -150,7 +145,7 @@ export function detectRecovery(){
   }
 }
 
-/* ---------------- EVENTS ---------------- */
+/* ---------- EVENTS ---------- */
 
 window.addEventListener("resumeQueue",()=>{
   emitRecovery("sending");
@@ -158,7 +153,5 @@ window.addEventListener("resumeQueue",()=>{
 });
 
 window.addEventListener("networkBack",()=>{
-  if(loadQueue().length){
-    processQueue();
-  }
+  if(loadQueue().length) processQueue();
 });

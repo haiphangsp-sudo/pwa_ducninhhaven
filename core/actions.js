@@ -1,6 +1,3 @@
-// core/actions.js
-//   Các hành động chính của app, bao gồm thêm vào giỏ hàng, gửi yêu cầu đến server, v.v.
-//   Các component sẽ gọi các hàm này để thực hiện hành động, thay vì thao tác trực tiếp với state hoặc queue
 
 
 import { UI, setState } from "./state.js";
@@ -10,13 +7,14 @@ import { getContext } from "./context.js";
 /* ---------- CART ---------- */
 
 export function addToCart(item){
+
   const existing = UI.cart.items.find(i =>
     i.category===item.category &&
     i.item===item.item &&
     i.option===item.option
   );
 
-  if(existing) existing.qty++;
+  if(existing) existing.qty += 1;
   else UI.cart.items.push({...item,qty:1});
 
   localStorage.setItem(
@@ -25,11 +23,12 @@ export function addToCart(item){
   );
 
   setState({cart:{items:UI.cart.items}});
-  document.getElementById("cartBar")
-  ?.classList.add("cart-bounce");
+
+  const bar=document.getElementById("cartBar");
+  bar?.classList.add("cart-bounce");
+
   setTimeout(()=>{
-    document.getElementById("cartBar")
-    ?.classList.remove("cart-bounce");
+    bar?.classList.remove("cart-bounce");
   },250);
 }
 
@@ -37,30 +36,32 @@ export function addToCart(item){
 
 export function sendInstant(action){
 
-  if(UI.ack.state!=="hidden") return; // tránh gửi nhiều
+  if(UI.ack.state!=="hidden") return;
+
   const ctx = getContext();
 
   if(!ctx?.active){
     window.dispatchEvent(new Event("openPlacePicker"));
     return;
   }
+
   setState({ack:{state:"show"}});
 
   enqueue({
-    id: action.id,
-    type: action.type,
+    type:"instant",
+    place: ctx.active.id,
+    placeType: ctx.active.type,
     category: action.category,
     item: action.code,
-    option: action.option,
-    qty: 1,
-    ts: Date.now()
+    option: action.option || "default",
+    qty:1
   });
-
 }
 
 export function sendCart(){
 
-  if(UI.ack.state!=="hidden") return; // tránh gửi nhiều
+  if(UI.ack.state!=="hidden") return;
+
   const ctx = getContext();
 
   if(!ctx?.active){
@@ -69,11 +70,10 @@ export function sendCart(){
   }
 
   enqueue({
-    id: ctx.active.id,
-    type: ctx.active.type,
-    target: ctx.active.id,
-    items: structuredClone(UI.cart.items),
-    ts: Date.now()
+    type:"cart",
+    place: ctx.active.id,
+    placeType: ctx.active.type,
+    items: structuredClone(UI.cart.items)
   });
 
   setState({
