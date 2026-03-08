@@ -106,7 +106,7 @@
     }
   },
 
-  "spa":{
+  "relax":{
     "label":{"vi":"Thư giãn","en":"Relax"},
     "allow":["room"],
     "ui":"cart",
