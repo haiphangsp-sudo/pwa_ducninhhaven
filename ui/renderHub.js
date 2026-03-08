@@ -49,7 +49,7 @@ export function renderHub(){
   menuEl.innerHTML = panels.map(key=>`
     <button class="hub-btn ${panel===key?"active":""}"
             data-key="${key}"
-            data-type=${panel.type}>
+            data-type=${key.type}>
       <span class="hub-icon">${ICONS[key] || ""}</span>
       <span class="hub-label">${translate(MENU[key].label)}</span>
     </button>
