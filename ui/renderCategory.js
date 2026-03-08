@@ -19,17 +19,17 @@ export function renderCategory(root, key){
   }
 
   root.innerHTML="";
-
-  switch(category.type){
+  const type = category.type;
+  switch(type){
 
     case "article":
       return renderArticle(root, category);
 
     case "instant":
-      return renderInstant(root, category, key);
+      return renderInstant(root, category, key, type);
 
     case "cart":
-      return renderCartPanel(root, category, key);
+      return renderCartPanel(root, category, key, type);
 
     default:
       root.innerHTML="";
@@ -62,12 +62,13 @@ function renderArticle(root, category){
 
 /* ========================================================= */
 
-function renderInstant(root, category, categoryKey){
+function renderInstant(root, category, categoryKey, type){
 
   root.innerHTML = Object.entries(category.items || {})
     .filter(([,item])=>item.active!==false)
     .map(([itemKey,item])=>`
       <button class="instant-btn"
+              data-type="${type}"
               data-category="${categoryKey}"
               data-item="${itemKey}">
         ${translate(item.label)}
@@ -84,10 +85,10 @@ function renderInstant(root, category, categoryKey){
         window.dispatchEvent(new Event("openPlacePicker"));
         return;
       }
-
+      
       sendInstant({
-        qty: 1.0,
-        type:"instant",
+        qty: 1,
+        type: btn.dataset.type,
         category: btn.dataset.category,
         code: btn.dataset.item
       });
@@ -98,7 +99,7 @@ function renderInstant(root, category, categoryKey){
 
 /* ========================================================= */
 
-function renderCartPanel(root, category, categoryKey){
+function renderCartPanel(root, category, categoryKey, type){
 
   root.innerHTML = Object.entries(category.items || {})
     .filter(([,item])=>item.active!==false)
@@ -110,6 +111,7 @@ function renderCartPanel(root, category, categoryKey){
         .filter(([,opt])=>opt.active!==false)
         .map(([optKey,opt])=>`
           <button class="option-btn"
+                  data-type="${type}"
                   data-category="${categoryKey}"
                   data-item="${itemKey}"
                   data-option="${optKey}">
@@ -138,7 +140,7 @@ function renderCartPanel(root, category, categoryKey){
 
       addToCart({
         type: btn.dataset.type,
-        qty: 1.0,
+        qty: 1,
         category: btn.dataset.category,
         item: btn.dataset.item,
         option: btn.dataset.option

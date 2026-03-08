@@ -45,11 +45,9 @@ export function renderHub(){
 
   let panel = UI.view.panel;
   if(!panels.includes(panel)) panel = panels[0];
-
   menuEl.innerHTML = panels.map(key=>`
     <button class="hub-btn ${panel===key?"active":""}"
             data-key="${key}"
-            data-type=${MENU[key].type}>
       <span class="hub-icon">${ICONS[key] || ""}</span>
       <span class="hub-label">${translate(MENU[key].label)}</span>
     </button>
