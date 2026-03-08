@@ -19,18 +19,17 @@ export function renderCategory(root, key){
   }
 
   root.innerHTML="";
-  const menuType = category.type;
   
-  switch(menuType){
+  switch(category.type){
 
     case "article":
       return renderArticle(root, category);
 
     case "instant":
-      return renderInstant(root, category, key, menuType);
+      return renderInstant(root, category, key);
 
     case "cart":
-      return renderCartPanel(root, category, key, menuType);
+      return renderCartPanel(root, category, key);
 
     default:
       root.innerHTML="";
@@ -51,7 +50,7 @@ const ctx = getContext();
 
 function renderArticle(root, category){
 
-  root.innerHTML = Object.values(category.items || {})
+  root.innerHTML = Object.values(category.items)
     .filter(sec=>sec.active!==false)
     .map(section=>{
 
@@ -72,9 +71,9 @@ function renderArticle(root, category){
 
 /* ========================================================= */
 
-function renderInstant(root, category, categoryKey, t){
+function renderInstant(root, category, categoryKey){
 
-  root.innerHTML = Object.entries(category.items || {})
+  root.innerHTML = Object.entries(category.items)
     .filter(([,item])=>item.active!==false)
     .map(([itemKey,item])=>`
       <button class="instant-btn"
@@ -92,7 +91,7 @@ function renderInstant(root, category, categoryKey, t){
       
       sendInstant({
         qty: 1,
-        type: t,
+        type: category.type,
         category: btn.dataset.category,
         code: btn.dataset.item
       });
@@ -103,7 +102,7 @@ function renderInstant(root, category, categoryKey, t){
 
 /* ========================================================= */
 
-function renderCartPanel(root, category, categoryKey, t){
+function renderCartPanel(root, category, categoryKey){
 
   root.innerHTML = Object.entries(category.items || {})
     .filter(([,item])=>item.active!==false)
@@ -137,7 +136,7 @@ function renderCartPanel(root, category, categoryKey, t){
       if(!ensureActive()) return;
 
       addToCart({
-        type: t,
+        type: category.type,
         category: btn.dataset.category,
         item: btn.dataset.item,
         option: btn.dataset.option
