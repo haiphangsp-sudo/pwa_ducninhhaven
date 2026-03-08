@@ -19,7 +19,8 @@ export function renderCategory(root, key){
   }
 
   root.innerHTML="";
-  const type = category.type;
+  const type = category;
+  
   switch(type){
 
     case "article":
@@ -35,7 +36,15 @@ export function renderCategory(root, key){
       root.innerHTML="";
   }
 }
+ function ensureActive(){
+  const ctx = getContext();
 
+      if(!ctx?.active){
+        window.dispatchEvent(new Event("openPlacePicker"));
+        return false;
+      }
+      return true;
+ }
 /* ========================================================= */
 /* ARTICLE */
 
@@ -62,13 +71,12 @@ function renderArticle(root, category){
 
 /* ========================================================= */
 
-function renderInstant(root, category, categoryKey, type){
+function renderInstant(root, category, categoryKey, t){
 
   root.innerHTML = Object.entries(category.items || {})
     .filter(([,item])=>item.active!==false)
     .map(([itemKey,item])=>`
       <button class="instant-btn"
-              data-type="${type}"
               data-category="${categoryKey}"
               data-item="${itemKey}">
         ${translate(item.label)}
@@ -79,16 +87,10 @@ function renderInstant(root, category, categoryKey, type){
 
     btn.onclick=()=>{
 
-      const ctx = getContext();
-
-      if(!ctx?.active){
-        window.dispatchEvent(new Event("openPlacePicker"));
-        return;
-      }
+      if(!ensureActive()) return;
       
       sendInstant({
-        qty: 1,
-        actionType: btn.dataset.type,
+        type: t,
         category: btn.dataset.category,
         code: btn.dataset.item
       });
@@ -99,7 +101,7 @@ function renderInstant(root, category, categoryKey, type){
 
 /* ========================================================= */
 
-function renderCartPanel(root, category, categoryKey, type){
+function renderCartPanel(root, category, categoryKey, t){
 
   root.innerHTML = Object.entries(category.items || {})
     .filter(([,item])=>item.active!==false)
@@ -111,7 +113,6 @@ function renderCartPanel(root, category, categoryKey, type){
         .filter(([,opt])=>opt.active!==false)
         .map(([optKey,opt])=>`
           <button class="option-btn"
-                  data-type="${type}"
                   data-category="${categoryKey}"
                   data-item="${itemKey}"
                   data-option="${optKey}">
@@ -131,16 +132,10 @@ function renderCartPanel(root, category, categoryKey, type){
 
     btn.onclick=()=>{
 
-      const ctx = getContext();
-
-      if(!ctx?.active){
-        window.dispatchEvent(new Event("openPlacePicker"));
-        return;
-      }
+      if(!ensureActive()) return;
 
       addToCart({
-        actionType: btn.dataset.type,
-        qty: 1,
+        type: t,
         category: btn.dataset.category,
         item: btn.dataset.item,
         option: btn.dataset.option
