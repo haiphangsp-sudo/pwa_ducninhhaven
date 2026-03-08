@@ -83,13 +83,13 @@
 
   opacity:.75;
 }
-.hub-icon svg{
+.hub-btn svg{
 width:22px;
 height:22px;
 display:block;
 }
 
-.hub-item.active svg{
+.hub-btn.active svg{
 stroke:white;
 }
 /* label nhỏ hơn */
