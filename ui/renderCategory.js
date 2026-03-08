@@ -136,7 +136,6 @@ function renderCartPanel(root, category, categoryKey){
       if(!ensureActive()) return;
 
       addToCart({
-        type: category.ui,
         category: btn.dataset.category,
         item: btn.dataset.item,
         option: btn.dataset.option
