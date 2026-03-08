@@ -48,7 +48,7 @@ export function sendInstant(action){
   setState({ack:{state:"show"}});
 
   enqueue({
-    actionType: action.actionType,
+    type: action.type,
     place: ctx.active.id,
     placeType: ctx.active.type,
     category: action.category,
