@@ -77,11 +77,11 @@ export async function processQueue(){
 
       let body;
 
-      if(job.type==="cart"){
+      if(job.ui==="cart"){
 
         body={
           id:req.id,
-          type:job.type,
+          type:job.ui,
           place:job.place,
           placeType:job.placeType,
           room:anchor?.type==="room"?anchor.id:"Guest",
@@ -92,7 +92,7 @@ export async function processQueue(){
 
         body={
           id:req.id,
-          type:job.type,
+          type:job.ui,
           place:job.place,
           placeType:job.placeType,
           room:anchor?.type==="room"?anchor.id:"Guest",

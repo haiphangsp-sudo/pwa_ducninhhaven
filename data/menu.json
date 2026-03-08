@@ -2,7 +2,7 @@
   "intro":{
     "label":{"vi":"Giới thiệu","en":"Introduction"},
     "allow":["room","table","area"],
-    "type":"article",
+    "ui":"article",
     "active":true,
     "items":{
       "welcome":{
@@ -19,7 +19,7 @@
   "food":{
     "label":{"vi":"Bữa ăn","en":"Food"},
     "allow":["room","table"],
-    "type":"cart",
+    "ui":"cart",
     "active":true,
     "items":{
 
@@ -39,7 +39,7 @@
   "drink":{
     "label":{"vi":"Thức uống","en":"Drinks"},
     "allow":["room","table","area"],
-    "type":"cart",
+    "ui":"cart",
     "active":true,
     "items":{
 
@@ -89,7 +89,7 @@
   "service":{
     "label":{"vi":"Dịch vụ phòng","en":"Room service"},
     "allow":["room"],
-    "type":"instant",
+    "ui":"instant",
     "active":true,
     "items":{
 
@@ -109,7 +109,7 @@
   "spa":{
     "label":{"vi":"Thư giãn","en":"Relax"},
     "allow":["room"],
-    "type":"cart",
+    "ui":"cart",
     "active":true,
     "items":{
 
@@ -130,7 +130,7 @@
   "help":{
     "label":{"vi":"Hỗ trợ","en":"Assistance"},
     "allow":["room","area"],
-    "type":"instant",
+    "ui":"instant",
     "active":true,
     "items":{
 

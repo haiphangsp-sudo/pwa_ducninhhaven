@@ -20,7 +20,7 @@ export function renderCategory(root, key){
 
   root.innerHTML="";
   
-  switch(category.type){
+  switch(category.ui){
 
     case "article":
       return renderArticle(root, category);
@@ -91,7 +91,7 @@ function renderInstant(root, category, categoryKey){
       
       sendInstant({
         qty: 1,
-        type: category.type,
+        type: category.ui,
         category: btn.dataset.category,
         code: btn.dataset.item
       });
@@ -136,7 +136,7 @@ function renderCartPanel(root, category, categoryKey){
       if(!ensureActive()) return;
 
       addToCart({
-        type: category.type,
+        type: category.ui,
         category: btn.dataset.category,
         item: btn.dataset.item,
         option: btn.dataset.option
