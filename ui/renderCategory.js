@@ -91,6 +91,7 @@ function renderInstant(root, category, categoryKey, t){
       if(!ensureActive()) return;
       
       sendInstant({
+        qty: 1,
         type: t,
         category: btn.dataset.category,
         code: btn.dataset.item
