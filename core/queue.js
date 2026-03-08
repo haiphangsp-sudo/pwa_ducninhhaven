@@ -77,7 +77,7 @@ export async function processQueue(){
 
       let body;
 
-      if(job.ui==="cart"){
+      if(job.type==="cart"){
 
         body={
           id:req.id,
