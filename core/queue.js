@@ -81,7 +81,7 @@ export async function processQueue(){
 
         body={
           id:req.id,
-          type:job.ui,
+          type:"cart",
           place:job.place,
           placeType:job.placeType,
           room:anchor?.type==="room"?anchor.id:"Guest",
@@ -92,7 +92,7 @@ export async function processQueue(){
 
         body={
           id:req.id,
-          type:job.ui,
+          type:"instant",
           place:job.place,
           placeType:job.placeType,
           room:anchor?.type==="room"?anchor.id:"Guest",
