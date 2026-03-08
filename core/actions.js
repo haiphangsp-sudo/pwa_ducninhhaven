@@ -70,6 +70,7 @@ export function sendCart(){
   }
 
   enqueue({
+    type: "cart",
     place: ctx.active.id,
     placeType: ctx.active.type,
     items: structuredClone(UI.cart.items)
