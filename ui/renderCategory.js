@@ -88,7 +88,7 @@ function renderInstant(root, category, categoryKey, type){
       
       sendInstant({
         qty: 1,
-        type: btn.dataset.type,
+        actionType: btn.dataset.type,
         category: btn.dataset.category,
         code: btn.dataset.item
       });
@@ -139,7 +139,7 @@ function renderCartPanel(root, category, categoryKey, type){
       }
 
       addToCart({
-        type: btn.dataset.type,
+        actionType: btn.dataset.type,
         qty: 1,
         category: btn.dataset.category,
         item: btn.dataset.item,
