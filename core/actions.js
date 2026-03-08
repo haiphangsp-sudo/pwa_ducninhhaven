@@ -17,7 +17,7 @@ export function addToCart(item){
   );
 
   if(existing) existing.qty++;
-  else UI.cart.items.push({...item,qty:1.0});
+  else UI.cart.items.push({...item,qty:1});
 
   localStorage.setItem(
     "haven_cart",
@@ -47,9 +47,8 @@ export function sendInstant(action){
   setState({ack:{state:"show"}});
 
   enqueue({
-    id: active.id,
-    type: active.type,
-    target: ctx.active.id,
+    id: action.id,
+    type: action.type,
     category: action.category,
     item: action.code,
     option: action.option,
@@ -70,16 +69,16 @@ export function sendCart(){
   }
 
   enqueue({
-    id: active.id,
+    id: ctx.active.id,
     type: active.type,
     target: ctx.active.id,
-    items: UI.cart.items,
+    items: structuredClone(UI.cart.items),
     ts: Date.now()
   });
 
   setState({
     ack:{state:"show"},
-    cart:{items:structuredClone(UI.cart.items)}
+    cart:{items:[]}
   });
 
   localStorage.removeItem("haven_cart");

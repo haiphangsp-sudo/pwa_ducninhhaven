@@ -88,7 +88,7 @@ let body;
 if(job.type==="cart"){
 
   body = {
-    id: job.id,
+    id: req.id,
     type: job.type,
     place: active?.id,
     placeType: active?.type,
