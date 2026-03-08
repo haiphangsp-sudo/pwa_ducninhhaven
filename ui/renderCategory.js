@@ -19,7 +19,7 @@ export function renderCategory(root, key){
   }
 
   root.innerHTML="";
-  const type = category;
+  const type = category.type;
   
   switch(type){
 
