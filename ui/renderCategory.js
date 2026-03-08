@@ -19,18 +19,18 @@ export function renderCategory(root, key){
   }
 
   root.innerHTML="";
-  const type = category.type;
+  const menuType = category.type;
   
-  switch(type){
+  switch(menuType){
 
     case "article":
       return renderArticle(root, category);
 
     case "instant":
-      return renderInstant(root, category, key, type);
+      return renderInstant(root, category, key, menuType);
 
     case "cart":
-      return renderCartPanel(root, category, key, type);
+      return renderCartPanel(root, category, key, menuType);
 
     default:
       root.innerHTML="";
