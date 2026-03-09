@@ -24,51 +24,11 @@ body{
   height:100vh;
   padding-bottom: calc(80px+env(safe-area-inset-bottom));
 }
-#contextBar{
-  position:sticky;
-  top:0;
-  z-index:1000;
 
-  height:58px;
-  flex-shrink:0;
-
-  background:#ece7dd;
-
-  display:flex;
-  align-items:center;
-
-  border-bottom:1px solid rgba(0,0,0,.05);
-}
 /* ======================================================
    HUB ROOT — thiết bị chứ không phải page
 ====================================================== */
 
-#hub{
-  flex:1;
-  display:flex;
-  flex-direction:column;
-  background:#e9e4da;
-  overflow:hidden;            /* không cho toàn layout cuộn */
-  touch-action:manipulation;  /* giảm delay touch */
-  min-height: 0;
-}
-#hubContent{
-  flex:1;
-  overflow-y:auto;             /* chỉ cho phép cuộn dọc */
-  overscroll-behavior:contain;
-  -webkit-overflow-scrolling:touch; /* cuộn mượt trên iOS */
-  margin-top: 24px;
-  padding: 10px;
-}
-#hubMenu{
-  background:#ece7dd;
-  padding:12px 10px;
-
-  display:flex;
-  gap:14px;
-
-  border-bottom:1px solid rgba(0,0,0,.05);
-}
 #cartBar{
   flex:0 0 60px;
   display:flex;
