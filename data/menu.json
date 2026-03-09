@@ -123,7 +123,7 @@
         "active":true,
         "options":{
           "hot":{
-            "label":{"vi":"Nóng","en":"Hot"},
+            "label":{"vi":"Cà phê đen nóng","en":"Hot black coffee"},
             "description":{
               "vi":"Cà phê Việt Nam pha phin truyền thống.",
               "en":"Traditional Vietnamese drip coffee."
@@ -132,7 +132,7 @@
             "active":true
           },
           "iced":{
-            "label":{"vi":"Đá","en":"Iced"},
+            "label":{"vi":"Cà phê đen đá","en":"Iced black coffee"},
             "description":{
               "vi":"Cà phê đen đá mát lạnh.",
               "en":"Vietnamese iced black coffee."
@@ -149,7 +149,7 @@
         "active":true,
         "options":{
           "hot":{
-            "label":{"vi":"Nóng","en":"Hot"},
+            "label":{"vi":"Cappuccino nóng","en":"Cappuccino hot"},
             "description":{
               "vi":"Cappuccino với lớp bọt sữa mịn.",
               "en":"Espresso with steamed milk and foam."
@@ -158,7 +158,7 @@
             "active":true
           },
           "iced":{
-            "label":{"vi":"Đá","en":"Iced"},
+            "label":{"vi":"Cappuccino đá","en":"Iced Cappuccino"},
             "description":{
               "vi":"Cappuccino lạnh nhẹ nhàng.",
               "en":"Chilled cappuccino."
@@ -175,7 +175,7 @@
         "active":true,
         "options":{
           "hot":{
-            "label":{"vi":"Nóng","en":"Hot"},
+            "label":{"vi":"Cà phê muối nóng","en":"Hot salted coffee"},
             "description":{
               "vi":"Cà phê muối đặc trưng miền Trung.",
               "en":"Central Vietnam style salted coffee."
@@ -184,7 +184,7 @@
             "active":true
           },
           "iced":{
-            "label":{"vi":"Đá","en":"Iced"},
+            "label":{"vi":"Cà phê muối đá","en":"Rock salt coffee"},
             "description":{
               "vi":"Cà phê muối lạnh.",
               "en":"Iced salted coffee."
