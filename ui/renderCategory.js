@@ -125,18 +125,15 @@ function renderCartPanel(root, category, categoryKey){
                  data-option="${optKey}">
               <div class="menu-info">
                 <div class="menu-title">${title}</div>
-
-                <div class="menu-desc">${desc}</div>
-
+                <div class="menu-desc">${desc}</div
                 <div class="menu-price">${formatPrice} đ</div>
+                <button class="order-btn"
+                        data-category="${categoryKey}"
+                        data-item="${itemKey}"
+                        data-option="${optKey}">
+                  ${Order}
+                </button>
               </div>
-              <button class="order-btn"
-                      data-category="${categoryKey}"
-                      data-item="${itemKey}"
-                      data-option="${optKey}">
-                ${Order}
-              </button>
-
             </div>
           `;
         }).join("");
