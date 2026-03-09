@@ -154,9 +154,20 @@
  color:#666;
  margin:6px 0 10px;
 }
-
 .menu-options{
  display:flex;
  flex-wrap:wrap;
  gap:8px;
+}
+.order-btn{
+ padding:8px 14px;
+ border-radius:8px;
+ border:1px solid #ddd;
+ background:#f7f7f7;
+ font-size:14px;
+}
+.menu-price{
+ font-size:14px;
+ opacity:.7;
+ margin-left:6px;
 }
