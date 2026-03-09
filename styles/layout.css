@@ -33,8 +33,6 @@ body{
   flex:1;
   display:flex;
   flex-direction:column;
-  background:#e9e4da;
-  overflow:hidden;            /* không cho toàn layout cuộn */
   touch-action:manipulation;  /* giảm delay touch */
   min-height: 0;
 }
