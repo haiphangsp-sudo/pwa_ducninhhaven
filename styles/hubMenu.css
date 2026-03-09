@@ -13,8 +13,6 @@
   box-shadow:2px 0 8px rgba(0,0,0,.05) inset;
   overflow:hidden;
   position:sticky;
-  top: 64px;
-  height: calc(100dvh - 120px);
 }
 
 
