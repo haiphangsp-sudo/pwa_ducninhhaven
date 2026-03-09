@@ -3,9 +3,8 @@
 body{
   margin:0;
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-  background:var(--bg);
+  background:#ece7dd;
   color:var(--text);
-  background:#e9e4da;
   height:100%;
   margin:0;
   overflow:hidden;   /* ngăn scroll toàn trang */
@@ -26,11 +25,19 @@ body{
   padding-bottom: calc(80px+env(safe-area-inset-bottom));
 }
 #contextBar{
-  flex: 0 0 auto;
-  display: flex;
-  align-items: center;
-  padding: 0 14px;
-  border-bottom: 1px solid #eee;
+  position:sticky;
+  top:0;
+  z-index:1000;
+
+  height:58px;
+  flex-shrink:0;
+
+  background:#ece7dd;
+
+  display:flex;
+  align-items:center;
+
+  border-bottom:1px solid rgba(0,0,0,.05);
 }
 /* ======================================================
    HUB ROOT — thiết bị chứ không phải page
@@ -54,17 +61,13 @@ body{
   padding: 10px;
 }
 #hubMenu{
-  flex:0 0 auto;
+  background:#ece7dd;
+  padding:12px 10px;
+
   display:flex;
-  align-items:center;
-  gap:12px;
-  border-bottom:1px solid #eee;
-  overflow-x: auto;           /* cho phép cuộn ngang nếu menu quá dài */
-  -webkit-overflow-scrolling:touch; /* cuộn mượt trên iOS */
-  position:sticky;
-  z-index: 5;
-  background: var(--bg);
-  
+  gap:14px;
+
+  border-bottom:1px solid rgba(0,0,0,.05);
 }
 #cartBar{
   flex:0 0 60px;
