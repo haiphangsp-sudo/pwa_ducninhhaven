@@ -8,8 +8,8 @@
       "welcome":{
         "label":{"vi":"Chào mừng","en":"Welcome"},
         "content":{
-          "vi":"Chúng tôi hy vọng bạn có thời gian thư giãn tuyệt vời tại Duc Ninh Haven.",
-          "en":"We hope you enjoy a relaxing stay at Duc Ninh Haven."
+          "vi":"Chào mừng bạn đến với Duc Ninh Haven. Chúng tôi hy vọng bạn có những giờ phút nghỉ ngơi yên tĩnh và thư giãn tại đây.",
+          "en":"Welcome to Duc Ninh Haven. We hope you enjoy a quiet and relaxing stay with us."
         },
         "active":true
       }
@@ -29,58 +29,81 @@
         "options":{
           "pho":{
             "label":{"vi":"Phở gà","en":"Chicken Pho"},
-            "description":{"vi":"....","en":"......"},
-            "price":0,
+            "description":{
+              "vi":"Phở gà nóng với nước dùng ninh chậm, ăn kèm rau thơm.",
+              "en":"Traditional Vietnamese chicken noodle soup with herbs."
+            },
+            "price":50000,
             "active":true
           },
           "bread":{
-            "label":{"vi":"Bánh mì chảo","en":"Pan bread"},
-            "description":{"vi":"....","en":"......"},
-            "price":0,
+            "label":{"vi":"Bánh mì chảo","en":"Pan Bread"},
+            "description":{
+              "vi":"Bánh mì ăn kèm trứng ốp la, pate và xúc xích.",
+              "en":"Vietnamese pan bread with egg, pate and sausage."
+            },
+            "price":55000,
             "active":true
           },
           "broken_rice":{
-            "label":{"vi":".....","en":"......."},
-            "description":{"vi":"....","en":"......"},
-            "price":0,
+            "label":{"vi":"Cơm tấm sườn","en":"Broken Rice with Pork"},
+            "description":{
+              "vi":"Cơm tấm truyền thống với sườn nướng và trứng.",
+              "en":"Vietnamese broken rice served with grilled pork and egg."
+            },
+            "price":55000,
             "active":true
           }
         }
       },
+
       "lunch":{
-        "label":{"vi":"Bữa trưa","en":"....."},
+        "label":{"vi":"Bữa trưa","en":"Lunch"},
         "defaultOption":"seafood",
         "active":true,
         "options":{
           "seafood":{
-            "label":{"vi":"....","en":""},
-            "description":{"vi":"....","en":"......"},
-            "price":0,
+            "label":{"vi":"Cơm hải sản","en":"Seafood Rice"},
+            "description":{
+              "vi":"Cơm nóng với hải sản xào nhẹ.",
+              "en":"Steamed rice served with sautéed seafood."
+            },
+            "price":75000,
             "active":true
           },
-          "seafochicken_riceod":{
-            "label":{"vi":"....","en":""},
-            "description":{"vi":"....","en":"......"},
-            "price":0,
+          "chicken_rice":{
+            "label":{"vi":"Cơm gà","en":"Chicken Rice"},
+            "description":{
+              "vi":"Cơm gà đơn giản với rau và nước chấm.",
+              "en":"Simple chicken rice with vegetables and dipping sauce."
+            },
+            "price":70000,
             "active":true
           }
         }
       },
+
       "dinner":{
-        "label":{"vi":"Bữa tối","en":"....."},
+        "label":{"vi":"Bữa tối","en":"Dinner"},
         "defaultOption":"bbq",
         "active":true,
         "options":{
           "local_rice":{
-            "label":{"vi":"....","en":""},
-            "description":{"vi":"....","en":"......"},
-            "price":0,
+            "label":{"vi":"Cơm nhà địa phương","en":"Local Home Rice"},
+            "description":{
+              "vi":"Bữa cơm đơn giản kiểu gia đình Việt.",
+              "en":"A simple Vietnamese home-style dinner."
+            },
+            "price":90000,
             "active":true
           },
           "bbq":{
-            "label":{"vi":"....","en":""},
-            "description":{"vi":"....","en":"......"},
-            "price":0,
+            "label":{"vi":"BBQ sân vườn","en":"Garden BBQ"},
+            "description":{
+              "vi":"Thịt nướng ngoài trời dùng kèm rau và nước chấm.",
+              "en":"Outdoor barbecue served with vegetables and sauces."
+            },
+            "price":120000,
             "active":true
           }
         }
@@ -101,14 +124,20 @@
         "options":{
           "hot":{
             "label":{"vi":"Nóng","en":"Hot"},
-            "description":{"vi":"....","en":"......"},
-            "price":0,
+            "description":{
+              "vi":"Cà phê Việt Nam pha phin truyền thống.",
+              "en":"Traditional Vietnamese drip coffee."
+            },
+            "price":30000,
             "active":true
-        },
+          },
           "iced":{
             "label":{"vi":"Đá","en":"Iced"},
-            "description":{"vi":"....","en":"......"},
-            "price":0,
+            "description":{
+              "vi":"Cà phê đen đá mát lạnh.",
+              "en":"Vietnamese iced black coffee."
+            },
+            "price":35000,
             "active":true
           }
         }
@@ -121,14 +150,20 @@
         "options":{
           "hot":{
             "label":{"vi":"Nóng","en":"Hot"},
-            "description":{"vi":"....","en":"......"},
-            "price":0,
+            "description":{
+              "vi":"Cappuccino với lớp bọt sữa mịn.",
+              "en":"Espresso with steamed milk and foam."
+            },
+            "price":45000,
             "active":true
           },
           "iced":{
             "label":{"vi":"Đá","en":"Iced"},
-            "description":{"vi":"....","en":"......"},
-            "price":0,
+            "description":{
+              "vi":"Cappuccino lạnh nhẹ nhàng.",
+              "en":"Chilled cappuccino."
+            },
+            "price":45000,
             "active":true
           }
         }
@@ -141,14 +176,20 @@
         "options":{
           "hot":{
             "label":{"vi":"Nóng","en":"Hot"},
-            "description":{"vi":"....","en":"......"},
-            "price":0,
+            "description":{
+              "vi":"Cà phê muối đặc trưng miền Trung.",
+              "en":"Central Vietnam style salted coffee."
+            },
+            "price":40000,
             "active":true
           },
           "iced":{
             "label":{"vi":"Đá","en":"Iced"},
-            "description":{"vi":"....","en":"......"},
-            "price":0,
+            "description":{
+              "vi":"Cà phê muối lạnh.",
+              "en":"Iced salted coffee."
+            },
+            "price":40000,
             "active":true
           }
         }
@@ -160,44 +201,52 @@
         "active":true,
         "options":{
           "hot":{
-            "label":{"vi":"Nóng","en":"Hot"},
-            "description":{"vi":"....","en":"......"},
-            "price":0,
+            "label":{"vi":"Trà nóng","en":"Hot Tea"},
+            "description":{
+              "vi":"Trà thảo mộc nhẹ nhàng.",
+              "en":"Light herbal tea."
+            },
+            "price":25000,
             "active":true
           },
           "iced":{
-            "label":{"vi":"Đá","en":"Iced"},
-            "description":{"vi":"....","en":"......"},
-            "price":0,
+            "label":{"vi":"Trà đá","en":"Iced Tea"},
+            "description":{
+              "vi":"Trà mát giải khát.",
+              "en":"Refreshing iced tea."
+            },
+            "price":25000,
             "active":true
           }
         }
       }
-
     }
   },
 
   "service":{
-    "label":{"vi":"Dịch vụ phòng","en":"Room service"},
+    "label":{"vi":"Dịch vụ phòng","en":"Room Service"},
     "allow":["room"],
     "ui":"instant",
     "active":true,
     "items":{
-
       "cleaning":{
         "label":{"vi":"Dọn phòng","en":"Housekeeping"},
-        "description":{"vi":"....","en":"......"},
+        "description":{
+          "vi":"Yêu cầu dọn phòng.",
+          "en":"Request room cleaning."
+        },
         "price":0,
         "active":true
       },
-
       "laundry":{
-        "label":{"vi":"Giặt đồ","en":"Laundry service"},
-        "description":{"vi":"....","en":"......"},
+        "label":{"vi":"Giặt đồ","en":"Laundry Service"},
+        "description":{
+          "vi":"Giặt và sấy quần áo.",
+          "en":"Laundry and drying service."
+        },
         "price":0,
         "active":true
       }
-
     }
   },
 
@@ -208,31 +257,39 @@
     "active":true,
     "items":{
       "footbath":{
-        "label":{"vi":"Ngâm chân thảo dược","en":"Herbal foot bath"},
+        "label":{"vi":"Ngâm chân thảo dược","en":"Herbal Foot Bath"},
         "defaultOption":"evening",
         "active":true,
         "options":{
           "morning":{
             "label":{"vi":"Buổi sáng","en":"Morning"},
-            "description":{"vi":"....","en":"......"},
-            "price":0,
+            "description":{
+              "vi":"Ngâm chân nhẹ nhàng buổi sáng.",
+              "en":"Gentle herbal foot bath in the morning."
+            },
+            "price":80000,
             "active":true
           },
           "afternoon":{
             "label":{"vi":"Buổi chiều","en":"Afternoon"},
-            "description":{"vi":"....","en":"......"},
-            "price":0,
+            "description":{
+              "vi":"Thư giãn sau một ngày dài.",
+              "en":"Relaxing herbal foot bath in the afternoon."
+            },
+            "price":80000,
             "active":true
           },
           "evening":{
             "label":{"vi":"Buổi tối","en":"Evening"},
-            "description":{"vi":"....","en":"......"},
-            "price":0,
+            "description":{
+              "vi":"Ngâm chân thư giãn trước khi ngủ.",
+              "en":"Relaxing foot bath before bedtime."
+            },
+            "price":90000,
             "active":true
           }
         }
       }
-
     }
   },
 
@@ -243,8 +300,11 @@
     "active":true,
     "items":{
       "reception":{
-        "label":{"vi":"Gọi lễ tân","en":"Contact reception"},
-        "description":{"vi":"....","en":"......"},
+        "label":{"vi":"Gọi lễ tân","en":"Contact Host"},
+        "description":{
+          "vi":"Liên hệ chủ nhà nếu bạn cần hỗ trợ.",
+          "en":"Contact the host if you need assistance."
+        },
         "active":true
       }
     }
