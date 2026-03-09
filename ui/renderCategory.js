@@ -121,12 +121,23 @@ function renderCartPanel(root, category, categoryKey){
           </button>
         `).join("");
 
-      return `
-        <div class="menu-item">
-          <div class="item-title">${title}</div>
-          <div class="item-options">${options}</div>
+      const desc = item.description ? translate(item.description) : "";
+
+    return `
+      <div class="menu-card">
+
+        <div class="menu-header">
+          <div class="menu-title">${title}</div>
         </div>
-      `;
+
+        ${desc ? `<div class="menu-desc">${desc}</div>` : ""}
+
+        <div class="menu-options">
+          ${options}
+        </div>
+
+      </div>
+    `;
     }).join("");
 
   root.querySelectorAll(".option-btn").forEach(btn=>{
