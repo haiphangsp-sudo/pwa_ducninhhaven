@@ -41,13 +41,22 @@ body{
   overflow-y:auto;             /* chỉ cho phép cuộn dọc */
   overscroll-behavior:contain;
   -webkit-overflow-scrolling:touch; /* cuộn mượt trên iOS */
-  margin-top: 24px;
-  padding: 10px;
+  padding: 24px 18px;
+}
+@media (min-width:900px){
+ #hubContent{
+  max-width:760px;
+ }
+}
+@media (min-width:700px){
+ #hubContent{
+  max-width:720px;
+  margin:0 auto;
+ }
 }
 #hubMenu{
   background:#ece7dd;
   padding:8px 0;
-
   display:flex;
   gap:14px;
   justify-content: space-around;
