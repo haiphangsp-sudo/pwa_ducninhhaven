@@ -119,7 +119,7 @@ function renderCartPanel(root, category, categoryKey){
           const price = opt.price ? opt.price : "";
           const formatPrice = price.toLocaleString("vi-VN");
           return `
-            <div class="menu-card"
+            <div class="menu-card" role="button" data-id="${categoryKey}.${itemKey}.${optKey}"
                  data-category="${categoryKey}"
                  data-item="${itemKey}"
                  data-option="${optKey}">
