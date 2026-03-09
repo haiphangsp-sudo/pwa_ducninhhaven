@@ -136,7 +136,7 @@
   background:transparent;
 }
 .menu-group{
- margin-bottom:28px;
+ margin-bottom:24px;
 }
 
 .menu-group-title{
@@ -167,6 +167,7 @@
  justify-content:space-between;
  gap:12px;
  border-radius:12px;
+ transform: scale(0.98);
 }
 
 .menu-title{
@@ -193,9 +194,11 @@
  font-size:14px;
 }
 .menu-price{
- font-size:14px;
+  font-weight:600;
+ font-size:16px;
  opacity:.7;
- margin-left:6px;
+ color:#2f4f4f;
+ margin-top:4px;
 }
 
 .menu-info{

@@ -117,7 +117,7 @@ function renderCartPanel(root, category, categoryKey){
           const title = translate(opt.label);
           const desc  = opt.description ? translate(opt.description) : "";
           const price = opt.price ? opt.price : "";
-
+          const formatPrice = price.toLocaleString("vi-VN");
           return `
             <div class="menu-card"
                  data-category="${categoryKey}"
@@ -128,7 +128,7 @@ function renderCartPanel(root, category, categoryKey){
 
                 <div class="menu-desc">${desc}</div>
 
-                <div class="menu-price">${price} đ</div>
+                <div class="menu-price">${formatPrice} đ</div>
               </div>
               <button class="order-btn"
                       data-category="${categoryKey}"
