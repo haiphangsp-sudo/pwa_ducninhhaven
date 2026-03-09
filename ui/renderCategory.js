@@ -123,13 +123,13 @@ function renderCartPanel(root, category, categoryKey){
                  data-category="${categoryKey}"
                  data-item="${itemKey}"
                  data-option="${optKey}">
+              <div class"menu-info">
+                <div class="menu-title">${title}</div>
 
-              <div class="menu-title">${title}</div>
+                <div class="menu-desc">${desc}</div>
 
-              <div class="menu-desc">${desc}</div>
-
-              <div class="menu-price">${price} đ</div>
-
+                <div class="menu-price">${price} đ</div>
+              </div>
               <button class="order-btn"
                       data-category="${categoryKey}"
                       data-item="${itemKey}"
