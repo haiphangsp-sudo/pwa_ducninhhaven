@@ -130,11 +130,9 @@ function renderCartPanel(root, category, categoryKey){
           <div class="menu-title">${title}</div>
         </div>
 
-        ${desc ? `<div class="menu-desc">${desc}</div>` : ""}
+        <div class="menu-desc">${desc}</div>
 
-        <div class="menu-options">
-          ${options}
-        </div>
+        <div class="menu-options">${options}</div>
 
       </div>
     `;
