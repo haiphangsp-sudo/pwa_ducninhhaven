@@ -46,11 +46,11 @@ body{
 }
 #hubMenu{
   background:#ece7dd;
-  padding:12px 10px;
+  padding:8px 0;
 
   display:flex;
   gap:14px;
-
+  justify-content: space-around;
   border-bottom:1px solid rgba(0,0,0,.05);
 }
 #cartBar{
@@ -63,14 +63,12 @@ body{
   border-top:1px solid #eee;
   box-shadow:0 -2px 8px rgba(0,0,0,0.05);
   height: 60px;
-  position: relative;
   transition: transform 0.3s ease, opacity 0.3s ease;
   position: fixed;
   left: 0;
   right: 0;
   bottom: 0;
   padding-bottom: env(safe-area-inset-bottom);
-  background: linear-gradient(180deg, #ece7dd, #e4dfd4);
 }
 .ack-dot{
   width:10px;
@@ -196,23 +194,29 @@ body{
  align-items:center;
  justify-content:center;
 
- gap:6px;
+ gap:4px;
 
- font-size:11px;
+ font-size:13px;
 
- color:#2c2c2c;
+ color:#444;
 
  transition:.18s ease;
 }
 
 .hub-btn.active{
 
- background:#2f4f3e;
+ background:#2f4f4f;
 
  color:white;
 
  box-shadow:
  0 4px 14px rgba(0,0,0,.18);
+}::after{
+  content: "";
+  width:24px;
+  height:3px;
+  background:#2f4f4f;
+  margin-top:4px;
 }
 
 .hub-btn svg{
