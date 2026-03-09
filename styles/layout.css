@@ -211,7 +211,8 @@ body{
 
  box-shadow:
  0 4px 14px rgba(0,0,0,.18);
-}::after{
+}
+.hub-btn.active::after{
   content: "";
   width:24px;
   height:3px;
