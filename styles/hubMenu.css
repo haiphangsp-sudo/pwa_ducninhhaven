@@ -1,60 +1,120 @@
+/* =====================================================
+   HUB MENU — MODE SELECTOR RAIL
+===================================================== */
+
 #hubMenu{
- display:flex;
- gap:14px;
-
- padding:12px 12px;
-
- background:#ece7dd;
-
- border-bottom:1px solid rgba(0,0,0,.05);
-
- overflow-x:auto;
-
- position:sticky;
- top:58px;
- z-index:5;
+  background:linear-gradient(180deg,#ece7dd,#e4dfd4);
+  padding:18px 10px;
+  display:flex;
+  flex-direction:row;
+  align-items:center;
+  justify-content:flex-start;
+  gap:18px;
+  box-shadow:2px 0 8px rgba(0,0,0,.05) inset;
+  overflow:hidden;
+  position:sticky;
 }
 
+
+/* button = mode tile */
 .hub-btn{
+  width:64px;
+  height:64px;
 
- width:64px;
- height:64px;
+  border:none;
+  border-radius:14px;
 
- border:none;
+  background:transparent;
+  color:#2c2c2c;
 
- border-radius:14px;
+  font-size:11px;
 
- background:transparent;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
 
- display:flex;
- flex-direction:column;
- align-items:center;
- justify-content:center;
+  gap:6px;
 
- gap:6px;
+  transition:.18s ease;
+}
 
- font-size:11px;
-
- color:#2c2c2c;
-
- transition:.18s ease;
+.hub-btn:hover{
+  background:rgba(255,255,255,.35);
 }
 
 .hub-btn.active{
+  background:#2f4f3e;
+  color:white;
 
- background:#2f4f3e;
-
- color:white;
-
- box-shadow:
- 0 4px 14px rgba(0,0,0,.18);
+  box-shadow:
+    0 4px 14px rgba(0,0,0,.18);
+}
+/* active không nhảy layout */
+.hub-btn.active:hover{
+  background:#355c49;
 }
 
+/* icon container */
+.hub-icon{
+  width:26px;
+  height:26px;
+  display:block;
+  margin-bottom:4px;
+}
+
+/* svg style */
+.hub-icon svg{
+  width:100%;
+  height:100%;
+
+  stroke:currentColor;
+  fill:none;
+  stroke-width:1.8;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+
+  opacity:.75;
+}
 .hub-btn svg{
- width:22px;
- height:22px;
+width:22px;
+height:22px;
+display:block;
 }
 
 .hub-btn.active svg{
- stroke:white;
+stroke:white;
+}
+/* label nhỏ hơn */
+.hub-label{
+  font-size:11px;
+  line-height:1.1;
+}
+
+/* active đổi màu */
+.hub-btn.active .hub-icon svg{
+  opacity:1;
+}
+
+/* hover nhẹ */
+.hub-btn:hover .hub-icon svg{
+  transform:scale(1.05);
+  transition:transform .15s ease;
+}
+.locked{
+  opacity:.45;
+}
+
+.locked button{
+  pointer-events:auto;
+}
+
+.hub-btn.disabled{
+  opacity:.35;
+}
+
+.option-btn.disabled{
+  opacity:.35;
+  pointer-events:none;
+  filter:grayscale(90%);
 }
