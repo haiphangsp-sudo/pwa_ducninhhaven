@@ -48,7 +48,7 @@
         }
       },
       "lunch":{
-        "label":{"vi":"","en":"....."},
+        "label":{"vi":"Bữa trưa","en":"....."},
         "defaultOption":"seafood",
         "active":true,
         "options":{
@@ -67,7 +67,7 @@
         }
       },
       "dinner":{
-        "label":{"vi":"","en":"....."},
+        "label":{"vi":"Bữa tối","en":"....."},
         "defaultOption":"bbq",
         "active":true,
         "options":{
