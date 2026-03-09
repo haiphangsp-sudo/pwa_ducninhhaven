@@ -50,6 +50,8 @@ body{
   overflow-y:auto;             /* chỉ cho phép cuộn dọc */
   overscroll-behavior:contain;
   -webkit-overflow-scrolling:touch; /* cuộn mượt trên iOS */
+  margin-top: 24px;
+  padding: 10px;
 }
 #hubMenu{
   flex:0 0 auto;
@@ -62,6 +64,7 @@ body{
   position:sticky;
   z-index: 5;
   background: var(--bg);
+  
 }
 #cartBar{
   flex:0 0 60px;
