@@ -108,37 +108,56 @@ function renderCartPanel(root, category, categoryKey){
     .filter(([,item])=>item.active!==false)
     .map(([itemKey,item])=>{
 
-      const title = translate(item.label);
+      const groupTitle = translate(item.label);
 
-      const options = Object.entries(item.options || {})
+      const cards = Object.entries(item.options || {})
         .filter(([,opt])=>opt.active!==false)
-        .map(([optKey,opt])=>`
-          <button class="option-btn"
-                  data-category="${categoryKey}"
-                  data-item="${itemKey}"
-                  data-option="${optKey}">
-            ${translate(opt.label)}
-          </button>
-        `).join("");
+        .map(([optKey,opt])=>{
 
-      const desc = translate(opt.description);
+          const title = translate(opt.label);
+          const desc  = opt.description ? translate(opt.description) : "";
+          const price = opt.price ? `<div class="menu-price">${opt.price}đ</div>` : "";
 
-    return `
-      <div class="menu-card">
+          return `
+            <div class="menu-card"
+                 data-category="${categoryKey}"
+                 data-item="${itemKey}"
+                 data-option="${optKey}">
 
-        <div class="menu-header">
-          <div class="menu-title">${title}</div>
+              <div class="menu-title">${title}</div>
+
+              ${desc ? `<div class="menu-desc">${desc}</div>` : ""}
+
+              ${price}
+
+              <button class="order-btn"
+                      data-category="${categoryKey}"
+                      data-item="${itemKey}"
+                      data-option="${optKey}">
+                Order
+              </button>
+
+            </div>
+          `;
+        }).join("");
+
+      return `
+        <div class="menu-group">
+
+          <h2 class="menu-group-title">
+            ${groupTitle}
+          </h2>
+
+          <div class="menu-grid">
+            ${cards}
+          </div>
+
         </div>
+      `;
 
-        <div class="menu-desc">${desc}</div>
-
-        <div class="menu-options">${options}</div>
-
-      </div>
-    `;
     }).join("");
 
-  root.querySelectorAll(".option-btn").forEach(btn=>{
+  root.querySelectorAll(".order-btn").forEach(btn=>{
 
     btn.onclick=()=>{
 
@@ -149,7 +168,9 @@ function renderCartPanel(root, category, categoryKey){
         item: btn.dataset.item,
         option: btn.dataset.option
       });
+
     };
 
   });
+
 }
