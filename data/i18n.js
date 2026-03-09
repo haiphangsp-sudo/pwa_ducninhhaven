@@ -95,7 +95,7 @@ haven:{vi:"Haven",en:"Haven"},
   },
 
   order:{
-    vi:"Gửi",
+    vi:"Chọn",
     en:"Order"
   }
 

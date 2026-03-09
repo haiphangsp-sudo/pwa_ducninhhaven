@@ -109,14 +109,14 @@ function renderCartPanel(root, category, categoryKey){
     .map(([itemKey,item])=>{
 
       const groupTitle = translate(item.label);
-
+      const Order = translate("order");
       const cards = Object.entries(item.options || {})
         .filter(([,opt])=>opt.active!==false)
         .map(([optKey,opt])=>{
 
           const title = translate(opt.label);
           const desc  = opt.description ? translate(opt.description) : "";
-          const price = opt.price ? `<div class="menu-price">${opt.price}đ</div>` : "";
+          const price = opt.price ? opt.price : "";
 
           return `
             <div class="menu-card"
@@ -126,15 +126,15 @@ function renderCartPanel(root, category, categoryKey){
 
               <div class="menu-title">${title}</div>
 
-              ${desc ? `<div class="menu-desc">${desc}</div>` : ""}
+              <div class="menu-desc">${desc}</div>
 
-              ${price}
+              <div class="menu-price">${price} đ</div>
 
               <button class="order-btn"
                       data-category="${categoryKey}"
                       data-item="${itemKey}"
                       data-option="${optKey}">
-                Order
+                ${Order}
               </button>
 
             </div>
