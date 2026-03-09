@@ -8,7 +8,7 @@
       "welcome":{
         "label":{"vi":"Chào mừng","en":"Welcome"},
         "content":{
-          "vi":"Chúng tôi hy vọng bạn có thời gian thư giãn tại Duc Ninh Haven.",
+          "vi":"Chúng tôi hy vọng bạn có thời gian thư giãn tuyệt vời tại Duc Ninh Haven.",
           "en":"We hope you enjoy a relaxing stay at Duc Ninh Haven."
         },
         "active":true
@@ -22,17 +22,69 @@
     "ui":"cart",
     "active":true,
     "items":{
-
       "breakfast":{
         "label":{"vi":"Bữa sáng","en":"Breakfast"},
         "defaultOption":"pho",
         "active":true,
         "options":{
-          "pho":{"label":{"vi":"Phở gà","en":"Chicken Pho"},"price":0,"active":true},
-          "bread":{"label":{"vi":"Bánh mì chảo","en":"Pan bread"},"price":0,"active":true}
+          "pho":{
+            "label":{"vi":"Phở gà","en":"Chicken Pho"},
+            "description":{"vi":"....","en":"......"},
+            "price":0,
+            "active":true
+          },
+          "bread":{
+            "label":{"vi":"Bánh mì chảo","en":"Pan bread"},
+            "description":{"vi":"....","en":"......"},
+            "price":0,
+            "active":true
+          },
+          "broken_rice":{
+            "label":{"vi":".....","en":"......."},
+            "description":{"vi":"....","en":"......"},
+            "price":0,
+            "active":true
+          }
+        }
+      },
+      "lunch":{
+        "label":{"vi":"","en":"....."},
+        "defaultOption":"seafood",
+        "active":true,
+        "options":{
+          "seafood":{
+            "label":{"vi":"....","en":""},
+            "description":{"vi":"....","en":"......"},
+            "price":0,
+            "active":true
+          },
+          "seafochicken_riceod":{
+            "label":{"vi":"....","en":""},
+            "description":{"vi":"....","en":"......"},
+            "price":0,
+            "active":true
+          }
+        }
+      },
+      "dinner":{
+        "label":{"vi":"","en":"....."},
+        "defaultOption":"bbq",
+        "active":true,
+        "options":{
+          "local_rice":{
+            "label":{"vi":"....","en":""},
+            "description":{"vi":"....","en":"......"},
+            "price":0,
+            "active":true
+          },
+          "bbq":{
+            "label":{"vi":"....","en":""},
+            "description":{"vi":"....","en":"......"},
+            "price":0,
+            "active":true
+          }
         }
       }
-
     }
   },
 
@@ -42,14 +94,23 @@
     "ui":"cart",
     "active":true,
     "items":{
-
       "blackcoffee":{
         "label":{"vi":"Cà phê đen","en":"Black Coffee"},
         "defaultOption":"hot",
         "active":true,
         "options":{
-          "hot":{"label":{"vi":"Nóng","en":"Hot"},"price":0,"active":true},
-          "iced":{"label":{"vi":"Đá","en":"Iced"},"price":0,"active":true}
+          "hot":{
+            "label":{"vi":"Nóng","en":"Hot"},
+            "description":{"vi":"....","en":"......"},
+            "price":0,
+            "active":true
+        },
+          "iced":{
+            "label":{"vi":"Đá","en":"Iced"},
+            "description":{"vi":"....","en":"......"},
+            "price":0,
+            "active":true
+          }
         }
       },
 
@@ -58,8 +119,18 @@
         "defaultOption":"hot",
         "active":true,
         "options":{
-          "hot":{"label":{"vi":"Nóng","en":"Hot"},"price":0,"active":true},
-          "iced":{"label":{"vi":"Đá","en":"Iced"},"price":0,"active":true}
+          "hot":{
+            "label":{"vi":"Nóng","en":"Hot"},
+            "description":{"vi":"....","en":"......"},
+            "price":0,
+            "active":true
+          },
+          "iced":{
+            "label":{"vi":"Đá","en":"Iced"},
+            "description":{"vi":"....","en":"......"},
+            "price":0,
+            "active":true
+          }
         }
       },
 
@@ -68,8 +139,18 @@
         "defaultOption":"hot",
         "active":true,
         "options":{
-          "hot":{"label":{"vi":"Nóng","en":"Hot"},"price":0,"active":true},
-          "iced":{"label":{"vi":"Đá","en":"Iced"},"price":0,"active":true}
+          "hot":{
+            "label":{"vi":"Nóng","en":"Hot"},
+            "description":{"vi":"....","en":"......"},
+            "price":0,
+            "active":true
+          },
+          "iced":{
+            "label":{"vi":"Đá","en":"Iced"},
+            "description":{"vi":"....","en":"......"},
+            "price":0,
+            "active":true
+          }
         }
       },
 
@@ -78,8 +159,18 @@
         "defaultOption":"hot",
         "active":true,
         "options":{
-          "hot":{"label":{"vi":"Nóng","en":"Hot"},"price":0,"active":true},
-          "iced":{"label":{"vi":"Đá","en":"Iced"},"price":0,"active":true}
+          "hot":{
+            "label":{"vi":"Nóng","en":"Hot"},
+            "description":{"vi":"....","en":"......"},
+            "price":0,
+            "active":true
+          },
+          "iced":{
+            "label":{"vi":"Đá","en":"Iced"},
+            "description":{"vi":"....","en":"......"},
+            "price":0,
+            "active":true
+          }
         }
       }
 
@@ -95,11 +186,15 @@
 
       "cleaning":{
         "label":{"vi":"Dọn phòng","en":"Housekeeping"},
+        "description":{"vi":"....","en":"......"},
+        "price":0,
         "active":true
       },
 
       "laundry":{
         "label":{"vi":"Giặt đồ","en":"Laundry service"},
+        "description":{"vi":"....","en":"......"},
+        "price":0,
         "active":true
       }
 
@@ -112,15 +207,29 @@
     "ui":"cart",
     "active":true,
     "items":{
-
       "footbath":{
         "label":{"vi":"Ngâm chân thảo dược","en":"Herbal foot bath"},
         "defaultOption":"evening",
         "active":true,
         "options":{
-          "morning":{"label":{"vi":"Buổi sáng","en":"Morning"},"price":0,"active":true},
-          "afternoon":{"label":{"vi":"Buổi chiều","en":"Afternoon"},"price":0,"active":true},
-          "evening":{"label":{"vi":"Buổi tối","en":"Evening"},"price":0,"active":true}
+          "morning":{
+            "label":{"vi":"Buổi sáng","en":"Morning"},
+            "description":{"vi":"....","en":"......"},
+            "price":0,
+            "active":true
+          },
+          "afternoon":{
+            "label":{"vi":"Buổi chiều","en":"Afternoon"},
+            "description":{"vi":"....","en":"......"},
+            "price":0,
+            "active":true
+          },
+          "evening":{
+            "label":{"vi":"Buổi tối","en":"Evening"},
+            "description":{"vi":"....","en":"......"},
+            "price":0,
+            "active":true
+          }
         }
       }
 
@@ -133,12 +242,11 @@
     "ui":"instant",
     "active":true,
     "items":{
-
       "reception":{
         "label":{"vi":"Gọi lễ tân","en":"Contact reception"},
+        "description":{"vi":"....","en":"......"},
         "active":true
       }
-
     }
   }
 }
