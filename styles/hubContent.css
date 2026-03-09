@@ -169,7 +169,8 @@
  justify-content:space-between;
  gap:12px;
  border-radius:12px;
- transform: scale(0.98);
+}:active{
+  transform: scale(0.98);
 }
 
 .menu-title{
