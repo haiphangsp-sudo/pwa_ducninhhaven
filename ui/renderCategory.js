@@ -121,7 +121,7 @@ function renderCartPanel(root, category, categoryKey){
           </button>
         `).join("");
 
-      const desc = translate(item.description);
+      const desc = translate(opt.description);
 
     return `
       <div class="menu-card">
