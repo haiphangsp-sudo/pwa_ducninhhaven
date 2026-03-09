@@ -1,203 +1,100 @@
-/* =========================================================
-   HUB CONTENT AREA
-========================================================= */
-
-/* =========================================================
-   ARTICLE PANEL (intro/help)
-========================================================= */
-
-.article{
-  max-width:620px;
-  margin:40px auto;
-  line-height:1.65;
-  font-size:16px;
-  color:#2b2b2b;
-}
-
-.article h2{
-  font-size:22px;
-  margin-bottom:14px;
-  font-weight:600;
-  letter-spacing:.02em;
-}
-
-.article p{
-  margin-bottom:12px;
-  opacity:.85;
-}
-
-
-/* =========================================================
-   CART PANEL (food/drink)
-========================================================= */
-
-.menu-item{
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-  margin-bottom:18px;
-}
-
-.item-title{
-  font-size:18px;
-  font-weight:600;
-  letter-spacing:.02em;
-  color:#1f2a23;
-}
-
-/* option grid */
-.item-options{
-  display:flex;
-  flex-wrap:wrap;
-  gap:12px;
-}
-
-/* option button */
-.option-btn{
-  border:none;
-  background:white;
-
-  padding:12px 16px;
-  min-width:150px;
-
-  border-radius:14px;
-  font-size:15px;
-  font-weight:500;
-
-  box-shadow:
-    0 1px 4px rgba(0,0,0,.12),
-    0 1px 0 rgba(255,255,255,.8) inset;
-
-  cursor:pointer;
-  transition:all .15s ease;
-}
-
-.option-btn:hover{
-  transform:translateY(-1px);
-  box-shadow:
-    0 3px 10px rgba(0,0,0,.18),
-    0 1px 0 rgba(255,255,255,.9) inset;
-}
-
-.option-btn:active{
-  transform:translateY(1px);
-  box-shadow:
-    0 1px 3px rgba(0,0,0,.2) inset;
-}
-
-
-/* =========================================================
-   INSTANT PANEL (service/help buttons)
-========================================================= */
-
-.instant-btn{
-  width:100%;
-  max-width:420px;
-  margin-bottom: 18px;
-
-  padding:18px;
-  border:none;
-  border-radius:18px;
-
-  background:#2f4f3e;
-  color:white;
-
-  font-size:16px;
-  font-weight:600;
-  letter-spacing:.03em;
-
-  cursor:pointer;
-  transition:all .15s ease;
-}
-
-.instant-btn:hover{
-  background:#3b624c;
-}
-
-.instant-btn:active{
-  transform:translateY(1px);
-}
-
-
-/* =========================================================
-   SCROLL FEEL (tablet friendly)
-========================================================= */
-
-#hubContent::-webkit-scrollbar{
-  width:8px;
-}
-
-#hubContent::-webkit-scrollbar-thumb{
-  background:rgba(0,0,0,.18);
-  border-radius:4px;
-}
-
-#hubContent::-webkit-scrollbar-track{
-  background:transparent;
-}
 .menu-group{
- margin-bottom:24px;
- padding-bottom:18px;
- border-bottom:1px solid #eee;
+ margin-bottom:28px;
 }
+
 .menu-group-title{
 
  font-size:22px;
-
  font-weight:600;
 
  margin-bottom:14px;
 
- letter-spacing:.03em;
-
- color:#2b2b2b;
-
+ letter-spacing:.02em;
 }
 
 .menu-grid{
+
  display:grid;
  grid-template-columns:1fr;
+
  gap:14px;
 }
 
 @media (min-width:700px){
-  .menu-grid{
-    grid-template-columns:1fr 1fr;
-  }
+
+ .menu-grid{
+  grid-template-columns:1fr 1fr;
+ }
+
 }
 .menu-card{
+
+ display:flex;
+ align-items:center;
+
+ gap:14px;
 
  padding:16px;
 
  background:#fff;
 
- border:none;
-
  border-radius:16px;
 
- box-shadow:
-   0 6px 18px rgba(0,0,0,.06),
-   0 1px 0 rgba(255,255,255,.7) inset;
+ border:none;
 
- display:flex;
- justify-content:space-between;
- gap:12px;
+ box-shadow:
+ 0 6px 18px rgba(0,0,0,.06),
+ 0 1px 0 rgba(255,255,255,.7) inset;
+
+ transition:.15s ease;
+}
+
+.menu-card:active{
+
+ transform:scale(.98);
+}
+.menu-thumb{
+
+ width:72px;
+ height:72px;
+
+ border-radius:12px;
+
+ object-fit:cover;
+
+ flex-shrink:0;
+}
+
+.menu-thumb[src=""]{
+
+ display:none;
+}
+.menu-info{
+ flex:1;
 }
 
 .menu-title{
+
  font-size:18px;
  font-weight:600;
 }
 
 .menu-desc{
+
  font-size:14px;
+
  color:#666;
- margin:6px 0 10px;
+
+ margin:6px 0;
 }
-.menu-options{
- display:flex;
- flex-wrap:wrap;
- gap:8px;
+
+.menu-price{
+
+ font-weight:600;
+
+ font-size:16px;
+
+ color:#2f4f3e;
 }
 .order-btn{
 
@@ -216,23 +113,9 @@
  font-weight:600;
 
  transition:.15s ease;
-
 }
+
 .order-btn:active{
+
  transform:scale(.95);
-}
-
-.menu-price{
-
- font-weight:600;
-
- font-size:16px;
-
- color:#2f4f3e;
-
- margin-top:6px;
-
-}
-.menu-info{
- flex:1;
 }
