@@ -66,6 +66,9 @@ body{
   justify-content: space-around;
   border-bottom:1px solid rgba(0,0,0,.05);
   flex-shrink: 0;
+ overflow-x:auto;
+ position:sticky;
+ z-index:5;
 }
 #cartBar{
   background: #fff;
@@ -103,19 +106,6 @@ body{
 }
 
 
-
-/* them */
-
-#contextBar{
- position:sticky;
- top:0;
- z-index:10;
- height:58px;
- background:#ece7dd;
- display:flex;
- align-items:center;
- border-bottom:1px solid rgba(0,0,0,.05);
-}
 
 .nav{
  display:flex;
@@ -169,17 +159,6 @@ body{
 .lang-switch button.active{
  background:#2f4f3e;
  color:white;
-}
-
-#hubMenu{
- display:flex;
- gap:14px;
- padding:12px 12px;
- background:#ece7dd;
- border-bottom:1px solid rgba(0,0,0,.05);
- overflow-x:auto;
- position:sticky;
- z-index:5;
 }
 
 .hub-btn{
