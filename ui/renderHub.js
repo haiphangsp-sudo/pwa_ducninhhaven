@@ -12,8 +12,7 @@ import { getContext } from "../core/context.js";
 export function renderHub(){
 
   const menuEl = document.getElementById("hubMenu");
-  const contentEl = document.getElementById("hubContent");
-  if(!menuEl || !contentEl) return;
+  const contentEl = document.querySelector(".category-panel");
 
   const ctx = getContext();
 
@@ -35,13 +34,6 @@ export function renderHub(){
 
   return cat.allow.includes(anchorType);
 });
-
-  // fallback nếu vẫn rỗng (an toàn tuyệt đối)
-  if(!panels.length){
-    contentEl.innerHTML = "";
-    menuEl.innerHTML = "";
-    return;
-  }
 
   let panel = UI.view.panel;
   if(!panels.includes(panel)) panel = panels[0];

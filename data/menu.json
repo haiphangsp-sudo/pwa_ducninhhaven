@@ -311,7 +311,7 @@
         "label":{"vi":"Gọi thanh toán","en":"Call for bill"},
         "description":{
           "vi":"Yêu cầu tính tiền và thanh toán.",
-          "en":"Request for bill and payment."
+          "en":"Request the bill and payment."
         },
         "active":true
       }

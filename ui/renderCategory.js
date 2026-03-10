@@ -8,32 +8,26 @@ import { translate } from "./utils/translate.js";
 export function renderCategory(root, key){
 
   const category = MENU[key];
-
   if(!category){
     root.innerHTML="";
     return;
   }
 
-  let html = `<div class="category-panel">`;
-
   switch(category.ui){
 
     case "article":
-      html += renderArticle(category);
+      root.innerHTML = renderArticle(category);
       break;
 
     case "instant":
-      html += renderInstant(category, key);
+      root.innerHTML = renderInstant(category, key);
       break;
 
     case "cart":
-      html += renderCartPanel(category, key);
+      root.innerHTML = renderCartPanel(category, key);
       break;
 
   }
-
-  html += `</div>`;
-  root.innerHTML = html;
 
   bindInstant();
   bindCart();
