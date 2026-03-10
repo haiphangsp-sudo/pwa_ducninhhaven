@@ -55,9 +55,9 @@ cart_bar:{
     vi:"món",
     en:"items"
   },
-  send_order:{
-    vi:"Gửi yêu cầu",
-    en:"Send request"
+  order:{
+    vi:"Thêm",
+    en:"Order"
   }
 },
 select_place:{vi:"Chọn vị trí phục vụ",en:"Select service location"},
@@ -94,9 +94,9 @@ haven:{vi:"Haven",en:"Haven"},
     en:"Add to order"
   },
 
-  order:{
-    vi:"Thêm",
-    en:"Order"
+  
+  send_request:{
+    vi:"Gửi yêu cầu",
+    en:"Send request"
   }
-
 };

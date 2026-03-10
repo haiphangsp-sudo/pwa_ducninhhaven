@@ -104,7 +104,7 @@ function renderInstant(category, categoryKey){
               <button class="instant-btn"
                 data-category="${categoryKey}"
                 data-item="${itemKey}">
-                ${translate("order")}
+                ${translate("send_request")}
               </button>
 
             </div>
@@ -152,7 +152,7 @@ function renderCartPanel(category, categoryKey){
                   data-category="${categoryKey}"
                   data-item="${itemKey}"
                   data-option="${optKey}">
-                  ${translate("order")}
+                  ${translate("cart_bar.order")}
                 </button>
 
               </div>
