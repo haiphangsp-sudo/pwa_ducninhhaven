@@ -36,7 +36,7 @@ body{
 #hubContent{
   flex: 1;
   overflow:auto;
-  padding-block: 110px;
+  padding-bottom: 110px;
 }
 .page-container{
   max-width: 980px;
