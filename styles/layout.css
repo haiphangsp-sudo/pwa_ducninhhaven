@@ -16,7 +16,7 @@ body{
   display:none !important;
 }
 
-#app, .main-content{
+#app{
   margin:auto;
   min-height:100vh;
   display:flex;
@@ -35,13 +35,14 @@ body{
   touch-action:manipulation;  /* giảm delay touch */
   min-height: 0;
   justify-content: center;
+  flex: 1;
+  overflow: hidden;
 }
 #hubContent{
-  flex:1;
   overflow-y:auto;             /* chỉ cho phép cuộn dọc */
   overscroll-behavior:contain;
   -webkit-overflow-scrolling:touch; /* cuộn mượt trên iOS */
-  padding: 24px 18px 120px;
+  padding: 20px 18px 120px;
   max-width: 980px;
   margin: 0 auto;
   width: 100%;
@@ -105,15 +106,11 @@ body{
 #contextBar{
  position:sticky;
  top:0;
- z-index:1000;
-
+ z-index:10;
  height:58px;
-
  background:#ece7dd;
-
  display:flex;
  align-items:center;
-
  border-bottom:1px solid rgba(0,0,0,.05);
 }
 
@@ -121,7 +118,6 @@ body{
  display:flex;
  align-items:center;
  justify-content:space-between;
-
  width:100%;
  padding:0 14px;
 }
@@ -130,7 +126,6 @@ body{
  display:flex;
  align-items:center;
  gap:6px;
-
  font-size:15px;
  font-weight:600;
 }
@@ -245,6 +240,7 @@ body{
  font-weight:600;
  margin-bottom:14px;
  letter-spacing:.02em;
+ scroll-margin-inline-start: 100px;
 }
 
 .menu-grid{
@@ -261,7 +257,7 @@ body{
 .menu-card{
  display:flex;
  gap:14px;
- padding:16px;
+ padding:16px 16px 20px;
  background:#fff;
  border-radius:16px;
  border:none;
