@@ -303,21 +303,21 @@ flex-direction: column;
  font-size:16px;
  color:#2f5d4b;
  margin-top: auto;
+ white-space: nowrap;
 }
 
 .order-btn{
-margin-top: 10px;
-width:100%;
- padding:14px;
- border:none;
- border-radius:10px;
- background:#2f4f3e;
- color:white;
- font-size:14px;
- font-weight:600;
- transition:.15s ease;
- min-width: 80px;
+padding: 8px 16px;
+    border: none;
+    border-radius: 10px;
+    background: #2f5d4b;
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    transition: .15s ease;
+    min-width: 80px;
     height: 36px;
+    cursor: pointer;
 }
 
 .order-btn:active{
@@ -361,5 +361,6 @@ width:100%;
   display:flex;
   justify-content:space-between;
   align-items:center;
-  margin-top:10px;
+  margin-top:12px;
+  gap: 12px;
 }
