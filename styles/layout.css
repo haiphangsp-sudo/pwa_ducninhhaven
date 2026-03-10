@@ -25,27 +25,32 @@ body{
   padding-bottom: calc(80px+env(safe-area-inset-bottom));
 }
 
-/* ======================================================
-   HUB ROOT — thiết bị chứ không phải page
-====================================================== */
-
 #hub{
   display:flex;
   flex-direction:column;
-  touch-action:manipulation;  /* giảm delay touch */
+  touch-action:manipulation;
   min-height: 0;
   flex: 1;
   overflow: hidden;
 }
 #hubContent{
-  overflow-y:auto;             /* chỉ cho phép cuộn dọc */
-  overscroll-behavior:contain;
-  -webkit-overflow-scrolling:touch; /* cuộn mượt trên iOS */
-  padding: 20px 18px 120px;
+  flex: 1;
+  overflow:auto;
+  padding-block: 110px;
+}
+.page-container{
   max-width: 980px;
   margin: 0 auto;
-  width: 100%;
-  box-sizing: border-box;
+  padding: 20px 18px;
+}
+.card{
+  background: #fff;
+  border-radius: 18px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.06);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 @media (min-width:900px){
  #hubContent{
@@ -231,17 +236,10 @@ body{
  }
 }
 .menu-card{
- display:flex;
- flex-direction: column;
- gap:8px;
- padding:16px 16px 20px;
- background:#fff;
- border-radius:16px;
  border:none;
  box-shadow:
  0 6px 18px rgba(0,0,0,.06),
  0 1px 0 rgba(255,255,255,.7) inset;
- transition:.15s ease;
  cursor:pointer;
  transition: transform .15s ease, box-shadow .15s ease;
 }
@@ -331,12 +329,8 @@ padding: 10px 16px;
 }
 
 .instant-card{
-  display:flex;
   justify-content:space-between;
   align-items:center;
-  background:#fff;
-  padding:18px;
-  border-radius:16px;
   box-shadow:0 2px 6px rgba(0,0,0,.05);
 }
 
@@ -352,20 +346,6 @@ padding: 10px 16px;
   display:flex;
   flex-direction:column;
   gap:16px;
-}
-
-.instant-card{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-
-  gap:20px;
-
-  padding:20px;
-  border-radius:18px;
-
-  background:#fff;
-  box-shadow:0 2px 8px rgba(0,0,0,.06);
 }
 
 .instant-info{

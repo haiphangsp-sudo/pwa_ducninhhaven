@@ -84,7 +84,7 @@ function renderInstant(category, categoryKey){
           const title = translate(item.label);
           const desc  = item.description ? translate(item.description) : "";
           return `
-            <div class="instant-card">
+            <div class="instant-card card">
 
               <div class="instant-info">
                 <div class="instant-title ${itemKey}">${title}</div>
@@ -126,7 +126,7 @@ function renderCartPanel(category, categoryKey){
           const price = opt.price || 0;
 
           return `
-            <div class="menu-card">
+            <div class="menu-card card">
 
               <div class="menu-title">${title}</div>
 
