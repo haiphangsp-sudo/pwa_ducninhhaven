@@ -131,7 +131,7 @@ function renderCartPanel(root, category, categoryKey){
                 <button class="order-btn"
                         data-category="${categoryKey}"
                         data-item="${itemKey}"
-                        data-option="${optKey}"
+                        data-option="${optKey}">
                   ${Order}
                 </button>
               </div>
