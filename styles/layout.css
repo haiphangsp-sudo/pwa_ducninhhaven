@@ -417,6 +417,9 @@ padding: 10px 16px;
 .instant-title.reception::before{
   content:"🔔";
 }
+.instant-title.pay:before{
+  content:"💳";
+}
 
 .instant-desc{
   font-size:15px;
