@@ -68,21 +68,23 @@ body{
   flex-shrink: 0;
 }
 #cartBar{
+  background: #fff;
+  border-radius: 18px;
   position:fixed;
   flex:0 0 60px;
   display:flex;
   align-items:center;
   justify-content:space-between;
-  padding:14px 20px;
-  background:white;
+  padding:18px;
   border-top:1px solid #eee;
-  box-shadow:0 -2px 8px rgba(0,0,0,0.05);
+  box-shadow:0 2px 8px rgba(0,0,0,0.06);
   height: 60px;
   transition: transform 0.3s ease, opacity 0.3s ease;
   left: 0;
   right: 0;
   bottom: 0;
   padding-bottom: env(safe-area-inset-bottom);
+
 }
 .ack-dot{
   width:10px;
@@ -231,11 +233,11 @@ body{
  stroke:white;
 }
 .menu-group-title{
- font-size:22px;
+ font-size:26px;
  font-weight:600;
- margin-bottom:14px;
+ margin-bottom:12px;
  letter-spacing:.02em;
- scroll-margin-inline-start: 100px;
+ scroll-margin-top: 100px;
 }
 
 .menu-grid{
@@ -251,7 +253,8 @@ body{
 }
 .menu-card{
  display:flex;
- gap:14px;
+ flex-direction: column;
+ gap:8px;
  padding:16px 16px 20px;
  background:#fff;
  border-radius:16px;
@@ -300,16 +303,17 @@ flex-direction: column;
 
 .menu-price{
  font-weight:600;
- font-size:16px;
+ font-size:18px;
  color:#2f5d4b;
  margin-top: auto;
  white-space: nowrap;
+
 }
 
 .order-btn{
-padding: 8px 16px;
+padding: 10px 16px;
     border: none;
-    border-radius: 10px;
+    border-radius: 12px;
     background: #2f5d4b;
     color: white;
     font-size: 14px;
@@ -361,6 +365,6 @@ padding: 8px 16px;
   display:flex;
   justify-content:space-between;
   align-items:center;
-  margin-top:12px;
+  margin-top: auto;
   gap: 12px;
 }
