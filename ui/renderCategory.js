@@ -126,12 +126,12 @@ function renderCartPanel(root, category, categoryKey){
                  <img class="menu-thumb" src="${opt.image || ''}" />
               <div class="menu-info">
                 <div class="menu-title">${title}</div>
-                <div class="menu-desc">${desc}</div
+                <div class="menu-desc">${desc}</div>
                 <div class="menu-price">${formatPrice} đ</div>
                 <button class="order-btn"
                         data-category="${categoryKey}"
                         data-item="${itemKey}"
-                        data-option="${optKey}">
+                        data-option="${optKey}"
                   ${Order}
                 </button>
               </div>
@@ -141,15 +141,8 @@ function renderCartPanel(root, category, categoryKey){
 
       return `
         <div class="menu-group">
-
-          <h2 class="menu-group-title">
-            ${groupTitle}
-          </h2>
-
-          <div class="menu-grid">
-            ${cards}
-          </div>
-
+          <h2 class="menu-group-title">${groupTitle}</h2>
+          <div class="menu-grid">${cards}</div>
         </div>
       `;
 
