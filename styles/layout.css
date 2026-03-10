@@ -34,7 +34,6 @@ body{
   flex-direction:column;
   touch-action:manipulation;  /* giảm delay touch */
   min-height: 0;
-  justify-content: center;
   flex: 1;
   overflow: hidden;
 }
@@ -66,6 +65,7 @@ body{
   gap:14px;
   justify-content: space-around;
   border-bottom:1px solid rgba(0,0,0,.05);
+  flex-shrink: 0;
 }
 #cartBar{
   position:fixed;

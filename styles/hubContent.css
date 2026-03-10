@@ -138,6 +138,7 @@
 }
 .menu-group{
  margin-bottom:24px;
+ min-width: 0;
 }
 
 @media (min-width:700px){
