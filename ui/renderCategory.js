@@ -8,11 +8,10 @@ import { translate } from "./utils/translate.js";
 export function renderCategory(root, key){
 
   const category = MENU[key];
-  if(!category){
+  if(!category || !root){
     root.innerHTML="";
     return;
   }
-  if(!root) return;
   switch(category.ui){
 
     case "article":
