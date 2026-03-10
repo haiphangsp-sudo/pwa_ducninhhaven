@@ -30,18 +30,21 @@ body{
 ====================================================== */
 
 #hub{
-  flex:1;
   display:flex;
   flex-direction:column;
   touch-action:manipulation;  /* giảm delay touch */
   min-height: 0;
+  justify-content: center;
 }
 #hubContent{
   flex:1;
   overflow-y:auto;             /* chỉ cho phép cuộn dọc */
   overscroll-behavior:contain;
   -webkit-overflow-scrolling:touch; /* cuộn mượt trên iOS */
-  padding: 24px 18px;
+  padding: 24px 18px 120px;
+  max-width: 980px;
+  margin: 0 auto;
+  width: 100%;
 }
 @media (min-width:900px){
  #hubContent{
