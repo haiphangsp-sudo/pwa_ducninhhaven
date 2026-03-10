@@ -399,7 +399,7 @@ padding: 10px 16px;
 .instant-title{
   display:flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   font-size:22px;
   font-weight:600;
 }
@@ -409,6 +409,7 @@ padding: 10px 16px;
   width: 28px;
   height: 28px;
   display: flex;
+  text-align: center;
   align-items: center;
   border-radius: 8px;
   background: #e7efe9;
