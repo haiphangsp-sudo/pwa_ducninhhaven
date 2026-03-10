@@ -11,7 +11,7 @@
   margin:40px auto;
   line-height:1.65;
   font-size:16px;
-  color:#2b2b2b;
+  padding: 20px 16px;
 }
 
 .article h2{
@@ -24,6 +24,7 @@
 .article p{
   margin-bottom:12px;
   opacity:.85;
+  color:#555;
 }
 
 
@@ -115,7 +116,7 @@
 }
 
 .instant-btn:active{
-  transform:translateY(1px);
+  transform:scale(.97);
 }
 
 
@@ -137,28 +138,6 @@
 }
 .menu-group{
  margin-bottom:24px;
- padding-bottom:18px;
- border-bottom:1px solid #eee;
-}
-.menu-group-title{
-
- font-size:22px;
-
- font-weight:600;
-
- margin-bottom:14px;
-
- letter-spacing:.03em;
-
- color:#2b2b2b;
-
-}
-
-.menu-grid{
- display:grid;
- grid-template-columns:1fr;
- gap:14px;
- margin-bottom: 24px;
 }
 
 @media (min-width:700px){
