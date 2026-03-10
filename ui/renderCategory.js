@@ -1,56 +1,64 @@
 
-// ui/renderCategory.js
-// Render nội dung bên trong category khi chọn tab ở menu dưới cùng
-
 
 import { MENU } from "../core/menuStore.js";
 import { addToCart, sendInstant } from "../core/actions.js";
 import { getContext } from "../core/context.js";
 import { translate } from "./utils/translate.js";
 
-/* ========================================================= */
-
 export function renderCategory(root, key){
 
   const category = MENU[key];
+
   if(!category){
     root.innerHTML="";
     return;
   }
 
-  root.innerHTML="";
-  
+  let html = `<div class="category-panel">`;
+
   switch(category.ui){
 
     case "article":
-      return renderArticle(root, category);
+      html += renderArticle(category);
+      break;
 
     case "instant":
-      return renderInstant(root, category, key);
+      html += renderInstant(category, key);
+      break;
 
     case "cart":
-      return renderCartPanel(root, category, key);
+      html += renderCartPanel(category, key);
+      break;
 
-    default:
-      root.innerHTML="";
   }
+
+  html += `</div>`;
+  root.innerHTML = html;
+
+  bindInstant();
+  bindCart();
 }
+
+/* ========================================================= */
 
 function ensureActive(){
-const ctx = getContext();
 
-    if(!ctx?.active){
-      window.dispatchEvent(new Event("openPlacePicker"));
-      return false;
-    }
-    return true;
+  const ctx = getContext();
+
+  if(!ctx?.active){
+    window.dispatchEvent(new Event("openPlacePicker"));
+    return false;
+  }
+
+  return true;
 }
+
 /* ========================================================= */
 /* ARTICLE */
 
-function renderArticle(root, category){
+function renderArticle(category){
 
-  root.innerHTML = Object.values(category.items)
+  return Object.values(category.items)
     .filter(sec=>sec.active!==false)
     .map(section=>{
 
@@ -70,98 +78,142 @@ function renderArticle(root, category){
 }
 
 /* ========================================================= */
+/* INSTANT */
 
-function renderInstant(root, category, categoryKey){
+function renderInstant(category, categoryKey){
 
-  root.innerHTML = Object.entries(category.items)
-    .filter(([,item])=>item.active!==false)
-    .map(([itemKey,item])=>`
-      <button class="instant-btn"
-              data-category="${categoryKey}"
-              data-item="${itemKey}">
-        ${translate(item.label)}
-      </button>
-    `).join("");
+  return `
+    <div class="instant-panel">
 
-  root.querySelectorAll(".instant-btn").forEach(btn=>{
+      ${
+        Object.entries(category.items)
+        .filter(([,item])=>item.active!==false)
+        .map(([itemKey,item])=>{
 
-    btn.onclick=()=>{
+          const title = translate(item.label);
+          const desc  = item.description ? translate(item.description) : "";
 
-      if(!ensureActive()) return;
-      
-      sendInstant({
-        qty: 1,
-        type: category.ui,
-        category: btn.dataset.category,
-        code: btn.dataset.item
-      });
-    };
+          return `
+            <div class="instant-card">
 
-  });
+              <div class="instant-info">
+                <div class="instant-title">${title}</div>
+                ${desc ? `<div class="instant-desc">${desc}</div>` : ""}
+              </div>
+
+              <button class="instant-btn"
+                data-category="${categoryKey}"
+                data-item="${itemKey}">
+                ${translate("order")}
+              </button>
+
+            </div>
+          `;
+        }).join("")
+      }
+
+    </div>
+  `;
 }
 
 /* ========================================================= */
+/* CART */
 
-function renderCartPanel(root, category, categoryKey){
+function renderCartPanel(category, categoryKey){
 
-  root.innerHTML = Object.entries(category.items || {})
+  return Object.entries(category.items || {})
     .filter(([,item])=>item.active!==false)
     .map(([itemKey,item])=>{
 
       const groupTitle = translate(item.label);
-      const Order = translate("order");
+
       const cards = Object.entries(item.options || {})
         .filter(([,opt])=>opt.active!==false)
         .map(([optKey,opt])=>{
 
           const title = translate(opt.label);
           const desc  = opt.description ? translate(opt.description) : "";
-          const price = opt.price ? opt.price : "";
-          const formatPrice = price.toLocaleString("vi-VN");
+          const price = opt.price || 0;
+
           return `
-            <div class="menu-card" role="button" data-id="${categoryKey}.${itemKey}.${optKey}"
-                 data-category="${categoryKey}"
-                 data-item="${itemKey}"
-                 data-option="${optKey}">
-                 <img class="menu-thumb" src="${opt.image || ''}" />
-              <div class="menu-info">
-                <div class="menu-title">${title}</div>
-                <div class="menu-desc">${desc}</div>
-                <div class="menu-price">${formatPrice} đ</div>
+            <div class="menu-card">
+
+              <div class="menu-title">${title}</div>
+
+              ${desc ? `<div class="menu-desc">${desc}</div>` : ""}
+
+              <div class="menu-bottom">
+
+                <div class="menu-price">
+                  ${price.toLocaleString("vi-VN")} đ
+                </div>
+
                 <button class="order-btn"
-                        data-category="${categoryKey}"
-                        data-item="${itemKey}"
-                        data-option="${optKey}">
-                  ${Order}
+                  data-category="${categoryKey}"
+                  data-item="${itemKey}"
+                  data-option="${optKey}">
+                  ${translate("order")}
                 </button>
+
               </div>
+
             </div>
           `;
+
         }).join("");
 
       return `
         <div class="menu-group">
+
           <h2 class="menu-group-title">${groupTitle}</h2>
-          <div class="menu-grid">${cards}</div>
+
+          <div class="menu-grid">
+            ${cards}
+          </div>
+
         </div>
       `;
 
     }).join("");
+}
 
-  root.querySelectorAll(".order-btn").forEach(btn=>{
+/* ========================================================= */
+/* EVENTS */
 
-    btn.onclick=()=>{
+function bindInstant(){
+
+  document.querySelectorAll(".instant-btn").forEach(btn=>{
+
+    btn.onclick = ()=>{
 
       if(!ensureActive()) return;
 
-      addToCart({
-        category: btn.dataset.category,
-        item: btn.dataset.item,
-        option: btn.dataset.option
+      sendInstant({
+        qty:1,
+        category:btn.dataset.category,
+        code:btn.dataset.item
       });
 
     };
 
   });
+}
 
+function bindCart(){
+
+  document.querySelectorAll(".order-btn").forEach(btn=>{
+
+    btn.onclick = ()=>{
+
+      if(!ensureActive()) return;
+
+      addToCart({
+        category:btn.dataset.category,
+        item:btn.dataset.item,
+        option:btn.dataset.option
+      });
+
+    };
+
+  });
 }

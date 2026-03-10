@@ -30,11 +30,13 @@ body{
 ====================================================== */
 
 #hub{
+  display:flex;
+  flex-direction:column;
   touch-action:manipulation;  /* giảm delay touch */
   min-height: 0;
   justify-content: center;
+  flex: 1;
   overflow: hidden;
-  width: 100%;
 }
 #hubContent{
   overflow-y:auto;             /* chỉ cho phép cuộn dọc */
@@ -331,4 +333,33 @@ width:100%;
   .menu-grid{
     grid-template-columns: 1fr 1fr 1fr;
   }
+}
+
+.category-panel{
+  display:flex;
+  flex-direction:column;
+  gap:28px;
+}
+
+.instant-panel{
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+}
+
+.instant-card{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:#fff;
+  padding:18px;
+  border-radius:16px;
+  box-shadow:0 2px 6px rgba(0,0,0,.05);
+}
+
+.menu-bottom{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:10px;
 }
