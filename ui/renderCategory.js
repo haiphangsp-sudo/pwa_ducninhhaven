@@ -89,15 +89,13 @@ function renderInstant(category, categoryKey){
         Object.entries(category.items)
         .filter(([,item])=>item.active!==false)
         .map(([itemKey,item])=>{
-
           const title = translate(item.label);
           const desc  = item.description ? translate(item.description) : "";
-
           return `
             <div class="instant-card">
 
               <div class="instant-info">
-                <div class="instant-title ${item.label}">${title}</div>
+                <div class="instant-title ${item}">${title}</div>
                 ${desc ? `<div class="instant-desc">${desc}</div>` : ""}
               </div>
 
