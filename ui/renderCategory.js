@@ -97,7 +97,7 @@ function renderInstant(category, categoryKey){
             <div class="instant-card">
 
               <div class="instant-info">
-                <div class="instant-title">${title}</div>
+                <div class="instant-title ${item.label}">${title}</div>
                 ${desc ? `<div class="instant-desc">${desc}</div>` : ""}
               </div>
 
