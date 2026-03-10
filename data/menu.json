@@ -310,8 +310,8 @@
       "pay":{
         "label":{"vi":"Gọi thanh toán","en":"Call for bill"},
         "description":{
-          "vi":"Liên hệ chủ nhà nếu bạn cần hỗ trợ.",
-          "en":"Contact the host if you need assistance."
+          "vi":"Yêu cầu tính tiền và thanh toán.",
+          "en":"Request for bill and payment."
         },
         "active":true
       }

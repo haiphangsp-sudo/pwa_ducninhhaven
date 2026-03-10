@@ -399,14 +399,23 @@ padding: 10px 16px;
 .instant-title{
   display:flex;
   align-items: center;
-  gap: 8px;
-  font-size:20px;
+  gap: 10px;
+  font-size:22px;
   font-weight:600;
 }
 
 .instant-title::before{
-  margin-right:8px;
-  font-size: 20px;
+  content: "";
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  border-radius: 8px;
+  background: #e7efe9;
+  margin-right: 8px;
+  font-size: 22px;
+  line-height: 1;
+  flex-shrink: 0;
 }
 .instant-title.cleaning::before{
   content:"🧹";
