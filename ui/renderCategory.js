@@ -123,6 +123,7 @@ function renderCartPanel(root, category, categoryKey){
                  data-category="${categoryKey}"
                  data-item="${itemKey}"
                  data-option="${optKey}">
+                 <img class="menu-thumb" src="${opt.image || ''}" />
               <div class="menu-info">
                 <div class="menu-title">${title}</div>
                 <div class="menu-desc">${desc}</div

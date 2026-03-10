@@ -237,35 +237,23 @@ body{
 .hub-btn.active svg{
  stroke:white;
 }
-
-.menu-group{
- margin-bottom:28px;
-}
-
 .menu-group-title{
-
  font-size:22px;
  font-weight:600;
-
  margin-bottom:14px;
-
  letter-spacing:.02em;
 }
 
 .menu-grid{
-
  display:grid;
  grid-template-columns:1fr;
-
  gap:14px;
 }
 
 @media (min-width:700px){
-
  .menu-grid{
   grid-template-columns:1fr 1fr;
  }
-
 }
 .menu-card{
 
@@ -331,31 +319,23 @@ body{
 }
 
 .menu-price{
-
  font-weight:600;
-
  font-size:16px;
-
  color:#2f4f3e;
 }
 
 .order-btn{
 
  padding:8px 14px;
-
  border:none;
-
  border-radius:10px;
-
  background:#2f4f3e;
-
  color:white;
-
  font-size:14px;
-
  font-weight:600;
-
  transition:.15s ease;
+ min-width: 80px;
+    height: 36px;
 }
 
 .order-btn:active{
