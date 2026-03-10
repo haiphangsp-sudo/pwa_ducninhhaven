@@ -12,7 +12,7 @@ export function renderCategory(root, key){
     root.innerHTML="";
     return;
   }
-
+  if(!root) return;
   switch(category.ui){
 
     case "article":
