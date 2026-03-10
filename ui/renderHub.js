@@ -12,7 +12,6 @@ import { getContext } from "../core/context.js";
 export function renderHub(){
 
   const menuEl = document.getElementById("hubMenu");
-  const contentEl = document.querySelector(".category-panel");
 
   const ctx = getContext();
 
@@ -51,5 +50,5 @@ export function renderHub(){
     };
   });
 
-  renderCategory(contentEl, panel);
+  renderCategory(panel);
 }

@@ -5,27 +5,26 @@ import { addToCart, sendInstant } from "../core/actions.js";
 import { getContext } from "../core/context.js";
 import { translate } from "./utils/translate.js";
 
-export function renderCategory(root, key){
-
+export function renderCategory(key){
+  const contentEl = document.querySelector(".category-panel");
   const category = MENU[key];
-  if(!category || !root){
-    root.innerHTML="";
+  if(!category){
+    contentEl.innerHTML="";
     return;
   }
   switch(category.ui){
 
     case "article":
-      root.innerHTML = renderArticle(category);
+      contentEl.innerHTML = renderArticle(category);
       break;
 
     case "instant":
-      root.innerHTML = renderInstant(category, key);
+      contentEl.innerHTML = renderInstant(category, key);
       break;
 
     case "cart":
-      root.innerHTML = renderCartPanel(category, key);
+      contentEl.innerHTML = renderCartPanel(category, key);
       break;
-
   }
 
   bindInstant();
