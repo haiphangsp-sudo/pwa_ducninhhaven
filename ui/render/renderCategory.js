@@ -1,6 +1,7 @@
+//  
 
-
-import { MENU } from "../../core/menuStore.js";
+import { getCategoryType } from "../../data/helpers.js"
+//import { MENU } from "../../core/menuStore.js";
 import { addToCart, sendInstant } from "../../core/events.js";
 import { getContext } from "../../core/context.js";
 import { translate } from "../utils/translate.js";
@@ -12,7 +13,7 @@ export function renderCategory(key){
     contentEl.innerHTML="";
     return;
   }
-  switch(category.ui){
+  switch(getCategoryType(category)){
 
     case "article":
       contentEl.innerHTML = renderArticle(category);
