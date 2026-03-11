@@ -7,6 +7,7 @@ import { getCategoryType, getItems } from "../../data/helpers.js"
 
 export function renderCategory(key){
   const contentEl = document.querySelector(".category-panel");
+  const category = getItems(key);
   switch(getCategoryType(key)){
 
     case "article":
@@ -14,7 +15,7 @@ export function renderCategory(key){
       break;
 
     case "instant":
-      contentEl.innerHTML = renderInstant(key);
+      contentEl.innerHTML = renderInstant(category,key);
       break;
 
     case "cart":
@@ -87,12 +88,11 @@ function renderArticle(categoryKey){
 /* ========================================================= */
 /* INSTANT */
 
-function renderInstant(categoryKey){
-  const Item = getItems(categoryKey);
+function renderInstant(category,categoryKey){
   return `
     <div class="instant-panel">
       ${
-        Item
+        category
         .filter(([,item])=>item.active!==false)
         .map(([itemKey,item])=>{
           const title = translate(item.label);
