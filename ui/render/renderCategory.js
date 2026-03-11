@@ -1,19 +1,18 @@
 //  
 
-import { getCategoryType } from "../../data/helpers.js"
 //import { MENU } from "../../core/menuStore.js";
 import { addToCart, sendInstant } from "../../core/events.js";
 import { getContext } from "../../core/context.js";
 import { translate } from "../utils/translate.js";
 
-export function renderCategory(key){
+export function renderCategory(key, uiType){
   const contentEl = document.querySelector(".category-panel");
   const category = MENU[key];
-  if(!category){
+  if(!category || !uiType){
     contentEl.innerHTML="";
     return;
   }
-  switch(getCategoryType(category)){
+  switch(uiType){
 
     case "article":
       contentEl.innerHTML = renderArticle(category);

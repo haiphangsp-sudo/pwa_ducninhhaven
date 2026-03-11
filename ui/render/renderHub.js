@@ -3,6 +3,7 @@
 
 import { UI } from "../../core/state.js";
 import { MENU } from "../../core/menuStore.js";
+import { getCategoryType } from "../../data/helpers.js"
 import { setState } from "../../core/state.js";
 import { translate } from "../utils/translate.js";
 import { renderCategory } from "./renderCategory.js";
@@ -48,6 +49,6 @@ export function renderHub(){
       setState({view:{panel:btn.dataset.key}});
     };
   });
-
-  renderCategory(panel);
+  const uiType = getCategoryType(key);
+  renderCategory(panel, uiType);
 }
