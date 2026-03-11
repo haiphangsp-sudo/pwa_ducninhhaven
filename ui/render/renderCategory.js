@@ -19,7 +19,7 @@ export function renderCategory(key){
       break;
 
     case "cart":
-      contentEl.innerHTML = renderCartPanel(key);
+      contentEl.innerHTML = renderCartPanel(category,key);
       break;
   }
   contentEl.onclick = e => {
@@ -64,9 +64,8 @@ function ensureActive(){
 /* ========================================================= */
 /* ARTICLE */
 
-function renderArticle(categoryKey){
-  const Item = getItems(categoryKey);
-  return Item
+function renderArticle(category,categoryKey){
+  return category
     .filter(sec=>sec.active!==false)
     .map(section=>{
 
