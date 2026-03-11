@@ -3,7 +3,7 @@
 
 import { UI } from "../../core/state.js";
 import { MENU } from "../../core/menuStore.js";
-import { getCategoryType } from "../../data/helpers.js"
+import { getCategoryType, getCategoriesForMode } from "../../data/helpers.js"
 import { setState } from "../../core/state.js";
 import { translate } from "../utils/translate.js";
 import { renderCategory } from "./renderCategory.js";
@@ -19,9 +19,9 @@ export function renderHub(){
   // ---- QUYỀN DỰA TRÊN ANCHOR, fallback sang ACTIVE ----
 
   const anchorType = ctx?.anchor?.type || null;
-
-  const panels = Object.keys(MENU).filter(key=>{
-    const cat = MENU[key];
+  const categories = getCategoriesForMode(anchorType);
+  const panels = categories.filter(key=>{
+    const cat = categories[key];
 
     if(!cat.active) return false;
 
@@ -49,5 +49,5 @@ export function renderHub(){
       setState({view:{panel:btn.dataset.key}});
     };
   });
-  renderCategory(panel, getCategoryType(panel));
+  renderCategory(panel);
 }
