@@ -116,19 +116,6 @@
  min-width: 0;
 }
 
-.menu-card{
- padding:18px;
- background:#fff;
- border:none;
- border-radius:16px;
- box-shadow:
-   0 6px 18px rgba(0,0,0,.06),
-   0 1px 0 rgba(255,255,255,.7) inset;
- display:flex;
- flex-direction: column;
- justify-content:space-between;
- gap:8px;
-}
 
 .menu-options{
  display:flex;
@@ -153,4 +140,137 @@
 }
 .menu-info{
  flex:1;
+}
+
+.menu-group-title{
+ font-size:26px;
+ font-weight:600;
+ margin-bottom:12px;
+ letter-spacing:.02em;
+ scroll-margin-top: 100px;
+}
+
+.menu-grid{
+ display:grid;
+ grid-template-columns:1fr;
+ gap:18px;
+}
+
+.menu-card{
+ border:none;
+ cursor:pointer;
+ transition: transform .15s ease, box-shadow .15s ease;
+ padding:18px;
+ background:#fff;
+ border-radius:16px;
+ box-shadow:
+   0 6px 18px rgba(0,0,0,.06),
+   0 1px 0 rgba(255,255,255,.7) inset;
+ display:flex;
+ flex-direction: column;
+ justify-content:space-between;
+ gap:8px;
+}
+
+.menu-card:active{
+ transform:scale(.98);
+}
+
+.menu-thumb{
+ width:72px;
+ height:72px;
+ border-radius:12px;
+ object-fit:cover;
+ flex-shrink:0;
+ background: #eee;
+}
+
+.menu-thumb[src=""]{
+ display:none;
+}
+
+.menu-info{
+ flex:1;
+display:flex;
+flex-direction: column;
+}
+
+.menu-price{
+ font-weight:600;
+ font-size:18px;
+ color:#2f5d4b;
+ margin-top: auto;
+ white-space: nowrap;
+
+}
+.order-btn:active{
+ transform:scale(.95);
+}
+
+.category-panel{
+  display:flex;
+  flex-direction:column;
+  gap:28px;
+}
+
+.instant-card{
+  justify-content:space-between;
+  align-items:center;
+  box-shadow:0 2px 6px rgba(0,0,0,.05);
+}
+
+.card-bottom{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-top: 8px;
+  gap: 12px;
+}
+
+.instant-panel{
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+}
+
+.card-title{
+  display:flex;
+  align-items: center;
+  gap: 12px;
+  font-size:22px;
+  font-weight:600;
+}
+
+.card-title::before{
+  content: "";
+  width: 28px;
+  height: 28px;
+  display: flex;
+  text-align: center;
+  align-items: center;
+  border-radius: 8px;
+  background: #e7efe9;
+  margin-right: 8px;
+  font-size: 22px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.card-title.service-cleaning::before{
+  content:"🧹";
+}
+.card-title.service-laundry::before{
+  content:"👕";
+}
+.card-title.service-reception::before{
+  content:"🔔";
+}
+.card-title.service-pay:before{
+  content:"💳";
+}
+
+.card-desc{
+  font-size:15px;
+  color:#666;
+  line-height:1.4;
+ margin:6px 0;
 }
