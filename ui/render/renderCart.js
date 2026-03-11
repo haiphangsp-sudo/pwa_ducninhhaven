@@ -11,6 +11,7 @@ export function renderCartBar(){
 
   const bar = document.getElementById("cartBar");
   const Count = document.getElementById("cartCount");
+  if(!bar || !Count) return;
   const items = UI.cart?.items || [];
   const total = items.reduce((a,b)=>a+b.qty,0);
   if(total>1){
