@@ -26,9 +26,29 @@ export function renderCategory(key){
       contentEl.innerHTML = renderCartPanel(category, key);
       break;
   }
+  contentEl.onclick = e => {
+    const instanBtn = e.target.closest(".instant-btn");
+    if(instanBtn){
+      if(!ensureActive()) return;
 
-  bindInstant();
-  bindCart();
+      sendInstant({
+        qty: 1,
+        category: instanBtn.dataset.category,
+        code: instanBtn.dataset.item
+      });
+    }
+    const orderBtn = e.target.closest(".order-btn");
+    if(orderBtn){
+      if(!ensureActive()) return;
+
+      addToCart({
+        category: orderBtn.dataset.category,
+        item: orderBtn.dataset.item,
+        option: orderBtn.dataset.option
+      });
+    }
+  };
+
 }
 
 /* ========================================================= */
@@ -85,7 +105,7 @@ function renderInstant(category, categoryKey){
           const desc  = item.description ? translate(item.description) : "";
           return `
             <div class="instant-card card">
-                <div class="card-title ${itemKey}">${title}</div>
+                <div class="card-title service-${itemKey}">${title}</div>
                 ${desc ? `<div class="card-desc">${desc}</div>` : ""}
             <div class="card-bottom">
               <button class="instant-btn"
@@ -98,7 +118,6 @@ function renderInstant(category, categoryKey){
           `;
         }).join("")
       }
-
     </div>
   `;
 }
@@ -121,6 +140,7 @@ function renderCartPanel(category, categoryKey){
           const title = translate(opt.label);
           const desc  = opt.description ? translate(opt.description) : "";
           const price = opt.price || 0;
+          const formatPrice = new Intl.NumberFormat("vi-VN");
 
           return `
             <div class="menu-card card">
@@ -131,7 +151,7 @@ function renderCartPanel(category, categoryKey){
 
               <div class="card-bottom">
                 <div class="menu-price">
-                  ${price.toLocaleString("vi-VN")} đ
+                  ${formatPrice(price)} đ
                 </div>
                 <button class="order-btn"
                   data-category="${categoryKey}"
@@ -160,45 +180,4 @@ function renderCartPanel(category, categoryKey){
       `;
 
     }).join("");
-}
-
-/* ========================================================= */
-/* EVENTS */
-
-function bindInstant(){
-
-  document.querySelectorAll(".instant-btn").forEach(btn=>{
-
-    btn.onclick = ()=>{
-
-      if(!ensureActive()) return;
-
-      sendInstant({
-        qty:1,
-        category:btn.dataset.category,
-        code:btn.dataset.item
-      });
-
-    };
-
-  });
-}
-
-function bindCart(){
-
-  document.querySelectorAll(".order-btn").forEach(btn=>{
-
-    btn.onclick = ()=>{
-
-      if(!ensureActive()) return;
-
-      addToCart({
-        category:btn.dataset.category,
-        item:btn.dataset.item,
-        option:btn.dataset.option
-      });
-
-    };
-
-  });
 }

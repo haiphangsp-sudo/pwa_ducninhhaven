@@ -60,7 +60,7 @@ function renderDrawer(){
   if(UI.delivery.state==="sending"){
     textOrder="delivery.pending";
   }else{
-    textOrder= "cart_bar.send_order";
+    textOrder= "cart_bar.order";
   }
   document.getElementById("drawerSend").textContent = translate(textOrder);
   document.querySelector(".drawer-title").textContent = translate("cart_bar.cart_title");
@@ -97,9 +97,7 @@ function renderDrawer(){
 }
 
 export function closeCartDrawer(){
-
   document.getElementById("cartDrawer").classList.add("hidden");
-
 }
 
 document.addEventListener("click",(e)=>{

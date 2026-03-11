@@ -355,16 +355,16 @@ padding: 10px 16px;
   line-height: 1;
   flex-shrink: 0;
 }
-.card-title.cleaning::before{
+.card-title.service-cleaning::before{
   content:"🧹";
 }
-.card-title.laundry::before{
+.card-title.service-laundry::before{
   content:"👕";
 }
-.card-title.reception::before{
+.card-title.service-reception::before{
   content:"🔔";
 }
-.card-title.pay:before{
+.card-title.service-pay:before{
   content:"💳";
 }
 
