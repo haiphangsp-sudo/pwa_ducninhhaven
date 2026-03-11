@@ -96,7 +96,6 @@ function renderInstant(category, categoryKey){
 
   return `
     <div class="instant-panel">
-
       ${
         Object.entries(category.items)
         .filter(([,item])=>item.active!==false)
@@ -104,16 +103,18 @@ function renderInstant(category, categoryKey){
           const title = translate(item.label);
           const desc  = item.description ? translate(item.description) : "";
           return `
-            <div class="instant-card card">
+            <div class="instant-card card row">
+              <div class="stack">
                 <div class="card-title service-${itemKey}">${title}</div>
                 ${desc ? `<div class="card-desc">${desc}</div>` : ""}
-            <div class="card-bottom">
-              <button class="instant-btn btn btn-primary"
-                data-category="${categoryKey}"
-                data-item="${itemKey}">
-                ${translate("send_request")}
-              </button>
-            </div>
+              </div>
+                <div class="card-bottom">
+                  <button class="instant-btn btn btn-primary"
+                    data-category="${categoryKey}"
+                    data-item="${itemKey}">
+                    ${translate("send_request")}
+                  </button>
+                </div>            
             </div>
           `;
         }).join("")
@@ -144,11 +145,8 @@ function renderCartPanel(category, categoryKey){
 
           return `
             <div class="menu-card card">
-
               <div class="card-title">${title}</div>
-
               ${desc ? `<div class="card-desc">${desc}</div>` : ""}
-
               <div class="card-bottom">
                 <div class="menu-price price">
                   ${formatPrice.format(price)} đ
@@ -159,9 +157,7 @@ function renderCartPanel(category, categoryKey){
                   data-option="${optKey}">
                   ${translate("cart_bar.order")}
                 </button>
-
               </div>
-
             </div>
           `;
 
@@ -169,13 +165,10 @@ function renderCartPanel(category, categoryKey){
 
       return `
         <div class="menu-group">
-
           <h2 class="menu-group-title">${groupTitle}</h2>
-
-          <div class="menu-grid">
+          <div class="menu-grid grid">
             ${cards}
           </div>
-
         </div>
       `;
 
