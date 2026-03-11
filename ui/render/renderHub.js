@@ -21,19 +21,19 @@ export function renderHub(){
   const anchorType = ctx?.anchor?.type || null;
 
   const panels = Object.keys(MENU).filter(key=>{
-  const cat = MENU[key];
+    const cat = MENU[key];
 
-  if(!cat.active) return false;
+    if(!cat.active) return false;
 
-  if(!cat.allow) return true;
+    if(!cat.allow) return true;
 
-  if(!anchorType){
-    // visitor mặc định chỉ xem được table/area
-    return cat.allow.includes("table") || cat.allow.includes("area");
-  }
+    if(!anchorType){
+      // visitor mặc định chỉ xem được table/area
+      return cat.allow.includes("table") || cat.allow.includes("area");
+    }
 
-  return cat.allow.includes(anchorType);
-});
+    return cat.allow.includes(anchorType);
+  });
 
   let panel = UI.view.panel;
   if(!panels.includes(panel)) panel = panels[0];
@@ -49,6 +49,6 @@ export function renderHub(){
       setState({view:{panel:btn.dataset.key}});
     };
   });
-  const uiType = getCategoryType(key);
+  const uiType = getCategoryType(panel);
   renderCategory(panel, uiType);
 }
