@@ -3,7 +3,7 @@
 
 import { UI } from "../../core/state.js";
 import { MENU } from "../../core/menuStore.js";
-import { getCategoryType, getCategoriesForMode } from "../../data/helpers.js"
+import { getItems, getCategoriesForMode } from "../../data/helpers.js"
 import { setState } from "../../core/state.js";
 import { translate } from "../utils/translate.js";
 import { renderCategory } from "./renderCategory.js";
@@ -21,7 +21,7 @@ export function renderHub(){
   const anchorType = ctx?.anchor?.type || null;
 
   const panels = getCategoriesForMode(anchorType).filter(key=>{
-  const cat = MENU[key];
+  const cat = getItems(key);
 
   if(!cat.active) return false;
 
@@ -31,7 +31,7 @@ export function renderHub(){
     // visitor mặc định chỉ xem được table/area
     return cat.allow.includes("table") || cat.allow.includes("area");
   }
-
+r
   return cat.allow.includes(anchorType);
 });
 
