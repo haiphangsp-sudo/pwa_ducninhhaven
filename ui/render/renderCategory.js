@@ -7,8 +7,9 @@ import { getCategoryType, getItems } from "../../data/helpers.js"
 
 export function renderCategory(key){
   const contentEl = document.querySelector(".category-panel");
+  const Type = getCategoryType(key);
   const category = getItems(key);
-  switch(category.ui){
+  switch(Type){
 
     case "article":
       contentEl.innerHTML = renderArticle(category);
