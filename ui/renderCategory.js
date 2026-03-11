@@ -151,7 +151,7 @@ function renderCartPanel(category, categoryKey){
 
               <div class="card-bottom">
                 <div class="menu-price">
-                  ${formatPrice(price)} đ
+                  ${formatPrice.format(price)} đ
                 </div>
                 <button class="order-btn"
                   data-category="${categoryKey}"
