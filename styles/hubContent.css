@@ -133,13 +133,6 @@
  transform:scale(.95);
 }
 
-.menu-price{
- font-weight:600;
- font-size:16px;
- color:#2f4f3e;
- margin-top:6px;
-
-}
 .menu-info{
  flex:1;
 }
@@ -189,11 +182,9 @@ flex-direction: column;
 }
 
 .menu-price{
- font-weight:600;
- font-size:18px;
  color:#2f5d4b;
- margin-top: auto;
  white-space: nowrap;
+ margin-top:6px;
 
 }
 .order-btn:active{
