@@ -19,7 +19,7 @@ export function renderApp(){
   renderAck();
 
   // UI hệ thống (không phụ thuộc view)
-  loadCart();
+  //loadCart();
   setDeliveryState("idle");
   setRecoveryState("idle");
 }
