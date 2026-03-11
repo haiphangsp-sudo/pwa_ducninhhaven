@@ -1,29 +1,25 @@
 //  
 
-import { MENU } from "../../core/menuStore.js";
 import { addToCart, sendInstant } from "../../core/events.js";
 import { getContext } from "../../core/context.js";
 import { translate } from "../utils/translate.js";
+import { getItems } from "../../data/helpers.js"
 
-export function renderCategory(key, uiType){
+export function renderCategory(key){
   const contentEl = document.querySelector(".category-panel");
-  const category = MENU[key];
-  if(!category || !uiType){
-    contentEl.innerHTML="";
-    return;
-  }
+  
   switch(category.ui){
 
     case "article":
-      contentEl.innerHTML = renderArticle(category,uiType);
+      contentEl.innerHTML = renderArticle(category);
       break;
 
     case "instant":
-      contentEl.innerHTML = renderInstant(category, key);
+      contentEl.innerHTML = renderInstant(key);
       break;
 
     case "cart":
-      contentEl.innerHTML = renderCartPanel(category, key);
+      contentEl.innerHTML = renderCartPanel(key);
       break;
   }
   contentEl.onclick = e => {
@@ -68,9 +64,9 @@ function ensureActive(){
 /* ========================================================= */
 /* ARTICLE */
 
-function renderArticle(category, uiType){
-
-  return Object.values(category.items)
+function renderArticle(categoryKey){
+  const Item = getItems(categoryKey);
+  return Item
     .filter(sec=>sec.active!==false)
     .map(section=>{
 
@@ -82,7 +78,7 @@ function renderArticle(category, uiType){
 
       return `
         <article class="article">
-          <h2>${title} ${uiType}</h2>
+          <h2>${title}</h2>
           ${body}
         </article>
       `;
@@ -92,12 +88,12 @@ function renderArticle(category, uiType){
 /* ========================================================= */
 /* INSTANT */
 
-function renderInstant(category, categoryKey){
-
+function renderInstant(categoryKey){
+  const Item = getItems(categoryKey);
   return `
     <div class="instant-panel">
       ${
-        Object.entries(category.items)
+        Item
         .filter(([,item])=>item.active!==false)
         .map(([itemKey,item])=>{
           const title = translate(item.label);
@@ -126,9 +122,9 @@ function renderInstant(category, categoryKey){
 /* ========================================================= */
 /* CART */
 
-function renderCartPanel(category, categoryKey){
-
-  return Object.entries(category.items || {})
+function renderCartPanel(categoryKey){
+  const Item = getItems(categoryKey);
+  return Item
     .filter(([,item])=>item.active!==false)
     .map(([itemKey,item])=>{
 
