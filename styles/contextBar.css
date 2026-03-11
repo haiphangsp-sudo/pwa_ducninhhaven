@@ -21,47 +21,43 @@
 }
 /* layout 3 vùng cố định */
 .nav{
-  display:grid;
-  align-items:center;
-  padding:0 14px;
   gap:8px;
   grid-template-columns: 90px 1fr 110px;
   height:52px;
-   width: 100%;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
   padding:10px 14px;
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ width:100%;
+ padding:0 14px;
 }
 .nav-left{
-  display:flex;
-  align-items:center;
-  font-size:15px;
   letter-spacing:.02em;
   justify-content:flex-start;
   justify-self:start;
-  gap:6px;
-  font-weight:600;
   opacity:.9;
+ display:flex;
+ align-items:center;
+ gap:6px;
+ font-size:15px;
+ font-weight:600;
 }
 .nav-center{
   text-align:center;
   font-size:17px;
   color:#2f4f3e;
-  /* nhìn rõ từ xa */
   text-shadow:0 1px 0 rgba(255,255,255,.6);
   letter-spacing:.03em;
   white-space:nowrap;
   overflow:hidden;
   text-overflow:ellipsis;
-  display:flex;
   align-items:center;
   justify-content:center;
   gap:.4rem;
   font-weight:500;
-
+ display:flex;
+ flex:1;
 }
-
 .nav-right{
   display:flex;
   justify-content:flex-end;
@@ -71,14 +67,13 @@
   justify-self:end;
 }
 
-.nav-right .lang-switch{
+.lang-switch{
   display:flex;
   gap:6px;
 }
 
 .lang-switch button{
   border:none;
-  background:#c1b18b;
   color:#333;
   width: 35px;
   font-size:12px;
@@ -86,19 +81,20 @@
   border-radius:8px;
   cursor:pointer;
   transition:all .15s ease;
+  background:transparent;
+  margin-left:6px;
 }
-
 .lang-switch button.active{
   background:#2f4f3e;
   color:white;
   box-shadow:0 1px 3px rgba(0,0,0,.2);
 }
+
 .place-picker{
   position:fixed; inset:0;
   display:flex; align-items:center; justify-content:center;
   z-index:50;
 }
-
 
 .picker-backdrop{
   position:absolute; inset:0;
@@ -130,11 +126,6 @@
   font-size:16px;
 }
 
-.nav-center{
-  flex:1;
-  display:flex;
-  justify-content:center;
-}
 
 .location-btn{
   border:none;
@@ -157,9 +148,12 @@
   opacity:.5;
 }
 
-.lang-switch button{
-  border:none;
-  background:transparent;
-  margin-left:6px;
-  cursor:pointer;
+.app-version{
+  margin-left: 6px;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-size: 8px;
+  background: #eee;
+  opacity: 0.7;
 }
+
