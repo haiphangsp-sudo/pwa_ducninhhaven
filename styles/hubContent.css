@@ -92,29 +92,15 @@
     0 1px 3px rgba(0,0,0,.2) inset;
 }
 
-
-/* =========================================================
-   INSTANT PANEL (service/help buttons)
-========================================================= */
-
 .instant-btn{
   width:100%;
   max-width:420px;
-  margin-bottom: 18px;
-
   padding:18px;
-  border:none;
-  border-radius:18px;
-
-  background:#2f4f3e;
-  color:white;
-
   font-size:16px;
-  font-weight:600;
   letter-spacing:.03em;
-
   cursor:pointer;
   transition:all .15s ease;
+  white-space:nowrap;
 }
 
 .instant-btn:hover{
@@ -124,11 +110,6 @@
 .instant-btn:active{
   transform:scale(.97);
 }
-
-
-/* =========================================================
-   SCROLL FEEL (tablet friendly)
-========================================================= */
 
 #hubContent::-webkit-scrollbar{
   width:8px;
@@ -172,36 +153,17 @@
  gap:8px;
 }
 .order-btn{
-
- padding:8px 14px;
-
- border:none;
-
- border-radius:10px;
-
- background:#2f4f3e;
-
- color:white;
-
  font-size:14px;
-
- font-weight:600;
-
  transition:.15s ease;
-
 }
 .order-btn:active{
  transform:scale(.95);
 }
 
 .menu-price{
-
  font-weight:600;
-
  font-size:16px;
-
  color:#2f4f3e;
-
  margin-top:6px;
 
 }

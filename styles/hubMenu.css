@@ -14,15 +14,6 @@
   overflow:hidden;
   position:sticky;
 }
-.btn-primary {
-    padding: 12px 22px;
-    border-radius: 14px;
-    border: none;
-    border-radius:14px;
-    background: #2f5d4b;
-    color: #fff;
-    font-weight: 600;
-}
 
 .hub-btn{
   width:64px;
