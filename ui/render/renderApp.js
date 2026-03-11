@@ -13,12 +13,13 @@ export function renderApp(){
 
   renderNavBar();
   renderHub();
-  loadCart();
+  renderCartBar()
+  
   initLangSwitch();
   renderAck();
 
   // UI hệ thống (không phụ thuộc view)
-  
+  loadCart();
   setDeliveryState("idle");
   setRecoveryState("idle");
 }
