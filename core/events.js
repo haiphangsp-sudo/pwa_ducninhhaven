@@ -7,8 +7,8 @@ import { getContext } from "./context.js";
 /* ---------- CART ---------- */
 
 export function addToCart(item){
-
-  const existing = UI.cart.items.find(i =>
+  const items = UI.cart?.items || [];
+  const existing = items.find(i =>
     i.category===item.category &&
     i.item===item.item &&
     i.option===item.option
