@@ -108,7 +108,7 @@ function renderInstant(category, categoryKey){
                 <div class="card-title service-${itemKey}">${title}</div>
                 ${desc ? `<div class="card-desc">${desc}</div>` : ""}
             <div class="card-bottom">
-              <button class="instant-btn"
+              <button class="instant-btn btn-primary"
                 data-category="${categoryKey}"
                 data-item="${itemKey}">
                 ${translate("send_request")}
@@ -153,7 +153,7 @@ function renderCartPanel(category, categoryKey){
                 <div class="menu-price">
                   ${formatPrice.format(price)} đ
                 </div>
-                <button class="order-btn"
+                <button class="order-btn btn-primary"
                   data-category="${categoryKey}"
                   data-item="${itemKey}"
                   data-option="${optKey}">
