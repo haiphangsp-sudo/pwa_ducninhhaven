@@ -33,14 +33,10 @@ body{
   flex: 1;
   overflow: hidden;
 }
-#hubContent{
-  flex: 1;
-  overflow:auto;
-  padding-bottom: 110px;
-}
+
 .page-container{
   max-width: 980px;
-  padding: 20px 18px;
+  padding: 20px 18px 120px;
   margin: 0 auto;
 }
 .card{
@@ -53,26 +49,6 @@ body{
   gap: 10px;
 }
 
-#cartBar{
-  background: #fff;
-  border-radius: 18px;
-  position:fixed;
-  flex:0 0 60px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:14px 20px;
-  border-top:1px solid #eee;
-  box-shadow:0 2px 8px rgba(0,0,0,0.06);
-  height: 60px;
-  transition: transform 0.3s ease, opacity 0.3s ease;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  padding-bottom: calc(14px + evn(safe-area-inset-bottom));
-  max-width: 980px;
-  z-index: 100;
-}
 .ack-dot{
   width:10px;
   height:10px;

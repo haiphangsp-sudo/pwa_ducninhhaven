@@ -5,6 +5,8 @@
   -webkit-overflow-scrolling:touch;
   width: 100%;
   box-sizing: border-box;
+  flex: 1;
+  padding-bottom: 110px;
 }
 .article{
   max-width:620px;
