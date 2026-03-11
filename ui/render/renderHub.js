@@ -21,7 +21,7 @@ export function renderHub(){
   const anchorType = ctx?.anchor?.type || "table";
   const categories = getCategoriesForMode(anchorType);
   const panels = categories.filter(key=>{
-    const cat = panels[key];
+    const cat = categories[key];
 
     if(!cat.active) return false;
 
