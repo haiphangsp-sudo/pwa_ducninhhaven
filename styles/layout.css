@@ -267,12 +267,6 @@ display:flex;
 flex-direction: column;
 }
 
-.menu-desc{
- font-size:14px;
- color:#666;
- margin:6px 0;
-}
-
 .menu-price{
  font-weight:600;
  font-size:18px;
@@ -329,11 +323,11 @@ padding: 10px 16px;
   box-shadow:0 2px 6px rgba(0,0,0,.05);
 }
 
-.menu-bottom{
+.card-bottom{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  margin-top: auto;
+  margin-top: 8px;
   gap: 12px;
 }
 
@@ -341,13 +335,6 @@ padding: 10px 16px;
   display:flex;
   flex-direction:column;
   gap:16px;
-}
-
-.instant-info{
-  flex:1;
-  display:flex;
-  flex-direction:column;
-  gap:6px;
 }
 
 .card-title{
@@ -385,12 +372,12 @@ padding: 10px 16px;
   content:"💳";
 }
 
-.instant-desc{
+.card-desc{
   font-size:15px;
   color:#666;
   line-height:1.4;
+ margin:6px 0;
 }
-
 .instant-btn{
   padding:12px 22px;
   border:none;

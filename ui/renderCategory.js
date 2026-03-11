@@ -85,18 +85,15 @@ function renderInstant(category, categoryKey){
           const desc  = item.description ? translate(item.description) : "";
           return `
             <div class="instant-card card">
-
-              <div class="instant-info">
                 <div class="card-title ${itemKey}">${title}</div>
-                ${desc ? `<div class="instant-desc">${desc}</div>` : ""}
-              </div>
-
+                ${desc ? `<div class="card-desc">${desc}</div>` : ""}
+            <div class="card-bottom">
               <button class="instant-btn"
                 data-category="${categoryKey}"
                 data-item="${itemKey}">
                 ${translate("send_request")}
               </button>
-
+            </div>
             </div>
           `;
         }).join("")
@@ -130,14 +127,12 @@ function renderCartPanel(category, categoryKey){
 
               <div class="card-title">${title}</div>
 
-              ${desc ? `<div class="menu-desc">${desc}</div>` : ""}
+              ${desc ? `<div class="card-desc">${desc}</div>` : ""}
 
-              <div class="menu-bottom">
-
+              <div class="card-bottom">
                 <div class="menu-price">
                   ${price.toLocaleString("vi-VN")} đ
                 </div>
-
                 <button class="order-btn"
                   data-category="${categoryKey}"
                   data-item="${itemKey}"
