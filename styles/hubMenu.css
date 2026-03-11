@@ -3,12 +3,10 @@
 ===================================================== */
 
 #hubMenu{
-  background:linear-gradient(180deg,#ece7dd,#e4dfd4);
   flex-direction:row;
   align-items:center;
   box-shadow:2px 0 8px rgba(0,0,0,.05) inset;
   overflow:hidden;
-  background:#ece7dd;
   padding:8px 0;
   display:flex;
   gap:14px;

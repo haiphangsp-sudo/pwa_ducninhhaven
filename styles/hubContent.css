@@ -162,16 +162,7 @@
  border:none;
  cursor:pointer;
  transition: transform .15s ease, box-shadow .15s ease;
- padding:18px;
- background:#fff;
- border-radius:16px;
- box-shadow:
-   0 6px 18px rgba(0,0,0,.06),
-   0 1px 0 rgba(255,255,255,.7) inset;
- display:flex;
- flex-direction: column;
  justify-content:space-between;
- gap:8px;
 }
 
 .menu-card:active{
