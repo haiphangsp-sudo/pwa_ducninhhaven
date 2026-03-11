@@ -18,7 +18,7 @@ export function renderHub(){
 
   // ---- QUYỀN DỰA TRÊN ANCHOR, fallback sang ACTIVE ----
 
-  const anchorType = ctx?.anchor?.type || null;
+  const anchorType = ctx.anchor.type;
   const categories = getCategoriesForMode(anchorType);
   const panels = categories.filter(key=>{
     const cat = categories[key];
