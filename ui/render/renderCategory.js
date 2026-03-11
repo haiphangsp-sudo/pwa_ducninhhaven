@@ -132,9 +132,7 @@ function renderInstant(category,categoryKey){
 /* CART */
 
 function renderCartPanel(category,categoryKey){
-  return category
-    .filter(([,item])=>item.active!==false)
-    .map(([itemKey,item])=>{
+  return category.map(([itemKey,item])=>{
 
       const groupTitle = translate(item.label);
 
