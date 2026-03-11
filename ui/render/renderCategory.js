@@ -120,7 +120,7 @@ function renderInstant(category,categoryKey){
 /* ========================================================= */
 /* CART */
 
-function renderCartPanel(category){
+function renderCartPanel(category,categoryKey){
   return category
     .filter(([,item])=>item.active!==false)
     .map(([itemKey,item])=>{
