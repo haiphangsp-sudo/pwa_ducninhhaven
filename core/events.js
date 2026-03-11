@@ -7,22 +7,22 @@ import { getContext } from "./context.js";
 /* ---------- CART ---------- */
 
 export function addToCart(item){
-  const items = UI.cart?.items || [];
-  const existing = items.find(i =>
+  const Items = UI.cart?.items || [];
+  const existing = Items.find(i =>
     i.category===item.category &&
     i.item===item.item &&
     i.option===item.option
   );
 
   if(existing) existing.qty += 1;
-  else UI.cart.items.push({...item,qty:1});
+  else Items.push({...item,qty:1});
 
   localStorage.setItem(
     "haven_cart",
-    JSON.stringify(UI.cart.items)
+    JSON.stringify(Items)
   );
 
-  setState({cart:{items:UI.cart.items}});
+  setState({cart:{items:Items}});
 
   const bar=document.getElementById("cartBar");
   bar?.classList.add("cart-bounce");
