@@ -11,10 +11,6 @@ body{
   min-height: 120vh; /* đảm bảo đủ chiều cao để hiển thị cart bar */
 }
 
-.hidden{
-  display:none !important;
-}
-
 #app{
   margin:auto;
   min-height:100vh;
@@ -34,18 +30,7 @@ body{
 }
 
 .page-container{
-  max-width: 980px;
   padding: 20px 18px 120px;
-  margin: 0 auto;
-}
-.card{
-  background: #fff;
-  border-radius: 18px;
-  padding: 20px;
-  box-shadow: 0 2px 8px rgba(0,0,0,.06);
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
 }
 
 .ack-dot{
@@ -56,11 +41,3 @@ body{
   animation:ack .5s ease;
 }
 
-.btn-primary {
-    padding: 12px 22px;
-    border-radius: 14px;
-    border: none;
-    background: #2f5d4b;
-    color: #fff;
-    font-weight: 600;
-}

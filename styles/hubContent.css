@@ -127,9 +127,8 @@
 }
 .order-btn{
  font-size:14px;
- transition:.15s ease;
-  cursor: pointer;
 }
+
 .order-btn:active{
  transform:scale(.95);
 }
