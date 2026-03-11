@@ -18,22 +18,22 @@ export function renderHub(){
 
   // ---- QUYỀN DỰA TRÊN ANCHOR, fallback sang ACTIVE ----
 
-  const anchorType = ctx?.anchor?.type || "table";
-  const categories = getCategoriesForMode(anchorType);
-  const panels = categories.filter(key=>{
-    const cat = categories[key];
+  const anchorType = ctx?.anchor?.type || null;
 
-    if(!cat.active) return false;
+  const panels = getCategoriesForMode(anchorType).filter(key=>{
+  const cat = MENU[key];
 
-    if(!cat.allow) return true;
+  if(!cat.active) return false;
 
-    if(!anchorType){
-      // visitor mặc định chỉ xem được table/area
-      return cat.allow.includes("table") || cat.allow.includes("area");
-    }
+  if(!cat.allow) return true;
 
-    return cat.allow.includes(anchorType);
-  });
+  if(!anchorType){
+    // visitor mặc định chỉ xem được table/area
+    return cat.allow.includes("table") || cat.allow.includes("area");
+  }
+
+  return cat.allow.includes(anchorType);
+});
 
   let panel = UI.view.panel;
   if(!panels.includes(panel)) panel = panels[0];
