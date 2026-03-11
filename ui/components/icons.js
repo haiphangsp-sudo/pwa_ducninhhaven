@@ -1,7 +1,7 @@
 
 
 
-export const ICONS = {
+const ICONS = {
 
 intro: `
 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -74,3 +74,6 @@ stroke-linecap="round" stroke-linejoin="round">
 </svg>`
 
 };
+export function icon(name){
+    return ICONS[name] || ICONS.help
+}

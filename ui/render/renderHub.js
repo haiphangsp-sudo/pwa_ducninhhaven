@@ -6,7 +6,7 @@ import { MENU } from "../../core/menuStore.js";
 import { setState } from "../../core/state.js";
 import { translate } from "../utils/translate.js";
 import { renderCategory } from "./renderCategory.js";
-import { ICONS } from "../components/icons.js";
+import { icon } from "../components/icons.js";
 import { getContext } from "../../core/context.js";
 
 export function renderHub(){
@@ -39,7 +39,7 @@ export function renderHub(){
   menuEl.innerHTML = panels.map(key=>`
     <button class="hub-btn${panel===key?" active":""}"
             data-key="${key}">
-      <span class="hub-icon">${ICONS[key] || ""}</span>
+      <span class="hub-icon">${icon(key) || ""}</span>
       <span class="hub-label">${translate(MENU[key].label)}</span>
     </button>`).join("");
 
