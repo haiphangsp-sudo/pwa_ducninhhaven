@@ -2,7 +2,7 @@ import { getItems, getCategoryType } from "../../data/helpers.js";
 
 import { translate } from "../utils/translate.js";
 
-import { ICONS } from "../components/icons.js";
+import { icon } from "../components/icons.js";
 
 
 export function renderCategory(category){

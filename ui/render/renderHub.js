@@ -3,7 +3,7 @@ import { getContext } from "../../core/context.js";
 
 import { getCategoriesForMode } from "../../data/helpers.js";
 
-import { ICONS } from "../components/icons.js";
+import { icon } from "../components/icons.js";
 import { translate } from "../utils/translate.js";
 
 import { renderCategory } from "./renderCategory.js";
@@ -38,7 +38,7 @@ export function renderHub(){
         <div class="row gap-m">
 
           <div class="icon">
-            ${ICONS[cat.key] || ""}
+            ${icon([cat.key]) || ""}
           </div>
 
           <div class="card-title">
