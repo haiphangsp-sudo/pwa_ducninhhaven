@@ -3,7 +3,7 @@ import { UI, setState } from "../core/state.js";
 import { getCategoriesForMode } from "../../data/helpers.js";
 import { translate } from "../utils/translate.js";
 import { renderCategory } from "./renderCategory.js";
-import { ICONS } from "../components/icons.js";
+import { icon } from "../components/icons.js";
 import { getContext } from "../../core/context.js";
 
 export function renderHub(){
@@ -27,7 +27,7 @@ export function renderHub(){
             data-key="${cat.key}">
 
       <span class="hub-icon">
-        ${ICONS[cat.key] || ""}
+        ${icon(key) || ""}
       </span>
 
       <span class="hub-label">
