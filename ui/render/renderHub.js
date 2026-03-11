@@ -24,13 +24,17 @@ export function renderHub(){
   menuEl.innerHTML = categories.map(cat=>
     `<button class="hub-btn${panel===cat.key?" active":""}"
             data-key="${cat.key}">
+
       <span class="hub-icon">
         ${icon(cat.key) || ""}
       </span>
+
       <span class="hub-label">
         ${translate(cat.label)}
       </span>
+
     </button>
+
   `).join("");
 
   menuEl.querySelectorAll("button").forEach(btn=>{
