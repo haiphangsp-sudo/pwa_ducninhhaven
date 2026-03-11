@@ -27,7 +27,7 @@ export function renderHub(){
             data-key="${cat.key}">
 
       <span class="hub-icon">
-        ${icon(key) || ""}
+        ${icon(panel) || ""}
       </span>
 
       <span class="hub-label">
