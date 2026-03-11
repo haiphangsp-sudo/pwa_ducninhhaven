@@ -12,8 +12,8 @@ export function renderCartBar(){
   const bar = document.getElementById("cartBar");
   const Count = document.getElementById("cartCount");
   if(!bar || !Count) return;
-  const items = UI.cart?.items || [];
-  const total = items.reduce((a,b)=>a+b.qty,0);
+  const Items = UI.cart?.items || [];
+  const total = Items.reduce((a,b)=>a+b.qty,0);
   if(total>1){
     Count.textContent = `${total} ${translate("cart_bar.items")}`;
   } else {
@@ -47,7 +47,7 @@ export function loadCart(){
   const saved = localStorage.getItem("haven_cart");
   if(saved) {
     UI.cart = JSON.parse(saved);
-    renderCartBar();
+    //renderCartBar();
   }
 }
 
