@@ -12,7 +12,7 @@ export function renderCategory(key, uiType){
     contentEl.innerHTML="";
     return;
   }
-  switch(uiType){
+  switch(category.ui){
 
     case "article":
       contentEl.innerHTML = renderArticle(category);
