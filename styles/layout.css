@@ -53,18 +53,6 @@ body{
   gap: 10px;
 }
 
-#hubMenu{
-  background:#ece7dd;
-  padding:8px 0;
-  display:flex;
-  gap:14px;
-  justify-content: space-around;
-  border-bottom:1px solid rgba(0,0,0,.05);
-  flex-shrink: 0;
- overflow-x:auto;
- position:sticky;
- z-index:5;
-}
 #cartBar{
   background: #fff;
   border-radius: 18px;

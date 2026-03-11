@@ -4,17 +4,21 @@
 
 #hubMenu{
   background:linear-gradient(180deg,#ece7dd,#e4dfd4);
-  padding:18px 10px;
-  display:flex;
   flex-direction:row;
   align-items:center;
-  justify-content:flex-start;
-  gap:18px;
   box-shadow:2px 0 8px rgba(0,0,0,.05) inset;
   overflow:hidden;
-  position:sticky;
+  background:#ece7dd;
+  padding:8px 0;
+  display:flex;
+  gap:14px;
+  justify-content: space-around;
+  border-bottom:1px solid rgba(0,0,0,.05);
+  flex-shrink: 0;
+ overflow-x:auto;
+ position:sticky;
+ z-index:5;
 }
-
 .hub-btn{
   width:64px;
   height:64px;
@@ -101,7 +105,7 @@ stroke:white;
   opacity:.35;
 }
 
-.option-btn.disabled{
+.order-btn.disabled{
   opacity:.35;
   pointer-events:none;
   filter:grayscale(90%);
