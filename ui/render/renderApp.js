@@ -1,8 +1,8 @@
 // ui/renderApp.js
 // Điểm vào duy nhất để render.
 
-import { renderCartBar ,loadCart} from "./render/renderCart.js";
-import { renderAck } from "./render/renderOverlay.js";
+import { renderCartBar ,loadCart} from ".renderCart.js";
+import { renderAck } from "./renderOverlay.js";
 import { setDeliveryState } from "./renderDelivery.js";
 import { setRecoveryState } from "./renderRecovery.js";
 import { initLangSwitch } from "./utils/translate.js";
