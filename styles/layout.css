@@ -83,7 +83,7 @@ body{
   display:flex;
   align-items:center;
   justify-content:space-between;
-  padding:18px;
+  padding:14px 20px;
   border-top:1px solid #eee;
   box-shadow:0 2px 8px rgba(0,0,0,0.06);
   height: 60px;
@@ -91,8 +91,10 @@ body{
   left: 0;
   right: 0;
   bottom: 0;
-  padding-bottom: env(safe-area-inset-bottom);
-
+  padding-bottom: calc(14px + evn(safe-area-inset-bottom));
+  width: 100%;
+  max-width: 980px;
+  z-index: 100;
 }
 .ack-dot{
   width:10px;
@@ -309,12 +311,6 @@ padding: 10px 16px;
   display:flex;
   flex-direction:column;
   gap:28px;
-}
-
-.instant-panel{
-  display:flex;
-  flex-direction:column;
-  gap:16px;
 }
 
 .instant-card{
