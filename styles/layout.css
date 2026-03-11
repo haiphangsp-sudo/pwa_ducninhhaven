@@ -150,44 +150,6 @@ body{
  color:white;
 }
 
-.hub-btn{
- width:64px;
- height:64px;
- border:none;
- border-radius:14px;
- background:transparent;
- display:flex;
- flex-direction:column;
- align-items:center;
- justify-content:center;
- gap:4px;
- font-size:13px;
- color:#444;
- transition:.18s ease;
-}
-
-.hub-btn.active{
- background:#2f4f4f;
- color:white;
- box-shadow:
- 0 4px 14px rgba(0,0,0,.18);
-}
-.hub-btn.active::after{
-  content: "";
-  width:24px;
-  height:3px;
-  background:#2f4f4f;
-  margin-top:4px;
-}
-
-.hub-btn svg{
- width:22px;
- height:22px;
-}
-
-.hub-btn.active svg{
- stroke:white;
-}
 .menu-group-title{
  font-size:26px;
  font-weight:600;
