@@ -41,6 +41,7 @@ body{
 .page-container{
   max-width: 980px;
   padding: 20px 18px;
+  margin: 0 auto;
 }
 .card{
   background: #fff;
