@@ -5,7 +5,7 @@ import { MENU } from "../core/menuStore.js";
 export function getCategoriesForMode(mode){
 
   return Object.entries(MENU)
-    .filter(([k,v])=>v.modes.includes(mode))
+    .filter(([k,v])=>v.allow.includes(mode))
     .map(([k,v])=>({key:k,...v}));
 
 }
@@ -22,5 +22,5 @@ export function getItems(category){
 }
 
 export function getCategoryType(category){
-  return MENU[category]?.type || "instant";
+  return MENU[category]?.ui;
 }
