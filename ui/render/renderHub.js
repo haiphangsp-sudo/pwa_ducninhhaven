@@ -1,13 +1,13 @@
 // renderHub.js
 // Chịu trách nhiệm render menu và nội dung của hub
 
-import { UI } from "../core/state.js";
-import { MENU } from "../core/menuStore.js";
-import { setState } from "../core/state.js";
-import { translate } from "./utils/translate.js";
+import { UI } from "../../core/state.js";
+import { MENU } from "../../core/menuStore.js";
+import { setState } from "../../core/state.js";
+import { translate } from "../utils/translate.js";
 import { renderCategory } from "./renderCategory.js";
-import { ICONS } from "./icons.js";
-import { getContext } from "../core/context.js";
+import { ICONS } from "../components/icons.js";
+import { getContext } from "../../core/context.js";
 
 export function renderHub(){
 

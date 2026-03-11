@@ -1,8 +1,8 @@
 //  renderAck.js
 // ---------- ACKNOWLEDGEMENT RENDER ----------
 
-import { UI, setState } from "../core/state.js";
-import { translate } from "./utils/translate.js";
+import { UI, setState } from "../../core/state.js";
+import { translate } from "../utils/translate.js";
 let timer=null;
 
 export function renderAck(){

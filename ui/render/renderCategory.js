@@ -1,9 +1,9 @@
 
 
-import { MENU } from "../core/menuStore.js";
-import { addToCart, sendInstant } from "../core/events.js";
-import { getContext } from "../core/context.js";
-import { translate } from "./utils/translate.js";
+import { MENU } from "../../core/menuStore.js";
+import { addToCart, sendInstant } from "../../core/events.js";
+import { getContext } from "../../core/context.js";
+import { translate } from "../utils/translate.js";
 
 export function renderCategory(key){
   const contentEl = document.querySelector(".category-panel");

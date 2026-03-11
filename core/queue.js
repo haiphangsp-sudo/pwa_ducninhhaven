@@ -44,7 +44,7 @@ export function enqueue(payload){
 
   saveQueue(queue);
 
-  emitDelivery("pending");
+  emitDelivery("pending",{count: queue.length});
 
   if(!processing) processQueue();
 }

@@ -1,7 +1,7 @@
 // ui/renderDelivery.js
 // Banner hiển thị trạng thái giao hàng (đang giao, giao thành công, giao thất bại)
 
-import { translate } from "./utils/translate.js";
+import { translate } from "../utils/translate.js";
 
 let state="idle";
 
