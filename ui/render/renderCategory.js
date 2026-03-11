@@ -3,11 +3,11 @@
 import { addToCart, sendInstant } from "../../core/events.js";
 import { getContext } from "../../core/context.js";
 import { translate } from "../utils/translate.js";
-import { getItems } from "../../data/helpers.js"
+import { getCategoryType, getItems } from "../../data/helpers.js"
 
 export function renderCategory(key){
   const contentEl = document.querySelector(".category-panel");
-  
+  const category = getCategoryType(key);
   switch(category.ui){
 
     case "article":
