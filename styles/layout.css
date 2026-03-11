@@ -70,7 +70,6 @@ body{
   right: 0;
   bottom: 0;
   padding-bottom: calc(14px + evn(safe-area-inset-bottom));
-  width: 100%;
   max-width: 980px;
   z-index: 100;
 }
