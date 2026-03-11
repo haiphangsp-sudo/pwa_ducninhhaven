@@ -68,7 +68,7 @@ function ensureActive(){
 /* ========================================================= */
 /* ARTICLE */
 
-function renderArticle(category){
+function renderArticle(category, uiType){
 
   return Object.values(category.items)
     .filter(sec=>sec.active!==false)
