@@ -49,6 +49,5 @@ export function renderHub(){
       setState({view:{panel:btn.dataset.key}});
     };
   });
-  const uiType = getCategoryType(panel);
-  renderCategory(panel, uiType);
+  renderCategory(panel, getCategoryType(panel));
 }
