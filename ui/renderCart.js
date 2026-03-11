@@ -2,7 +2,7 @@
 // Thanh giỏ dưới cùng (state-driven)
 
 import { UI } from "../core/state.js";
-import { sendCart } from "../core/actions.js";
+import { sendCart } from "../core/events.js";
 import { getContext } from "../core/context.js";
 import { translate } from "./utils/translate.js";
 import { MENU } from "../core/menuStore.js";
