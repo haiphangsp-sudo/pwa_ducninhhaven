@@ -1,13 +1,9 @@
-// renderHub.js
-// Chịu trách nhiệm render menu và nội dung của hub
 
-import { UI } from "../../core/state.js";
-import { MENU } from "../../core/menuStore.js";
-import { getItems, getCategoriesForMode } from "../../data/helpers.js"
-import { setState } from "../../core/state.js";
+import { UI, setState } from "../core/state.js";
+import { getCategoriesForMode } from "../../data/helpers.js";
 import { translate } from "../utils/translate.js";
 import { renderCategory } from "./renderCategory.js";
-import { icon } from "../components/icons.js";
+import { ICONS } from "../components/icons.js";
 import { getContext } from "../../core/context.js";
 
 export function renderHub(){
@@ -15,39 +11,38 @@ export function renderHub(){
   const menuEl = document.getElementById("hubMenu");
 
   const ctx = getContext();
+  const mode = ctx?.anchor?.type || "table";
 
-  // ---- QUYỀN DỰA TRÊN ANCHOR, fallback sang ACTIVE ----
-
-  const anchorType = ctx?.anchor?.type || null;
-
-  const panels = getCategoriesForMode(anchorType).filter(key=>{
-  const cat = getItems(key);
-
-  if(!cat.active) return false;
-
-  if(!cat.allow) return true;
-
-  if(!anchorType){
-    // visitor mặc định chỉ xem được table/area
-    return cat.allow.includes("table") || cat.allow.includes("area");
-  }
-r
-  return cat.allow.includes(anchorType);
-});
+  const categories = getCategoriesForMode(mode);
 
   let panel = UI.view.panel;
-  if(!panels.includes(panel)) panel = panels[0];
-  menuEl.innerHTML = panels.map(key=>`
-    <button class="hub-btn${panel===key?" active":""}"
-            data-key="${key}">
-      <span class="hub-icon">${icon(key) || ""}</span>
-      <span class="hub-label">${translate(MENU[key].label)}</span>
-    </button>`).join("");
+
+  if(!categories.find(c=>c.key===panel)){
+    panel = categories[0]?.key;
+  }
+
+  menuEl.innerHTML = categories.map(cat=>`
+
+    <button class="hub-btn${panel===cat.key?" active":""}"
+            data-key="${cat.key}">
+
+      <span class="hub-icon">
+        ${ICONS[cat.key] || ""}
+      </span>
+
+      <span class="hub-label">
+        ${translate(cat.label)}
+      </span>
+
+    </button>
+
+  `).join("");
 
   menuEl.querySelectorAll("button").forEach(btn=>{
     btn.onclick=()=>{
       setState({view:{panel:btn.dataset.key}});
     };
   });
+
   renderCategory(panel);
 }
