@@ -15,7 +15,7 @@ export function renderCategory(key, uiType){
   switch(category.ui){
 
     case "article":
-      contentEl.innerHTML = renderArticle(category);
+      contentEl.innerHTML = renderArticle(category,uiType);
       break;
 
     case "instant":
@@ -82,7 +82,7 @@ function renderArticle(category){
 
       return `
         <article class="article">
-          <h2>${title}</h2>
+          <h2>${title} ${uiType}</h2>
           ${body}
         </article>
       `;
