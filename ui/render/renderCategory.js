@@ -1,22 +1,15 @@
-import { getItems, getCategoryType } from "../../data/helpers.js";
+//  
 
+import { addToCart, sendInstant } from "../../core/events.js";
+import { getContext } from "../../core/context.js";
 import { translate } from "../utils/translate.js";
+import { getCategoryType, getItems } from "../../data/helpers.js"
 
-import { icon } from "../components/icons.js";
-
-
-export function renderCategory(category){
-
-  const hubContent = document.getElementById("hubContent");
-
-  if(!hubContent) return;
-
-  const type = getCategoryType(category);
-
-  const items = getItems(category);
-
-  if(!items.length){
-
+export function renderCategory(key){
+  const contentEl = document.querySelector(".category-panel");
+  const Type = getCategoryType(key);
+  const Items = getItems(key);
+  if(!Items.length){
     hubContent.innerHTML = `
       <div class="container">
         <div class="card">
@@ -24,140 +17,164 @@ export function renderCategory(category){
         </div>
       </div>
     `;
-
     return;
   }
+  switch(Type){
 
+    case "article":
+      contentEl.innerHTML = renderArticle(Items);
+      break;
 
-  let html = `<div class="container">`;
+    case "instant":
+      contentEl.innerHTML = renderInstant(Items,key);
+      break;
 
+    case "cart":
+      contentEl.innerHTML = renderCartPanel(Items,key);
+      break;
+  }
+  contentEl.onclick = e => {
+    const instanBtn = e.target.closest(".instant-btn");
+    if(instanBtn){
+      if(!ensureActive()) return;
 
-  // ARTICLE (intro)
+      sendInstant({
+        qty: 1,
+        category: instanBtn.dataset.category,
+        code: instanBtn.dataset.item
+      });
+    }
+    const orderBtn = e.target.closest(".order-btn");
+    if(orderBtn){
+      if(!ensureActive()) return;
 
-  if(type==="article"){
+      addToCart({
+        category: orderBtn.dataset.category,
+        item: orderBtn.dataset.item,
+        option: orderBtn.dataset.option
+      });
+    }
+  };
 
-    html+=`
+}
 
-      <div class="stack">
+/* ========================================================= */
 
-        ${items.map(item=>`
+function ensureActive(){
 
-          <div class="card">
+  const ctx = getContext();
 
-            <div class="card-title">
-              ${translate(item.label)}
-            </div>
-
-            <div class="card-desc">
-              ${translate(item.content)}
-            </div>
-
-          </div>
-
-        `).join("")}
-
-      </div>
-
-    `;
-
+  if(!ctx?.active){
+    window.dispatchEvent(new Event("openPlacePicker"));
+    return false;
   }
 
+  return true;
+}
 
-  // CART (food / drink / relax)
+/* ========================================================= */
+/* ARTICLE */
 
-  if(type==="cart"){
+function renderArticle(category,categoryKey){
+  return category
+    .filter(sec=>sec.active!==false)
+    .map(section=>{
 
-    html+=`
+      const title = translate(section.label);
 
-      <div class="grid grid-2">
+      const body = Array.isArray(section.content)
+        ? section.content.map(p=>`<p>${translate(p)}</p>`).join("")
+        : `<p>${translate(section.content)}</p>`;
 
-        ${items.map(item=>`
+      return `
+        <article class="article">
+          <h2>${title}</h2>
+          ${body}
+        </article>
+      `;
+    }).join("");
+}
 
-          <div class="card menu-item"
-            data-category="${category}"
-            data-item="${item.key}">
+/* ========================================================= */
+/* INSTANT */
 
-            <div class="card-title">
-              ${translate(item.label)}
-            </div>
-
-            ${item.description?`
-              <div class="card-desc">
-                ${translate(item.description)}
+function renderInstant(category,categoryKey){
+  return `
+    <div class="instant-panel">
+      ${
+        category
+        .filter(([,item])=>item.active!==false)
+        .map(([itemKey,item])=>{
+          const title = translate(item.label);
+          const desc  = item.description ? translate(item.description) : "";
+          return `
+            <div class="instant-card card row">
+              <div class="stack">
+                <div class="card-title service-${itemKey}">${title}</div>
+                ${desc ? `<div class="card-desc">${desc}</div>` : ""}
               </div>
-            `:""}
-
-            <div class="card-bottom">
-
-              <button
-                class="btn btn-primary add-cart"
-                data-category="${category}"
-                data-item="${item.key}">
-
-                Add
-              </button>
-
+                <div class="card-bottom">
+                  <button class="instant-btn btn btn-primary"
+                    data-category="${categoryKey}"
+                    data-item="${itemKey}">
+                    ${translate("send_request")}
+                  </button>
+                </div>            
             </div>
+          `;
+        }).join("")
+      }
+    </div>
+  `;
+}
 
-          </div>
+/* ========================================================= */
+/* CART */
 
-        `).join("")}
+function renderCartPanel(category,categoryKey){
+  return category
+    .filter(([,item])=>item.active!==false)
+    .map(([itemKey,item])=>{
 
-      </div>
+      const groupTitle = translate(item.label);
 
-    `;
+      const cards = Object.entries(item.options || {})
+        .filter(([,opt])=>opt.active!==false)
+        .map(([optKey,opt])=>{
 
-  }
+          const title = translate(opt.label);
+          const desc  = opt.description ? translate(opt.description) : "";
+          const price = opt.price || 0;
+          const formatPrice = new Intl.NumberFormat("vi-VN");
 
-
-  // INSTANT (service / help)
-
-  if(type==="instant"){
-
-    html+=`
-
-      <div class="stack">
-
-        ${items.map(item=>`
-
-          <div class="card">
-
-            <div class="card-title">
-              ${translate(item.label)}
-            </div>
-
-            ${item.description?`
-              <div class="card-desc">
-                ${translate(item.description)}
+          return `
+            <div class="menu-card card">
+              <div class="card-title">${title}</div>
+              ${desc ? `<div class="card-desc">${desc}</div>` : ""}
+              <div class="card-bottom">
+                <div class="menu-price price">
+                  ${formatPrice.format(price)} đ
+                </div>
+                <button class="order-btn btn btn-primary"
+                  data-category="${categoryKey}"
+                  data-item="${itemKey}"
+                  data-option="${optKey}">
+                  ${translate("cart_bar.order")}
+                </button>
               </div>
-            `:""}
-
-            <div class="card-bottom">
-
-              <button
-                class="btn btn-secondary instant-btn"
-                data-category="${category}"
-                data-item="${item.key}">
-
-                Request
-
-              </button>
-
             </div>
+          `;
 
+        }).join("");
+
+      return `
+        <div class="menu-group">
+          <h2 class="menu-group-title">${groupTitle}</h2>
+          <div class="menu-grid grid">
+            ${cards}
           </div>
+        </div>
+      `;
 
-        `).join("")}
-
-      </div>
-
-    `;
-
-  }
-
-
-  html+=`</div>`;
-
-  hubContent.innerHTML = html;
-
+    }).join("");
 }
