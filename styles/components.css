@@ -104,17 +104,6 @@
   background:rgba(255,255,255,.12);
 }
 
-/* animation */
-@keyframes recoverSlide{
-  from{
-    opacity:0;
-    transform:translate(-50%,-10px);
-  }
-  to{
-    opacity:1;
-    transform:translate(-50%,0);
-  }
-}
 .menu-update-banner{
   position:fixed;
   top:60px;
@@ -239,13 +228,4 @@
   background:#2f4f3e;
   color:white;
   font-weight:600;
-}
-
-@keyframes drawerUp{
-  from{
-    transform:translateY(100%);
-  }
-  to{
-    transform:translateY(0);
-  }
 }
