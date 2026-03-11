@@ -17,7 +17,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  padding-bottom: calc(14px + evn(safe-area-inset-bottom));
+  padding-bottom: calc(14px + env(safe-area-inset-bottom));
   max-width: 980px;
   z-index: 100;
 }

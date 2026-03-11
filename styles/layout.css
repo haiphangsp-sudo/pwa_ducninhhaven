@@ -6,7 +6,6 @@ body{
   background:#ece7dd;
   color:var(--text);
   height:100%;
-  margin:0;
   overflow:hidden;   /* ngăn scroll toàn trang */
   padding-bottom: env(safe-area-inset-bottom); /* tránh bị che bởi notch trên iOS */
   min-height: 120vh; /* đảm bảo đủ chiều cao để hiển thị cart bar */

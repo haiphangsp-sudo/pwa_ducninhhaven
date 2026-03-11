@@ -1,0 +1,160 @@
+/* ================================
+   HAVEN UI SYSTEM
+================================ */
+
+/* ---------- Layout container ---------- */
+
+.container{
+  max-width:980px;
+  margin:0 auto;
+  padding:20px 18px;
+}
+
+/* ---------- Card ---------- */
+
+.card{
+  background:#fff;
+  border-radius:18px;
+  padding:20px;
+  box-shadow:0 2px 8px rgba(0,0,0,.06);
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+/* card header */
+
+.card-title{
+  font-size:22px;
+  font-weight:600;
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+/* card description */
+
+.card-desc{
+  font-size:15px;
+  color:#666;
+  line-height:1.45;
+}
+
+/* card bottom actions */
+
+.card-bottom{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:10px;
+  gap:12px;
+}
+
+/* ---------- Buttons ---------- */
+
+.btn{
+  border:none;
+  border-radius:14px;
+  padding:12px 20px;
+  font-weight:600;
+  cursor:pointer;
+  transition:.15s ease;
+}
+
+/* primary */
+
+.btn-primary{
+  background:#2f4f3e;
+  color:white;
+}
+
+/* secondary */
+
+.btn-secondary{
+  background:#f3f2ef;
+  color:#333;
+}
+
+/* ghost */
+
+.btn-ghost{
+  background:transparent;
+}
+
+/* press feedback */
+
+.btn:active{
+  transform:scale(.96);
+}
+
+/* ---------- Price ---------- */
+
+.price{
+  font-size:18px;
+  font-weight:600;
+  color:#2f4f3e;
+}
+
+/* ---------- Icon container ---------- */
+
+.icon{
+  width:28px;
+  height:28px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:8px;
+  background:#e7efe9;
+}
+
+/* ---------- Grid ---------- */
+
+.grid{
+  display:grid;
+  gap:18px;
+}
+
+.grid-2{
+  grid-template-columns:1fr 1fr;
+}
+
+.grid-3{
+  grid-template-columns:1fr 1fr 1fr;
+}
+
+/* ---------- Stack layout ---------- */
+
+.stack{
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+}
+
+/* ---------- Row layout ---------- */
+
+.row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+
+/* ---------- Utility ---------- */
+
+.hidden{
+  display:none!important;
+}
+
+.center{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.flex{
+  display:flex;
+}
+
+.gap-s{ gap:8px }
+.gap-m{ gap:16px }
+.gap-l{ gap:24px }

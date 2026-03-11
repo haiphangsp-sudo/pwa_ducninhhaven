@@ -1,7 +1,7 @@
 /* styles/motion.css */
 /* Chuyển động nhẹ, không gây khó chịu */
 
-cart-bar{
+.cart-bar{
   transition:transform .2s ease, opacity .2s ease;
 }
 .cart-bar.hidden{
