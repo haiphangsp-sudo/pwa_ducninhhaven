@@ -87,7 +87,7 @@ function renderInstant(category, categoryKey){
             <div class="instant-card card">
 
               <div class="instant-info">
-                <div class="instant-title ${itemKey}">${title}</div>
+                <div class="card-title ${itemKey}">${title}</div>
                 ${desc ? `<div class="instant-desc">${desc}</div>` : ""}
               </div>
 
@@ -128,7 +128,7 @@ function renderCartPanel(category, categoryKey){
           return `
             <div class="menu-card card">
 
-              <div class="menu-title">${title}</div>
+              <div class="card-title">${title}</div>
 
               ${desc ? `<div class="menu-desc">${desc}</div>` : ""}
 

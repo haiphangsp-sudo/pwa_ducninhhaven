@@ -5,7 +5,13 @@
 /* =========================================================
    ARTICLE PANEL (intro/help)
 ========================================================= */
-
+#hubContent{
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch;
+  width: 100%;
+  box-sizing: border-box;
+}
 .article{
   max-width:620px;
   margin:40px auto;
@@ -158,11 +164,6 @@
  flex-direction: column;
  justify-content:space-between;
  gap:8px;
-}
-
-.menu-title{
- font-size:18px;
- font-weight:600;
 }
 
 .menu-desc{
