@@ -3,7 +3,7 @@
 // entry point
 
 import { subscribe } from "./core/state.js";
-import { renderApp } from "./ui/renderApp.js";
+import { renderApp } from "./ui/render/renderApp.js";
 import { onNetworkChange } from "./services/network.js";
 import { CONFIG } from "./config.js";
 import { resetIdleTimer } from "./core/idle.js";
