@@ -120,9 +120,8 @@ function renderInstant(category,categoryKey){
 /* ========================================================= */
 /* CART */
 
-function renderCartPanel(categoryKey){
-  const Item = getItems(categoryKey);
-  return Item
+function renderCartPanel(category){
+  return category
     .filter(([,item])=>item.active!==false)
     .map(([itemKey,item])=>{
 
