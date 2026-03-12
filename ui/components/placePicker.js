@@ -2,7 +2,7 @@
 // Component cho phép khách chọn điểm phục vụ (phòng/bàn/khu vực) thủ công, nếu QR code không hoạt động hoặc khách muốn đổi điểm phục vụ
 
 
-
+import { getIcon } from "./navBar.js"; 
 import { PLACES } from "../../data/places.js";
 import { setActive, getAnchor } from "../../core/context.js";
 import { translate } from "../utils/translate.js";
@@ -61,15 +61,19 @@ function renderGroup(type,data){
   const group=el.querySelector(`[data-group="${type}"]`);
   if(!group) return;
 
-  group.innerHTML=`
-    <div class="picker-title">${translate(type)}</div>
-    <div class="picker-list">
-      ${Object.entries(data).map(([id,p])=>`
-        <button class="btn-secondary btn" data-type="${type}" data-id="${id}">
-          ${translate(p.label)}
-        </button>
-      `).join("")}
+  group.innerHTML =`
+    <div class="row">
+      <div class="${type}-icon">${getIcon(type)}</div>
+      <div class="picker-title">${translate(type)}</div>
+      <div class="picker-list">
+        ${Object.entries(data).map(([id,p])=>`
+          <button class="btn-primary btn" data-type="${type}" data-id="${id}">
+            ${translate(p.label)}
+          </button>
+        `).join("")}
+      </div>
     </div>
+  
   `;
 
   group.querySelectorAll("button").forEach(btn=>{

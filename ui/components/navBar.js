@@ -35,7 +35,7 @@ export function renderNavBar(){
 }
 /* ===================================================== */
 
-function getIcon(type){
+export function getIcon(type){
   if(type === "room")  return "🛏";
   if(type === "table") return "🍽";
   if(type === "area")  return "📍";
