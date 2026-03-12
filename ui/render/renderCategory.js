@@ -77,8 +77,8 @@ function renderArticle(category){
       const title = translate(section.label);
 
       const body = Array.isArray(section.content)
-        ? section.content.map(p=>`<p>${translate(p)}</p>`).join("")
-        : `<p>${translate(section.content)}</p>`;
+        ? section.content.map(p=>`<p class="card-desc">${translate(p)}</p>`).join("")
+        : `<p class="card-desc">${translate(section.content)}</p>`;
 
       return `
       <div class="card">
