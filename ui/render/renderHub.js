@@ -11,17 +11,25 @@ export function renderHub(){
   const menuEl = document.getElementById("hubMenu");
 
   const ctx = getContext();
-  const mode = ctx?.anchor?.type || "table";
+  const mode = ctx?.anchor?.type || null;
 
-  const categories = getCategoriesForMode(mode);
+  const panels = Object.keys(MENU).filter(key => {
+    const cat = MENU[key];
+    if (!cat.active) return false;
+    if (!cat.allow) return true;
+    if (!mode) {
+      return cat.allow.includes("table") || cat.allow.includes("area");
+    }
+    return cat.allow.includes(mode);
+  });
 
   let panel = UI.view.panel;
 
-  if(!categories.find(c=>c.key===panel)){
-    panel = categories[0]?.key;
+  if(!panels.includes(panel)){
+    panel = panels[0];
   }
 
-  menuEl.innerHTML = categories.map(cat=>
+  menuEl.innerHTML = panels.map(cat=>
     `<button class="hub-btn${panel===cat.key?" active":""}"
             data-key="${cat.key}">
       ${renderIcon(cat.key,"hub-icon")}
