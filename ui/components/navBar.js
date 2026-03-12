@@ -6,7 +6,9 @@ import { getContext } from "../../core/context.js";
 import { PLACES } from "../../data/places.js";
 
 /* ===================================================== */
-
+  let identityIcon;
+  let identityLabel;
+  let locLabel;
 export function renderNavBar(){
 
   let labelLeft="table_guest"; 
@@ -24,9 +26,9 @@ export function renderNavBar(){
     labelLeft="area_guest";
   }
 
-  document.querySelector(".nav-left .identity-icon").textContent = icon(anchor?.type);
-  document.querySelector(".nav-left .identity-label").textContent = translate(labelLeft);
-  document.querySelector(".nav-center .loc-label").textContent = formatLocation(ctx);
+  identityIcon = document.querySelector(".identity-icon");
+  identityLabel = document.querySelector(".identity-label");
+  locLabel = document.querySelector(".loc-label");
 
   updateNavContext();
   initLangSwitch();
@@ -76,9 +78,10 @@ function bindClick(){
 /* EXTERNAL REFRESH */
 
 export function updateNavContext(){
-  const identityIcon = document.querySelector(".identity-icon");
-  const identityLabel = document.querySelector(".identity-label");
-  const locLabel = document.querySelector(".loc-label");
+  
+  document.querySelector(identityIcon).textContent = icon(anchor?.type);
+  document.querySelector(identityLabel).textContent = translate(labelLeft);
+  document.querySelector(locLabel).textContent = formatLocation(ctx);
 
   if(!identityIcon || !identityLabel || !locLabel) return;
 
