@@ -79,9 +79,9 @@ function bindClick(){
 
 export function updateNavContext(){
   
-  document.querySelector(identityIcon).textContent = icon(anchor?.type);
-  document.querySelector(identityLabel).textContent = translate(labelLeft);
-  document.querySelector(locLabel).textContent = formatLocation(ctx);
+  identityIcon.textContent = icon(anchor?.type);
+  identityLabel.textContent = translate(labelLeft);
+  locLabel.textContent = formatLocation(ctx);
 
   if(!identityIcon || !identityLabel || !locLabel) return;
 
