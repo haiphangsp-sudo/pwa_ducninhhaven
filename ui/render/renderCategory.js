@@ -76,7 +76,7 @@ function ensureActive(){
 /* ARTICLE */
 
 function renderArticle(category){
-  return category.values(category.items)
+  return Object.values(category.items)
     .filter(sec=>sec.active!==false)
     .map(section=>{
 
