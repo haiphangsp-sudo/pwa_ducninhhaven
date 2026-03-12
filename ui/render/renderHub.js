@@ -1,6 +1,6 @@
 
 import { UI, setState } from "../../core/state.js";
-import { getCategoriesForMode } from "../../data/helpers.js";
+import { MENU } from "../../core/menuStore.js";
 import { translate } from "../utils/translate.js";
 import { renderCategory } from "./renderCategory.js";
 import { renderIcon } from "../components/icons.js";
