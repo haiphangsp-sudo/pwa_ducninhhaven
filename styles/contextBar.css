@@ -67,11 +67,6 @@
   justify-self:end;
 }
 
-.lang-switch{
-  display:flex;
-  gap:6px;
-}
-
 .lang-switch button{
   border:none;
   color:#333;
@@ -81,7 +76,6 @@
   border-radius:8px;
   cursor:pointer;
   transition:all .15s ease;
-  background:transparent;
   margin-left:6px;
 }
 .lang-switch button.active{
@@ -136,7 +130,6 @@
   display:flex;
   align-items:center;
   gap:6px;
-  box-shadow:0 4px 12px rgba(0,0,0,.08);
   cursor:pointer;
 }
 
