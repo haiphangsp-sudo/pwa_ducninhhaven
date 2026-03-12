@@ -133,39 +133,39 @@ function renderInstant(Items,categoryKey){
 function renderCartPanel(Items,categoryKey){
 
   return Object.entries(Items.items || {})
-          .filter(([,item])=>item.active!==false)
-          .map(item=>{
+    .filter(([,item])=>item.active!==false)
+    .map(([itemKey,item])=>{
 
       const groupTitle = translate(item.label);
+      
+    const cards = Object.entries(item.option || {})
+      .filter(([,opt])=>opt.active!==false)
+      .map(([optKey,opt])=>{
 
-            const cards = Object.entries(item.option || {})
-        .filter(([,opt])=>opt.active!==false)
-        .map(([optKey,opt])=>{
+        const title = translate(opt.label);
+        const desc  = opt.description ? translate(opt.description) : "";
+        const price = opt.price || 0;
+        const formatPrice = new Intl.NumberFormat("vi-VN");
 
-          const title = translate(opt.label);
-          const desc  = opt.description ? translate(opt.description) : "";
-          const price = opt.price || 0;
-          const formatPrice = new Intl.NumberFormat("vi-VN");
-
-          return `
-            <div class="menu-card card">
-              <div class="card-title">${title}</div>
-              ${desc ? `<div class="card-desc">${desc}</div>` : ""}
-              <div class="card-bottom">
-                <div class="menu-price price">
-                  ${formatPrice.format(price)} đ
-                </div>
-                <button class="order-btn btn btn-primary"
-                  data-category="${categoryKey}"
-                  data-item="${itemKey}"
-                  data-option="${optKey}">
-                  ${translate("cart_bar.order")}
-                </button>
+        return `
+          <div class="menu-card card">
+            <div class="card-title">${title}</div>
+            ${desc ? `<div class="card-desc">${desc}</div>` : ""}
+            <div class="card-bottom">
+              <div class="menu-price price">
+                ${formatPrice.format(price)} đ
               </div>
+              <button class="order-btn btn btn-primary"
+                data-category="${categoryKey}"
+                data-item="${itemKey}"
+                data-option="${optKey}">
+                ${translate("cart_bar.order")}
+              </button>
             </div>
-          `;
+          </div>
+        `;
 
-        }).join("");
+      }).join("");
 
       return `
         <div class="menu-group">
