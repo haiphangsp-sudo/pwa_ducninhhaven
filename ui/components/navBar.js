@@ -1,6 +1,5 @@
 // ui/components/navBar.js
 //   NAVBAR: hiển thị nơi phục vụ hiện tại, và nút chuyển ngôn ngữ
-import { icon } from "../components/icons.js";
 import { initLangSwitch, translate } from "../utils/translate.js";
 import { getContext } from "../../core/context.js";
 import { PLACES } from "../../data/places.js";
@@ -36,7 +35,7 @@ export function renderNavBar(){
 }
 /* ===================================================== */
 
-function icon(type){
+function getIcon(type){
   if(type === "room")  return "🛏";
   if(type === "table") return "🍽";
   if(type === "area")  return "📍";
@@ -92,7 +91,7 @@ export function updateNavContext(){
   }else if(anchor?.type==="area") {
     labelLeft="area_guest";
   }
-  identityIcon.textContent = icon(anchor?.type);
+  identityIcon.textContent = getIcon(anchor?.type);
   identityLabel.textContent = translate(labelLeft);
   //identityLabel.textContent = translate(anchor?.type === "room" ? anchor.id : anchor?.type === "table" ? "table_guest" : "area_guest");
   if(!ctx){
