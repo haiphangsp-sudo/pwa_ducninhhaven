@@ -103,7 +103,6 @@ function renderInstant(Items,categoryKey){
     <div class="instant-panel">
       ${
         Items
-        .filter(([,item])=>item.active!==false)
         .map(([itemKey,item])=>{
           const title = translate(item.label);
           const desc  = item.description ? translate(item.description) : "";
