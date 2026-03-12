@@ -42,7 +42,8 @@ export function renderHub(){
 
   menuEl.querySelectorAll("button").forEach(btn=>{
     btn.onclick=()=>{
-      setState({view:{panel:btn.dataset.key}});
+      setState({ view: { panel: btn.dataset.key } });
+      renderCategory(key);
     };
   });
 
