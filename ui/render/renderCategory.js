@@ -122,7 +122,7 @@ function renderCartPanel(category, categoryKey){
         .filter(([,opt])=>opt.active!==false)
         .map(([optKey, opt]) => {
           
-          categoryCard(opt, optKey, itemKey, categoryKey);
+         return categoryCard(opt, optKey, itemKey, categoryKey);
           
         }).join("");
 
@@ -137,5 +137,4 @@ function renderCartPanel(category, categoryKey){
 
     }).join("");
 }
-
 /* ========================================================= */
