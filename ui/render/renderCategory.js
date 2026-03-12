@@ -131,7 +131,7 @@ function renderCartPanel(category, categoryKey){
       return `
         <div class="menu-group">
           <h2 class="menu-group-title">${groupTitle}</h2>
-          <div class="menu-grid">
+          <div class="menu-grid grid">
             ${cards}
           </div>
         </div>
