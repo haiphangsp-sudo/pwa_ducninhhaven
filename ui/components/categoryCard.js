@@ -10,7 +10,7 @@ export function categoryCard(opt,optKey,itemKey,categoryKey) {
     const price = opt.price || 0;
 
     return `
-    <div class="menu-card card">
+        <div class="menu-card card">
         <div class="card-title">${title}</div>
         ${desc ? `<div class="card-desc">${desc}</div>` : ""}
         <div class="card-bottom">
@@ -24,7 +24,6 @@ export function categoryCard(opt,optKey,itemKey,categoryKey) {
             ${translate("cart_bar.order")}
         </button>
         </div>
-    </div>
-    `;
+    </div>`;
 
 }
