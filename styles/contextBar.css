@@ -2,21 +2,12 @@
 /* ===== CONTEXT BAR (navigation anchor) ===== */
 
 #contextBar{
-  position:sticky;
-  top:0;
-  z-index:1000;
-
   /* chống giật khi scroll trên tablet */
   transform:translateZ(0);
   backface-visibility:hidden;
-  height:58px;
   flex-shrink:0;
-  background:linear-gradient(180deg,#ece7dd,#e4dfd4);
-  border-bottom:none;
   font-size:var(--font-xl);
   font-weight:600;
-  display:flex;
-  align-items:center;
   box-shadow: 2px 0 8px rgba(0, 0, 0, .05) inset;
 }
 /* layout 3 vùng cố định */
@@ -67,17 +58,7 @@
   justify-self:end;
 }
 
-.lang-switch button{
-  border:none;
-  color:#333;
-  width: 35px;
-  font-size:12px;
-  padding:5px 9px;
-  border-radius:8px;
-  cursor:pointer;
-  transition:all .15s ease;
-  margin-left:6px;
-}
+
 .lang-switch button.active{
   background:#2f4f3e;
   color:white;
