@@ -62,7 +62,7 @@ function renderGroup(type,data){
   if(!group) return;
 
   group.innerHTML =`
-    <div class="gap-s">
+    <div class="flex gap-s">
       <span class="${type}-icon">${getIcon(type)}</span>
       <span class="picker-title">${translate(type)}</span>
     </div>
