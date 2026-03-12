@@ -1,11 +1,11 @@
 // ui/renderHub.js
 
-import { UI, setState } from "../core/state.js";
-import { MENU } from "../core/menuStore.js";
-import { translate } from "./utils/translate.js";
+import { UI, setState } from "../../core/state.js";
+import { MENU } from "../../core/menuStore.js";
+import { translate } from "../utils/translate.js";
 import { renderCategory } from "./renderCategory.js";
-import { ICONS } from "./icons.js";
-import { getContext } from "../core/context.js";
+import { renderIcon } from "../components/icons.js";
+import { getContext } from "../../core/context.js";
 
 export function renderHub(){
 
@@ -53,15 +53,10 @@ export function renderHub(){
     <button
       class="hub-btn${panel===key ? " active" : ""}"
       data-key="${key}">
-
-      <span class="hub-icon">
-        ${ICONS[key] || ""}
-      </span>
-
+      ${renderIcon(key,"hub-icon")}
       <span class="hub-label">
         ${translate(MENU[key].label)}
       </span>
-
     </button>
 
   `).join("");
