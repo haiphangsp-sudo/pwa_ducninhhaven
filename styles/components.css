@@ -228,6 +228,7 @@
   font-weight:600;
 }
 .picker-list button{
-  width: 110px;
-  font-size:12px;
+  width: 120px;
+  font-size:15px;
+  white-space: nowrap;
 }
