@@ -12,6 +12,14 @@
           "en":"Welcome to Duc Ninh Haven. We hope you enjoy a quiet and relaxing stay with us."
         },
         "active":true
+      },
+      "about":{
+        "label":{"vi":"Về chúng tôi","en":"About Us"},
+        "content":{
+          "vi":"Chúng tôi không cố trở thành một nơi ai cũng thích. Chúng tôi chỉ cố trở thành một nơi mà một số người cần.",
+          "en":"We're not trying to be a place everyone likes. We're just trying to be a place that some people need."
+        },
+        "active":true
       }
     }
   },
