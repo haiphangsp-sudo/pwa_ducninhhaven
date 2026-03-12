@@ -9,7 +9,7 @@ export function instantCard(service,itemKey,categoryKey) {
 
 return `
 <div class="instant-card card">
-    <div class="instant-info">
+    <div class="instant-info stack">
         <div class="card-title service-${itemKey}">
             ${title}
         </div>

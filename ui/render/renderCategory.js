@@ -97,6 +97,8 @@ function renderInstant(category, categoryKey){
 
   return `
     <div class="instant-panel">
+      <div class="menu-group">
+      <div class="grid">
       ${
         Object.entries(category.items)
         .filter(([,item])=>item.active!==false)
@@ -106,6 +108,8 @@ function renderInstant(category, categoryKey){
           
         }).join("")
       }
+      </div>
+    </div>
     </div>
   `;
 }
