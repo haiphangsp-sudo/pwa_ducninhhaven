@@ -6,8 +6,6 @@
   flex-direction:row;
   align-items:center;
   overflow:hidden;
-  padding:5px;
-  gap:14px;
   justify-content: space-around;
   border-bottom:1px solid rgba(0,0,0,.05);
   flex-shrink: 0;
