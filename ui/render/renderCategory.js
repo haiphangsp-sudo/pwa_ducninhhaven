@@ -75,7 +75,7 @@ function ensureActive(){
 /* ========================================================= */
 /* ARTICLE */
 
-function renderArticle(category,categoryKey){
+function renderArticle(category){
   return category
     .filter(sec=>sec.active!==false)
     .map(section=>{
@@ -98,11 +98,11 @@ function renderArticle(category,categoryKey){
 /* ========================================================= */
 /* INSTANT */
 
-function renderInstant(category,categoryKey){
+function renderInstant(Items,categoryKey){
   return `
     <div class="instant-panel">
       ${
-        category
+        Items
         .filter(([,item])=>item.active!==false)
         .map(([itemKey,item])=>{
           const title = translate(item.label);
@@ -131,12 +131,12 @@ function renderInstant(category,categoryKey){
 /* ========================================================= */
 /* CART */
 
-function renderCartPanel(category,categoryKey){
-  return category.map(([itemKey,item])=>{
+function renderCartPanel(Items,categoryKey){
+  return Items.map(item=>{
 
       const groupTitle = translate(item.label);
 
-      const cards = Object.entries(item.options || {})
+      const cards = getItems(item)
         .filter(([,opt])=>opt.active!==false)
         .map(([optKey,opt])=>{
 
