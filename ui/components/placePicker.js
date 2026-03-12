@@ -19,7 +19,7 @@ export function initPlacePicker(){
 
   el.innerHTML=`
     <div class="picker-backdrop"></div>
-    <div class="picker-panel">
+    <div class="picker-panel stack">
 
       <h3>${translate("select_place")}</h3>
 
@@ -62,7 +62,7 @@ function renderGroup(type,data){
   if(!group) return;
 
   group.innerHTML =`
-    <div class="row">
+    <div class="gap-s">
       <span class="${type}-icon">${getIcon(type)}</span>
       <span class="picker-title">${translate(type)}</span>
     </div>
