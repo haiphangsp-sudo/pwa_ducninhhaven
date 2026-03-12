@@ -23,9 +23,9 @@ export function initPlacePicker(){
 
       <h3>${translate("select_place")}</h3>
 
-      <div class="picker-group" data-group="room"></div>
-      <div class="picker-group" data-group="table"></div>
-      <div class="picker-group" data-group="area"></div>
+      <div class="picker-group grid" data-group="room"></div>
+      <div class="picker-group grid" data-group="table"></div>
+      <div class="picker-group grid" data-group="area"></div>
 
     </div>
   `;
