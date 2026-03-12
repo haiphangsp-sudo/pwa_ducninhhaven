@@ -1,9 +1,11 @@
-// ui/renderCategory.js
+// ui/render/renderCategory.js
 
 import { MENU } from "../../core/menuStore.js";
 import { addToCart, sendInstant } from "../../core/events.js";
 import { getContext } from "../../core/context.js";
 import { translate } from "../utils/translate.js";
+import { categoryCard } from "../components/categoryCard.js";
+import { instantCard } from "../components/instantCard.js";
 
 export function renderCategory(key){
 
@@ -53,7 +55,6 @@ export function renderCategory(key){
     }
   };
 }
-
 /* ========================================================= */
 
 function ensureActive(){
@@ -64,7 +65,6 @@ function ensureActive(){
   }
   return true;
 }
-
 /* ========================================================= */
 /* ARTICLE */
 
@@ -88,7 +88,6 @@ function renderArticle(category){
       `;
     }).join("");
 }
-
 /* ========================================================= */
 /* INSTANT */
 
@@ -96,39 +95,18 @@ function renderInstant(category, categoryKey){
 
   return `
     <div class="instant-panel">
-
       ${
         Object.entries(category.items)
         .filter(([,item])=>item.active!==false)
         .map(([itemKey,item])=>{
-
-          const title = translate(item.label);
-          const desc  = item.description ? translate(item.description) : "";
-
-          return `
-            <div class="instant-card card">
-              <div class="card-title service-${itemKey}">
-                ${title}
-              </div>
-              ${desc ? `<div class="card-desc">${desc}</div>` : ""}
-              <div class="card-bottom">
-                <button class="instant-btn btn btn-primary"
-                  data-category="${categoryKey}"
-                  data-item="${itemKey}">
-                  ${translate("send_request")}
-                </button>
-              </div>
-
-            </div>
-          `;
-
+      
+          instantCard(item,itemKey,categoryKey);
+          
         }).join("")
       }
-
     </div>
   `;
 }
-
 /* ========================================================= */
 /* CART */
 
@@ -142,30 +120,10 @@ function renderCartPanel(category, categoryKey){
 
       const cards = Object.entries(item.options || {})
         .filter(([,opt])=>opt.active!==false)
-        .map(([optKey,opt])=>{
-
-          const title = translate(opt.label);
-          const desc  = opt.description ? translate(opt.description) : "";
-          const price = opt.price || 0;
-
-          return `
-            <div class="menu-card card">
-              <div class="card-title">${title}</div>
-              ${desc ? `<div class="card-desc">${desc}</div>` : ""}
-              <div class="card-bottom">
-                <div class="menu-price price">
-                  ${price.toLocaleString("vi-VN")} đ
-                </div>
-                <button class="order-btn btn btn-primary"
-                  data-category="${categoryKey}"
-                  data-item="${itemKey}"
-                  data-option="${optKey}">
-                  ${translate("cart_bar.order")}
-                </button>
-              </div>
-            </div>
-          `;
-
+        .map(([optKey, opt]) => {
+          
+          categoryCard(opt, optKey, itemKey, categoryKey);
+          
         }).join("");
 
       return `

@@ -1,28 +1,30 @@
-export function categoryCard(item){
+// ui/components/categoryCard.js
 
-return `
-<div class="menu-card"
- data-category="${item.category}"
- data-item="${item.item}"
- data-option="${item.option||""}">
+import { translate } from "../utils/translate.js";
 
- <div class="menu-info">
+export function categoryCard(opt,optKey,itemKey,categoryKey) {
 
-   <div class="menu-title">${item.title}</div>
+    
+    const title = translate(opt.label);
+    const desc  = opt.description ? translate(opt.description) : "";
+    const price = opt.price || 0;
 
-   <div class="menu-desc">${item.desc||""}</div>
-
- </div>
-
- <div class="menu-bottom">
-
-   <div class="menu-price">${item.price}</div>
-
-   <button class="order-btn">Thêm</button>
-
- </div>
-
-</div>
-`
+    return `
+    <div class="menu-card card">
+        <div class="card-title">${title}</div>
+        ${desc ? `<div class="card-desc">${desc}</div>` : ""}
+        <div class="card-bottom">
+        <div class="menu-price price">
+            ${price.toLocaleString("vi-VN")} đ
+        </div>
+        <button class="order-btn btn btn-primary"
+            data-category="${categoryKey}"
+            data-item="${itemKey}"
+            data-option="${optKey}">
+            ${translate("cart_bar.order")}
+        </button>
+        </div>
+    </div>
+    `;
 
 }
