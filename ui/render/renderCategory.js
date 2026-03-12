@@ -1,5 +1,5 @@
 //  
-import { MENU } from "../../data/menu.json";
+import { MENU } from "../../core/menuStore.js";
 import { addToCart, sendInstant } from "../../core/events.js";
 import { getContext } from "../../core/context.js";
 import { translate } from "../utils/translate.js";
