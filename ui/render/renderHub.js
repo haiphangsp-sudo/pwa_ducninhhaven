@@ -34,7 +34,7 @@ export function renderHub(){
             data-key="${key}">
       ${renderIcon(key,"hub-icon")}
       <span class="hub-label">
-        ${translate(cat.key.label)}
+        ${translate(MENU[key].label)}
       </span>
     </button>
 
