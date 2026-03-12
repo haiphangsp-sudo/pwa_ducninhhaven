@@ -1,5 +1,5 @@
 //  
-
+import { MENU } from "../../data/menu.json";
 import { addToCart, sendInstant } from "../../core/events.js";
 import { getContext } from "../../core/context.js";
 import { translate } from "../utils/translate.js";
@@ -8,8 +8,8 @@ import { getCategoryType, getItems } from "../../data/helpers.js"
 export function renderCategory(key){
   const contentEl = document.querySelector(".category-panel");
   const Type = getCategoryType(key);
-  const Items = getItems(key);
-  if(!Items.length){
+  const Items = MENU[key];
+  if(!Items){
     hubContent.innerHTML = `
       <div class="container">
         <div class="card">
@@ -76,7 +76,7 @@ function ensureActive(){
 /* ARTICLE */
 
 function renderArticle(category){
-  return category
+  return category.values(category.items)
     .filter(sec=>sec.active!==false)
     .map(section=>{
 
@@ -102,7 +102,8 @@ function renderInstant(Items,categoryKey){
   return `
     <div class="instant-panel">
       ${
-        Items
+        Object.entries(Items.items)
+        .filter(([,item])=>item.active!==false)
         .map(([itemKey,item])=>{
           const title = translate(item.label);
           const desc  = item.description ? translate(item.description) : "";
@@ -131,11 +132,15 @@ function renderInstant(Items,categoryKey){
 /* CART */
 
 function renderCartPanel(Items,categoryKey){
-  return Items.map(item=>{
+
+  return Object.entries(Items.items || {})
+          .filter(([,item])=>item.active!==false)
+          .map(item=>{
 
       const groupTitle = translate(item.label);
 
-      const cards = getItems(item)
+            const cards = Object.entries(item.option || {})
+        .filter(([,opt])=>opt.active!==false)
         .map(([optKey,opt])=>{
 
           const title = translate(opt.label);
