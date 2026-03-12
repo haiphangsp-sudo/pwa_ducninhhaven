@@ -63,16 +63,17 @@ function renderGroup(type,data){
 
   group.innerHTML =`
     <div class="row">
-      <div class="${type}-icon">${getIcon(type)}</div>
-      <div class="picker-title">${translate(type)}</div>
-      <div class="picker-list">
-        ${Object.entries(data).map(([id,p])=>`
-          <button class="btn-primary btn" data-type="${type}" data-id="${id}">
-            ${translate(p.label)}
-          </button>
-        `).join("")}
-      </div>
+      <span class="${type}-icon">${getIcon(type)}</span>
+      <span class="picker-title">${translate(type)}</span>
     </div>
+    <div class="picker-list">
+      ${Object.entries(data).map(([id,p])=>`
+        <button class="btn-primary btn" data-type="${type}" data-id="${id}">
+          ${translate(p.label)}
+        </button>
+      `).join("")}
+    </div>
+    
   
   `;
 
