@@ -81,10 +81,12 @@ function renderArticle(category){
         : `<p>${translate(section.content)}</p>`;
 
       return `
+      <div class="card">
         <article class="article">
-          <h2>${title}</h2>
+          <h2 class="card-title">${title}</h2>
           ${body}
         </article>
+        </div>
       `;
     }).join("");
 }
