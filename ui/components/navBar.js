@@ -79,10 +79,6 @@ function bindClick(){
 
 export function updateNavContext(){
   
-  identityIcon.textContent = icon(anchor?.type);
-  identityLabel.textContent = translate(labelLeft);
-  locLabel.textContent = formatLocation(ctx);
-
   if(!identityIcon || !identityLabel || !locLabel) return;
 
   const ctx = getContext();
