@@ -1,6 +1,6 @@
 // ui/components/navBar.js
 //   NAVBAR: hiển thị nơi phục vụ hiện tại, và nút chuyển ngôn ngữ
-
+import { icon } from "../components/icons.js";
 import { initLangSwitch, translate } from "../utils/translate.js";
 import { getContext } from "../../core/context.js";
 import { PLACES } from "../../data/places.js";
