@@ -100,7 +100,7 @@ function renderInstant(category, categoryKey){
         .filter(([,item])=>item.active!==false)
         .map(([itemKey,item])=>{
       
-          instantCard(item,itemKey,categoryKey);
+         return instantCard(item,itemKey,categoryKey);
           
         }).join("")
       }
