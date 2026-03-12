@@ -12,18 +12,15 @@
  overflow-x:auto;
  position:sticky;
  z-index:5;
+ padding: 12px
 }
 .hub-btn{
   width:64px;
   height:64px;
-  border:none;
-  border-radius:14px;
   background:transparent;
-  display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:center;
-  gap:6px;
   transition:.18s ease;
  font-size:13px;
  color:#444;
