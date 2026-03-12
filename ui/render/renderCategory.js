@@ -137,7 +137,6 @@ function renderCartPanel(Items,categoryKey){
       const groupTitle = translate(item.label);
 
       const cards = getItems(item)
-        .filter(([,opt])=>opt.active!==false)
         .map(([optKey,opt])=>{
 
           const title = translate(opt.label);
