@@ -1,37 +1,35 @@
-//  
+// ui/renderCategory.js
+
 import { MENU } from "../../core/menuStore.js";
 import { addToCart, sendInstant } from "../../core/events.js";
 import { getContext } from "../../core/context.js";
 import { translate } from "../utils/translate.js";
-import { getCategoryType, getItems } from "../../data/helpers.js"
 
 export function renderCategory(key){
+
   const contentEl = document.querySelector(".category-panel");
-  const Items = MENU[key];
-  if(!Items){
-    hubContent.innerHTML = `
-      <div class="container">
-        <div class="card">
-          <div class="card-desc">No items available</div>
-        </div>
-      </div>
-    `;
+  const category = MENU[key];
+
+  if(!category){
+    contentEl.innerHTML="";
     return;
   }
-  switch(Items.ui){
+
+  switch(category.ui){
 
     case "article":
-      contentEl.innerHTML = renderArticle(Items);
+      contentEl.innerHTML = renderArticle(category);
       break;
 
     case "instant":
-      contentEl.innerHTML = renderInstant(Items,key);
+      contentEl.innerHTML = renderInstant(category, key);
       break;
 
     case "cart":
-      contentEl.innerHTML = renderCartPanel(Items,key);
+      contentEl.innerHTML = renderCartPanel(category, key);
       break;
   }
+
   contentEl.onclick = e => {
     const instanBtn = e.target.closest(".instant-btn");
     if(instanBtn){
@@ -54,7 +52,6 @@ export function renderCategory(key){
       });
     }
   };
-
 }
 
 /* ========================================================= */
@@ -75,6 +72,7 @@ function ensureActive(){
 /* ARTICLE */
 
 function renderArticle(category){
+
   return Object.values(category.items)
     .filter(sec=>sec.active!==false)
     .map(section=>{
@@ -97,32 +95,42 @@ function renderArticle(category){
 /* ========================================================= */
 /* INSTANT */
 
-function renderInstant(Items,categoryKey){
+function renderInstant(category, categoryKey){
+
   return `
     <div class="instant-panel">
+
       ${
-        Object.entries(Items.items)
+        Object.entries(category.items)
         .filter(([,item])=>item.active!==false)
         .map(([itemKey,item])=>{
+
           const title = translate(item.label);
           const desc  = item.description ? translate(item.description) : "";
+
           return `
-            <div class="instant-card card row">
-              <div class="stack">
-                <div class="card-title service-${itemKey}">${title}</div>
-                ${desc ? `<div class="card-desc">${desc}</div>` : ""}
+            <div class="instant-card card">
+
+              <div class="card-title service-${itemKey}">
+                ${title}
               </div>
-                <div class="card-bottom">
-                  <button class="instant-btn btn btn-primary"
-                    data-category="${categoryKey}"
-                    data-item="${itemKey}">
-                    ${translate("send_request")}
-                  </button>
-                </div>            
+
+              ${desc ? `<div class="card-desc">${desc}</div>` : ""}
+
+              <div class="card-bottom">
+                <button class="instant-btn btn btn-primary"
+                  data-category="${categoryKey}"
+                  data-item="${itemKey}">
+                  ${translate("send_request")}
+                </button>
+              </div>
+
             </div>
           `;
+
         }).join("")
       }
+
     </div>
   `;
 }
@@ -130,51 +138,62 @@ function renderInstant(Items,categoryKey){
 /* ========================================================= */
 /* CART */
 
-function renderCartPanel(Items,categoryKey){
+function renderCartPanel(category, categoryKey){
 
-  return Object.entries(Items.items || {})
+  return Object.entries(category.items || {})
     .filter(([,item])=>item.active!==false)
     .map(([itemKey,item])=>{
 
       const groupTitle = translate(item.label);
-      
-    const cards = Object.entries(item.option || {})
-      .filter(([,opt])=>opt.active!==false)
-      .map(([optKey,opt])=>{
 
-        const title = translate(opt.label);
-        const desc  = opt.description ? translate(opt.description) : "";
-        const price = opt.price || 0;
-        const formatPrice = new Intl.NumberFormat("vi-VN");
+      const cards = Object.entries(item.options || {})
+        .filter(([,opt])=>opt.active!==false)
+        .map(([optKey,opt])=>{
 
-        return `
-          <div class="menu-card card">
-            <div class="card-title">${title}</div>
-            ${desc ? `<div class="card-desc">${desc}</div>` : ""}
-            <div class="card-bottom">
-              <div class="menu-price price">
-                ${formatPrice.format(price)} đ
+          const title = translate(opt.label);
+          const desc  = opt.description ? translate(opt.description) : "";
+          const price = opt.price || 0;
+
+          return `
+            <div class="menu-card card">
+
+              <div class="card-title">${title}</div>
+
+              ${desc ? `<div class="card-desc">${desc}</div>` : ""}
+
+              <div class="card-bottom">
+
+                <div class="menu-price">
+                  ${price.toLocaleString("vi-VN")} đ
+                </div>
+
+                <button class="order-btn btn btn-primary"
+                  data-category="${categoryKey}"
+                  data-item="${itemKey}"
+                  data-option="${optKey}">
+                  ${translate("cart_bar.order")}
+                </button>
+
               </div>
-              <button class="order-btn btn btn-primary"
-                data-category="${categoryKey}"
-                data-item="${itemKey}"
-                data-option="${optKey}">
-                ${translate("cart_bar.order")}
-              </button>
-            </div>
-          </div>
-        `;
 
-      }).join("");
+            </div>
+          `;
+
+        }).join("");
 
       return `
         <div class="menu-group">
+
           <h2 class="menu-group-title">${groupTitle}</h2>
-          <div class="menu-grid grid">
+
+          <div class="menu-grid">
             ${cards}
           </div>
+
         </div>
       `;
 
     }).join("");
 }
+
+/* ========================================================= */
