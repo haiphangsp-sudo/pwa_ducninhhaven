@@ -96,7 +96,6 @@ function renderArticle(category){
 function renderInstant(category, categoryKey){
 
   return `
-    <div class="instant-panel">
       <div class="menu-group">
       <div class="grid">
       ${
@@ -109,7 +108,6 @@ function renderInstant(category, categoryKey){
         }).join("")
       }
       </div>
-    </div>
     </div>
   `;
 }
