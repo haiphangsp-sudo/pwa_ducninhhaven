@@ -57,14 +57,11 @@ export function renderCategory(key){
 /* ========================================================= */
 
 function ensureActive(){
-
   const ctx = getContext();
-
   if(!ctx?.active){
     window.dispatchEvent(new Event("openPlacePicker"));
     return false;
   }
-
   return true;
 }
 
@@ -110,13 +107,10 @@ function renderInstant(category, categoryKey){
 
           return `
             <div class="instant-card card">
-
               <div class="card-title service-${itemKey}">
                 ${title}
               </div>
-
               ${desc ? `<div class="card-desc">${desc}</div>` : ""}
-
               <div class="card-bottom">
                 <button class="instant-btn btn btn-primary"
                   data-category="${categoryKey}"
@@ -156,26 +150,19 @@ function renderCartPanel(category, categoryKey){
 
           return `
             <div class="menu-card card">
-
               <div class="card-title">${title}</div>
-
               ${desc ? `<div class="card-desc">${desc}</div>` : ""}
-
               <div class="card-bottom">
-
-                <div class="menu-price">
+                <div class="menu-price price">
                   ${price.toLocaleString("vi-VN")} đ
                 </div>
-
                 <button class="order-btn btn btn-primary"
                   data-category="${categoryKey}"
                   data-item="${itemKey}"
                   data-option="${optKey}">
                   ${translate("cart_bar.order")}
                 </button>
-
               </div>
-
             </div>
           `;
 
@@ -183,13 +170,10 @@ function renderCartPanel(category, categoryKey){
 
       return `
         <div class="menu-group">
-
           <h2 class="menu-group-title">${groupTitle}</h2>
-
           <div class="menu-grid">
             ${cards}
           </div>
-
         </div>
       `;
 
