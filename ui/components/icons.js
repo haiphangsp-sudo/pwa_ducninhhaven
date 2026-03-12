@@ -77,3 +77,9 @@ stroke-linecap="round" stroke-linejoin="round">
 export function icon(name){
     return ICONS[name] || ICONS.help
 }
+export function renderIcon(name,cls="icon"){
+
+  return `<span class="${cls}">
+           ${icon(name)}
+         </span>`
+}

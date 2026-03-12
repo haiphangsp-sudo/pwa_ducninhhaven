@@ -3,7 +3,7 @@ import { UI, setState } from "../../core/state.js";
 import { getCategoriesForMode } from "../../data/helpers.js";
 import { translate } from "../utils/translate.js";
 import { renderCategory } from "./renderCategory.js";
-import { icon } from "../components/icons.js";
+import { renderIcon } from "../components/icons.js";
 import { getContext } from "../../core/context.js";
 
 export function renderHub(){
@@ -24,15 +24,10 @@ export function renderHub(){
   menuEl.innerHTML = categories.map(cat=>
     `<button class="hub-btn${panel===cat.key?" active":""}"
             data-key="${cat.key}">
-
-      <span class="hub-icon">
-        ${icon(cat.key) || ""}
-      </span>
-
+      ${renderIcon(cat.key,"hub-icon")}
       <span class="hub-label">
         ${translate(cat.label)}
       </span>
-
     </button>
 
   `).join("");
