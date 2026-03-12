@@ -11,8 +11,10 @@ export function categoryCard(opt,optKey,itemKey,categoryKey) {
 
     return `
         <div class="menu-card card">
-        <div class="card-title">${title}</div>
-        ${desc ? `<div class="card-desc">${desc}</div>` : ""}
+            <div class="stack">
+                <div class="card-title">${title}</div>
+                ${desc ? `<div class="card-desc">${desc}</div>` : ""}
+            </div>
         <div class="card-bottom">
         <div class="menu-price price">
             ${price.toLocaleString("vi-VN")} đ
