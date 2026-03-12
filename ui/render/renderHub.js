@@ -1,74 +1,47 @@
+
 import { UI, setState } from "../../core/state.js";
-import { getContext } from "../../core/context.js";
-
 import { getCategoriesForMode } from "../../data/helpers.js";
-
-import { icon } from "../components/icons.js";
 import { translate } from "../utils/translate.js";
-
 import { renderCategory } from "./renderCategory.js";
-
+import { icon } from "../components/icons.js";
+import { getContext } from "../../core/context.js";
 
 export function renderHub(){
 
-  const hubMenu = document.getElementById("hubMenu");
-
-  if(!hubMenu) return;
+  const menuEl = document.getElementById("hubMenu");
 
   const ctx = getContext();
   const mode = ctx?.anchor?.type || "table";
 
   const categories = getCategoriesForMode(mode);
 
-  let active = UI.view.panel;
+  let panel = UI.view.panel;
 
-  if(!categories.find(c=>c.key===active)){
-    active = categories[0]?.key;
+  if(!categories.find(c=>c.key===panel)){
+    panel = categories[0]?.key;
   }
 
-  hubMenu.innerHTML = `
-  <div class="container grid grid-3">
+  menuEl.innerHTML = categories.map(cat=>
+    `<button class="hub-btn${panel===cat.key?" active":""}"
+            data-key="${cat.key}">
 
-    ${categories.map(cat=>`
+      <span class="hub-icon">
+        ${icon(cat.key) || ""}
+      </span>
 
-      <button
-        class="card hub-btn ${active===cat.key?"active":""}"
-        data-key="${cat.key}">
+      <span class="hub-label">
+        ${translate(cat.label)}
+      </span>
 
-        <div class="row gap-m">
+    </button>
 
-          <div class="icon">
-            ${icon([cat.key]) || ""}
-          </div>
+  `).join("");
 
-          <div class="card-title">
-            ${translate(cat.label)}
-          </div>
-
-        </div>
-
-      </button>
-
-    `).join("")}
-
-  </div>
-  `;
-
-
-  hubMenu.querySelectorAll(".hub-btn").forEach(btn=>{
-
+  menuEl.querySelectorAll("button").forEach(btn=>{
     btn.onclick=()=>{
-
-      const key = btn.dataset.key;
-
-      setState({
-        view:{panel:key}
-      });
-
-      renderCategory(key);
-
+      setState({view:{panel:btn.dataset.key}});
     };
-
   });
 
+  renderCategory(panel);
 }
