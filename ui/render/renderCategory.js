@@ -97,7 +97,7 @@ function renderInstant(category, categoryKey){
 
   return `
       <div class="menu-group">
-      <div class="grid">
+      <div class="menu-grid grid">
       ${
         Object.entries(category.items)
         .filter(([,item])=>item.active!==false)
