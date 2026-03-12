@@ -7,7 +7,6 @@ import { getCategoryType, getItems } from "../../data/helpers.js"
 
 export function renderCategory(key){
   const contentEl = document.querySelector(".category-panel");
-  const Type = getCategoryType(key);
   const Items = MENU[key];
   if(!Items){
     hubContent.innerHTML = `
@@ -19,7 +18,7 @@ export function renderCategory(key){
     `;
     return;
   }
-  switch(Type){
+  switch(Items.ui){
 
     case "article":
       contentEl.innerHTML = renderArticle(Items);
