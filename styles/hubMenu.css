@@ -2,44 +2,6 @@
    HUB MENU — MODE SELECTOR RAIL
 ===================================================== */
 
-#hubMenu{
-  flex-direction:row;
-  align-items:center;
-  overflow:hidden;
-  justify-content: space-around;
-  border-bottom:1px solid var(--border-soft);
-  background: var(--bg-soft);
-  top: 56px;
-  flex-shrink: 0;
-  position:sticky;
-  z-index:90;
-  scroll-snap-type: x mandatory;
-}
-.hub-btn{
-  width:64px;
-  height:64px;
-  flex: 0 0 auto;
-  background:transparent;
-  flex-direction:column;
-  transition:.18s ease;
-  font-size:13px;
-  color:#444;
-  scroll-snap-align: start;
-}
-
-.hub-btn.active{
-  box-shadow:0 4px 14px rgba(0,0,0,.18);
-  background: var(--brand-soft);
-  color: var(--brand);
-}
-
-.hub-btn.active::after{
-  content: "";
-  width:24px;
-  height:3px;
-  background:#2f4f4f;
-  margin-top:4px;
-}
 
 .hub-icon svg{
  width:22px;
@@ -50,15 +12,6 @@ display:block;
 
 .hub-btn.active svg{
  stroke:white;
-}
-
-.hub-btn:hover{
-  background:rgba(255,255,255,.35);
-}
-
-/* active không nhảy layout */
-.hub-btn.active:hover{
-  background:#355c49;
 }
 
 .hub-btn.active svg{
@@ -93,6 +46,17 @@ stroke:white;
   gap:var(--space-2);
   padding:var(--space-2) var(--space-3);
   overflow-x:auto;
+  flex-direction:row;
+  align-items:center;
+  overflow:hidden;
+  justify-content: space-around;
+  border-bottom:1px solid var(--border-soft);
+  background: var(--bg-soft);
+  top: 56px;
+  flex-shrink: 0;
+  position:sticky;
+  z-index:90;
+  scroll-snap-type: x mandatory;
 }
 
 .hub-btn{
@@ -100,17 +64,39 @@ stroke:white;
   flex-direction:column;
   align-items:center;
   gap:6px;
-
   padding:12px 14px;
-
   border-radius:var(--radius-l);
   color:var(--text-soft);
+
+  width:64px;
+  height:64px;
+  flex: 0 0 auto;
+  background:transparent;
+  transition:.18s ease;
+  font-size:13px;
+  scroll-snap-align: start;
 }
+
 
 .hub-btn.active{
   background:var(--bg-soft);
   color:var(--text-main);
   box-shadow:var(--shadow-soft);
+}
+.hub-btn.active:hover{
+  background:#355c49;
+}
+
+.hub-btn.active::after{
+  content: "";
+  width:24px;
+  height:3px;
+  background:#2f4f4f;
+  margin-top:4px;
+}
+
+.hub-btn:hover{
+  background:rgba(255,255,255,.35);
 }
 
 .hub-icon{
