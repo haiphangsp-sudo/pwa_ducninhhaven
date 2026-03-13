@@ -7,12 +7,15 @@
   align-items:center;
   overflow:hidden;
   justify-content: space-around;
-  border-bottom:1px solid rgba(0,0,0,.05);
+  border-bottom:1px solid var(--border-soft);
+  background: var(--bg-soft);
+  top: 56px;
   flex-shrink: 0;
  overflow-x:auto;
  position:sticky;
- z-index:5;
- padding: 12px
+ z-index:90;
+ padding: 10px 16px;
+ gap: 12px;
 }
 .hub-btn{
   width:64px;
@@ -24,13 +27,15 @@
   transition:.18s ease;
  font-size:13px;
  color:#444;
+ cursor: pointer;
 }
 
 .hub-btn.active{
  box-shadow:0 4px 14px rgba(0,0,0,.18);
-  background:#2f4f3e;
-  color:white;
+  background: var(--brand-soft);
+  color: var(--brand);
 }
+
 .hub-btn.active::after{
   content: "";
   width:24px;

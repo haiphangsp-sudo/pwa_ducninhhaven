@@ -57,7 +57,11 @@
     grid-template-columns: minmax(60px,18%) 1fr minmax(70px,18%);
   }
 }
-
+@media (min-width: 768px){
+  #hubMenu{
+    gap: 20px;
+  }
+};
 
 @media (min-width:900px){
   .menu-grid{
