@@ -47,12 +47,14 @@ export function renderHub(){
   /* =======================================================
      RENDER MENU
   ======================================================= */
-
+  //${renderIcon(key,"hub-icon")}
   menuEl.innerHTML = panels.map(key=>`
 
     <button class="hub-btn btn center${panel===key ? " active" : ""}"
       data-key="${key}">
-      ${renderIcon(key,"hub-icon")}
+      <span class="icon-svg">
+        <img scr="/icons/${key}.svg>"
+      </span>
       <span class="hub-label">
         ${translate(MENU[key].label)}
       </span>
