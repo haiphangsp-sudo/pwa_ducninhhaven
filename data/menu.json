@@ -256,7 +256,7 @@
               "vi":"Giặt và sấy quần áo.",
               "en":"Laundry and drying service."
             },
-            "price":0,
+            "price":30000,
             "active":true
           }
         }
@@ -272,7 +272,6 @@
               "vi":"Liên hệ chủ nhà nếu bạn cần hỗ trợ.",
               "en":"Contact the host if you need assistance."
             },
-            "price":0,
             "active":true
           },
           "pay":{
@@ -281,7 +280,6 @@
               "vi":"Yêu cầu tính tiền và thanh toán.",
               "en":"Request the bill and payment."
             },
-            "price":0,
             "active":true
           }
         }

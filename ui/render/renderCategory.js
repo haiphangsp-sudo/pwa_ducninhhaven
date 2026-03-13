@@ -74,11 +74,9 @@ function renderArticle(category){
     .map(section=>{
 
       const title = translate(section.label);
-
       const body = Array.isArray(section.content)
         ? section.content.map(p=>`<p class="card-desc">${translate(p)}</p>`).join("")
         : `<p class="card-desc">${translate(section.content)}</p>`;
-
       return `
       <div class="card">
         <article class="article">

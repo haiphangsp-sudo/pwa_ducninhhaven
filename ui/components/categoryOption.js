@@ -7,7 +7,7 @@ export function categoryOpt(opt,optKey,itemKey,categoryKey,type) {
     
     const title = translate(opt.label);
     const desc  = opt.description ? translate(opt.description) : "";
-    const price = opt.price || 0;
+    const price = opt.price;
 
     return `
         <div class="card">
@@ -17,8 +17,8 @@ export function categoryOpt(opt,optKey,itemKey,categoryKey,type) {
             </div>
             <div class="row card-bottom">
                 <div class="price">
-                    ${price.toLocaleString("vi-VN")} đ
-                </div>
+                    ${price?(price>0?price.toLocaleString("vi-VN"):"Free"):"Hello"}
+                </div>}
                 <button class="btn btn-primary"
                     data-ui="${type}"
                     data-category="${categoryKey}"
