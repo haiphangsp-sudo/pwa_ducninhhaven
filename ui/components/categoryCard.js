@@ -20,6 +20,7 @@ export function categoryCard(opt,optKey,itemKey,categoryKey) {
                     ${price.toLocaleString("vi-VN")} đ
                 </div>
                 <button class="order-btn btn btn-primary"
+                    data-ui="cart"
                     data-category="${categoryKey}"
                     data-item="${itemKey}"
                     data-option="${optKey}">

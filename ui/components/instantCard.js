@@ -17,6 +17,7 @@ return `
     </div>
     <div class="card-bottom">
         <button class="instant-btn btn btn-primary"
+            data-ui="instant"
             data-category="${categoryKey}"
             data-item="${itemKey}"
             data-option="${optKey}">

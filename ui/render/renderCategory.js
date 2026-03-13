@@ -33,24 +33,24 @@ export function renderCategory(key){
   }
 
   contentEl.onclick = e => {
-    const instanBtn = e.target.closest(".instant-btn");
-    if(instanBtn){
+    const Btn = e.target.closest("button[data-ui]");
+    const data = Btn.dataset;
+    if(data.ui==="instant"){
       if(!ensureActive()) return;
 
       sendInstant({
         qty: 1,
-        category: instanBtn.dataset.category,
-        code: instanBtn.dataset.item
+        category: Btn.dataset.category,
+        code: Btn.dataset.item
       });
     }
-    const orderBtn = e.target.closest(".order-btn");
-    if(orderBtn){
+    if(data.ui==="cart"){
       if(!ensureActive()) return;
 
       addToCart({
-        category: orderBtn.dataset.category,
-        item: orderBtn.dataset.item,
-        option: orderBtn.dataset.option
+        category: Btn.dataset.category,
+        item: Btn.dataset.item,
+        option: Btn.dataset.option
       });
     }
   };
