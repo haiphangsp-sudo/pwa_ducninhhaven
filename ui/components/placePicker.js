@@ -23,11 +23,9 @@ export function initPlacePicker(){
   `;
 
   document.body.appendChild(el);
-
   window.addEventListener("openPlacePicker",openPicker);
   el.querySelector(".picker-backdrop").onclick=closePicker;
 }
-
 /* -------------------------------------------------- */
 
 function openPicker(){
@@ -45,7 +43,6 @@ function openPicker(){
 
   el.classList.remove("hidden");
 }
-
 /* -------------------------------------------------- */
 
 function renderGroup(type,data){
@@ -65,8 +62,6 @@ function renderGroup(type,data){
         </button>
       `).join("")}
     </div>
-    
-  
   `;
 
   group.querySelectorAll("button").forEach(btn=>{
@@ -84,7 +79,6 @@ function clearGroup(type){
   const group=el.querySelector(`[data-group="${type}"]`);
   if(group) group.innerHTML="";
 }
-
 /* -------------------------------------------------- */
 
 function closePicker(){
