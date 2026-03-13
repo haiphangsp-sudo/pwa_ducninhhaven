@@ -52,7 +52,7 @@ export function renderHub(){
 
     <button class="hub-btn btn center${panel===key ? " active" : ""}"
       data-key="${key}">
-      <span class="icon-svg">
+      <span class="hub-icon">
         <img src="/icons/${key}.svg">
       </span>
       <span class="hub-label">
