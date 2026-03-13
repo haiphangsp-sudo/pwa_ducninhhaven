@@ -94,23 +94,28 @@ function renderArticle(category){
 /* INSTANT */
 
 function renderInstant(category, categoryKey){
-
+  return Object.entries(category.items)
+    .filter(([,item])=>item.active!==false)
+    .map(([itemKey, item]) => {
+      const groupTitle = translate(item.label);
+      const cards = Object.entries(item.options || {})
+        .filter(([,opt])=>opt.active!==false)
+        .map(([optKey, opt]) => {
+          
+         return instantCard(opt, optKey, categoryKey);
+          
+        }).join("");
   return `
       <div class="menu-group">
-      <div class="menu-grid grid">
-      ${
-        Object.entries(category.items)
-        .filter(([,item])=>item.active!==false)
-        .map(([itemKey,item])=>{
-      
-         return instantCard(item,itemKey,categoryKey);
-          
-        }).join("")
-      }
+        <h2 class="menu-group-title">${groupTitle}</h2>
+        <div class="menu-grid grid">
+          ${cards}
+        </div>
       </div>
-    </div>
-  `;
+    `;
+    }).join("");
 }
+
 /* ========================================================= */
 /* CART */
 
