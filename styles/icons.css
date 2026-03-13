@@ -23,37 +23,3 @@
   width:22px;
   height:22px;
 }
-
-/* hành động */
-.icon-cart{
-  background-image:url("/icons/cart.svg");
-}
-
-.icon-call{
-  background-image:url("/icons/bell.svg");
-}
-
-.icon-send{
-  background-image:url("/icons/send.svg");
-}
-
-/* icon cho hub */
-.icon-food{
-  background-image:url("/icons/food.svg");
-}
-
-.icon-drink{
-  background-image:url("/icons/coffee.svg");
-}
-
-.icon-service{
-  background-image:url("/icons/service.svg");
-}
-
-.icon-relax{
-  background-image:url("/icons/leaf.svg");
-}
-
-.icon-info{
-  background-image:url("/icons/book.svg");
-}
