@@ -24,11 +24,11 @@ export function renderCategory(key){
       break;
 
     case "instant":
-      contentEl.innerHTML = renderInstant(category, key,"instant");
+      contentEl.innerHTML = renderCommon(category, key,"instant");
       break;
 
     case "cart":
-      contentEl.innerHTML = renderCartPanel(category, key,"cart");
+      contentEl.innerHTML = renderCommon(category, key,"cart");
       break;
   }
 
@@ -93,7 +93,7 @@ function renderArticle(category){
 /* ========================================================= */
 /* INSTANT */
 
-function renderInstant(category, categoryKey,type){
+function renderCommon(category, categoryKey,type){
   return Object.entries(category.items)
     .filter(([,item])=>item.active!==false)
     .map(([itemKey, item]) => {
