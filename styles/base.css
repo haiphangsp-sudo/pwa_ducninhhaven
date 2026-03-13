@@ -1,0 +1,35 @@
+/* styles/base.css */
+
+*,
+*::before,
+*::after{
+  box-sizing:border-box;
+}
+
+html{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+
+body{
+  margin:0;
+  background:var(--bg-main);
+  color:var(--text-main);
+  line-height:1.45;
+}
+
+img{
+  display:block;
+  max-width:100%;
+}
+
+button{
+  font:inherit;
+  border:none;
+  background:none;
+  cursor:pointer;
+}
+
+.hidden{
+  display:none !important;
+}
