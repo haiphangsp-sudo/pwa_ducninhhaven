@@ -7,26 +7,18 @@ import { PLACES } from "../../data/places.js";
 import { setActive, getAnchor } from "../../core/context.js";
 import { translate } from "../utils/translate.js";
 
-let el=null;
+const el=document.getElementById("placePicker");
 
 /* -------------------------------------------------- */
 
 export function initPlacePicker(){
-
-  el=document.createElement("div");
-  el.id="placePicker";
-  el.className="place-picker hidden";
-
   el.innerHTML=`
     <div class="picker-backdrop"></div>
     <div class="picker-panel stack">
-
       <h3>${translate("select_place")}</h3>
-
       <div class="picker-group grid" data-group="room"></div>
       <div class="picker-group grid" data-group="table"></div>
       <div class="picker-group grid" data-group="area"></div>
-
     </div>
   `;
 
