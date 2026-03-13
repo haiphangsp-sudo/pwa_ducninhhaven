@@ -12,13 +12,13 @@ export function categoryOpt(opt,optKey,itemKey,categoryKey,type) {
     return `
         <div class="card">
             <div class="stack">
-                <div class="card-title">${title}</div>
+                <div class="card-title service-${optKey}">${title}</div>
                 ${desc ? `<div class="card-desc">${desc}</div>` : ""}
             </div>
             <div class="row card-bottom">
                 <div class="price">
                     ${price?(price>0?price.toLocaleString("vi-VN"):"Free"):"Hello"}
-                </div>}
+                </div>
                 <button class="btn btn-primary"
                     data-ui="${type}"
                     data-category="${categoryKey}"
