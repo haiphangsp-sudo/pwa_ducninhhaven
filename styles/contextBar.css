@@ -70,7 +70,6 @@
 
 #contextBar{
   display:flex;
-  align-items:center;
   justify-content:space-between;
 
   gap:16px;
@@ -89,7 +88,7 @@
    FLEX GROUPS
    ========================================================= */
 
-#contextBar > div{
+.nav{
   display:flex;
   align-items:center;
   gap:10px;
@@ -229,27 +228,6 @@
 
 }
 
-
-/* =========================================================
-   MOBILE
-   ========================================================= */
-
-@media (max-width:640px){
-
-  .identity-label{
-    display:none;
-  }
-
-  .app-version{
-    display:none;
-  }
-
-  .location-btn{
-    font-size:13px;
-    padding:6px 12px;
-  }
-
-}
 
 
 .place-picker{
