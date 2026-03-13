@@ -232,7 +232,7 @@
   },
 
   "service":{
-    "label":{"vi":"Dịch vụ","en":"Room Service"},
+    "label":{"vi":"Dịch vụ","en":"Service"},
     "allow":["room","area"],
     "ui":"instant",
     "active":true,
