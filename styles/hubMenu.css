@@ -11,11 +11,8 @@
   background: var(--bg-soft);
   top: 56px;
   flex-shrink: 0;
-  overflow-x:auto;
   position:sticky;
   z-index:90;
-  padding: 10px 16px;
-  gap: 12px;
   scroll-snap-type: x mandatory;
 }
 .hub-btn{
@@ -99,4 +96,39 @@ stroke:white;
 
 .hub-btn.disabled{
   opacity:.35;
+}
+/* styles/hubMenu.css */
+
+#hubMenu{
+  display:flex;
+  gap:var(--space-2);
+  padding:var(--space-2) var(--space-3);
+  overflow-x:auto;
+}
+
+.hub-btn{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:6px;
+
+  padding:12px 14px;
+
+  border-radius:var(--radius-l);
+  color:var(--text-soft);
+}
+
+.hub-btn.active{
+  background:var(--bg-soft);
+  color:var(--text-main);
+  box-shadow:var(--shadow-soft);
+}
+
+.hub-icon{
+  width:24px;
+  height:24px;
+}
+
+.hub-label{
+  font-size:13px;
 }

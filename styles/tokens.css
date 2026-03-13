@@ -31,3 +31,93 @@
   --font-s: 15px;
 
 }
+/* styles/tokens.css */
+/* Haven UI Design Tokens */
+
+:root{
+
+/* =====================
+   BRAND
+===================== */
+
+--brand: #2f5d46;
+--brand-hover: #254a38;
+--brand-soft: #e6efe9;
+
+/* =====================
+   BACKGROUND
+===================== */
+
+--bg-main: #f4f1ea;
+--bg-soft: #ffffff;
+--bg-muted: #f7f6f2;
+
+/* =====================
+   TEXT
+===================== */
+
+--text-main: #1f1f1f;
+--text-soft: #6b6b6b;
+--text-muted: #9a9a9a;
+--text-invert: #ffffff;
+
+/* =====================
+   BORDER
+===================== */
+
+--border-soft: #e5e1d8;
+--border-light: #f0ede6;
+
+/* =====================
+   STATUS
+===================== */
+
+--success: #2e7d32;
+--error: #b00020;
+--warning: #f5a623;
+
+/* =====================
+   SHADOW
+===================== */
+
+--shadow-soft: 0 4px 14px rgba(0,0,0,0.06);
+--shadow-card: 0 8px 22px rgba(0,0,0,0.08);
+--shadow-floating: 0 12px 30px rgba(0,0,0,0.12);
+
+/* =====================
+   RADIUS
+===================== */
+
+--radius-s: 10px;
+--radius-m: 16px;
+--radius-l: 22px;
+--radius-xl: 30px;
+
+/* =====================
+   SPACING
+===================== */
+
+--space-1: 6px;
+--space-2: 10px;
+--space-3: 16px;
+--space-4: 24px;
+--space-5: 32px;
+
+/* =====================
+   TYPOGRAPHY
+===================== */
+
+--font-xl: 32px;
+--font-l: 24px;
+--font-m: 18px;
+--font-s: 15px;
+--font-xs: 13px;
+
+/* =====================
+   LAYOUT
+===================== */
+
+--container-max: 980px;
+--content-max: 720px;
+
+}

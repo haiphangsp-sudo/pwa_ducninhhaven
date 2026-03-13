@@ -1,9 +1,20 @@
 /* styles/motion.css */
 /* Chuyển động nhẹ, không gây khó chịu */
 
-.cart-bar{
-  transition:transform .2s ease, opacity .2s ease;
+.btn,
+.card,
+.hub-btn{
+  background: .2s ease;
+  box-shadow: .2s ease;
+  transform: .1s ease;
 }
+.btn:active{
+  transform: scale(.96);
+}
+.card:hover{
+  box-shadow: var(--shadow-card);
+}
+
 .cart-bar.hidden{
   transform:translateY(100%);
   opacity:0;

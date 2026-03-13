@@ -1,3 +1,4 @@
+/* styles/hubContent.css */
 
 #hubContent{
   overflow-y:auto;
@@ -56,10 +57,6 @@
 #hubContent::-webkit-scrollbar-track{
   background:transparent;
 }
-.menu-group{
- margin-bottom:24px;
- min-width: 0;
-}
 
 .menu-group-title{
  font-size: var(--font-xl);
@@ -67,11 +64,6 @@
  margin-bottom:12px;
  letter-spacing:.02em;
  scroll-margin-top: 100px;
-}
-
-.menu-grid{
- display:grid;
- grid-template-columns:1fr;
 }
 
 .menu-card{
@@ -127,3 +119,24 @@
 .card-title.service-pay:before{
   content:"💳";
 }
+
+#hubContent{
+  overflow-y:auto;
+}
+
+.menu-group{
+  margin-bottom:var(--space-4);
+}
+
+.menu-group-title{
+  font-size:var(--font-l);
+  font-weight:700;
+  margin-bottom:var(--space-2);
+}
+
+.menu-grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:var(--space-3);
+}
+

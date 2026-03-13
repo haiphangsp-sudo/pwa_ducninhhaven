@@ -148,3 +148,35 @@ body{
   opacity:.95;
   z-index:50;
 }
+
+.container{
+  max-width:var(--container-max);
+  margin:0 auto;
+  padding:0 var(--space-3);
+}
+
+.page-container{
+  max-width:var(--content-max);
+  margin:0 auto;
+  padding:var(--space-3);
+}
+
+.flex{
+  display:flex;
+}
+
+.row{
+  display:flex;
+  align-items:center;
+  gap:var(--space-2);
+}
+
+.column{
+  display:flex;
+  flex-direction:column;
+}
+
+.center{
+  align-items:center;
+  justify-content:center;
+}
