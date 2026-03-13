@@ -40,21 +40,11 @@
   line-height:1.45;
 }
 
-/* card bottom actions */
-
-.card-bottom{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-top:10px;
-  gap:12px;
-}
-
 /* ---------- Buttons ---------- */
 
 .btn{
   border:none;
-  border-radius:14px;
+  border-radius: var(--radius-m);
   padding:12px 20px;
   font-weight:600;
   cursor:pointer;
@@ -90,7 +80,7 @@
 /* ---------- Price ---------- */
 
 .price{
-  font-size:18px;
+  font-size: var(--font-m);
   font-weight:600;
   color:#2f4f3e;
 }

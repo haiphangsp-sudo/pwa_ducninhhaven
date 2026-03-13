@@ -148,7 +148,6 @@
 .menu-grid{
  display:grid;
  grid-template-columns:1fr;
- gap:18px;
 }
 
 .menu-card{
@@ -201,14 +200,6 @@ flex-direction: column;
   justify-content:space-between;
   align-items:center;
   box-shadow:0 2px 6px rgba(0,0,0,.05);
-}
-
-.card-bottom{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-top: 8px;
-  gap: 12px;
 }
 
 .instant-panel{
