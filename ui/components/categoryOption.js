@@ -17,7 +17,7 @@ export function categoryOpt(opt,optKey,itemKey,categoryKey,type) {
             </div>
             <div class="row card-bottom">
                 <div class="price">
-                    ${price?(price>0?price.toLocaleString("vi-VN"):"Free"):"Hello"}
+                    ${price?price>0?price.toLocaleString("vi-VN"):"Free":"Hello"}
                 </div>
                 <button class="btn btn-primary"
                     data-ui="${type}"
