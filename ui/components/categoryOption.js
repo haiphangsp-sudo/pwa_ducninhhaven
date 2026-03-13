@@ -2,7 +2,7 @@
 
 import { translate } from "../utils/translate.js";
 
-export function categoryCard(opt,optKey,itemKey,categoryKey) {
+export function categoryOpt(opt,optKey,itemKey,categoryKey,type) {
 
     
     const title = translate(opt.label);
@@ -19,12 +19,12 @@ export function categoryCard(opt,optKey,itemKey,categoryKey) {
                 <div class="price">
                     ${price.toLocaleString("vi-VN")} đ
                 </div>
-                <button class="order-btn btn btn-primary"
-                    data-ui="cart"
+                <button class="btn btn-primary"
+                    data-ui="${type}"
                     data-category="${categoryKey}"
                     data-item="${itemKey}"
                     data-option="${optKey}">
-                    ${translate("cart_bar.order")}
+                    ${type==="cart"?translate("cart_bar.order"):translate("send_request")}
                 </button>
             </div>
         </div>`;

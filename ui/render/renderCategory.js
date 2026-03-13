@@ -4,8 +4,7 @@ import { MENU } from "../../core/menuStore.js";
 import { addToCart, sendInstant } from "../../core/events.js";
 import { getContext } from "../../core/context.js";
 import { translate } from "../utils/translate.js";
-import { categoryCard } from "../components/categoryCard.js";
-import { instantCard } from "../components/instantCard.js";
+import { categoryOpt } from "../components/categoryOption.js";
 
 export function renderCategory(key){
 
@@ -93,20 +92,17 @@ function renderArticle(category){
 /* ========================================================= */
 /* INSTANT */
 
-function renderCommon(category, categoryKey,type){
+function renderCommon(category, categoryKey, type) {
   return Object.entries(category.items)
-    .filter(([,item])=>item.active!==false)
+    .filter(([, item]) => item.active !== false)
     .map(([itemKey, item]) => {
       const groupTitle = translate(item.label);
       const cards = Object.entries(item.options || {})
-        .filter(([,opt])=>opt.active!==false)
+        .filter(([, opt]) => opt.active !== false)
         .map(([optKey, opt]) => {
-          if(type==="instant")
-            return instantCard(opt, optKey, itemKey, categoryKey);
-          if(type==="cart")
-            return categoryCard(opt, optKey, itemKey, categoryKey);
+            return categoryOpt(opt, optKey, itemKey, categoryKey,type);
         }).join("");
-  return `
+      return `
       <div class="menu-group">
         <h2 class="menu-group-title">${groupTitle}</h2>
         <div class="menu-grid grid">
@@ -116,4 +112,3 @@ function renderCommon(category, categoryKey,type){
     `;
     }).join("");
 }
-

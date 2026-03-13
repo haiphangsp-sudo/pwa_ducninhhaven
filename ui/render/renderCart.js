@@ -46,7 +46,6 @@ export function renderCartBar(){
   
 }
 
-
 // - Lưu giỏ hàng vào localStorage để giữ nguyên khi reload trang
 export function loadCart(){
   const saved = localStorage.getItem("haven_cart");
@@ -55,5 +54,3 @@ export function loadCart(){
     renderCartBar();
   }
 }
-
-

@@ -24,8 +24,6 @@
   flex: 0 0 auto;
   background:transparent;
   flex-direction:column;
-  align-items:center;
-  justify-content:center;
   transition:.18s ease;
   font-size:13px;
   color:#444;
@@ -101,10 +99,4 @@ stroke:white;
 
 .hub-btn.disabled{
   opacity:.35;
-}
-
-.order-btn.disabled{
-  opacity:.35;
-  pointer-events:none;
-  filter:grayscale(90%);
 }
