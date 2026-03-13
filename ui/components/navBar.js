@@ -37,9 +37,9 @@ export function renderNavBar(){
 
 export function getIcon(type){
   if(type === "room")  return "🛏";
-  if(type === "table") return "🍽";
-  if(type === "area")  return "📍";
-  return "👤";
+  if(type === "table") return "☕ ";
+  if(type === "area")  return "🌿";
+  return "📍";
 }
 
 function formatLocation(ctx){
