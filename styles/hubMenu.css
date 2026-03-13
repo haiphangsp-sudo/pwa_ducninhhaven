@@ -11,27 +11,29 @@
   background: var(--bg-soft);
   top: 56px;
   flex-shrink: 0;
- overflow-x:auto;
- position:sticky;
- z-index:90;
- padding: 10px 16px;
- gap: 12px;
+  overflow-x:auto;
+  position:sticky;
+  z-index:90;
+  padding: 10px 16px;
+  gap: 12px;
+  scroll-snap-type: x mandatory;
 }
 .hub-btn{
   width:64px;
   height:64px;
+  flex: 0 0 auto;
   background:transparent;
   flex-direction:column;
   align-items:center;
   justify-content:center;
   transition:.18s ease;
- font-size:13px;
- color:#444;
- cursor: pointer;
+  font-size:13px;
+  color:#444;
+  scroll-snap-align: start;
 }
 
 .hub-btn.active{
- box-shadow:0 4px 14px rgba(0,0,0,.18);
+  box-shadow:0 4px 14px rgba(0,0,0,.18);
   background: var(--brand-soft);
   color: var(--brand);
 }

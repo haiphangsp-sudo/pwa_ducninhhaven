@@ -14,19 +14,16 @@ body{
 #app{
   margin:auto;
   min-height:100vh;
-  display:flex;
   flex-direction:column;
   height:100vh;
   padding-bottom: calc(80px+env(safe-area-inset-bottom));
 }
 
 #hub{
-  display:flex;
   flex-direction:column;
   touch-action:manipulation;
   min-height: 0;
   flex: 1;
-  overflow: hidden;
 }
 
 .ack-dot{

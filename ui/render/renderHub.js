@@ -50,7 +50,7 @@ export function renderHub(){
 
   menuEl.innerHTML = panels.map(key=>`
 
-    <button class="hub-btn btn flex${panel===key ? " active" : ""}"
+    <button class="hub-btn btn center${panel===key ? " active" : ""}"
       data-key="${key}">
       ${renderIcon(key,"hub-icon")}
       <span class="hub-label">
