@@ -35,9 +35,10 @@
 /* card description */
 
 .card-desc{
-  font-size:15px;
+  font-size: var(--font-s);
   color:#666;
   line-height:1.45;
+  margin: 6px 0;
 }
 
 /* ---------- Buttons ---------- */

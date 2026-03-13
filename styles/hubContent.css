@@ -242,10 +242,3 @@ flex-direction: column;
 .card-title.service-pay:before{
   content:"💳";
 }
-
-.card-desc{
-  font-size:15px;
-  color:#666;
-  line-height:1.4;
- margin:6px 0;
-}
