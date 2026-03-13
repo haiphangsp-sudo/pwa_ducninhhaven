@@ -24,11 +24,11 @@ export function renderCategory(key){
       break;
 
     case "instant":
-      contentEl.innerHTML = renderInstant(category, key);
+      contentEl.innerHTML = renderInstant(category, key,"instant");
       break;
 
     case "cart":
-      contentEl.innerHTML = renderCartPanel(category, key);
+      contentEl.innerHTML = renderCartPanel(category, key,"cart");
       break;
   }
 
@@ -93,7 +93,7 @@ function renderArticle(category){
 /* ========================================================= */
 /* INSTANT */
 
-function renderInstant(category, categoryKey){
+function renderInstant(category, categoryKey,type){
   return Object.entries(category.items)
     .filter(([,item])=>item.active!==false)
     .map(([itemKey, item]) => {
@@ -101,9 +101,10 @@ function renderInstant(category, categoryKey){
       const cards = Object.entries(item.options || {})
         .filter(([,opt])=>opt.active!==false)
         .map(([optKey, opt]) => {
-          
-         return instantCard(opt, optKey, categoryKey);
-          
+          if(type==="instant")
+            return instantCard(opt, optKey, itemKey, categoryKey);
+          if(type==="cart")
+            return categoryCard(opt, optKey, itemKey, categoryKey);
         }).join("");
   return `
       <div class="menu-group">
@@ -116,34 +117,3 @@ function renderInstant(category, categoryKey){
     }).join("");
 }
 
-/* ========================================================= */
-/* CART */
-
-function renderCartPanel(category, categoryKey){
-
-  return Object.entries(category.items || {})
-    .filter(([,item])=>item.active!==false)
-    .map(([itemKey,item])=>{
-
-      const groupTitle = translate(item.label);
-
-      const cards = Object.entries(item.options || {})
-        .filter(([,opt])=>opt.active!==false)
-        .map(([optKey, opt]) => {
-          
-         return categoryCard(opt, optKey, itemKey, categoryKey);
-          
-        }).join("");
-
-      return `
-        <div class="menu-group">
-          <h2 class="menu-group-title">${groupTitle}</h2>
-          <div class="menu-grid grid">
-            ${cards}
-          </div>
-        </div>
-      `;
-
-    }).join("");
-}
-/* ========================================================= */
