@@ -208,14 +208,6 @@ flex-direction: column;
   gap:16px;
 }
 
-.card-title{
-  display:flex;
-  align-items: center;
-  gap: 12px;
-  font-size:22px;
-  font-weight:600;
-}
-
 .card-title::before{
   content: "";
   width: 28px;
