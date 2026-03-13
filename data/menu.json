@@ -232,32 +232,62 @@
   },
 
   "service":{
-    "label":{"vi":"Dịch vụ phòng","en":"Room Service"},
-    "allow":["room"],
+    "label":{"vi":"Dịch vụ","en":"Room Service"},
+    "allow":["room","area"],
     "ui":"instant",
     "active":true,
     "items":{
-      "cleaning":{
-        "label":{"vi":"Dọn phòng","en":"Housekeeping"},
-        "description":{
-          "vi":"Yêu cầu dọn phòng.",
-          "en":"Request room cleaning."
-        },
-        "price":0,
-        "active":true
+      "room_service":{
+        "label":{"vi":"Dịch vụ phòng","en":"Room Service"},
+        "active":true,
+        "options":{
+          "cleaning":{
+            "label":{"vi":"Dọn phòng","en":"Housekeeping"},
+            "description":{
+              "vi":"Yêu cầu dọn phòng.",
+              "en":"Request room cleaning."
+            },
+            "price":0,
+            "active":true
+          },
+          "laundry":{
+            "label":{"vi":"Giặt đồ","en":"Laundry Service"},
+            "description":{
+              "vi":"Giặt và sấy quần áo.",
+              "en":"Laundry and drying service."
+            },
+            "price":0,
+            "active":true
+          }
+        }
       },
-      "laundry":{
-        "label":{"vi":"Giặt đồ","en":"Laundry Service"},
-        "description":{
-          "vi":"Giặt và sấy quần áo.",
-          "en":"Laundry and drying service."
-        },
-        "price":0,
-        "active":true
+      "assistance":{
+        "label":{"vi":"Hỗ trợ","en":"Assistance"},
+        "allow":["room","area"],
+        "active":true,
+        "options":{
+          "reception":{
+            "label":{"vi":"Gọi lễ tân","en":"Contact Host"},
+            "description":{
+              "vi":"Liên hệ chủ nhà nếu bạn cần hỗ trợ.",
+              "en":"Contact the host if you need assistance."
+            },
+            "price":0,
+            "active":true
+          },
+          "pay":{
+            "label":{"vi":"Gọi thanh toán","en":"Call for bill"},
+            "description":{
+              "vi":"Yêu cầu tính tiền và thanh toán.",
+              "en":"Request the bill and payment."
+            },
+            "price":0,
+            "active":true
+          }
+        }
       }
     }
   },
-
   "relax":{
     "label":{"vi":"Thư giãn","en":"Relax"},
     "allow":["room"],
@@ -297,31 +327,6 @@
             "active":true
           }
         }
-      }
-    }
-  },
-
-  "help":{
-    "label":{"vi":"Hỗ trợ","en":"Assistance"},
-    "allow":["room","area"],
-    "ui":"instant",
-    "active":true,
-    "items":{
-      "reception":{
-        "label":{"vi":"Gọi lễ tân","en":"Contact Host"},
-        "description":{
-          "vi":"Liên hệ chủ nhà nếu bạn cần hỗ trợ.",
-          "en":"Contact the host if you need assistance."
-        },
-        "active":true
-      },
-      "pay":{
-        "label":{"vi":"Gọi thanh toán","en":"Call for bill"},
-        "description":{
-          "vi":"Yêu cầu tính tiền và thanh toán.",
-          "en":"Request the bill and payment."
-        },
-        "active":true
       }
     }
   }

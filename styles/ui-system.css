@@ -84,6 +84,7 @@
   font-size: var(--font-m);
   font-weight:600;
   color:#2f4f3e;
+  white-space: nowrap;
 }
 
 /* ---------- Icon container ---------- */

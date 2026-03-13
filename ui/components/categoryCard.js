@@ -10,13 +10,13 @@ export function categoryCard(opt,optKey,itemKey,categoryKey) {
     const price = opt.price || 0;
 
     return `
-        <div class="menu-card card">
+        <div class="card">
             <div class="stack">
                 <div class="card-title">${title}</div>
                 ${desc ? `<div class="card-desc">${desc}</div>` : ""}
             </div>
             <div class="row card-bottom">
-                <div class="menu-price price">
+                <div class="price">
                     ${price.toLocaleString("vi-VN")} đ
                 </div>
                 <button class="order-btn btn btn-primary"

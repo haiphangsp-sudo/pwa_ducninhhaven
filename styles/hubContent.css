@@ -119,26 +119,17 @@
  min-width: 0;
 }
 
-
-.menu-options{
- display:flex;
- flex-wrap:wrap;
- gap:8px;
-}
 .order-btn{
- font-size:14px;
+ font-size:var(--font-s);
+ font-weight:600
 }
 
 .order-btn:active{
  transform:scale(.95);
 }
 
-.menu-info{
- flex:1;
-}
-
 .menu-group-title{
- font-size:26px;
+ font-size: var(--font-xl);
  font-weight:600;
  margin-bottom:12px;
  letter-spacing:.02em;
@@ -151,7 +142,6 @@
 }
 
 .menu-card{
- border:none;
  cursor:pointer;
  transition: transform .15s ease, box-shadow .15s ease;
  justify-content:space-between;
@@ -164,7 +154,7 @@
 .menu-thumb{
  width:72px;
  height:72px;
- border-radius:12px;
+ border-radius: var(--radius-m);
  object-fit:cover;
  flex-shrink:0;
  background: #eee;
@@ -174,38 +164,12 @@
  display:none;
 }
 
-.menu-info{
- flex:1;
-display:flex;
-flex-direction: column;
-}
-
-.menu-price{
- color:#2f5d4b;
- white-space: nowrap;
- margin-top:6px;
-
-}
 .order-btn:active{
  transform:scale(.95);
 }
 
 .category-panel{
-  display:flex;
-  flex-direction:column;
   gap:28px;
-}
-
-.instant-card{
-  justify-content:space-between;
-  align-items:center;
-  box-shadow:0 2px 6px rgba(0,0,0,.05);
-}
-
-.instant-panel{
-  display:flex;
-  flex-direction:column;
-  gap:16px;
 }
 
 .card-title::before{

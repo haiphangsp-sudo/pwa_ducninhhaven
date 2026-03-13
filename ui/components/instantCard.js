@@ -8,8 +8,8 @@ export function instantCard(service,itemKey,categoryKey) {
     const desc  = service.description ? translate(service.description) : "";
 
 return `
-<div class="instant-card card">
-    <div class="instant-info stack">
+<div class="card">
+    <div class="stack">
         <div class="card-title service-${itemKey}">
             ${title}
         </div>
