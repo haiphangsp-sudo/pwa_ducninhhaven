@@ -15,7 +15,7 @@ export function initPlacePicker(){
   el.innerHTML=`
     <div class="picker-backdrop"></div>
     <div class="picker-panel stack">
-      <h3>${translate("select_place")}</h3>
+      <h3></h3>
       <div class="picker-group grid" data-group="room"></div>
       <div class="picker-group grid" data-group="table"></div>
       <div class="picker-group grid" data-group="area"></div>
@@ -61,7 +61,9 @@ function renderGroup(type,data){
       `).join("")}
     </div>
   `;
-
+  const h3 = el.querySelector("h3");
+  h3.textContent = translate("select_place");
+  
   group.querySelectorAll("button").forEach(btn=>{
     btn.onclick=()=>{
       setActive({
