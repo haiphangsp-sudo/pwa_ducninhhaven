@@ -41,12 +41,6 @@
   margin-top:4px;
 }
 
-.hub-icon{
-  width:26px;
-  height:26px;
-  display:block;
-  margin-bottom:4px;
-}
 .hub-icon svg{
  width:22px;
  height:22px;
@@ -69,11 +63,6 @@ display:block;
 
 .hub-btn.active svg{
 stroke:white;
-}
-/* label nhỏ hơn */
-.hub-label{
-  font-size:11px;
-  line-height:1.1;
 }
 
 /* active đổi màu */
@@ -128,7 +117,10 @@ stroke:white;
   width:24px;
   height:24px;
 }
-
+.hub-icon img{
+  width:100%;
+  height:100%;
+}
 .hub-label{
   font-size:13px;
 }
