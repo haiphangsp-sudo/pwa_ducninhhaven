@@ -21,8 +21,6 @@ export function initPlacePicker(){
       <div class="picker-group grid" data-group="area"></div>
     </div>
   `;
-
-  document.body.appendChild(el);
   window.addEventListener("openPlacePicker",openPicker);
   el.querySelector(".picker-backdrop").onclick=closePicker;
 }
