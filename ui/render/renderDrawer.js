@@ -30,7 +30,8 @@ function renderDrawer(){
     const ItemDrawer = translate(MENU[i.category].items[i.item].label);
     const OptionDrawer = translate(MENU[i.category].items[i.item].options[i.option].label);
     const row=document.createElement("div");
-    row.className="drawer-item";
+    row.className = "drawer-item";
+    row.dataset.i = index;
     row.innerHTML=`
       <div>
         <strong>${ItemDrawer}</strong>
@@ -38,7 +39,7 @@ function renderDrawer(){
       </div>
       <div class="drawer-qty">
         <button data-i="${index}" class="qty-minus">−</button>
-        <span>${i.qty}</span>
+        <span class="qty">${i.qty}</span>
         <button data-i="${index}" class="qty-plus">+</button>
       </div>
     `;
@@ -53,14 +54,17 @@ function renderDrawer(){
   document.getElementById("drawerClose").onclick = closeOverlay;
 }
 
-document.addEventListener("click",(e)=>{
-  const i=e.target.dataset.i;
+document.addEventListener("click", (e) => {
+  
+  const i = e.target.dataset.i;
+  const row = e.target.closest(".drawer-item");
+  
   if(e.target.classList.contains("qty-plus")){
     UI.cart.items[i].qty++;
   }
 
   if (e.target.classList.contains("qty-minus")) {
-    
+
     UI.cart.items[i].qty--;
 
     if (UI.cart.items[i].qty <= 0) {
