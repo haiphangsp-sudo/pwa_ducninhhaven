@@ -8,7 +8,8 @@ import { setRecoveryState } from "./renderRecovery.js";
 import { initLangSwitch } from "../utils/translate.js";
 import { renderNavBar } from "../components/navBar.js";
 import { renderHub } from "./renderHub.js";
-import { initPlacePicker } from "./ui/components/placePicker.js";
+import { initPlacePicker } from "../components/placePicker.js";
+
 
 export function renderApp(){
 
