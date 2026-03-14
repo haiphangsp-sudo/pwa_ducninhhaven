@@ -59,8 +59,8 @@ document.addEventListener("click",(e)=>{
 
     const i=e.target.dataset.i;
     UI.cart.items[i].qty++;
-
-    updateTotal(UI.cart.items.qty);
+    
+    updateTotal();
   }
 
   if(e.target.classList.contains("qty-minus")){
@@ -71,12 +71,11 @@ document.addEventListener("click",(e)=>{
 
     if(UI.cart.items[i].qty<=0){
       UI.cart.items.splice(i, 1);
-      const total = UI.cart.items.reduce((a, b) => a + b.qty, 0);
-      updateTotal(total);
     }
     if(UI.cart.items.length==0){
       closeOverlay();
     }
     
+    updateTotal();
   }
 });

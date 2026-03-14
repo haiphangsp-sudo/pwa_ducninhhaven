@@ -18,16 +18,17 @@ export function renderCartBar(){
     bar.classList.add("hidden");
     return;
   } else {
-    updateTotal(total);
+    updateTotal();
     bar.classList.remove("hidden");
   }
   
   if(!ctx) bar.classList.remove("hidden");
   
-    cartBtn.textContent=translate("cart_bar.cart_title");
-    cartBtn.onclick = openCartDrawer;
+  cartBtn.textContent=translate("cart_bar.cart_title");
+  cartBtn.onclick = openCartDrawer;
 }
-export function updateTotal(total) {
+export function updateTotal() {
+  const total = UI.cart.items.reduce((a, b) => a + b.qty, 0);
   let textTotal;
   if(total>1){
     textTotal = `${total} ${translate("cart_bar.items")}`;

@@ -5,6 +5,7 @@ import { addToCart, sendInstant } from "../../core/events.js";
 import { getContext } from "../../core/context.js";
 import { translate } from "../utils/translate.js";
 import { categoryOpt } from "../components/categoryOption.js";
+import { openPicker } from "../components/placePicker.js"
 
 export function renderCategory(key){
 
@@ -33,7 +34,11 @@ export function renderCategory(key){
 
   contentEl.onclick = e => {
     const Btn = e.target.closest(".category-panel button[data-ui]");
-    if(!Btn) return;
+    if (!Btn) {
+        openPicker();
+      return;
+    }
+  
     const data = Btn.dataset;
     if(data.ui==="instant"){
       if(!ensureActive()) return;
