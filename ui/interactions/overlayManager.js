@@ -8,7 +8,6 @@ export function showOverlay(id) {
     const el = document.getElementById(id);
     if (!el) return;
 
-    closeOverlay();
     el.classList.remove("hidden");
     backdrop.classList.remove("hidden");
     current = el;
