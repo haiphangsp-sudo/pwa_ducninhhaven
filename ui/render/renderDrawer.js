@@ -78,7 +78,7 @@ document.addEventListener("click", (e) => {
       reindexDrawer();
     }
   }
-  row.querySelector(".qty").textContent = UI.cart.items[i].qty;
+  row.querySelector(".qty").textContent = UI.cart.items[i]?.qty||0;
   updateTotal();
 
 });
