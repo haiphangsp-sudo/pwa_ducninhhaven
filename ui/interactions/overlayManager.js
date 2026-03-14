@@ -11,7 +11,7 @@ export function showOverlay(id) {
     el.classList.remove("hidden");
     backdrop.classList.remove("hidden");
     current = el;
-    backdrop.onclick = closeOverlay();
+    backdrop.onclick = closeOverlay;
 }
 
 export function closeOverlay() {
