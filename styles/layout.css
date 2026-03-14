@@ -126,16 +126,6 @@
   padding:0 var(--space-3);
 }
 
-.page-container{
-  max-width:var(--content-max);
-  margin:0 auto;
-  padding:var(--space-3);
-}
-
-.flex{
-  display:flex;
-}
-
 .row{
   display:flex;
   align-items:center;
