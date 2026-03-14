@@ -34,16 +34,10 @@ export function renderCartBar(){
     bar.classList.remove("hidden");
   }
   
-  if(!ctx){
-    cartBtn.textContent=translate("cart_bar.select_place");
-    bar.classList.remove("hidden");
-    cartBtn.onclick = ()=>window.dispatchEvent(new Event("openPlacePicker"));
-    
-  }else{
+  if(!ctx) bar.classList.remove("hidden");
+  
     cartBtn.textContent=translate("cart_bar.cart_title");
     cartBtn.onclick = openCartDrawer;
-  }
-  
 }
 
 // - Lưu giỏ hàng vào localStorage để giữ nguyên khi reload trang

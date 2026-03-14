@@ -1,5 +1,7 @@
+ //    ui/render/renderDrawer.js
 
 
+import { showOverlay, closeOverlay } from "../../ui/interactions/overlayManager.js"
 import { sendCart } from "../../core/events.js";
 import { UI } from "../../core/state.js";
 import { translate } from "../utils/translate.js";
@@ -8,16 +10,8 @@ import { MENU } from "../../core/menuStore.js";
 
 export function openCartDrawer(){
   renderDrawer();
-  document.getElementById("cartDrawer").classList.remove("hidden");
+  showOverlay("cartDrawer");
 }
-
- function closeCartDrawer(){
-  document.getElementById("cartDrawer").classList.add("hidden");
-}
-
-document.addEventListener("keydown", e=>{
-  if(e.key==="Escape") closeCartDrawer();
-});
   
 function renderDrawer(textTotal){
   let textOrder="";
@@ -51,11 +45,10 @@ function renderDrawer(textTotal){
     el.appendChild(row);
   });
   
-    document.getElementById("drawerClose").onclick = closeCartDrawer;
-    document.querySelector(".drawer-backdrop").onclick = closeCartDrawer;
+    document.getElementById("drawerClose").onclick = closeOverlay();
     document.getElementById("drawerSend").onclick=()=>{ 
       sendCart(); 
-      closeCartDrawer();
+      closeOverlay();
       el.innerHTML="";
      };
 }
@@ -81,7 +74,7 @@ document.addEventListener("click",(e)=>{
       UI.cart.items.splice(i,1);
     }
     if(UI.cart.items.length==0){
-      closeCartDrawer();
+      closeOverlay();
     }
     renderDrawer();
     renderCartBar();
