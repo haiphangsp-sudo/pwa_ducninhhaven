@@ -60,11 +60,8 @@ stroke:white;
 }
 
 .hub-btn{
-  display:flex;
   flex-direction:column;
-  align-items:center;
   gap:6px;
-  padding:12px 14px;
   border-radius:var(--radius-l);
   color:var(--text-soft);
 
@@ -72,7 +69,6 @@ stroke:white;
   height:64px;
   flex: 0 0 auto;
   background:transparent;
-  transition:.18s ease;
   font-size:13px;
   scroll-snap-align: start;
 }
