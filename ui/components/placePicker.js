@@ -11,7 +11,7 @@ import { translate } from "../utils/translate.js";
 
 /* -------------------------------------------------- */
 
-export function initPlacePicker() {
+function initPlacePicker() {
   const el=document.getElementById("placePicker");
   el.innerHTML=`
     <div class="picker-panel stack">
@@ -21,12 +21,11 @@ export function initPlacePicker() {
       <div class="picker-group grid" data-group="area"></div>
     </div>
   `;
-  window.addEventListener("openPlacePicker",openPicker);
 }
 /* -------------------------------------------------- */
 
-function openPicker(){
-
+export function openPicker(){
+  initPlacePicker()
   const anchor=getAnchor();
 
   // phòng chỉ hiện nếu khách phòng
