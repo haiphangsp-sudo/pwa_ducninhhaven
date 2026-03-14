@@ -1,4 +1,5 @@
-//  
+// ui/interactions/overlayManager.js
+
 
 let current = null;
 const backdrop = document.getElementById("overlayBackdrop");
@@ -11,6 +12,7 @@ export function showOverlay(id) {
     el.classList.remove("hidden");
     backdrop.classList.remove("hidden");
     current = el;
+    backdrop.onclick = closeOverlay;
 }
 
 export function closeOverlay() {
@@ -19,8 +21,6 @@ export function closeOverlay() {
     backdrop.classList.add("hidden");
     current = null;
 }
-
-backdrop.onclick = closeOverlay;
 
 document.addEventListener("keydown", e => {
     if (e.key === "Escape") closeOverlay();
