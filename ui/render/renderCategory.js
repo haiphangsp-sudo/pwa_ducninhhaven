@@ -33,6 +33,7 @@ export function renderCategory(key){
 
   contentEl.onclick = e => {
     const Btn = e.target.closest(".category-panel button[data-ui]");
+    if(!Btn) return;
     const data = Btn.dataset;
     if(data.ui==="instant"){
       if(!ensureActive()) return;
