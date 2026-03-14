@@ -8,29 +8,17 @@ import { openCartDrawer } from "./renderDrawer.js";
 
 export function renderCartBar(){
 
-  const bar = document.getElementById("cartBar");
-  const CountCart = document.getElementById("cartCount");
-  const CountDrawer = document.querySelector(".drawer-total");
-  if (!bar || !CountCart) return;
-  
+  const bar = document.getElementById("cartBar");  
   const ctx = getContext();
   const cartBtn = document.getElementById("cartOpen");
-
   const Items = UI.cart?.items || [];
   const total = Items.reduce((a, b) => a + b.qty, 0);
-  let textTotal;
-  if(total>1){
-    textTotal = `${total} ${translate("cart_bar.items")}`;
-  } else {
-    textTotal = `${total} ${translate("cart_bar.item")}`;
-  }
-  CountCart.textContent = textTotal;
-  CountDrawer.textContent = textTotal;
-
+  
   if(total==0){
     bar.classList.add("hidden");
     return;
-  }else{
+  } else {
+    updateTotal(total);
     bar.classList.remove("hidden");
   }
   
@@ -39,7 +27,17 @@ export function renderCartBar(){
     cartBtn.textContent=translate("cart_bar.cart_title");
     cartBtn.onclick = openCartDrawer;
 }
+export function updateTotal(total) {
+  let textTotal;
+  if(total>1){
+    textTotal = `${total} ${translate("cart_bar.items")}`;
+  } else {
+    textTotal = `${total} ${translate("cart_bar.item")}`;
+  }
+  document.getElementById("cartCount").textContent = textTotal;
+  document.querySelector(".drawer-total").textContent = textTotal;
 
+}
 // - Lưu giỏ hàng vào localStorage để giữ nguyên khi reload trang
 export function loadCart(){
   const saved = localStorage.getItem("haven_cart");
