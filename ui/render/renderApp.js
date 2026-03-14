@@ -18,7 +18,8 @@ export function renderApp(){
   renderCartBar()
   initLangSwitch();
   renderAck();
-  
+  initPlacePicker();
+
   // UI hệ thống (không phụ thuộc view)
   //loadCart();
   setDeliveryState("idle");
