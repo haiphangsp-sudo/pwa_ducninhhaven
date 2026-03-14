@@ -68,8 +68,9 @@
   height:32px;
   border:none;
   border-radius:8px;
-  background:#2f4f3e;
-  color:white;
+  color:#2f4f3e;
+  font-weight: 600;
+  font-size: var(--font-m);
 }
 
 .drawer-footer{

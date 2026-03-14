@@ -38,9 +38,9 @@ function renderDrawer(){
         <div>${OptionDrawer}</div>
       </div>
       <div class="drawer-qty">
-        <button data-i="${index}" class="qty-minus">−</button>
+        <button data-i="${index}" class="qty-minus center">−</button>
         <span class="qty">${i.qty}</span>
-        <button data-i="${index}" class="qty-plus">+</button>
+        <button data-i="${index}" class="qty-plus center">+</button>
       </div>
     `;
     el.appendChild(row);

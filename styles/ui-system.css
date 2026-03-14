@@ -133,10 +133,6 @@
 
 /* ---------- Utility ---------- */
 
-.hidden{
-  display:none!important;
-}
-
 .center{
   display:flex;
   align-items:center;
@@ -150,3 +146,4 @@
 .gap-s{ gap:8px }
 .gap-m{ gap:16px }
 .gap-l{ gap:24px }
+
