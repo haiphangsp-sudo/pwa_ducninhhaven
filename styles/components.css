@@ -53,7 +53,7 @@
   justify-content:space-between;
   align-items:center;
   padding:12px;
-  background:#f3f2ef;
+  background:var(--bg-muted);
   border-radius:12px;
 }
 
@@ -61,18 +61,35 @@
   display:flex;
   align-items:center;
   gap:10px;
+  background:var(--bg-soft);
+  padding:4px 6px;
+  width: 110px;
+  border-radius:12px;
 }
-
+.drawer-qty .qty{
+  color:var(--brand);
+  font-weight:600;
+  font-size:var(--font-m);
+  text-align: center;
+}
 .drawer-qty button{
   width:32px;
   height:32px;
   border:none;
   border-radius:8px;
+  background:#e7e5e0;
+
   color:#2f4f3e;
   font-weight: 600;
   font-size: var(--font-m);
 }
-
+.drawer-qty button:active{
+  transform:scale(.92);
+}
+.drawer-qty button:hover{
+  background:var(--brand-hover);
+  transform:scale(1.05);
+}
 .drawer-footer{
   margin-top:16px;
 }
