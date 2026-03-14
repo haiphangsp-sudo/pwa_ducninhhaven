@@ -20,8 +20,8 @@ export function initPlacePicker(){
       <div class="picker-group grid" data-group="area"></div>
     </div>
   `;
-  window.addEventListener("openPlacePicker",showOverlay(openPicker));
-  closeOverlay().onclick=closePicker;
+  window.addEventListener("openPlacePicker", showOverlay("placePicker").openPicker());
+  closeOverlay(closePicker);
 }
 /* -------------------------------------------------- */
 
@@ -39,7 +39,6 @@ function openPicker(){
   renderGroup("area", PLACES.areas);
   
   el.querySelector(".picker-label").textContent = translate("select_place");
-  el.classList.remove("hidden");
 }
 /* -------------------------------------------------- */
 
