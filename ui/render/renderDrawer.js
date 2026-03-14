@@ -14,7 +14,7 @@ export function openCartDrawer(){
   document.getElementById("drawerClose").onclick = closeOverlay();
 }
   
-function renderDrawer(textTotal){
+function renderDrawer(){
   let textOrder="";
   if(UI.delivery.state==="sending"){
     textOrder="delivery.pending";
