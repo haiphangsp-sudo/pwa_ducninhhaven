@@ -7,11 +7,12 @@ import { PLACES } from "../../data/places.js";
 import { setActive, getAnchor } from "../../core/context.js";
 import { translate } from "../utils/translate.js";
 
-const el=document.getElementById("placePicker");
+
 
 /* -------------------------------------------------- */
 
-export function initPlacePicker(){
+export function initPlacePicker() {
+  const el=document.getElementById("placePicker");
   el.innerHTML=`
     <div class="picker-panel stack">
       <h3 class="picker-label"></h3>
@@ -20,8 +21,7 @@ export function initPlacePicker(){
       <div class="picker-group grid" data-group="area"></div>
     </div>
   `;
-  window.addEventListener("openPlacePicker",openPicker(),showOverlay("placePicker"));
-  closeOverlay(closePicker);
+  window.addEventListener("openPlacePicker",openPicker);
 }
 /* -------------------------------------------------- */
 
@@ -37,8 +37,8 @@ function openPicker(){
 
   renderGroup("table",PLACES.tables);
   renderGroup("area", PLACES.areas);
-  
-  el.querySelector(".picker-label").textContent = translate("select_place");
+  showOverlay("placePicker");
+  document.querySelector(".picker-label").textContent = translate("select_place");
 }
 /* -------------------------------------------------- */
 
@@ -68,7 +68,7 @@ function renderGroup(type,data){
         type:btn.dataset.type,
         id:btn.dataset.id
       });
-      closePicker();
+        closeOverlay();
     };
   });
 }
@@ -78,7 +78,3 @@ function clearGroup(type){
   if(group) group.innerHTML="";
 }
 /* -------------------------------------------------- */
-
-function closePicker(){
-  el.classList.add("hidden");
-}
