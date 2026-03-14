@@ -34,10 +34,7 @@ export function renderCategory(key){
 
   contentEl.onclick = e => {
     const Btn = e.target.closest(".category-panel button[data-ui]");
-    if (!Btn) {
-        openPicker();
-      return;
-    }
+    if (!Btn) return;
   
     const data = Btn.dataset;
     if(data.ui==="instant"){
@@ -64,7 +61,7 @@ export function renderCategory(key){
 function ensureActive(){
   const ctx = getContext();
   if(!ctx?.active){
-    openCartDrawer();
+    openPicker();
     return false;
   }
   return true;
