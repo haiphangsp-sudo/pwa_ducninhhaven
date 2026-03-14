@@ -47,6 +47,37 @@ body{
   z-index:1200;
 }
 
+ .overlay-panel{
+  position:fixed;
+  z-index:1000;
+ }
+ 
+.overlay-bottom{
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.overlay-center{
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.overlay-drawer{
+  max-height: 70vh;
+  overflow: auto;
+  transform: translate(-50%, -50%);
+}
+.overlay-picker{
+  inset:0;
+  display:flex; 
+  align-items:center; 
+  justify-content:center;
+  max-width: 90vw;
+  width: 480px;
+}
+/* ===== Delivery Banner ===== */
+
 .delivery-banner {
   position: fixed;
   bottom: 20px;

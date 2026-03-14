@@ -20,15 +20,6 @@
   background:#e7e5e0;
 }
 
-.cart-drawer{
-  position:fixed;
-  z-index:1000;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  max-height: 70vh;
-}
-
 .drawer-panel{
   position:absolute;
   bottom:0;
