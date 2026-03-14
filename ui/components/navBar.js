@@ -3,6 +3,8 @@
 import { initLangSwitch, translate } from "../utils/translate.js";
 import { getContext } from "../../core/context.js";
 import { PLACES } from "../../data/places.js";
+import { openPicker } from "./placePicker.js";
+
 
 /* ===================================================== */
   let identityIcon;
@@ -31,7 +33,7 @@ export function renderNavBar(){
 
   updateNavContext();
   initLangSwitch();
-  bindClick();
+  document.querySelector(".nav-center button").onclick = openPicker;
 }
 /* ===================================================== */
 
@@ -60,19 +62,6 @@ function formatLocation(ctx){
   return translate(place.label);
 
 }
-/* ===================================================== */
-/* INTERACTION */
-
-function bindClick(){
-
-  const el = document.querySelector(".nav-center button");
-  if(!el) return;
-
-  el.onclick = ()=>{
-    window.dispatchEvent(new Event("openPlacePicker"));
-  };
-}
-
 /* ===================================================== */
 /* EXTERNAL REFRESH */
 
