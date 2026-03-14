@@ -57,6 +57,7 @@ stroke:white;
   position:sticky;
   z-index:90;
   scroll-snap-type: x mandatory;
+  
 }
 
 .hub-btn{
