@@ -1,15 +1,6 @@
 /* styles/layout.css */
 /* Bố cục màn hình*/
-body{
-  margin:0;
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-  background:#ece7dd;
-  color:var(--text);
-  height:100%;
-  overflow:hidden;   /* ngăn scroll toàn trang */
-  padding-bottom: env(safe-area-inset-bottom); /* tránh bị che bởi notch trên iOS */
-  min-height: 120vh; /* đảm bảo đủ chiều cao để hiển thị cart bar */
-}
+
 
 #app{
   margin:auto;
