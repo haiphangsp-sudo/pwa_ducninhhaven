@@ -74,7 +74,7 @@ function renderGroup(type,data){
 }
 
 function clearGroup(type){
-  const group=el.querySelector(`[data-group="${type}"]`);
+  const group=document.querySelector(`[data-group="${type}"]`);
   if(group) group.innerHTML="";
 }
 /* -------------------------------------------------- */
