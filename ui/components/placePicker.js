@@ -70,6 +70,7 @@ function renderGroup(type,data){
         closeOverlay();
     };
   });
+  closeOverlay();
 }
 
 function clearGroup(type){
