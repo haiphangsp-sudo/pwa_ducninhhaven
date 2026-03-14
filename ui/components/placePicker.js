@@ -14,7 +14,7 @@ import { translate } from "../utils/translate.js";
 function initPlacePicker() {
   const el=document.getElementById("placePicker");
   el.innerHTML=`
-    <div class="picker-panel stack">
+    <div class="picker-panel">
       <h3 class="picker-label"></h3>
       <div class="picker-group grid" data-group="room"></div>
       <div class="picker-group grid" data-group="table"></div>
