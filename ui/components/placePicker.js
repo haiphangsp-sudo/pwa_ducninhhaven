@@ -44,7 +44,7 @@ function openPicker(){
 /* -------------------------------------------------- */
 
 function renderGroup(type,data){
-
+  el.querySelector(".picker-label").textContent = translate("select_place");
   const group=el.querySelector(`[data-group="${type}"]`);
   if(!group) return;
 
@@ -61,7 +61,7 @@ function renderGroup(type,data){
       `).join("")}
     </div>
   `;
-  el.querySelector("h3.picker-label") = translate("select_place");
+  
  
   group.querySelectorAll("button").forEach(btn=>{
     btn.onclick=()=>{
