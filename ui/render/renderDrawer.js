@@ -71,7 +71,8 @@ document.addEventListener("click",(e)=>{
     if(UI.cart.items[i].qty<=0){
       UI.cart.items.splice(i, 1);
     }
-    if(UI.cart.items.length==0){
+    if (UI.cart.items.length == 0) {
+      document.getElementById("drawerItems").innerHTML = "";
       closeOverlay();
     }
   

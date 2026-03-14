@@ -18,7 +18,7 @@ export function renderCartBar(){
     bar.classList.add("hidden");
     return;
   } else {
-    updateTotal();
+    updateTotal(total);
     bar.classList.remove("hidden");
   }
   
@@ -27,7 +27,7 @@ export function renderCartBar(){
   cartBtn.textContent=translate("cart_bar.cart_title");
   cartBtn.onclick = openCartDrawer;
 }
-export function updateTotal() {
+export function updateTotal(total) {
   const total = UI.cart.items.reduce((a, b) => a + b.qty, 0);
   let textTotal;
   if(total>1){
