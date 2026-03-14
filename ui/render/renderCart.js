@@ -28,7 +28,6 @@ export function renderCartBar(){
   cartBtn.onclick = openCartDrawer;
 }
 export function updateTotal(total) {
-  const total = UI.cart.items.reduce((a, b) => a + b.qty, 0);
   let textTotal;
   if(total>1){
     textTotal = `${total} ${translate("cart_bar.items")}`;
