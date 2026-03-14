@@ -8,6 +8,7 @@ import { setRecoveryState } from "./renderRecovery.js";
 import { initLangSwitch } from "../utils/translate.js";
 import { renderNavBar } from "../components/navBar.js";
 import { renderHub } from "./renderHub.js";
+import { initPlacePicker } from "./ui/components/placePicker.js";
 
 export function renderApp(){
 
@@ -17,7 +18,7 @@ export function renderApp(){
   
   initLangSwitch();
   renderAck();
-
+  initPlacePicker();
   // UI hệ thống (không phụ thuộc view)
   //loadCart();
   setDeliveryState("idle");

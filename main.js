@@ -10,7 +10,6 @@ import { resetIdleTimer } from "./core/idle.js";
 import { loadMenu, MENU } from "./core/menuStore.js";
 import { detectRecovery } from "./core/queue.js";
 import { getContext, resolvePlace, setAnchor, setActive, normalizeContext } from "./core/context.js";
-import { initPlacePicker } from "./ui/components/placePicker.js";
 import { updateNavContext } from "./ui/components/navBar.js"
 
 /* ---------- VERSION ---------- */
@@ -100,11 +99,10 @@ function showMenuUpdated(){
   const el=document.createElement("div");
   el.className="menu-update-banner";
   el.textContent="Thực đơn vừa được cập nhật";
-  document.body.appendChild(el);
+  document.getSelection(".app-version").appendChild(el);
   setTimeout(()=>el.remove(),2500);
 }
 
-// - Cập nhật context mới nhất lên NavBar mỗi khi có thay đổi
 function loadContext(){ 
   window.addEventListener("contextchange", updateNavContext);
 }
@@ -122,7 +120,6 @@ async function boot(){
   applyURLContext();   // ← phải chạy trước render
   normalizeContext(); // đảm bảo context được lưu lại với timestamp mới, tránh bị xoá do TTL
   subscribe(renderApp);
-  initPlacePicker();
 
   renderApp();
   detectRecovery();
