@@ -59,7 +59,7 @@ document.addEventListener("click",(e)=>{
 
     const i=e.target.dataset.i;
     UI.cart.items[i].qty++;
-    
+    renderDrawer()
   }
 
   if(e.target.classList.contains("qty-minus")){
@@ -75,6 +75,6 @@ document.addEventListener("click",(e)=>{
       document.getElementById("drawerItems").innerHTML = "";
       closeOverlay();
     }
-  
+    renderDrawer();
   }
 });
