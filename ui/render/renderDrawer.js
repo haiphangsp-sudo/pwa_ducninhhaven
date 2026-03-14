@@ -54,29 +54,35 @@ function renderDrawer(){
 }
 
 document.addEventListener("click",(e)=>{
-
+  const i=e.target.dataset.i;
   if(e.target.classList.contains("qty-plus")){
-
-    const i=e.target.dataset.i;
     UI.cart.items[i].qty++;
-    renderDrawer();
-    updateTotal();
   }
 
-  if(e.target.classList.contains("qty-minus")){
-
-    const i=e.target.dataset.i;
-
+  if (e.target.classList.contains("qty-minus")) {
+    
     UI.cart.items[i].qty--;
 
-    if(UI.cart.items[i].qty<=0){
+    if (UI.cart.items[i].qty <= 0) {
       UI.cart.items.splice(i, 1);
+    
+      if (UI.cart.items.length == 0) {
+        document.getElementById("drawerItems").innerHTML = "";
+        closeOverlay();
+        return;
+      }
+      reindexDrawer();
     }
-    if (UI.cart.items.length == 0) {
-      document.getElementById("drawerItems").innerHTML = "";
-      closeOverlay();
-    }
-    renderDrawer();
-    updateTotal();
   }
+  row.querySelector(".qty").textContent = UI.cart.items[i].qty;
+  updateTotal();
+
 });
+
+function reindexDrawer() {
+  document
+    .querySelectorAll(".drawer-item")
+    .forEach((row, i) => {
+      row.dataset.i = i;
+    });
+}
