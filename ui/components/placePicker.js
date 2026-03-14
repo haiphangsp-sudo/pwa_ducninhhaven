@@ -44,7 +44,7 @@ function openPicker(){
 
 function renderGroup(type,data){
   
-  const group=el.querySelector(`[data-group="${type}"]`);
+  const group=document.querySelector(`[data-group="${type}"]`);
   if(!group) return;
 
   group.innerHTML =`
