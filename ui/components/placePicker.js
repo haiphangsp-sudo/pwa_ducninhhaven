@@ -20,7 +20,10 @@ export function initPlacePicker(){
       <div class="picker-group grid" data-group="area"></div>
     </div>
   `;
-  window.addEventListener("openPlacePicker", showOverlay("placePicker").openPicker());
+  window.addEventListener("openPlacePicker",
+    showOverlay("placePicker"),
+    openPicker()
+  );
   closeOverlay(closePicker);
 }
 /* -------------------------------------------------- */
