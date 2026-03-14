@@ -76,10 +76,9 @@
   width:32px;
   height:32px;
   border:none;
-  border-radius:8px;
-  background:#e7e5e0;
-
-  color:#2f4f3e;
+  border-radius:50%;
+  background:var(--bg-soft);
+  color:var(--brand);
   font-weight: 600;
   font-size: var(--font-m);
 }
