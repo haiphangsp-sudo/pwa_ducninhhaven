@@ -58,7 +58,6 @@
                 </div>
             </section>
         </div>
-        
         <div id="cartBar" class="row cart-bar hidden">
             <div class="cart-info">
                 <span class="cart-icon">🛒</span>
@@ -66,27 +65,27 @@
             </div>
             <button id="cartOpen" class="btn btn-primary cart-open"></button>
         </div>
-        <div id="cartDrawer" class="cart-drawer hidden">
-            <div class="drawer-backdrop"></div>
-            <div class="drawer-panel">
-                <div class="row drawer-header">
-                    <span class="drawer-title"></span>
-                    <span class="drawer-total"></span>
-                    <button id="drawerClose">✕</button>
-                </div>
-                <div id="drawerItems" class="stack drawer-items"></div>
-                <div class="drawer-footer">
-                    <button id="drawerSend" class="drawer-send"></button>
-                </div>
+    </div>
+    <div id="overlayBackdrop" class="overlay-backdrop hidden"></div>
+    <div id="cartDrawer" class="cart-drawer hidden">
+        <div class="drawer-backdrop"></div>
+        <div class="drawer-panel">
+            <div class="row drawer-header">
+                <span class="drawer-title"></span>
+                <span class="drawer-total"></span>
+                <button id="drawerClose">✕</button>
+            </div>
+            <div id="drawerItems" class="stack drawer-items"></div>
+            <div class="drawer-footer">
+                <button id="drawerSend" class="drawer-send"></button>
             </div>
         </div>
-        <div id="placePicker" class="place-picker hidden"> </div>
-        <!-- ACK Overlay -->
-        <div id="ackOverlay" class="overlay hidden"></div>
-        <!-- Delivery Banner -->
-        <div id="deliveryStatus" class="delivery-banner hidden"></div>
-        <div id="recoveryBanner" class="recovery-banner hidden"></div>
     </div>
+    <div id="placePicker" class="place-picker hidden"></div>
+        
+    <div id="ackOverlay" class="overlay hidden"></div>
+    <div id="deliveryStatus" class="delivery-banner hidden"></div>
+    <div id="recoveryBanner" class="recovery-banner hidden"></div>
     <script type="module" src="main.js"></script>
 </body>
 </html>

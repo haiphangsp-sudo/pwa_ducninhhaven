@@ -1,7 +1,7 @@
 // ui/components/placePicker.js
 // Component cho phép khách chọn điểm phục vụ (phòng/bàn/khu vực) thủ công, nếu QR code không hoạt động hoặc khách muốn đổi điểm phục vụ
 
-
+import { showOverlay, closeOverlay } from "../../ui/interactions/overlayManager.js";
 import { getIcon } from "./navBar.js"; 
 import { PLACES } from "../../data/places.js";
 import { setActive, getAnchor } from "../../core/context.js";
@@ -13,7 +13,6 @@ const el=document.getElementById("placePicker");
 
 export function initPlacePicker(){
   el.innerHTML=`
-    <div class="picker-backdrop"></div>
     <div class="picker-panel stack">
       <h3 class="picker-label"></h3>
       <div class="picker-group grid" data-group="room"></div>
@@ -21,8 +20,8 @@ export function initPlacePicker(){
       <div class="picker-group grid" data-group="area"></div>
     </div>
   `;
-  window.addEventListener("openPlacePicker",openPicker);
-  el.querySelector(".picker-backdrop").onclick=closePicker;
+  window.addEventListener("openPlacePicker",showOverlay(openPicker));
+  closeOverlay().onclick=closePicker;
 }
 /* -------------------------------------------------- */
 
@@ -37,14 +36,15 @@ function openPicker(){
     clearGroup("room");
 
   renderGroup("table",PLACES.tables);
-  renderGroup("area",PLACES.areas);
-
+  renderGroup("area", PLACES.areas);
+  
+  el.querySelector(".picker-label").textContent = translate("select_place");
   el.classList.remove("hidden");
 }
 /* -------------------------------------------------- */
 
 function renderGroup(type,data){
-  el.querySelector(".picker-label").textContent = translate("select_place");
+  
   const group=el.querySelector(`[data-group="${type}"]`);
   if(!group) return;
 
