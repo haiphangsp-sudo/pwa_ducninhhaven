@@ -46,7 +46,6 @@ export function renderCategory(key){
     }
     if(data.ui==="cart"){
       if(!ensureActive()) return;
-
       addToCart({
         category: Btn.dataset.category,
         item: Btn.dataset.item,
