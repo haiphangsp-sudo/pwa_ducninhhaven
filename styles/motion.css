@@ -50,14 +50,7 @@
   from{transform:scale(.5);opacity:.4}
   to{transform:scale(1.4);opacity:0}
 }
-.cart-bounce{
-  animation:cartBounce .25s ease;
-}
-@keyframes cartBounce{
-  0%{transform:scale(1)}
-  50%{transform:scale(1.15)}
-  100%{transform:scale(1)}
-}
+
 
 @keyframes drawerUp{
   from{
@@ -76,5 +69,18 @@
   to{
     opacity:1;
     transform:translate(-50%,0);
+  }
+}
+.place-picker{
+  animation: pickerIn .18s ease;
+}
+@keyframes pickerIn {
+  from{ 
+    transform: translate(-50%, -60%);
+    opacity: .7
+  }
+  to{
+    transform: translate(-50%, -50%);
+    opacity: 1
   }
 }

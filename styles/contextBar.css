@@ -156,11 +156,11 @@
   position:fixed; inset:0;
   display:flex; align-items:center; justify-content:center;
   z-index:1000;
-}
-
-.picker-backdrop{
-  position:absolute; inset:0;
-  background:rgba(0,0,0,.35);
+  top: 50%;
+  left: 50%;
+  max-width: 90vw;
+  transform: translate(-50%, -50%);
+  width: 480px;
 }
 
 .picker-panel{
