@@ -58,7 +58,8 @@ document.addEventListener("click", (e) => {
   
   const i = e.target.dataset.i;
   const row = e.target.closest(".drawer-item");
-  
+  if(!row) return;
+
   if(e.target.classList.contains("qty-plus")){
     UI.cart.items[i].qty++;
   }
