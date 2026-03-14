@@ -11,7 +11,6 @@ import { MENU } from "../../core/menuStore.js";
 export function openCartDrawer(){
   renderDrawer();
   showOverlay("cartDrawer");
-  document.getElementById("drawerClose").onclick = closeOverlay();
 }
   
 function renderDrawer(){
@@ -46,11 +45,12 @@ function renderDrawer(){
     el.appendChild(row);
   });
   
-    document.getElementById("drawerSend").onclick=()=>{ 
-      sendCart(); 
-      closeOverlay();
-      el.innerHTML="";
-    };
+  document.getElementById("drawerSend").onclick=()=>{ 
+    sendCart(); 
+    closeOverlay();
+    el.innerHTML="";
+  };
+  document.getElementById("drawerClose").onclick = closeOverlay;
 }
 
 document.addEventListener("click",(e)=>{
