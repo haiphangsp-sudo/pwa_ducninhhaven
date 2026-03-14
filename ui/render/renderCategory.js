@@ -64,7 +64,7 @@ export function renderCategory(key){
 function ensureActive(){
   const ctx = getContext();
   if(!ctx?.active){
-    window.dispatchEvent(new Event("openPlacePicker"));
+    openCartDrawer();
     return false;
   }
   return true;
