@@ -1,24 +1,25 @@
 // ui/interactions/overlayManager.js
 
 
-let current = null;
+let current = false;
 const backdrop = document.getElementById("overlayBackdrop");
 
 export function showOverlay(id) {
-    const el = document.getElementById(id);
-    if (!el) return;
-
-    el.classList.remove("hidden");
-    backdrop.classList.remove("hidden");
-    current = el;
-    document.getElementById("overlayBackdrop").onclick = closeOverlay;
+    if (!current) {
+        const el = document.getElementById(id);
+        el.classList.remove("hidden");
+        backdrop.classList.remove("hidden");
+        backdrop.onclick = closeOverlay;
+        current = true;
+    }
 }
 
 export function closeOverlay() {
-    if (!current) return;
-    current.classList.add("hidden");
-    backdrop.classList.add("hidden");
-    current = null;
+    if (current) { 
+        current.classList.add("hidden");
+        backdrop.classList.add("hidden");
+        current = false;
+    }   
 }
 
 document.addEventListener("keydown", e => {
