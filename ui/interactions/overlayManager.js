@@ -2,11 +2,12 @@
 
 
 let current = false;
+let el = null;
 const backdrop = document.getElementById("overlayBackdrop");
 
 export function showOverlay(id) {
     if (!current) {
-        const el = document.getElementById(id);
+        el = document.getElementById(id);
         el.classList.remove("hidden");
         backdrop.classList.remove("hidden");
         backdrop.onclick = closeOverlay;
@@ -16,7 +17,7 @@ export function showOverlay(id) {
 
 export function closeOverlay() {
     if (current) { 
-        current.classList.add("hidden");
+        el.classList.add("hidden");
         backdrop.classList.add("hidden");
         current = false;
     }   
