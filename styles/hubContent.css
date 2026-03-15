@@ -96,6 +96,7 @@
 
 .category-panel{
   gap:28px;
+  margin: var(--space-4);
 }
 
 .card-title::before{
