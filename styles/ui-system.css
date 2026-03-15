@@ -12,7 +12,7 @@
 }
 /* card header */
 
-.card-title{
+.menu-card__title{
   font-size: 22px;
   font-weight: 600;
   display: flex;
