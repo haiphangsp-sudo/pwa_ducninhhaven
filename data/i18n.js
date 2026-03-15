@@ -58,6 +58,14 @@ cart_bar:{
   order:{
     vi:"Thêm",
     en:"Order"
+  },
+  free: {
+    vi: "Miễn phí",
+    en: "Free"
+  },
+  instant: {
+    vi: "Dịch vụ tức thời",
+    en: "Instant service"
   }
 },
 select_place:{vi:"Chọn vị trí phục vụ",en:"Select service location"},
@@ -73,28 +81,22 @@ haven:{vi:"Haven",en:"Haven"},
     vi:"Đang gửi yêu cầu…",
     en:"Sending request…"
   },
-
   received:{
     vi:"Chúng tôi đã nhận yêu cầu",
     en:"We’ve received your request"
   },
-
   connection_lost:{
     vi:"Mất kết nối. Yêu cầu sẽ được gửi sớm",
     en:"Connection lost. We’ll deliver your request shortly"
   },
-
   unable_send:{
     vi:"Không thể gửi. Vui lòng thử lại",
     en:"Unable to send. Please try again"
   },
-
   add_to_order:{
     vi:"Thêm vào yêu cầu",
     en:"Add to order"
   },
-
-  
   send_request:{
     vi:"Gửi yêu cầu",
     en:"Send request"
