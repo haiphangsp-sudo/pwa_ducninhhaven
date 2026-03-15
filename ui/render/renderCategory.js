@@ -96,20 +96,23 @@ function renderArticle(category){
 /* ========================================================= */
 /* INSTANT */
 
-function renderCommon(group, categoryKey) {
-  const options = Object.entries(group.items);
-  return options.filter(([, item]) => item.active !== false)
+function renderCommon(group, groupKey) {
+  let Recommended = false;
+  const type = group.ui;
+  return Object.entries(group.items)
+    .filter(([, item]) => item.active !== false)
     .map(([itemKey, item]) => {
-      const defaultOpt = item.defaultOption || options[0]?.[0];
-      const groupTitle = translate(item.label);
-      const cards = Object.entries(item.options || {})
-        .filter(([, opt]) => opt.active !== false)
-        .map(([optKey, opt]) => {
-            return categoryOpt(opt, optKey, itemKey, categoryKey, group.ui);
+      const Title = translate(item.label);
+      const cards = Object.entries(item.options || {});
+      cards.filter(([, opt]) => opt.active !== false);
+      const defaultKey = item.defaultOption || options[0]?.[0];
+      cards.map(([optKey, opt]) => {
+        if (optKey === defaultKey) Recommended = true;
+          return categoryOpt(opt, optKey, itemKey, groupKey, type, Recommended);
         }).join("");
       return `
       <div class="menu-group">
-        <h2 class="menu-group-title">${groupTitle}</h2>
+        <h2 class="menu-group-title">${Title}</h2>
         <div class="menu-grid grid">
           ${cards}
         </div>
