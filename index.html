@@ -20,18 +20,18 @@
     <div id="app" class="flex">
         <div id="contextBar" class="row context-bar">
             <div class="nav center">
-                <div class="nav-left">
+                <div class="nav-left context-bar__identity">
                     <span class="identity-icon"></span>
                     <span class="identity-label"></span>
                 </div>
-                <div class="nav-center">
+                <div class="nav-center context-bar__place">
                     <button class="location-btn row btn">
                         <span class="loc-label"></span>
                         <span class="loc-arrow">▾</span>
                     </button>
                 </div>
                 <div class="nav-right">
-                    <div id="langSwitch" class="lang-switch">
+                    <div id="langSwitch" class="lang-switch context-bar__lang">
                         <button class="btn btn-ghost" data-lang="vi">VI</button>
                         <button class="btn btn-ghost"data-lang="en">EN</button>
                     </div>
@@ -49,10 +49,10 @@
         </div>
         <div id="cartBar" class="row cart-bar center hidden">
             <div class="cart-info">
-                <span class="cart-icon">🛒</span>
-                <span id="cartCount">0</span>
+                <span class="cart-bar__icon">🛒</span>
+                <span id="cartCount" class="cart-bar__count">0</span>
             </div>
-            <button id="cartOpen" class="btn btn-primary cart-open"></button>
+            <button id="cartOpen" class="btn btn-primary cart-bar__button"></button>
         </div>
     </div>
         <!-- Overlay layer -->
@@ -60,12 +60,12 @@
     <div class="overlay">
         <div id="cartDrawer" class="overlay__panel overlay__panel--bottom overlay-drawer hidden">
             <div class="drawer-panel">
-                <div class="row drawer-header">
+                <div class="row drawer__header">
                     <span class="drawer-title"></span>
                     <span class="drawer-total"></span>
                     <button id="drawerClose">✕</button>
                 </div>
-                <div id="drawerItems" class="stack drawer-items"></div>
+                <div id="drawerItems" class="stack drawer__items"></div>
                 <div class="drawer-footer">
                     <button id="drawerSend" class="drawer-send"></button>
                 </div>

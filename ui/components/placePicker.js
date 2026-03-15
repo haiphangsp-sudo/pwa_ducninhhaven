@@ -15,7 +15,7 @@ function initPlacePicker() {
   const el=document.getElementById("placePicker");
   el.innerHTML=`
     <div class="picker-panel">
-      <h3 class="picker-label"></h3>
+      <h3 class="picker-panel_title"></h3>
       <div class="picker-group grid" data-group="room"></div>
       <div class="picker-group grid" data-group="table"></div>
       <div class="picker-group grid" data-group="area"></div>
@@ -53,7 +53,7 @@ function renderGroup(type,data){
     </div>
     <div class="picker-list">
       ${Object.entries(data).map(([id,p])=>`
-        <button class="btn-primary btn" data-type="${type}" data-id="${id}">
+        <button class="btn-primary btn picker-option" data-type="${type}" data-id="${id}">
           ${translate(p.label)}
         </button>
       `).join("")}

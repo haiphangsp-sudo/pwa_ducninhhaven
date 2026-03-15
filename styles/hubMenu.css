@@ -73,16 +73,16 @@ stroke:white;
 }
 
 
-.hub-btn.active{
+.hub-btn.is-active{
   background:var(--bg-soft);
   color:var(--text-main);
   box-shadow:var(--shadow-soft);
 }
-.hub-btn.active:hover{
+.hub-btn.is-active:hover{
   background:#355c49;
 }
 
-.hub-btn.active::after{
+.hub-btn.is-active::after{
   content: "";
   width:24px;
   height:3px;

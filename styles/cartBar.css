@@ -34,3 +34,27 @@
   align-items:center;
   gap:8px;
 }
+
+.drawer__header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:18px;
+  font-weight:600;
+  margin-bottom:16px;
+}
+
+.drawer__items{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.drawer__item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:12px;
+  background:var(--bg-muted);
+  border-radius:12px;
+}

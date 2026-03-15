@@ -30,10 +30,10 @@ function renderDrawer(){
     const ItemDrawer = translate(MENU[i.category].items[i.item].label);
     const OptionDrawer = translate(MENU[i.category].items[i.item].options[i.option].label);
     const row=document.createElement("div");
-    row.className = "drawer-item";
+    row.className = "drawer__item";
     row.dataset.i = index;
     row.innerHTML=`
-      <div>
+      <div class="drawer__info">
         <strong>${ItemDrawer}</strong>
         <div>${OptionDrawer}</div>
       </div>
@@ -42,6 +42,7 @@ function renderDrawer(){
         <span class="qty">${i.qty}</span>
         <button data-i="${index}" class="qty-plus center">+</button>
       </div>
+      <div class="drawer__footer"></div>
     `;
     el.appendChild(row);
   });

@@ -33,29 +33,6 @@
   animation:drawerUp .25s ease;
 }
 
-.drawer-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  font-size:18px;
-  font-weight:600;
-  margin-bottom:16px;
-}
-
-.drawer-items{
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-}
-
-.drawer-item{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:12px;
-  background:var(--bg-muted);
-  border-radius:12px;
-}
 
 .drawer-qty{
   display:flex;

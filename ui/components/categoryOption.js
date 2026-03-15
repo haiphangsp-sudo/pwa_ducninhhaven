@@ -17,7 +17,7 @@ export function categoryOpt(opt,optKey,itemKey,categoryKey,type) {
             </div>
             <div class="row menu-cart__action card-bottom">
                 <div class="price">
-                    ${price?((price>0)?(price.toLocaleString("vi-VN")+" đ"):"Free"):"Phục vụ ngay"}
+                    ${price > 0 ? price.toLocaleString("vi-VN") + " đ" : price === 0 ? "Free" : "Phục vụ ngay"}
                 </div>
                 <button class="btn btn-primary"
                     data-ui="${type}"
