@@ -99,13 +99,13 @@ function renderArticle(category){
 function renderCommon(group, groupKey) {
   let Recommended = false;
   const type = group.ui;
-  const Group = Object.entries(group.items);
-  Group.filter(([, item]) => item.active !== false);
+  const Group = Object.entries(group.items)
+  .filter(([, item]) => item.active !== false);
   return Group.map(([itemKey, item]) => {
       if (item.defaultOption) Recommended = true;
       const Title = translate(item.label);
-      const cards = Object.entries(item.options || {});
-      cards.filter(([, opt]) => opt.active !== false)
+      const cards = Object.entries(item.options || {})
+      .filter(([, opt]) => opt.active !== false)
       .map(([optKey, opt]) => {
         return categoryOpt(opt, optKey, itemKey, groupKey, type, Recommended);
       }).join("");
