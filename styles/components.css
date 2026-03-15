@@ -77,7 +77,16 @@
   border:none;
   border-radius:14px;
 
-  background:#2f4f3e;
+  background:var(--brand);
+  color:var(--text-invert);
+  font-weight:600;
+  cursor:pointer;
+  transition:.15s ease;
+}
+
+.drawer-send:active{
+  transform:scale(.96);
+  background:var(--brand-hover);
   color:white;
   font-weight:600;
 }
@@ -86,6 +95,10 @@
   font-size:var(--font-s);
   white-space: nowrap;
   padding: 8px 10px;
+  color: var(--text-invert);
+  background: var(--brand);
+  border-radius: 12px
+
 }
 .picker-title{
   font-size: 15px;
