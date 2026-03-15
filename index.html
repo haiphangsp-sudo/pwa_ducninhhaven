@@ -57,22 +57,24 @@
     </div>
         <!-- Overlay layer -->
     <div id="overlayBackdrop" class="overlay-backdrop hidden"></div>
-    <div id="cartDrawer" class="overlay-panel overlay-bottom overlay-drawer hidden">
-        <div class="drawer-panel">
-            <div class="row drawer-header">
-                <span class="drawer-title"></span>
-                <span class="drawer-total"></span>
-                <button id="drawerClose">✕</button>
-            </div>
-            <div id="drawerItems" class="stack drawer-items"></div>
-            <div class="drawer-footer">
-                <button id="drawerSend" class="drawer-send"></button>
+    <div class="overlay">
+        <div id="cartDrawer" class="overlay__panel overlay__panel--bottom overlay-drawer hidden">
+            <div class="drawer-panel">
+                <div class="row drawer-header">
+                    <span class="drawer-title"></span>
+                    <span class="drawer-total"></span>
+                    <button id="drawerClose">✕</button>
+                </div>
+                <div id="drawerItems" class="stack drawer-items"></div>
+                <div class="drawer-footer">
+                    <button id="drawerSend" class="drawer-send"></button>
+                </div>
             </div>
         </div>
-    </div>
-    <div id="placePicker" class="overlay-panel overlay-center overlay-picker hidden"></div>
-        <!-- System feedback -->
-    <div id="ackOverlay" class="overlay hidden"></div>
+        <div id="placePicker" class="overlay__panel overlay__panel-center overlay-picker hidden"></div>
+     </div>
+    <!-- System feedback -->
+    <div id="ackOverlay" class="overlay__ack hidden"></div>
     <div id="deliveryStatus" class="delivery-banner hidden"></div>
     <div id="recoveryBanner" class="recovery-banner hidden"></div>
     <script type="module" src="main.js"></script>

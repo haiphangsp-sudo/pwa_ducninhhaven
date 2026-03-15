@@ -11,13 +11,13 @@ export function categoryOpt(opt,optKey,itemKey,categoryKey,type) {
 
     return `
         <div class="card">
-            <div class="stack">
-                <div class="card-title service-${optKey}">${title}</div>
-                ${desc ? `<div class="card-desc">${desc}</div>` : ""}
+            <div class="stack menu-cart__info">
+                <div class="card-title menu-card__title service-${optKey}">${title}</div>
+                ${desc ? `<div class="card-desc menu-cart__desc">${desc}</div>` : ""}
             </div>
-            <div class="row card-bottom">
+            <div class="row menu-cart__action card-bottom">
                 <div class="price">
-                    ${price?((price>0)?(price.toLocaleString("vi-VN")+" đ"):"Free"):"Hello"}
+                    ${price?((price>0)?(price.toLocaleString("vi-VN")+" đ"):"Free"):"Phục vụ ngay"}
                 </div>
                 <button class="btn btn-primary"
                     data-ui="${type}"
