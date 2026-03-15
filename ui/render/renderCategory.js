@@ -98,9 +98,9 @@ function renderArticle(category){
 
 function renderCommon(group, categoryKey) {
   const options = Object.entries(group.items);
-   options.filter(([, item]) => item.active !== false);
-    const defaultOpt = item.defaultOption || options[0]?.[0];
-    return options.map(([itemKey, item]) => {
+  return options.filter(([, item]) => item.active !== false)
+    .map(([itemKey, item]) => {
+      const defaultOpt = item.defaultOption || options[0]?.[0];
       const groupTitle = translate(item.label);
       const cards = Object.entries(item.options || {})
         .filter(([, opt]) => opt.active !== false)
