@@ -28,12 +28,11 @@ export function renderCategory(key){
       break;
 
     case "instant":
-      contentEl.innerHTML = renderCommon(category, key,"instant");
+      contentEl.innerHTML = renderCommon(category, key);
       break;
 
     case "cart":
-      //contentEl.innerHTML = renderCommon(category, key,"cart");
-      renderCategoryNew(category);
+      contentEl.innerHTML = renderCommon(category, key);
       break;
   }
 
@@ -97,15 +96,16 @@ function renderArticle(category){
 /* ========================================================= */
 /* INSTANT */
 
-function renderCommon(category, categoryKey, type) {
-  return Object.entries(category.items)
-    .filter(([, item]) => item.active !== false)
-    .map(([itemKey, item]) => {
+function renderCommon(group, categoryKey) {
+  const options = Object.entries(group.items);
+   options.filter(([, item]) => item.active !== false);
+    const defaultOpt = item.defaultOption || options[0]?.[0];
+    return options.map(([itemKey, item]) => {
       const groupTitle = translate(item.label);
       const cards = Object.entries(item.options || {})
         .filter(([, opt]) => opt.active !== false)
         .map(([optKey, opt]) => {
-            return categoryOpt(opt, optKey, itemKey, categoryKey,type);
+            return categoryOpt(opt, optKey, itemKey, categoryKey, group.ui);
         }).join("");
       return `
       <div class="menu-group">
