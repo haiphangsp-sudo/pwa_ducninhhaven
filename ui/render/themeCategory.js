@@ -5,7 +5,7 @@ import { translate } from "../utils/translate.js";
 import { addToCart } from "../../core/events.js";
 import { openOptionSheet } from "./renderOpitonSheet.js";
 
-export function renderCategory(category){
+export function renderCategoryNew(category){
 
   const el = document.getElementById("hubContent");
   el.innerHTML = "";
