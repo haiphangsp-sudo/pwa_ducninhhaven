@@ -101,12 +101,11 @@ function renderCommon(group, groupKey) {
   const Group = Object.entries(group.items)
   .filter(([, item]) => item.active !== false);
   return Group.map(([itemKey, item]) => {
-      const Recommended = !!item.defaultOption;
       const Title = translate(item.label);
       const cards = Object.entries(item.options || {})
       .filter(([, opt]) => opt.active !== false)
       .map(([optKey, opt]) => {
-        return categoryOpt(opt, optKey, itemKey, groupKey, type, Recommended);
+        return categoryOpt(opt, optKey, itemKey, groupKey, type, optKey===item.defaultOption);
       }).join("");
       return `
         <div class="menu-group">
