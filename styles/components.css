@@ -38,7 +38,6 @@
   display:flex;
   align-items:center;
   gap:10px;
-  background:var(--bg-soft);
   padding:4px 6px;
   width: 110px;
   border-radius:12px;
@@ -134,17 +133,3 @@
   margin-top:var(--space-2);
 }
 
-/* buttons */
-
-.btn-primary{
-  background:var(--brand);
-  color:var(--text-invert);
-}
-
-.btn-primary:hover{
-  background:var(--brand-hover);
-}
-
-.btn-ghost{
-  background:transparent;
-}

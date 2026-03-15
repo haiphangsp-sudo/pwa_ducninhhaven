@@ -1,17 +1,7 @@
 /* styles/tokens.css */
 /*Design tokens (màu, spacing, radius, font scale)*/
+
 :root{
-
-  /* colors */
-  --bg: #F3F4F5;
-  --card: #FFFFFF;
-  --text: #1C1C1E;
-  --muted: #8E8E93;
-  --accent: #2F6FED;
-
-  /* elevation */
-  --shadow: 0 6px 18px rgba(0,0,0,0.08);
-
 /* =====================
    BRAND
 ===================== */
@@ -47,7 +37,11 @@
 /* =====================
    STATUS
 ===================== */
-
+--bg: #F3F4F5;
+--card: #FFFFFF;
+--text: #1C1C1E;
+--muted: #8E8E93;
+--accent: #2F6FED;
 --success: #2e7d32;
 --error: #b00020;
 --warning: #f5a623;
@@ -55,7 +49,7 @@
 /* =====================
    SHADOW
 ===================== */
-
+--shadow: 0 6px 18px rgba(0,0,0,0.08);
 --shadow-soft: 0 4px 14px rgba(0,0,0,0.06);
 --shadow-card: 0 8px 22px rgba(0,0,0,0.08);
 --shadow-floating: 0 12px 30px rgba(0,0,0,0.12);
