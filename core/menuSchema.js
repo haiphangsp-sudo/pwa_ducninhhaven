@@ -70,6 +70,8 @@ export function validateMenu(menu){
   }
 
   for(const catKey in menu){
+    if(catKey === "version")
+      continue
 
     const cat = menu[catKey]
 
@@ -148,7 +150,7 @@ export function validateMenu(menu){
     console.error("MENU_SCHEMA_ERROR");
     console.table(errors);
 
-    throw new Error("Menu schema invalid");
+    throw new Error(`Menu schema invalid: ${errors.length} errors`);
 
   }
 
