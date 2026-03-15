@@ -2,7 +2,7 @@
 //   Tải menu chuẩn từ server, sau đó merge với state vận hành (nếu có) để có menu hoàn chỉnh cho app
 //   Menu được lưu trong biến toàn cục MENU, các component có thể import và sử dụng
 
-import { validateMenu, normalizeMenu } from "./menuSchema.js";
+import { validateMenu } from "./menuSchema.js";
 
 export let MENU = {};
 
