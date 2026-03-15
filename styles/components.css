@@ -132,7 +132,7 @@
   color:var(--brand);
   margin-top:var(--space-2);
 }
-.data-recommended{
+.recommended{
   content:"Recommended";
   font-size: 11px;
   color: var(--brand);
