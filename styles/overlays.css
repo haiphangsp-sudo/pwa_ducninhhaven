@@ -24,13 +24,13 @@
   z-index:1000;
  }
 
-.overlay__panel-bottom{
+.overlay__panel--bottom{
   left: 0;
   right: 0;
   bottom: 0;
 }
 
-.overlay__panel-center{
+.overlay__panel--center{
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
