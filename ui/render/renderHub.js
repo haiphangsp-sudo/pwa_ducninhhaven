@@ -3,7 +3,7 @@
 import { UI, setState } from "../../core/state.js";
 import { MENU } from "../../core/menuStore.js";
 import { translate } from "../utils/translate.js";
-import { renderCategory } from "./renderCategory.js";
+import { renderCategoryNew } from "./themeCategory.js";
 import { getContext } from "../../core/context.js";
 
 export function renderHub(){
@@ -87,6 +87,6 @@ export function renderHub(){
      RENDER CATEGORY
   ======================================================= */
 
-  renderCategory(panel);
+  renderCategoryNew(panel);
 
 }
