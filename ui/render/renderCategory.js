@@ -6,7 +6,6 @@ import { getContext } from "../../core/context.js";
 import { translate } from "../utils/translate.js";
 import { categoryOpt } from "../components/categoryOption.js";
 import { openPicker } from "../components/placePicker.js"
-import { renderCategoryNew } from "./themeCategory.js";
 
 
 export function renderCategory(key){
@@ -27,13 +26,10 @@ export function renderCategory(key){
       contentEl.innerHTML = renderArticle(category);
       break;
 
-    case "instant":
+    case "default":
       contentEl.innerHTML = renderCommon(category, key);
       break;
 
-    case "cart":
-      contentEl.innerHTML = renderCommon(category, key);
-      break;
   }
 
   contentEl.onclick = e => {
@@ -99,9 +95,9 @@ function renderArticle(category){
 
 function renderCommon(group, groupKey) {
   const type = group.ui;
-  const Group = Object.entries(group.items)
+  const items = Object.entries(group.items)
   .filter(([, item]) => item.active !== false);
-  return Group.map(([itemKey, item]) => {
+  return items.map(([itemKey, item]) => {
       const Title = translate(item.label);
       const cards = Object.entries(item.options || {})
       .filter(([, opt]) => opt.active !== false)
