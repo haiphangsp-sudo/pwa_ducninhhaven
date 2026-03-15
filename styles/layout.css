@@ -131,11 +131,6 @@
   flex-direction:column;
 }
 
-.center{
-  align-items:center;
-  justify-content:center;
-}
-
 .overlay-backdrop{
   position:fixed;
   inset:0;
