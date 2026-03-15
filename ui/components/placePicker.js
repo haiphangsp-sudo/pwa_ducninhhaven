@@ -37,7 +37,7 @@ export function openPicker(){
   renderGroup("table",PLACES.tables);
   renderGroup("area", PLACES.areas);
   showOverlay("placePicker");
-  document.querySelector(".picker-label").textContent = translate("select_place");
+  
 }
 /* -------------------------------------------------- */
 
@@ -70,6 +70,7 @@ function renderGroup(type,data){
         closeOverlay();
     };
   });
+  document.querySelector(".picker-label").textContent = translate("select_place");
   closeOverlay();
 }
 
