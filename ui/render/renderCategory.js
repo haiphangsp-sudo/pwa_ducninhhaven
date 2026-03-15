@@ -99,14 +99,14 @@ function renderArticle(category){
 function renderCommon(group, groupKey) {
   let Recommended = false;
   const type = group.ui;
-  return Object.entries(group.items)
-    .filter(([, item]) => item.active !== false)
-    .map(([itemKey, item]) => {
+  const Group = Object.entries(group.items);
+  Group.filter(([, item]) => item.active !== false);
+  const defaultKey = item.defaultOption || options[0]?.[0];
+  return Group.map(([itemKey, item]) => {
       const Title = translate(item.label);
       const cards = Object.entries(item.options || {});
-      cards.filter(([, opt]) => opt.active !== false);
-      const defaultKey = item.defaultOption || options[0]?.[0];
-      cards.map(([optKey, opt]) => {
+      cards.filter(([, opt]) => opt.active !== false)
+      .map(([optKey, opt]) => {
         if (opt === defaultKey) Recommended = true;
         return categoryOpt(opt, optKey, itemKey, groupKey, type, Recommended);
       }).join("");
