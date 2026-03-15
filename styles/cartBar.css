@@ -58,3 +58,18 @@
   background:var(--bg-muted);
   border-radius:12px;
 }
+.picker-group{
+  margin-bottom: var(--space-3);
+}
+.picker-panel{
+  position:relative;
+  background:white;
+  padding:var(--space-2);
+  border-radius:14px;
+}
+
+.picker-list{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+}
