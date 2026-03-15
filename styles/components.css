@@ -81,10 +81,11 @@
   color:white;
   font-weight:600;
 }
-.picker-list button{
+.picker-option{
   width: 110px;
-  font-size:12px;
+  font-size:var(--font-s);
   white-space: nowrap;
+  padding: 8px 10px;
 }
 .picker-title{
   font-size: 15px;
