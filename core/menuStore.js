@@ -9,13 +9,13 @@ export let MENU = {};
 export async function loadMenu(){
 
   /* 1. tải menu chuẩn */
-  const data = await fetch("/data/menu.json", { cache: "no-store" }).then(r => r.json());
+  const base = await fetch("/data/menu.json", { cache: "no-store" }).then(r => r.json());
 
   /*  sửa menu */
   //normalizeMenu(data);
 
   /* 2. kiểm tra schema */
-  validateMenu(data);
+  validateMenu(base);
 
   /* 3. tải state vận hành */
   let state={};
