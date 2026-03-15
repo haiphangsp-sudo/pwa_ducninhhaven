@@ -1,5 +1,7 @@
 {
-  "version":2.0,
+  "meta":{
+    "version":2.0
+  },
   "intro":{
     "label":{"vi":"Giới thiệu","en":"Introduction"},
     "allow":["room","table","area"],
