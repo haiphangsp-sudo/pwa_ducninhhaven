@@ -49,7 +49,7 @@ export function renderHub(){
   //${renderIcon(key,"hub-icon")}
   menuEl.innerHTML = panels.map(key=>`
 
-    <button class="hub-btn btn center${panel===key ? " active" : ""}"
+    <button class="hub-btn btn center${panel===key ? " is-active" : ""}"
       data-key="${key}">
       <span class="hub-icon">
         <img src="/icons/${key}.svg">
@@ -68,6 +68,8 @@ export function renderHub(){
   menuEl.querySelectorAll(".hub-btn").forEach(btn=>{
 
     btn.onclick = ()=>{
+
+      if(btn.classList.contains("is-active")) return;
 
       const key = btn.dataset.key;
 
