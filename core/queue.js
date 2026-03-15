@@ -34,6 +34,11 @@ function emitRecovery(state){
 export function enqueue(payload){
 
   const queue=loadQueue();
+  const MAX_QUEUE = 50;
+
+  if (queue.length >= MAX_QUEUE) {
+    queue.shift();
+  }
 
   queue.push({
     id:crypto.randomUUID(),
@@ -77,31 +82,16 @@ export async function processQueue(){
 
       let body;
 
-      if(job.type==="cart"){
-
         body={
           id:req.id,
-          type:"cart",
+          type: job.type,
           place:job.place,
           placeType:job.placeType,
-          room:anchor?.type==="room"?anchor.id:"Guest",
+          room: anchor?.type === "room" ? anchor.id : "Guest",
+          device: navigator.userAgent,
+          time: Date.now(),
           items:job.items
         };
-
-      }else{
-
-        body={
-          id:req.id,
-          type:"instant",
-          place:job.place,
-          placeType:job.placeType,
-          room:anchor?.type==="room"?anchor.id:"Guest",
-          category:job.category,
-          item:job.item,
-          option:job.option
-        };
-
-      }
 
       await sendRequest(body);
 

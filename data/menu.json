@@ -1,4 +1,5 @@
 {
+  "version":1.0,
   "intro":{
     "label":{"vi":"Giới thiệu","en":"Introduction"},
     "allow":["room","table","area"],
@@ -8,16 +9,28 @@
       "welcome":{
         "label":{"vi":"Chào mừng","en":"Welcome"},
         "content":{
-          "vi":"Chào mừng bạn đến với Duc Ninh Haven. Chúng tôi hy vọng bạn có những giờ phút nghỉ ngơi yên tĩnh và thư giãn tại đây.",
-          "en":"Welcome to Duc Ninh Haven. We hope you enjoy a quiet and relaxing stay with us."
+          "vi":[
+            "Chào mừng bạn đến với Duc Ninh Haven.", 
+            "Chúng tôi hy vọng bạn có những giờ phút nghỉ ngơi yên tĩnh và thư giãn tại đây."
+        ],
+          "en":[
+            "Welcome to Duc Ninh Haven.",
+            "We hope you enjoy a quiet and relaxing stay with us."
+        ]
         },
         "active":true
       },
       "about":{
         "label":{"vi":"Về chúng tôi","en":"About Us"},
         "content":{
-          "vi":"Chúng tôi không cố trở thành một nơi ai cũng thích. Chúng tôi chỉ cố trở thành một nơi mà một số người cần.",
-          "en":"We're not trying to be a place everyone likes. We're just trying to be a place that some people need."
+          "vi":[
+            "Chúng tôi không cố trở thành một nơi ai cũng thích.",
+            "Chúng tôi chỉ cố trở thành một nơi mà một số người cần."
+          ],
+          "en":[
+            "We're not trying to be a place everyone likes.",
+            "We're just trying to be a place that some people need."
+          ]
         },
         "active":true
       }
@@ -42,6 +55,7 @@
               "en":"Traditional Vietnamese chicken noodle soup with herbs."
             },
             "price":50000,
+            "unit": "item",
             "active":true
           },
           "bread":{
@@ -51,6 +65,7 @@
               "en":"Vietnamese pan bread with egg, pate and sausage."
             },
             "price":55000,
+            "unit": "item",
             "active":true
           },
           "broken_rice":{
@@ -60,6 +75,7 @@
               "en":"Vietnamese broken rice served with grilled pork and egg."
             },
             "price":55000,
+            "unit": "item",
             "active":true
           }
         }
@@ -77,6 +93,7 @@
               "en":"Steamed rice served with sautéed seafood."
             },
             "price":75000,
+            "unit": "item",
             "active":true
           },
           "chicken_rice":{
@@ -86,6 +103,7 @@
               "en":"Simple chicken rice with vegetables and dipping sauce."
             },
             "price":70000,
+            "unit": "item",
             "active":true
           }
         }
@@ -103,6 +121,7 @@
               "en":"A simple Vietnamese home-style dinner."
             },
             "price":90000,
+            "unit": "item",
             "active":true
           },
           "bbq":{
@@ -112,6 +131,7 @@
               "en":"Outdoor barbecue served with vegetables and sauces."
             },
             "price":120000,
+            "unit": "item", 
             "active":true
           }
         }
@@ -137,6 +157,7 @@
               "en":"Traditional Vietnamese drip coffee."
             },
             "price":30000,
+            "unit": "item",
             "active":true
           },
           "iced":{
@@ -146,6 +167,7 @@
               "en":"Vietnamese iced black coffee."
             },
             "price":35000,
+            "unit": "item",
             "active":true
           }
         }
@@ -163,6 +185,7 @@
               "en":"Espresso with steamed milk and foam."
             },
             "price":45000,
+            "unit": "item",
             "active":true
           },
           "iced":{
@@ -172,6 +195,7 @@
               "en":"Chilled cappuccino."
             },
             "price":45000,
+            "unit": "item",
             "active":true
           }
         }
@@ -189,6 +213,7 @@
               "en":"Central Vietnam style salted coffee."
             },
             "price":40000,
+            "unit": "item",
             "active":true
           },
           "iced":{
@@ -198,6 +223,7 @@
               "en":"Iced salted coffee."
             },
             "price":40000,
+            "unit": "item",
             "active":true
           }
         }
@@ -215,6 +241,7 @@
               "en":"Light herbal tea."
             },
             "price":25000,
+            "unit": "item",
             "active":true
           },
           "iced":{
@@ -224,6 +251,7 @@
               "en":"Refreshing iced tea."
             },
             "price":0,
+            "unit": "item",
             "active":true
           }
         }
@@ -256,6 +284,7 @@
               "en":"Laundry and drying services are charged by weight (kg)."
             },
             "price":30000,
+            "unit": "kg",
             "active":true
           }
         }
@@ -303,6 +332,7 @@
               "en":"Gentle herbal foot bath in the morning."
             },
             "price":80000,
+            "unit": "session",
             "active":true
           },
           "afternoon":{
@@ -312,6 +342,7 @@
               "en":"Relaxing herbal foot bath in the afternoon."
             },
             "price":80000,
+            "unit": "session",
             "active":true
           },
           "evening":{
@@ -321,6 +352,7 @@
               "en":"Relaxing foot bath before bedtime."
             },
             "price":90000,
+            "unit": "session",
             "active":true
           }
         }
