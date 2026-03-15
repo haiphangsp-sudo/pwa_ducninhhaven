@@ -101,7 +101,7 @@ function renderCommon(group, groupKey) {
   const type = group.ui;
   const Group = Object.entries(group.items);
   Group.filter(([, item]) => item.active !== false);
-  const defaultKey = item.defaultOption || options[0]?.[0];
+  if (item.defaultOption) Recommended = true;
   return Group.map(([itemKey, item]) => {
       const Title = translate(item.label);
       const cards = Object.entries(item.options || {});
