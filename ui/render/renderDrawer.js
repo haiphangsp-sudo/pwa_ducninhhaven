@@ -58,7 +58,7 @@ function renderDrawer(){
 document.addEventListener("click", (e) => {
   
   const i = e.target.dataset.i;
-  const row = e.target.closest(".drawer-item");
+  const row = e.target.closest(".drawer__item");
   if(!row) return;
 
   if(e.target.classList.contains("qty-plus")){
@@ -87,7 +87,7 @@ document.addEventListener("click", (e) => {
 
 function reindexDrawer() {
   document
-    .querySelectorAll(".drawer-item")
+    .querySelectorAll(".drawer__item")
     .forEach((row, i) => {
       row.dataset.i = i;
     });
