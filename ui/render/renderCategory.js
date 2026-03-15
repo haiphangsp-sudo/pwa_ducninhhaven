@@ -40,25 +40,26 @@ export function renderCategory(key){
     const Btn = e.target.closest("button[data-ui]");
     if (!Btn) return;
   
-    const data = Btn.dataset;
-    if(data.ui==="instant"){
-      if(!ensureActive()) return;
+    const payload = {
+      ui: Btn.dataset.ui,
+      category: Btn.dataset.category,
+      item: Btn.dataset.item,
+      option: Btn.dataset.option,
+      qty: 1
+    };
 
-      sendInstant({
-        qty: 1,
-        category: Btn.dataset.category,
-        code: Btn.dataset.item
-      });
-    }
-    if(data.ui==="cart"){
-      if(!ensureActive()) return;
-      addToCart({
-        category: Btn.dataset.category,
-        item: Btn.dataset.item,
-        option: Btn.dataset.option
-      });
-    }
+    dispatchAction(payload);
   };
+}
+
+function dispatchAction(payload) {
+  if(!ensureActive()) return;
+  if(payload.ui==="instant"){
+    sendInstant(payload);
+  }
+  if(payload.ui==="cart"){
+    addToCart(payload);
+  }
 }
 /* ========================================================= */
 
