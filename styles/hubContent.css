@@ -92,7 +92,7 @@
   margin: var(--space-2);
 }
 
-.card-title::before{
+.menu-card__title::before{
   content: "";
   width: 28px;
   height: 28px;
@@ -107,20 +107,20 @@
   line-height: 1;
   flex-shrink: 0;
 }
-.cart-title.is-default::before {
+.menu-card__title.is-default::before {
   content:"✓";
   font-size: 14px;
 }
-.card-title.service-cleaning::before{
+.menu-card__title.service-cleaning::before{
   content:"🧹";
 }
-.card-title.service-laundry::before{
+.menu-card__title.service-laundry::before{
   content:"👕";
 }
-.card-title.service-reception::before{
+.menu-card__title.service-reception::before{
   content:"🔔";
 }
-.card-title.service-pay:before{
+.menu-card__title.service-pay:before{
   content:"💳";
 }
 
