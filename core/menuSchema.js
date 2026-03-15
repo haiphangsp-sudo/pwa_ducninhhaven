@@ -12,45 +12,45 @@ NORMALIZE
 
 export function normalizeMenu(menu){
 
-  for(const catKey in menu){
+  for (const catKey in menu) {
 
     const cat = menu[catKey]
 
-    if(cat.active === undefined)
+    if (typeof cat !== "object" || cat === null) continue
+
+    if (cat.active === undefined)
       cat.active = true
 
-    if(!cat.allow)
-      cat.allow = ["room","table"]
+    if (!cat.allow)
+      cat.allow = ["room", "table"]
+    if (!cat.items) continue
 
-    for(const itemKey in cat.items){
+    for (const itemKey in cat.items) {
 
       const item = cat.items[itemKey]
+      if (typeof item !== "object" || item === null) continue
 
-      if(item.active === undefined)
+      if (item.active === undefined)
         item.active = true
 
-      if(cat.ui === "cart" || cat.ui === "instant"){
+      if (cat.ui === "cart" || cat.ui === "instant") {
+        if (!item.options) {
 
-        for(const optKey in item.options){
+          for (const optKey in item.options) {
 
-          const opt = item.options[optKey]
+            const opt = item.options[optKey]
+            if (typeof opt !== "object") continue
 
-          if(opt.active === undefined)
-            opt.active = true
+            if (opt.active === undefined)
+              opt.active = true
+          }
 
-          if(opt.price === undefined)
-            opt.price = 0
-
-          if(opt.price > 0 && !opt.unit)
-            opt.unit = "item"
         }
 
       }
 
     }
-
   }
-
   return menu
 }
 
