@@ -1,6 +1,6 @@
 /* styles/hubContent.css */
 
-#hubContent{
+.hub-content{
   overflow-y:auto;
   overscroll-behavior:contain;
   -webkit-overflow-scrolling:touch;
@@ -9,6 +9,11 @@
   flex: 1;
   padding-bottom: 110px;
   contain: layout paint;
+}
+.page-container{
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: 0 var(--space-3);
 }
 .article{
   max-width:620px;
@@ -118,10 +123,6 @@
 }
 .card-title.service-pay:before{
   content:"💳";
-}
-
-#hubContent{
-  overflow-y:auto;
 }
 
 .menu-group{
