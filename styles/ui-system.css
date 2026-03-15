@@ -2,18 +2,14 @@
    HAVEN UI SYSTEM
 ================================ */
 
-/* ---------- Card ---------- */
 
 .card{
-  background:#fff;
-  border-radius:18px;
-  padding:20px;
-  box-shadow:0 2px 8px rgba(0,0,0,.06);
-  display:flex;
-  flex-direction:column;
-  gap:10px;
+  background:var(--bg-soft);
+  border:1px solid var(--border-soft);
+  border-radius:var(--radius-l);
+  box-shadow:var(--shadow-soft);
+  padding:var(--space-3);
 }
-
 /* card header */
 
 .card-title{
