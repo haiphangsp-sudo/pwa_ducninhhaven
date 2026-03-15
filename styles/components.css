@@ -132,4 +132,9 @@
   color:var(--brand);
   margin-top:var(--space-2);
 }
-
+.data-recommended{
+  content:"Recommended";
+  font-size: 11px;
+  color: var(--brand);
+  margin-left: 6px;
+}
