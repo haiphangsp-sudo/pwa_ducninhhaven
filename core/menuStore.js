@@ -9,7 +9,7 @@ export let MENU = {};
 export async function loadMenu(){
 
   /* 1. tải menu chuẩn */
-  const baseSchema = await fetch("/data/menu.schema.json", { cache: "no-store" }).then(r => r.json());
+  const baseSchema = await fetch("/data/menu.json", { cache: "no-store" }).then(r => r.json());
   /*  sửa menu */
   const base = normalizeMenu(baseSchema);
 
