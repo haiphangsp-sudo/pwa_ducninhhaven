@@ -43,8 +43,14 @@
 /* primary */
 
 .btn-primary{
-  background:#2f4f3e;
-  color:white;
+  background: var(--brand);
+  color: var(--text-invert);
+}
+.btn-primary:hover{
+  background:var(--brand-hover);
+}
+.btn-primary:active{
+  transform:scale(.96);
 }
 
 /* secondary */
