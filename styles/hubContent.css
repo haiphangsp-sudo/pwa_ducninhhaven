@@ -96,6 +96,7 @@
   content: "";
   width: 28px;
   height: 28px;
+  display: flex;
   justify-items: center;
   align-items: center;
   border-radius: 8px;
@@ -114,19 +115,15 @@
 }
 .menu-card__title.service-cleaning::before{
   content:"🧹";
-  display: flex;
 }
 .menu-card__title.service-laundry::before{
   content:"👕";
-  display: flex
 }
 .menu-card__title.service-reception::before{
   content:"🔔";
-  display: flex
 }
 .menu-card__title.service-pay:before{
   content:"💳";
-  display: flex
 }
 
 .menu-group{
