@@ -1,5 +1,9 @@
 {
-  "version":2.0,
+  "meta":{
+    "version":2.0,
+    "updated":"2026-03-20",
+    "lang":["vi","en"]
+  },
   "intro":{
     "label":{"vi":"Giới thiệu","en":"Introduction"},
     "allow":["room","table","area"],
