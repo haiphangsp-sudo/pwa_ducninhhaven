@@ -107,7 +107,6 @@ function renderCommon(group, groupKey) {
       const cards = Object.entries(item.options || {});
       cards.filter(([, opt]) => opt.active !== false)
       .map(([optKey, opt]) => {
-        if (opt === defaultKey) Recommended = true;
         return categoryOpt(opt, optKey, itemKey, groupKey, type, Recommended);
       }).join("");
       return `
