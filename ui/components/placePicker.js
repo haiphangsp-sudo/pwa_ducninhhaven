@@ -70,7 +70,7 @@ function renderGroup(type,data){
         closeOverlay();
     };
   });
-  document.querySelector(".picker-label").textContent = translate("select_place");
+  document.querySelector(".picker-panel_title").textContent = translate("select_place");
   closeOverlay();
 }
 
