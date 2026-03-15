@@ -11,7 +11,7 @@ export function categoryOpt(opt, optKey, itemKey, categoryKey, type, Recommended
     return `
         <div class="card">
             <div class="stack menu-cart__info">
-                <div class="card-title service-${optKey} menu-card__title ${Recommended ? "is-default" : ""}">${title}</div>
+                <div class="service-${optKey} menu-card__title ${Recommended ? "is-default" : ""}">${title}</div>
                 ${desc ? `<div class="card-desc menu-cart__desc">${desc}</div>` : ""}
             </div>
             <div class="row menu-cart__action card-bottom">

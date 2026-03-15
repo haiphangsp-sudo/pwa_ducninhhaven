@@ -97,7 +97,7 @@
   width: 28px;
   height: 28px;
   display: flex;
-  text-align: center;
+  justify-items: center;
   align-items: center;
   border-radius: 8px;
   background: var(--brand-soft);
@@ -109,7 +109,8 @@
 }
 .menu-card__title.is-default::before {
   content:"✓";
-  font-size: 14px;
+  font-size: 16px;
+  font-weight: 600;
 }
 .menu-card__title.service-cleaning::before{
   content:"🧹";
