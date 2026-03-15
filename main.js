@@ -10,7 +10,6 @@ import { resetIdleTimer } from "./core/idle.js";
 import { loadMenu, MENU } from "./core/menuStore.js";
 import { detectRecovery } from "./core/queue.js";
 import { getContext, resolvePlace, setAnchor, setActive, normalizeContext } from "./core/context.js";
-import { updateNavContext } from "./ui/components/navBar.js"
 
 /* ---------- VERSION ---------- */
 // - Đảm bảo phiên bản SW khớp với phiên bản app
@@ -103,10 +102,6 @@ function showMenuUpdated(){
   setTimeout(()=>el.remove(),2500);
 }
 
-function loadContext(){ 
-  window.addEventListener("contextchange", updateNavContext);
-}
-
 
 /* ---------- BOOT ---------- */
 // - Hàm khởi động ứng dụng, chạy tất cả các thiết lập cần thiết và render giao diện lần đầu
@@ -134,7 +129,7 @@ async function boot(){
   });
 
   watchMenu();
-  loadContext();
+  
 }
 
 boot();

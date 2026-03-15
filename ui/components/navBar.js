@@ -4,7 +4,7 @@ import { initLangSwitch, translate } from "../utils/translate.js";
 import { getContext } from "../../core/context.js";
 import { PLACES } from "../../data/places.js";
 import { openPicker } from "./placePicker.js";
-
+import { updateNavContext } from "./updateData.js";
 
 /* ===================================================== */
   let identityIcon;
@@ -62,30 +62,4 @@ function formatLocation(ctx){
   return translate(place.label);
 
 }
-/* ===================================================== */
-/* EXTERNAL REFRESH */
 
-export function updateNavContext(){
-  
-  if(!identityIcon || !identityLabel || !locLabel) return;
-
-  const ctx = getContext();
-  const anchor = ctx?.anchor;
-  const active = ctx?.active;
-  let labelLeft="haven"; 
-  if(anchor?.type==="room") {
-    labelLeft=anchor.id;
-  }else if(anchor?.type==="table") {
-    labelLeft="table_guest";
-  }else if(anchor?.type==="area") {
-    labelLeft="area_guest";
-  }
-  identityIcon.textContent = getIcon(anchor?.type);
-  identityLabel.textContent = translate(labelLeft);
-  //identityLabel.textContent = translate(anchor?.type === "room" ? anchor.id : anchor?.type === "table" ? "table_guest" : "area_guest");
-  if(!ctx){
-    locLabel.textContent = translate("select_place");
-  }else{
-    locLabel.textContent = formatLocation(ctx);
-  }
-}
