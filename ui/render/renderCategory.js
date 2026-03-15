@@ -20,16 +20,10 @@ export function renderCategory(key){
     return;
   }
 
-  switch(category.ui){
-
-    case "article":
-      contentEl.innerHTML = renderArticle(category);
-      break;
-
-    case "default":
+  if (category.ui === "article") {
+    contentEl.innerHTML = renderArticle(category);
+  }else{
       contentEl.innerHTML = renderCommon(category, key);
-      break;
-
   }
 
   contentEl.onclick = e => {
