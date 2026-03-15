@@ -4,7 +4,7 @@ import { initLangSwitch, translate } from "../utils/translate.js";
 import { getContext } from "../../core/context.js";
 import { PLACES } from "../../data/places.js";
 import { openPicker } from "./placePicker.js";
-import { updateNavContext } from "./updateData.js";
+import { updateNavContext } from "../interactions/updateData.js";
 
 /* ===================================================== */
   let identityIcon;
