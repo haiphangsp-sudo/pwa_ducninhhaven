@@ -145,10 +145,10 @@ export function validateMenu(menu){
 
   if(errors.length){
 
-    console.error("MENU_SCHEMA_ERROR")
-    console.table(errors)
+    console.error("MENU_SCHEMA_ERROR");
+    console.table(errors);
 
-    throw new Error("Menu schema invalid")
+    throw new Error("Menu schema invalid");
 
   }
 
