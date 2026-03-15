@@ -3,7 +3,7 @@
 // Lưu trong localStorage để tồn tại qua các phiên, nhưng có TTL để tránh lỗi khi khách quên đóng app
 
 import { PLACES } from "../data/places.js";
-import { updateNavContext } from "../ui/interactions/updateData.js";
+import { updateNavContext } from "../ui/components/navBar.js";
 
 const KEY="haven_context";
 const ACTIVE_TTL = 30*60*1000;      // 60 phút
