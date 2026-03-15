@@ -6,6 +6,8 @@ import { getContext } from "../../core/context.js";
 import { translate } from "../utils/translate.js";
 import { categoryOpt } from "../components/categoryOption.js";
 import { openPicker } from "../components/placePicker.js"
+import { renderCategoryNew } from "./themeCategory.js";
+
 
 export function renderCategory(key){
 
@@ -28,7 +30,8 @@ export function renderCategory(key){
       break;
 
     case "cart":
-      contentEl.innerHTML = renderCommon(category, key,"cart");
+      //contentEl.innerHTML = renderCommon(category, key,"cart");
+      renderCategoryNew(category);
       break;
   }
 
