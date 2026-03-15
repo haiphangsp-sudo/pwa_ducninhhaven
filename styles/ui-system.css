@@ -19,6 +19,7 @@
   align-items: center;
   gap: 12px;
   letter-spacing: .02em;
+  color: var(--brand);
 }
 
 /* card description */

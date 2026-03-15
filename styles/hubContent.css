@@ -107,6 +107,10 @@
   line-height: 1;
   flex-shrink: 0;
 }
+.cart-title.is-default::before {
+  content:"✓";
+  font-size: 14px;
+}
 .card-title.service-cleaning::before{
   content:"🧹";
 }
