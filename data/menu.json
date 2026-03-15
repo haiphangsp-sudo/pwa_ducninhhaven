@@ -247,7 +247,6 @@
               "vi":"Yêu cầu dọn phòng.",
               "en":"Request room cleaning."
             },
-            "price":0,
             "active":true
           },
           "laundry":{
