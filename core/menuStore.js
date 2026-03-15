@@ -12,7 +12,7 @@ export async function loadMenu(){
   const data = await fetch("/data/menu.json", { cache: "no-store" }).then(r => r.json());
 
   /*  sửa menu */
-  normalizeMenu(data);
+  //normalizeMenu(data);
 
   /* 2. kiểm tra schema */
   validateMenu(data);
