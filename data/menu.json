@@ -32,7 +32,7 @@
     "items":{
       "breakfast":{
         "label":{"vi":"Bữa sáng","en":"Breakfast"},
-        "defaultOption":"pho",
+        "recommend":"pho",
         "active":true,
         "options":{
           "pho":{
@@ -67,7 +67,7 @@
 
       "lunch":{
         "label":{"vi":"Bữa trưa","en":"Lunch"},
-        "defaultOption":"seafood",
+        "recommend":"seafood",
         "active":true,
         "options":{
           "seafood":{
@@ -93,7 +93,7 @@
 
       "dinner":{
         "label":{"vi":"Bữa tối","en":"Dinner"},
-        "defaultOption":"bbq",
+        "recommend":"bbq",
         "active":true,
         "options":{
           "local_rice":{
@@ -127,7 +127,7 @@
     "items":{
       "blackcoffee":{
         "label":{"vi":"Cà phê đen","en":"Black Coffee"},
-        "defaultOption":"hot",
+        "recommend":"hot",
         "active":true,
         "options":{
           "hot":{
@@ -153,7 +153,7 @@
 
       "cappuccino":{
         "label":{"vi":"Cappuccino","en":"Cappuccino"},
-        "defaultOption":"hot",
+        "recommend":"hot",
         "active":true,
         "options":{
           "hot":{
@@ -179,7 +179,7 @@
 
       "saltcoffee":{
         "label":{"vi":"Cà phê muối","en":"Salt Coffee"},
-        "defaultOption":"hot",
+        "recommend":"hot",
         "active":true,
         "options":{
           "hot":{
@@ -293,7 +293,7 @@
     "items":{
       "footbath":{
         "label":{"vi":"Ngâm chân thảo dược","en":"Herbal Foot Bath"},
-        "defaultOption":"evening",
+        "recommend":"evening",
         "active":true,
         "options":{
           "morning":{

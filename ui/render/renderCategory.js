@@ -105,7 +105,7 @@ function renderCommon(group, groupKey) {
       const cards = Object.entries(item.options || {})
       .filter(([, opt]) => opt.active !== false)
       .map(([optKey, opt]) => {
-        return categoryOpt(opt, optKey, itemKey, groupKey, type, optKey===item.defaultOption);
+        return categoryOpt(opt, optKey, itemKey, groupKey, type, optKey===item.recommend);
       }).join("");
       return `
         <div class="menu-group">
