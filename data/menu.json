@@ -205,7 +205,7 @@
 
       "tea":{
         "label":{"vi":"Trà","en":"Tea"},
-        "defaultOption":"hot",
+        "recommend":"hot",
         "active":true,
         "options":{
           "hot":{
