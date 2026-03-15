@@ -26,8 +26,8 @@ export function validateMenu(menu){
         req(item,"options",`${catKey}.${itemKey}`);
         req(item,"recommend",`${catKey}.${itemKey}`);
 
-        if(!item.options[item.defaultOption])
-          errors.push(`${catKey}.${itemKey}: defaultOption not exists`);
+        if(!item.options[item.recommend])
+          errors.push(`${catKey}.${itemKey}: recommend not exists`);
 
         for(const [optKey,opt] of Object.entries(item.options||{})){
           req(opt,"label",`${catKey}.${itemKey}.${optKey}`);
