@@ -2,6 +2,7 @@
 //   Định nghĩa schema cho menu, đảm bảo menu tải về có cấu trúc đúng để app hoạt động ổn định    
 
 
+
 const VALID_UI = ["cart","instant","article"]
 const VALID_UNIT = ["item","session","kg","hour","person","set","glass"]
 const VALID_ALLOW = ["room","table","area"]
@@ -12,45 +13,45 @@ NORMALIZE
 
 export function normalizeMenu(menu){
 
-  for (const catKey in menu) {
+  for(const catKey in menu){
 
     const cat = menu[catKey]
 
-    if (typeof cat !== "object" || cat === null) continue
-
-    if (cat.active === undefined)
+    if(cat.active === undefined)
       cat.active = true
 
-    if (!cat.allow)
-      cat.allow = ["room", "table"]
-    if (!cat.items) continue
+    if(!cat.allow)
+      cat.allow = ["room","table"]
 
-    for (const itemKey in cat.items) {
+    for(const itemKey in cat.items){
 
       const item = cat.items[itemKey]
-      if (typeof item !== "object" || item === null) continue
 
-      if (item.active === undefined)
+      if(item.active === undefined)
         item.active = true
 
-      if (cat.ui === "cart" || cat.ui === "instant") {
-        if (!item.options) {
+      if(cat.ui === "cart" || cat.ui === "instant"){
 
-          for (const optKey in item.options) {
+        for(const optKey in item.options){
 
-            const opt = item.options[optKey]
-            if (typeof opt !== "object") continue
+          const opt = item.options[optKey]
 
-            if (opt.active === undefined)
-              opt.active = true
-          }
+          if(opt.active === undefined)
+            opt.active = true
 
+          if(opt.price === undefined)
+            opt.price = 0
+
+          if(opt.price > 0 && !opt.unit)
+            opt.unit = "item"
         }
 
       }
 
     }
+
   }
+
   return menu
 }
 
