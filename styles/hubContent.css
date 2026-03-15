@@ -12,8 +12,8 @@
 }
 .page-container{
   max-width: var(--content-max);
-  margin: 0 auto;
-  padding: 0 var(--space-3);
+  margin: var(--space-4) auto;
+  padding: var(--space-2);
 }
 .article{
   max-width:620px;
