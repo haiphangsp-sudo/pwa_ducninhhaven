@@ -12,6 +12,8 @@ import { renderCategoryNew } from "./themeCategory.js";
 export function renderCategory(key){
 
   const contentEl = document.querySelector(".category-panel");
+  if(!contentEl) return;
+
   const category = MENU[key];
 
   if(!category){
