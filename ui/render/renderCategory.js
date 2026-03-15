@@ -31,7 +31,7 @@ export function renderCategory(key){
 
     case "cart":
       //contentEl.innerHTML = renderCommon(category, key,"cart");
-      renderCategoryNew(category);
+      renderCategoryNew(key);
       break;
   }
 
