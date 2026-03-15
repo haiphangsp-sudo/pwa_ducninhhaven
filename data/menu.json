@@ -253,8 +253,8 @@
           "laundry":{
             "label":{"vi":"Giặt đồ","en":"Laundry Service"},
             "description":{
-              "vi":"Giặt và sấy quần áo.",
-              "en":"Laundry and drying service."
+              "vi":"Dịch vụ giặt ủi và sấy khô được tính phí theo trọng lượng (kg).",
+              "en":"Laundry and drying services are charged by weight (kg)."
             },
             "price":30000,
             "active":true
