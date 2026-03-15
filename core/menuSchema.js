@@ -24,7 +24,7 @@ export function validateMenu(menu){
 
       if(cat.ui==="cart"){
         req(item,"options",`${catKey}.${itemKey}`);
-        req(item,"defaultOption",`${catKey}.${itemKey}`);
+        req(item,"recommend",`${catKey}.${itemKey}`);
 
         if(!item.options[item.defaultOption])
           errors.push(`${catKey}.${itemKey}: defaultOption not exists`);
