@@ -4,7 +4,9 @@
 /* EXTERNAL REFRESH */
 
 export function updateNavContext(){
-  
+  const identityIcon = document.querySelector(".identity-icon");
+  const identityLabel = document.querySelector(".identity-label");
+  const locLabel = document.querySelector(".loc-label");
   if(!identityIcon || !identityLabel || !locLabel) return;
 
   const ctx = getContext();
