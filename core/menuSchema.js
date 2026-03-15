@@ -20,11 +20,7 @@ export function normalizeMenu(menu){
 
   for(const catKey in menu){
 
-    if(catKey === "version") continue;
-
     const cat = menu[catKey];
-
-    if(typeof cat !== "object" || cat === null) continue;
 
     if(cat.active === undefined)
       cat.active = true;
