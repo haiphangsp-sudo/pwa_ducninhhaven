@@ -17,7 +17,7 @@ export async function loadMenu(){
   const base = normalizeMenu(menu);
 
   /* 2. kiểm tra schema */
-  validateMenu(base);
+  validateMenu(menu);
 
   /* 3. tải state vận hành */
   let state={};
