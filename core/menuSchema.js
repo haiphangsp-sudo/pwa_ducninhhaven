@@ -18,8 +18,6 @@ export function validateMenu(menu){
 
     if(!["article","cart","instant"].includes(cat.ui))
       errors.push(`${catKey}: invalid ui`);
-    if (!Array.isArray(item.content.vi))
-      errors.push(`${catKey}: invalid content: content.vi must be array`);
 
     for(const [itemKey,item] of Object.entries(cat.items||{})){
 
