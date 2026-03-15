@@ -10,14 +10,12 @@ export async function loadMenu(){
 
   /* 1. tải menu chuẩn */
   const data = await fetch("/data/menu.json", { cache: "no-store" }).then(r => r.json());
-  const menu = data.categories;
-  const meta = data.meta;
 
   /*  sửa menu */
-  const base = normalizeMenu(menu);
+  const base = normalizeMenu(data);
 
   /* 2. kiểm tra schema */
-  validateMenu(menu);
+  validateMenu(base);
 
   /* 3. tải state vận hành */
   let state={};
