@@ -107,16 +107,16 @@ function renderCommon(group, groupKey) {
       cards.filter(([, opt]) => opt.active !== false);
       const defaultKey = item.defaultOption || options[0]?.[0];
       cards.map(([optKey, opt]) => {
-        if (optKey === defaultKey) Recommended = true;
-          return categoryOpt(opt, optKey, itemKey, groupKey, type, Recommended);
-        }).join("");
+        if (opt === defaultKey) Recommended = true;
+        return categoryOpt(opt, optKey, itemKey, groupKey, type, Recommended);
+      }).join("");
       return `
-      <div class="menu-group">
-        <h2 class="menu-group-title">${Title}</h2>
-        <div class="menu-grid grid">
-          ${cards}
+        <div class="menu-group">
+          <h2 class="menu-group-title">${Title}</h2>
+          <div class="menu-grid grid">
+            ${cards}
+          </div>
         </div>
-      </div>
-    `;
+      `;
     }).join("");
 }
