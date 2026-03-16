@@ -63,13 +63,14 @@ function ensureActive(){
 }
 /* ========================================================= */
 /* ARTICLE */
-
-
 export function renderArticle(category){
 
   const articles = Array.isArray(category.articles)
     ? category.articles
-    : [];
+    : [{
+        title: category.label,
+        body: category.content || []
+      }];
 
   const html = articles.map(article=>{
 
@@ -78,30 +79,23 @@ export function renderArticle(category){
       : [];
 
     const paragraphs = body
-      .map(text=>`<p class="article-p">${translate(text)}</p>`)
+      .map(text=>`<p class="article-p">${translate(text || "")}</p>`)
       .join("");
 
     return `
       <section class="article-block">
-
         <h2 class="article-subtitle">
-          ${translate(article.title)}
+          ${translate(article.title || "")}
         </h2>
-
         <div class="article-body">
           ${paragraphs}
         </div>
-
       </section>
     `;
 
   }).join("");
 
-  return `
-    <article class="article">
-      ${html}
-    </article>
-  `;
+  return `<article class="article">${html}</article>`;
 }
 /* ========================================================= */
 /* INSTANT */
