@@ -92,7 +92,13 @@
   margin: var(--space-2);
 }
 
-.menu-card__title::before{
+[data-service].is-default::before {
+  content:"✓";
+  display: grid;
+  font-size: 14px;
+  font-weight: 700;
+}
+[data-service]::before{
   content: "";
   width: 28px;
   height: 28px;
@@ -107,22 +113,17 @@
   line-height: 1;
   flex-shrink: 0;
 }
-.menu-card__title.is-default::before {
-  content:"✓";
-  display: grid;
-  font-size: 14px;
-  font-weight: 700;
-}
-.menu-card__title.service-cleaning::before{
+
+[data-service="cleaning"]::before{
   content:"🧹";
 }
-.menu-card__title.service-laundry::before{
+[data-service="laundry"]::before{
   content:"👕";
 }
-.menu-card__title.service-reception::before{
+[data-service="reception"]::before{
   content:"🔔";
 }
-.menu-card__title.service-pay:before{
+[data-service="pay"]:before{
   content:"💳";
 }
 
