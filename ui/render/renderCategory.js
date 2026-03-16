@@ -65,16 +65,21 @@ function ensureActive(){
 /* ARTICLE */
 function renderArticle(category){
 
+  const lang = getLanguage()
   const sections = Object.values(category.items || {})
 
   return sections
-    .filter(s => s.active !== false)
+    .filter(sec => sec.active !== false)
     .map(section => {
 
       const title = translate(section.label)
 
-      const body = (section.content || [])
-        .map(p => `<p class="card-desc">${translate(p)}</p>`)
+      const paragraphs = Array.isArray(section.content)
+        ? section.content
+        : []
+
+      const body = paragraphs
+        .map(p => `<p class="card-desc">${p?.[lang] || ""}</p>`)
         .join("")
 
       return `
