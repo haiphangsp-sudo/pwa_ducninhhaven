@@ -1,6 +1,6 @@
 // ui/render/renderCategory.js
 
-import { getCategory, getOptions} from "../../core/menuQuery.js";
+import { getArticleContent,getCategory, getOptions} from "../../core/menuQuery.js";
 import { addToCart, sendInstant } from "../../core/events.js";
 import { getContext } from "../../core/context.js";
 import { translate } from "../utils/translate.js";
@@ -65,9 +65,7 @@ function ensureActive(){
 /* ARTICLE */
 export function renderArticle(category, key) {
 
-  const group = MENU[key]
-  if (!group || !group.items) return
-
+  const group = getArticleContent(category)
   const container = document.getElementById("panel")
   if (!container) return
 
