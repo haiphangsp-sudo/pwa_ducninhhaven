@@ -69,7 +69,6 @@ function ensureActive(){
 
   const article = getArticle(panel);
   if(!article){
-    contentEl.innerHTML = "";
     return;
   }
 
