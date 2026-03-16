@@ -6,6 +6,7 @@ import { getRetryDelay } from "../services/retryPolicy.js";
 import { getContext } from "./context.js";
 
 const STORAGE_KEY="haven_queue";
+const MAX_QUEUE = 50;
 
 let processing=false;
 
@@ -34,8 +35,7 @@ function emitRecovery(state){
 export function enqueue(payload){
 
   const queue=loadQueue();
-  const MAX_QUEUE = 50;
-
+  
   if (queue.length >= MAX_QUEUE) {
     queue.shift();
   }
