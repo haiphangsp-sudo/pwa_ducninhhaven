@@ -9,8 +9,6 @@ import { openPicker } from "../components/placePicker.js";
 
 export function renderMenu(key){
 
-  if(!container) return;
-
   const category = getCategory(key);
 
   if(!category) return;
