@@ -2,7 +2,7 @@
 
 import { UI, setState } from "../../core/state.js";
 import { translate } from "../utils/translate.js";
-import { renderCategory } from "./renderCategory.js";
+import { renderMenu } from "./renderMenu.js";
 import { getCategories } from "../../core/menuQuery.js";
 
 export function renderHub(){
@@ -54,7 +54,7 @@ export function renderHub(){
         view:{ panel:key }
       });
 
-      renderCategory(key);
+      renderMenu(key);
 
     };
 
@@ -64,6 +64,6 @@ export function renderHub(){
      RENDER CATEGORY
   ======================================================= */
 
-  renderCategory(panel);
+  renderMenu(panel);
 
 }
