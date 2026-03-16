@@ -6,7 +6,7 @@
     "active":true,
     "icon":"info",
     "items":
-    [{
+    {
       "welcome":{
         "label":{"vi":"Chào mừng","en":"Welcome"},
         "content":[
@@ -23,7 +23,7 @@
           ],
         "active":true
       }
-  }]
+  }
   },
 
   "food":{
