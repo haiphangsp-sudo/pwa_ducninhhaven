@@ -8,16 +8,10 @@
     "items":{
       "welcome":{
         "label":{"vi":"Chào mừng","en":"Welcome"},
-        "content":{
-          "vi":[
-            "Chào mừng bạn đến với Duc Ninh Haven!",
-            "Chúng tôi hy vọng bạn có những giờ phút nghỉ ngơi yên tĩnh và thư giãn tại đây."
+        "content":[
+          {"vi":"Chào mừng bạn đến với Duc Ninh Haven!", "en": "Welcome to Duc Ninh Haven!"},
+          {"vi": "Chúng tôi hy vọng bạn có những giờ phút nghỉ ngơi yên tĩnh và thư giãn tại đây.","en":"We hope you enjoy a quiet and relaxing stay with us."}
         ],
-          "en":[
-            "Welcome to Duc Ninh Haven!",
-            "We hope you enjoy a quiet and relaxing stay with us."
-        ]
-        },
         "active":true
       },
       "about":{
