@@ -64,7 +64,7 @@ function ensureActive(){
 /* ========================================================= */
 /* ARTICLE */
 
- function renderIntro(panel){
+ function renderArticle(panel){
 
 
   const article = getArticle(panel);
