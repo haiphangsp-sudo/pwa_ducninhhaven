@@ -1,6 +1,6 @@
 // ui/render/renderCategory.js
 
-import { getCategory, getOptions} from "../../core/menuQuery.js";
+import { getArticleContent,getCategory, getOptions} from "../../core/menuQuery.js";
 import { addToCart, sendInstant } from "../../core/events.js";
 import { getContext } from "../../core/context.js";
 import { translate } from "../utils/translate.js";
@@ -73,7 +73,7 @@ function renderArticle(category){
       const title = translate(section.label);
       const body = Array.isArray(section.content)
         ? section.content.map(p=>`<p class="card-desc">${translate(p)}</p>`).join("")
-        : `<p class="card-desc">${translate(section.content)}</p>`;
+        : `<p class="card-desc">${translate(section.content)}</p>`.join("");
       return `
       <div class="card">
         <article class="article">
