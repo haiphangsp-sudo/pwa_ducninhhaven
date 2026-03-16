@@ -1,20 +1,24 @@
 // ui/render/renderMenu.js
 
-import { getOptions } from "../../core/menuQuery.js";
+import { getOptions, getCategory } from "../../core/menuQuery.js";
 import { addToCart, sendInstant } from "../../core/events.js";
 import { getContext } from "../../core/context.js";
 import { translate } from "../utils/translate.js";
 import { categoryOpt } from "../components/categoryOption.js";
 import { openPicker } from "../components/placePicker.js";
 
-export function renderMenu(category){
+export function renderMenu(key){
 
-  const container = document.getElementById("hubContent");
+    const container = getCategory(key);
+    if(!container) return;
+
+    const category = getCategory(key);
+    const html = document.querySelector(".category-panel");
   if(!container) return;
 
   const type = category.ui;
 
-  const html = category.items.map(item => {
+  html = category.items.map(item => {
 
     const title = translate(item.label);
 
