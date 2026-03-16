@@ -1,6 +1,6 @@
 // ui/render/renderCategory.js
 
-import { getArticleContent,getCategory, getOptions} from "../../core/menuQuery.js";
+import { getArticle,getCategory, getOptions} from "../../core/menuQuery.js";
 import { addToCart, sendInstant } from "../../core/events.js";
 import { getContext } from "../../core/context.js";
 import { translate } from "../utils/translate.js";
@@ -63,26 +63,51 @@ function ensureActive(){
 }
 /* ========================================================= */
 /* ARTICLE */
-export function renderArticle(category, key) {
+import { getArticle } from "../../core/menuQuery.js";
+import { translate } from "../utils/translate.js";
 
-  const article = getArticleContent(key)
-  if (!article) return;
+ function renderIntro(panel){
 
-  const items = (article.items || [])
-    .filter(item => item.active !== false);
+  const contentEl = document.querySelector(".category-panel");
+
+  const article = getArticle(panel);
+  if(!article){
+    contentEl.innerHTML = "";
+    return;
+  }
 
   const html = `
-  <section class="article">
-  <h1 class="article__title">${translate(category.label)}</h1>
-  ${items.map(item => `
-    <div class="article-card">
-      <h3 class="article-card__title">${translate(item.label)}</h2>
-      ${item.desc ? `<p class="article-card__desc">${translate(item.desc)}</p>` : ""}
+    <section class="intro">
+
+      <h1 class="intro-title">
+        ${translate(article.label)}
+      </h1>
+
+      <div class="intro-body">
+
+        ${article.items.map(item=>`
+
+          <article class="intro-block">
+
+            <h3 class="intro-block-title">
+              ${translate(item.label)}
+            </h3>
+
+            <p class="intro-block-text">
+              ${translate(item.content)}
+            </p>
+
+          </article>
+
+        `).join("")}
+
       </div>
-  `).join("")}
-  </section>
+
+    </section>
   `;
-document.querySelector(".category-panel").innerHTML = html;
+
+  contentEl.innerHTML = html;
+
 }
 
 /* ========================================================= */
