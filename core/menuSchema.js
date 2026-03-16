@@ -10,7 +10,7 @@ export function normalizeMenu(menu) {
     if(cat.ui===undefined)
       cat.ui="cart";
     if(cat.allow===undefined)
-      cat.allow=["room","table"];
+      cat.allow=["table"];
     if(cat.items===undefined)
       cat.items = {};
     for (const [itemKey, item] of Object.entries(cat.items || {})) {
