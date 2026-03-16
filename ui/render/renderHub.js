@@ -3,20 +3,12 @@
 import { UI, setState } from "../../core/state.js";
 import { translate } from "../utils/translate.js";
 import { renderCategory } from "./renderCategory.js";
-import { getContext } from "../../core/context.js";
 import { getCategories } from "../../core/menuQuery.js";
 
 
 export function renderHub(){
 
   const menuEl = document.getElementById("hubMenu");
-  const ctx = getContext();
-
-  const anchorType = ctx?.anchor?.type || null;
-
-  /* =======================================================
-     LỌC CATEGORY THEO allow + active
-  ======================================================= */
 
   const panels = getCategories();
   /* =======================================================
