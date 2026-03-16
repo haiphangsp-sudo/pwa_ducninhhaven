@@ -16,9 +16,9 @@ export function getCategories() {
     const out = [];
     for (const [key, cat] of Object.entries(MENU)) {
         const cat = MENU[key];
-        if (typeof cat.allow === "object") continue
+        if (typeof cat!== "object") continue
         if (cat.active === false) continue;
-        if (!cat.allow.includes(placeType)) continue;
+        if (cat.allow&&!cat.allow.includes(placeType)) continue;
         out.push({
             key,
             label: cat.label,
