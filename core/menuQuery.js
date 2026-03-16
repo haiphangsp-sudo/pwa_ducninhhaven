@@ -1,8 +1,8 @@
 //
 //
 
-import { MENU } from "./menuStore";
-import { getContext } from "./context";
+import { MENU } from "./menuStore.js";
+import { getContext } from "./context.js";
 
 
 function getPlaceType() {
