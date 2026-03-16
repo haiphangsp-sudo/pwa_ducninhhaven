@@ -77,6 +77,6 @@ export function getOptions(catKey, itemKey) {
         return out;
 }
 export function getArticleContent(articleKey) {
-    return MENU.article?.[articleKey] || null;
+    return MENU.intro?.[articleKey] || null;
 }
     
