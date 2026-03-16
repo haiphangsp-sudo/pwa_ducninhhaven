@@ -23,7 +23,7 @@ export function renderCategory(key){
   if (category.ui === "article") {
     const article = getArticle(key);
     if (!article) return;
-    contentEl.innerHTML = renderArticle(article);
+    contentEl.innerHTML = renderArticle(key);
   }else{
       contentEl.innerHTML = renderCommon(category, key);
   }
@@ -66,8 +66,10 @@ function ensureActive(){
 /* ========================================================= */
 /* ARTICLE */
 
- function renderArticle(article){
-  return `
+function renderArticle(key) {
+   const articles = getArticle(key);
+  if (!articles) return "";
+  return articles.map(article => `
     <div class="article">
       <h2 class="article-title">${translate(article.label)}</h2>
       <div class="article-content">
@@ -76,9 +78,8 @@ function ensureActive(){
     .join("")}
       </div>
     </div>
-  `;
-}
-
+  `).join("");
+  }
 /* ========================================================= */
 /* INSTANT */
 
