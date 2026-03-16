@@ -26,7 +26,7 @@ export function categoryOpt(opt, optKey, itemKey, categoryKey, type, Recommended
                     data-ui="${type}"
                     data-category="${categoryKey}"
                     data-item="${itemKey}"
-                    data-option="${optKey}">
+                    data-option="${opt.key}">
                     ${type==="cart"?translate("cart_bar.order"):translate("send_request")}
                 </button>
             </div>
