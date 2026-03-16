@@ -8,7 +8,7 @@ import { categoryOpt } from "../components/categoryOption.js";
 import { openPicker } from "../components/placePicker.js";
 
 export function renderMenu(category){
-
+if(!category) return;
   const type = category.ui;
 
   return Object.entries(category.items)
