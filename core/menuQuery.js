@@ -76,16 +76,12 @@ export function getOptions(catKey, itemKey) {
         }
         return out;
 }
-export function getArticle(hub,articleKey) {
-    const category = MENU[hub];
-    if (!category|| category.items !=="article") return null;
-    const article = category.items?.[articleKey];
-    if (!article||!article.content) return null;
+export function getArticle(key) {
+    const cat = MENU[key];
+    if (!cat) return [];
    
-    return {
-        key: articleKey,
-        label: article.label,
-        content: article.content
-    };
+    return Object.values(cat.items)
+    .filter(item=>item.active!==false)
+    
 }
     
