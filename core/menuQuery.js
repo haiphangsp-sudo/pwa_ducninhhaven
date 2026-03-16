@@ -15,7 +15,6 @@ export function getCategories() {
     const placeType = getPlaceType();
     const out = [];
     for (const [key, cat] of Object.entries(MENU)) {
-        const cat = MENU[key];
         if (typeof cat!== "object") continue
         if (cat.active === false) continue;
         if (cat.allow&&!cat.allow.includes(placeType)) continue;
