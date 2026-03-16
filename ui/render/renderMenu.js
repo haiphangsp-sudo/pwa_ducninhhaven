@@ -37,7 +37,7 @@ export function renderMenu(key){
       </div>
     `;
 
-  });
+  }).join("");
 
   
   document.querySelector(".category-panel").onclick = e => {
