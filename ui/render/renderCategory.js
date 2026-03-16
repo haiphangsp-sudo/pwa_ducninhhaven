@@ -1,6 +1,6 @@
 // ui/render/renderCategory.js
 
-import { MENU } from "../../core/menuStore.js";
+import { getCategory, getOptions} from "../../core/menuQuery.js";
 import { addToCart, sendInstant } from "../../core/events.js";
 import { getContext } from "../../core/context.js";
 import { translate } from "../utils/translate.js";
@@ -13,7 +13,7 @@ export function renderCategory(key){
   const contentEl = document.querySelector(".category-panel");
   if(!contentEl) return;
 
-  const category = MENU[key];
+  const category = getCategory(key);
 
   if(!category){
     contentEl.innerHTML="";
@@ -87,20 +87,23 @@ function renderArticle(category){
 /* ========================================================= */
 /* INSTANT */
 
-function renderCommon(group, groupKey) {
+function renderCommon(group) {
   const type = group.ui;
-  const items = Object.entries(group.items)
-  .filter(([, item]) => item.active !== false);
-  return items.map(([itemKey, item]) => {
-      const Title = translate(item.label);
-      const cards = Object.entries(item.options || {})
+  return group.items.map(item => {
+    const title = translate(item.label);
+    const options = getOptions(group.key, item.key);
+    
+    const cards = options.map(opt => {
+        const recom=item.recommend&&item.recommend.includes(opt.key);
+        return categoryOpt(opt, opt.key, item.key, group.key, type, recom);
+      })
       .filter(([, opt]) => opt.active !== false)
       .map(([optKey, opt]) => {
         return categoryOpt(opt, optKey, itemKey, groupKey, type, optKey===item.recommend);
       }).join("");
       return `
         <div class="menu-group">
-          <h2 class="menu-group-title">${Title}</h2>
+          <h2 class="menu-group-title">${title}</h2>
           <div class="menu-grid grid">
             ${cards}
           </div>

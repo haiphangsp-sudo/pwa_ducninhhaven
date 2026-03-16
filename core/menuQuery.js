@@ -43,15 +43,14 @@ export function getItems(catKey) {
     const cat = MENU[catKey];
     if (!cat) return [];
     const out = [];
-    for (const [key, item] of Object.entries(cat.items)) {
+    for (const [itemKey, item] of Object.entries(cat.items || {})) {
         if (item.active === false) continue;
         out.push({
             key: itemKey,
             label: item.label,
             price: item.price,
             unit: item.unit,
-            image: item.image,
-            options: getOptions(catKey, itemKey)
+            image: item.image
         });
     
     }
@@ -59,18 +58,18 @@ export function getItems(catKey) {
 
 }
 export function getOptions(catKey, itemKey) {
-    const cat = MENU[catKey];
-    if (!cat) return [];
+
     const item = MENU?.[catKey]?.items?.[itemKey];
         if (!item?.options) return [];
         const out = [];
-        for (const [key, opt] of Object.entries(item.options)) {
+        for (const [optKey, opt] of Object.entries(item.options)) {
             if (opt.active === false) continue;
             out.push({
                 key: optKey,
                 label: opt.label,
                 price: opt.price,
-                unit: opt.unit
+                unit: opt.unit,
+                desc: opt.description
             });
         }
         return out;
