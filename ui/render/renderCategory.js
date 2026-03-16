@@ -79,15 +79,11 @@ function renderArticle(category){
 
     const title = translate(section.label)
 
-    let body = ""
-
-    if(Array.isArray(section.content)){
-      body = section.content
-        .map(p => `<p class="card-desc">${translate(p)}</p>`)
-        .join("")
-    }else{
-      body = `<p class="card-desc">${translate(section.content || "")}</p>`
-    }
+    const content = Array.isArray(section.content) ? section.content : [section.content]
+    const body = content
+      .filter(Boolean)
+      .map(p => `<p class="card-desc">${translate(p)}</p>`)
+      .join("")
 
     parts.push(`
       <div class="card">
