@@ -1,7 +1,6 @@
 // ui/renderHub.js
 
 import { UI, setState } from "../../core/state.js";
-import { MENU } from "../../core/menuStore.js";
 import { translate } from "../utils/translate.js";
 import { renderCategory } from "./renderCategory.js";
 import { getContext } from "../../core/context.js";
@@ -34,15 +33,15 @@ export function renderHub(){
      RENDER MENU
   ======================================================= */
   //${renderIcon(key,"hub-icon")}
-  menuEl.innerHTML = panels.map(key=>`
+  menuEl.innerHTML = panels.map(cat=>`
 
-    <button class="hub-btn btn center${panel===key ? " is-active" : ""}"
-      data-key="${key}">
+    <button class="hub-btn btn center${panel===cat.key ? " is-active" : ""}"
+      data-key="${cat.key}">
       <span class="hub-icon">
-        <img src="/icons/${key}.svg">
+        <img src="/icons/${cat.key}.svg">
       </span>
       <span class="hub-label">
-        ${translate(MENU[key].label)}
+        ${translate(cat.label)}
       </span>
     </button>
 
