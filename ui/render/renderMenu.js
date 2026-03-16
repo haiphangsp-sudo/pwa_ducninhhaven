@@ -11,7 +11,7 @@ export function renderMenu(category){
 
   const type = category.ui;
 
-  return category.items.map(item => {
+  return Object.entries(category.items).map(item => {
 
     const options = getOptions(category.key, item.key);
 
