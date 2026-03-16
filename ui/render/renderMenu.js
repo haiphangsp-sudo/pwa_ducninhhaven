@@ -9,21 +9,20 @@ import { openPicker } from "../components/placePicker.js";
 
 export function renderMenu(key){
 
-  const category = getCategory(key);
+    const category = getCategory(key);
+    if(!category) return;
 
-  if(!category) return;
+    const type = category.ui;
 
-  const type = category.ui;
+    return category.items.map(item => {
 
-  return category.items.map(item => {
+        const title = translate(item.label);
+        const options = getOptions(category.key, item.key);
 
-    const title = translate(item.label);
-    const options = getOptions(category.key, item.key);
-
-    const cards = options.map(opt =>
-      categoryOpt(opt, item.key, category.key, type)
-    ).join("");
-
+        const cards = options.map(opt => {
+            return categoryOpt(opt, item.key, category.key, type)
+        }).join("");
+    
     return `
       <div class="menu-group">
 
@@ -38,10 +37,10 @@ export function renderMenu(key){
       </div>
     `;
 
-  }).join("");
+  });
 
-  const container= document.querySelector(".category-panel");
-  container.onclick = e => {
+  
+  document.querySelector(".category-panel").onclick = e => {
 
     const Btn = e.target.closest("button[data-ui]");
     if(!Btn) return;
