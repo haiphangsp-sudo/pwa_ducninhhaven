@@ -11,12 +11,12 @@ export function renderMenu(category){
 
   const type = category.ui;
 
-  return Object.entries(category.items).map(item => {
+  return Object.entries(category.items).map(([itemKey, item]) => {
 
-    const options = getOptions(category.key, item.key);
+    const options = getOptions(category.key, itemKey);
 
     const cards = options
-      .map(opt => categoryOpt(opt, item.key, category.key, type))
+      .map(opt => categoryOpt(opt, itemKey, category.key, type))
       .join("");
 
     return `
