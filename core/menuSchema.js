@@ -2,7 +2,39 @@
 //   Định nghĩa schema cho menu, đảm bảo menu tải về có cấu trúc đúng để app hoạt động ổn định    
 
 
-
+export function normalizeMenu(menu) {
+  for (const [catKey, cat] of Object.entries(menu)){
+    const cat = menu[catKey];
+    if(cat.active===undefined)
+      cat.active=true;
+    if(cat.ui===undefined)
+      cat.ui="cart";
+    if(cat.allow===undefined)
+      cat.allow=["room","table"];
+    if(cat.items===undefined)
+      cat.items = {};
+    for (const [itemKey, item] of Object.entries(cat.items || {})) {
+      if (item.active === undefined)
+        item.active = true;
+      if (item.options === undefined)
+        item.options = {};
+      if (item.recommend === undefined)
+        item.recommend = Object.keys(item.options)[0];
+      if (cat.ui === "cart" || cat.ui === "instant") {
+        for (const [optKey, opt] of Object.entries(item.options || {})) {
+          if (opt.active === undefined)
+            opt.active = true;
+          if (opt.price > 0 && !opt.unit)
+            opt.unit = "item";
+          if (opt.unit && !["item", "session", "kg", "hour", "person"].includes(opt.unit))
+            throw new Error(`Invalid unit: ${opt.unit}`);
+          
+        }
+      }
+    }
+  }
+  return menu;
+}
 export function validateMenu(menu){
 
   const errors=[];
@@ -22,6 +54,8 @@ export function validateMenu(menu){
       if(!validAllow.includes(a))
         errors.push(`Invalid allow: ${a}`);
     }
+    if(typeof cat.active!== "boolean")
+      errors.push(`${catKey}: invalid active: active must be boolean`);
     if(!["article","cart","instant"].includes(cat.ui))
       errors.push(`${catKey}: invalid ui`);
 

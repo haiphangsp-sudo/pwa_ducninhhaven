@@ -2,7 +2,7 @@
 //   Tải menu chuẩn từ server, sau đó merge với state vận hành (nếu có) để có menu hoàn chỉnh cho app
 //   Menu được lưu trong biến toàn cục MENU, các component có thể import và sử dụng
 
-import { validateMenu } from "./menuSchema.js";
+import { validateMenu, normalizeMenu } from "./menuSchema.js";
 
 export let MENU = {};
 
@@ -12,10 +12,10 @@ export async function loadMenu(){
   const base = await fetch("/data/menu.json", { cache: "no-store" }).then(r => r.json());
 
   /*  sửa menu */
-  //normalizeMenu(data);
+  const data =normalizeMenu(base);
 
   /* 2. kiểm tra schema */
-  validateMenu(base);
+  validateMenu(data);
 
   /* 3. tải state vận hành */
   let state={};
@@ -24,7 +24,7 @@ export async function loadMenu(){
   }catch{}
 
   /* 4. merge */
-  MENU = deepMerge(base,state);
+  MENU = deepMerge(data,state);
 }
 
 function deepMerge(base,patch){
