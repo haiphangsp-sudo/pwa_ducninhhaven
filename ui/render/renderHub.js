@@ -3,7 +3,7 @@
 import { UI, setState } from "../../core/state.js";
 import { translate } from "../utils/translate.js";
 import { renderCategory } from "./renderCategory.js";
-import { getCategories, getPlaceType } from "../../core/menuQuery.js";
+import {  getPlaceType } from "../../core/menuQuery.js";
 import { getCategoriesForMode } from "../../data/helpers.js";
 
 
