@@ -28,26 +28,16 @@ export function openPicker(){
   initPlacePicker()
   const anchor=getAnchor();
   
-  // phòng chỉ hiện nếu khách phòng
   if (anchor?.type === "room") {
     renderGroup("room", { [anchor.id]: PLACES.rooms[anchor.id] });
     renderGroup("table", PLACES.tables);
     renderGroup("area", PLACES.areas);
-  }else
-  
-  // khu vực chỉ hiện nếu khách khu vực
-  if(anchor?.type === "area"){
+  } else if (anchor?.type === "area") {
     renderGroup("area", PLACES.areas);
     renderGroup("table", PLACES.tables);
     clearGroup("room");
-  }else
-  // bàn chỉ hiện nếu khách bàn
-  if (anchor?.type === "table") {
-    renderGroup("table", PLACES.tables);
-    clearGroup("room");
-    clearGroup("area");
   } else {
-    renderGroup("table", PLACES.rooms);
+    renderGroup("table", PLACES.tables);
     clearGroup("room");
     clearGroup("area");
   }
