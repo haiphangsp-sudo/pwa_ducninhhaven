@@ -1,6 +1,6 @@
 // ui/render/renderCategory.js
 
-import { getArticleContent,getCategory, getOptions} from "../../core/menuQuery.js";
+import { getCategory, getOptions} from "../../core/menuQuery.js";
 import { addToCart, sendInstant } from "../../core/events.js";
 import { getContext } from "../../core/context.js";
 import { translate } from "../utils/translate.js";
@@ -63,40 +63,46 @@ function ensureActive(){
 }
 /* ========================================================= */
 /* ARTICLE */
-export function renderArticle(category){
+function renderArticle(category){
 
-  const articles = Array.isArray(category.articles)
-    ? category.articles
-    : [{
-        title: category.label,
-        body: category.content || []
-      }];
+  const items = category.items || {}
 
-  const html = articles.map(article=>{
+  const parts = []
 
-    const body = Array.isArray(article.content)
-      ? article.content
-      : [];
+  for (const key in items){
 
-    const paragraphs = body
-      .map(text=>`<p class="article-p">${translate(text || "")}</p>`)
-      .join("");
+    if (!Object.hasOwn(items,key)) continue
 
-    return `
-      <section class="article-block">
-        <h2 class="article-subtitle">
-          ${translate(article.title || "")}
-        </h2>
-        <div class="article-body">
-          ${paragraphs}
-        </div>
-      </section>
-    `;
+    const section = items[key]
 
-  }).join("");
+    if(section.active === false) continue
 
-  return `<article class="article">${html}</article>`;
+    const title = translate(section.label)
+
+    let body = ""
+
+    if(Array.isArray(section.content)){
+      body = section.content
+        .map(p => `<p class="card-desc">${translate(p)}</p>`)
+        .join("")
+    }else{
+      body = `<p class="card-desc">${translate(section.content || "")}</p>`
+    }
+
+    parts.push(`
+      <div class="card">
+        <article class="article">
+          <h2 class="card-title">${title}</h2>
+          ${body}
+        </article>
+      </div>
+    `)
+
+  }
+
+  return parts.join("")
 }
+
 /* ========================================================= */
 /* INSTANT */
 
@@ -106,7 +112,7 @@ function renderCommon(group) {
     const title = translate(item.label);
     const options = getOptions(group.key, item.key)
     const cards = options.map(opt => {
-        return categoryOpt(opt, item.key, group.key, type);
+        return categoryOpt(opt, item.key, group.key, type, item.recommend===group.key);
       }).join("");
       return `
         <div class="menu-group">
