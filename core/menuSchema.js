@@ -71,9 +71,15 @@ export function validateMenu(menu){
         req(item,"options",`${catKey}.${itemKey}`);
         req(item,"recommend",`${catKey}.${itemKey}`);
 
-        if(!item.options[item.recommend])
+        if (!Array.isArray(item.recommend)) {
           errors.push(`${catKey}.${itemKey}: recommend not exists`);
-
+        } else {
+          for (const r of item.recommend) {
+            if (!item.options?.[r]) {
+              errors.push(`${catKey}.${itemKey}: invalid recommend: ${r}`);
+            }
+          }
+        }
         for(const [optKey,opt] of Object.entries(item.options||{})){
           req(opt,"label",`${catKey}.${itemKey}.${optKey}`);
           req(opt, "active", `${catKey}.${itemKey}.${optKey}`);
