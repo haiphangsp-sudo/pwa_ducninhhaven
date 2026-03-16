@@ -10,7 +10,7 @@ import { openPicker } from "../components/placePicker.js"
 
 export function renderCategory(key){
 
-  const contentEl = document.querySelector(".category-panel");
+  const contentEl = document.getSelection(".category-panel");
   if(!contentEl) return;
 
   const category = getCategory(key);
