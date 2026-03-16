@@ -97,13 +97,13 @@ function renderArticle(category){
 /* ========================================================= */
 /* INSTANT */
 
-function renderCommon(group) {
-  const type = group.ui;
-  return group.items.map(item => {
+function renderCommon(category) {
+  const type = category.ui;
+  return category.items.map(item => {
     const title = translate(item.label);
-    const options = getOptions(group.key, item.key)
+    const options = getOptions(category.key, item.key)
     const cards = options.map(opt => {
-        return categoryOpt(opt, item.key, group.key, type, item.recommend===group.key);
+        return categoryOpt(opt, item.key, category.key, type, item.recommend===category.key);
       }).join("");
       return `
         <div class="menu-group">
