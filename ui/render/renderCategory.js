@@ -71,7 +71,7 @@ const articles = Array.isArray(category.articles)
       const title = translate(article.label);
       const body = Array.isArray(article.content)
         ? article.content : [];
-      const paragraphs = body
+      body
         .map(text =>`<p class="card-desc">${translate(text)}</p>`)
           .join("");
       return `
