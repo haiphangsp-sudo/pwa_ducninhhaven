@@ -17,7 +17,7 @@ export function renderMenu(key){
 
   const type = category.ui;
 
-  const html = category.items.map(item => {
+  return category.items.map(item => {
 
     const title = translate(item.label);
     const options = getOptions(category.key, item.key);
