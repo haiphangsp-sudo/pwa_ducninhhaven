@@ -84,7 +84,7 @@
 
       "lunch":{
         "label":{"vi":"Bữa trưa","en":"Lunch"},
-        "recommend":"seafood",
+        "recommend":["seafood"],
         "active":true,
         "options":{
           "seafood":{
@@ -112,7 +112,7 @@
 
       "dinner":{
         "label":{"vi":"Bữa tối","en":"Dinner"},
-        "recommend":"bbq",
+        "recommend":["bbq"],
         "active":true,
         "options":{
           "local_rice":{
@@ -149,7 +149,7 @@
     "items":{
       "blackcoffee":{
         "label":{"vi":"Cà phê đen","en":"Black Coffee"},
-        "recommend":"hot",
+        "recommend":["hot"],
         "active":true,
         "options":{
           "hot":{
@@ -177,7 +177,7 @@
 
       "cappuccino":{
         "label":{"vi":"Cappuccino","en":"Cappuccino"},
-        "recommend":"hot",
+        "recommend":["hot"],
         "active":true,
         "options":{
           "hot":{
@@ -205,7 +205,7 @@
 
       "saltcoffee":{
         "label":{"vi":"Cà phê muối","en":"Salt Coffee"},
-        "recommend":"hot",
+        "recommend":["hot"],
         "active":true,
         "options":{
           "hot":{
@@ -233,7 +233,7 @@
 
       "tea":{
         "label":{"vi":"Trà","en":"Tea"},
-        "recommend":"hot",
+        "recommend":["hot"],
         "active":true,
         "options":{
           "hot":{
