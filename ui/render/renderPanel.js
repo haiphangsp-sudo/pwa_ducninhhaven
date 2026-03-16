@@ -4,7 +4,7 @@ import { renderMenu } from "./renderMenu.js";
 
 export function renderPanel(key){
 
-  const container = document.getElementById("hubContent");
+  const container = document.querySelector(".category-panel");
   if(!container) return;
 
   const category = getCategory(key);
