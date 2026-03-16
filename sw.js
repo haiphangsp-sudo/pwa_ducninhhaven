@@ -1,6 +1,6 @@
 // sw.js
 //Offline-first static caching (không cache POST).
-const CACHE_NAME = "haven-static-v23";
+const CACHE_NAME = "haven-static-v24";
 
 const STATIC_ASSETS = [
   "./",
