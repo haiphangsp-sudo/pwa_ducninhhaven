@@ -341,7 +341,7 @@
     }
   },
    "help":{
-    "label":{"vi":"Dịch vụ","en":"Service"},
+    "label":{"vi": "Hỗ trợ","en": "Suport"},
     "allow":["room","area","table"],
     "ui":"instant",
     "active":true,
