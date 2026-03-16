@@ -303,7 +303,7 @@
     "items":{
       "footbath":{
         "label":{"vi":"Ngâm chân thảo dược","en":"Herbal Foot Bath"},
-        "recommend":"evening",
+        "recommend":["evening"],
         "active":true,
         "options":{
           "morning":{
