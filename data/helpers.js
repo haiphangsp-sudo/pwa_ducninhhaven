@@ -3,14 +3,19 @@
 
 import { MENU } from "../core/menuStore.js";
 
-
-export function getCategoriesForMode(mode){
-
+function getPlaceType() {
+    const ctx = getContext();
+    const anchor=ctx?.anchor;
+    if(!anchor) return "table";
+    return anchor.type;
+}
+export function getCategoriesForMode(){
+  const placeType = getPlaceType();
   return Object.entries(MENU)
 
     .filter(([k,v]) =>
       v.active &&
-      v.allow?.includes(mode)
+      v.allow?.includes(placeType)
     )
 
     .map(([k,v])=>({
@@ -37,15 +42,6 @@ export function getItems(category){
     }));
 
 }
-
-
-
-export function getCategoryType(category){
-
-  return MENU[category]?.ui || "instant";
-
-}
-
 
 
 export function getOptions(category,item){
