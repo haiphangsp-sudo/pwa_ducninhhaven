@@ -69,7 +69,7 @@ export function getOptions(catKey, itemKey) {
                 label: opt.label,
                 price: opt.price,
                 unit: opt.unit,
-                desc: opt.description
+                description: opt.description
             });
         }
         return out;
