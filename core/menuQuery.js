@@ -60,7 +60,8 @@ export function getItems(catKey) {
 export function getOptions(catKey, itemKey) {
 
     const item = MENU?.[catKey]?.items?.[itemKey];
-        if (!item?.options) return [];
+    if (!item?.options) return [];
+    const recommend=Array.isArray(item.recommend)?item.recommend:[];
         const out = [];
         for (const [optKey, opt] of Object.entries(item.options)) {
             if (opt.active === false) continue;
@@ -69,6 +70,7 @@ export function getOptions(catKey, itemKey) {
                 label: opt.label,
                 price: opt.price,
                 unit: opt.unit,
+                recommend: recommend.includes(optKey),
                 description: opt.description
             });
         }

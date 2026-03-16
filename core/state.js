@@ -8,7 +8,9 @@ export const UI = {
   lang:{
     current:"vi"
   },
-
+  meta: {
+    version:1
+  },
   /* ---------------- SERVICE CONTEXT ---------------- */
 
   context:{
