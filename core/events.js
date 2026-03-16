@@ -62,13 +62,6 @@ export function sendCart(){
 
   if(UI.ack.state!=="hidden") return;
 
-  const ctx = getContext();
-
-  if(!ctx?.active){
-    window.dispatchEvent(new Event("openPlacePicker"));
-    return;
-  }
-
   enqueue({
     type: "cart",
     place: ctx.active.id,

@@ -40,7 +40,7 @@ export function renderHub(){
   let panel = UI.view.panel;
 
   if(!panels.includes(panel)){
-    panel = panels[1];
+    panel = panels[0];
   }
 
   /* =======================================================
