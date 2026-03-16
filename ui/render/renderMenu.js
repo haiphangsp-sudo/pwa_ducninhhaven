@@ -66,3 +66,11 @@ function dispatchAction(payload) {
     addToCart(payload);
   }
 }
+function ensureActive(){
+  const ctx = getContext();
+  if(!ctx?.active){
+    openPicker();
+    return false;
+  }
+  return true;
+}
