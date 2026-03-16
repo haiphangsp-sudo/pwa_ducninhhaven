@@ -46,7 +46,7 @@
     "items":{
       "breakfast":{
         "label":{"vi":"Bữa sáng","en":"Breakfast"},
-        "recommend":"pho",
+        "recommend":["bread","chicken_rice"],
         "active":true,
         "options":{
           "pho":{
