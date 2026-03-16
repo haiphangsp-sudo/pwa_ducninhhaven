@@ -7,39 +7,38 @@ import { translate } from "../utils/translate.js";
 import { categoryOpt } from "../components/categoryOption.js";
 import { openPicker } from "../components/placePicker.js";
 
-export function renderMenu(key) {
+export function renderMenu(key){
 
-    const category = getCategory(key);
-    if (!category) return;
+  const category = getCategory(key);
+  if(!category) return "";
 
-    const type = category.ui;
+  const type = category.ui;
 
-    return category.items.map(item => {
+  return category.items.map(item => {
 
-        const title = translate(item.label);
-        const options = getOptions(category.key, item.key);
+    const options = getOptions(category.key, item.key);
 
-        const cards = options.map(opt => {
-            return categoryOpt(opt, item.key, category.key, type)
-        }).join("");
-    
-        return `
-      <div class="menu-group">
+    const cards = options
+      .map(opt => categoryOpt(opt, item.key, category.key, type))
+      .join("");
+
+    return `
+      <section class="menu-group">
 
         <h2 class="menu-group-title">
-          ${title}
+          ${translate(item.label)}
         </h2>
 
         <div class="menu-grid grid">
           ${cards}
         </div>
 
-      </div>
+      </section>
     `;
 
-    }).join("");
+  }).join("");
+
 }
-  
   document.querySelector(".category-panel").onclick = e => {
 
     const Btn = e.target.closest("button[data-ui]");
