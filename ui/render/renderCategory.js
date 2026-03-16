@@ -91,15 +91,10 @@ function renderCommon(group) {
   const type = group.ui;
   return group.items.map(item => {
     const title = translate(item.label);
-    const options = getOptions(group.key, item.key);
-    
+    const options = getOptions(group.key, item.key)
     const cards = options.map(opt => {
         const recom=item.recommend&&item.recommend.includes(opt.key);
         return categoryOpt(opt, opt.key, item.key, group.key, type, recom);
-      })
-      .filter(([, opt]) => opt.active !== false)
-      .map(([optKey, opt]) => {
-        return categoryOpt(opt, optKey, itemKey, groupKey, type, optKey===item.recommend);
       }).join("");
       return `
         <div class="menu-group">
