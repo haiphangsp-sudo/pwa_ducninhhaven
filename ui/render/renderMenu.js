@@ -9,10 +9,11 @@ import { openPicker } from "../components/placePicker.js";
 
 export function renderMenu(key){
 
-  const container = document.getElementById("hubContent");
+  const container = document.querySelector(".category-panel");
   if(!container) return;
 
   const category = getCategory(key);
+
   if(!category) return;
 
   const type = category.ui;
@@ -59,13 +60,4 @@ export function renderMenu(key){
 
     dispatchAction(payload);
   };
-}
-function dispatchAction(payload) {
-  if(!ensureActive()) return;
-  if(payload.ui==="instant"){
-    sendInstant(payload);
-  }
-  if(payload.ui==="cart"){
-    addToCart(payload);
-  }
 }
