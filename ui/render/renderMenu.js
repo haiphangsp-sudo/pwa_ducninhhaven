@@ -1,6 +1,6 @@
 // ui/render/renderMenu.js
 
-import { getOptions, getCategory } from "../../core/menuQuery.js";
+import { getCategory, getOptions } from "../../core/menuQuery.js";
 import { addToCart, sendInstant } from "../../core/events.js";
 import { getContext } from "../../core/context.js";
 import { translate } from "../utils/translate.js";
@@ -9,23 +9,21 @@ import { openPicker } from "../components/placePicker.js";
 
 export function renderMenu(key){
 
-    const container = getCategory(key);
-    if(!container) return;
-
-    const category = getCategory(key);
-    const html = document.querySelector(".category-panel");
+  const container = document.getElementById("hubContent");
   if(!container) return;
+
+  const category = getCategory(key);
+  if(!category) return;
 
   const type = category.ui;
 
-  html = category.items.map(item => {
+  const html = category.items.map(item => {
 
     const title = translate(item.label);
-
-    const options = getOptions(category.key,item.key);
+    const options = getOptions(category.key, item.key);
 
     const cards = options.map(opt =>
-      categoryOpt(opt,item.key,category.key,type)
+      categoryOpt(opt, item.key, category.key, type)
     ).join("");
 
     return `
@@ -60,35 +58,14 @@ export function renderMenu(key){
     };
 
     dispatchAction(payload);
-
   };
 }
-
-/* ACTION ROUTER */
-
-function dispatchAction(payload){
-
+function dispatchAction(payload) {
   if(!ensureActive()) return;
-
   if(payload.ui==="instant"){
     sendInstant(payload);
   }
-
   if(payload.ui==="cart"){
     addToCart(payload);
   }
-}
-
-/* CONTEXT CHECK */
-
-function ensureActive(){
-
-  const ctx = getContext();
-
-  if(!ctx?.active){
-    openPicker();
-    return false;
-  }
-
-  return true;
 }
