@@ -65,7 +65,7 @@ function ensureActive(){
 /* ARTICLE */
 export function renderArticle(category, key) {
 
-  const group = getArticleContent(category)
+  const group = getArticleContent(key)
   const container = document.getElementById("panel")
   if (!container) return
 
