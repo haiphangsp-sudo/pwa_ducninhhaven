@@ -7,10 +7,7 @@ import { translate } from "../utils/translate.js";
 import { categoryOpt } from "../components/categoryOption.js";
 import { openPicker } from "../components/placePicker.js";
 
-export function renderMenu(key){
-
-  const category = getCategory(key);
-  if(!category) return "";
+export function renderMenu(category){
 
   const type = category.ui;
 
