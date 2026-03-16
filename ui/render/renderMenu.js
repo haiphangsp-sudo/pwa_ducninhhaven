@@ -9,7 +9,6 @@ import { openPicker } from "../components/placePicker.js";
 
 export function renderMenu(key){
 
-  const container = document.querySelector(".category-panel");
   if(!container) return;
 
   const category = getCategory(key);
@@ -43,7 +42,6 @@ export function renderMenu(key){
 
   }).join("");
 
-  container.innerHTML = html;
 
   container.onclick = e => {
 
