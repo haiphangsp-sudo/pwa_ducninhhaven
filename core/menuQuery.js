@@ -29,16 +29,23 @@ export function getCategories() {
 return out;
 
 }
-export function getCategory(catKey) {
-    const cat = MENU[catKey];
-    if (!cat) return null;
+export function getCategory(key) {
+    const category = MENU.categories[key];
+    if (!category) return null;
+    
+    const items = Object.entries(category.items || {}).map(([itemKey, item]) => ({
+        ...item,
+        key: itemKey
+    })
+    );
+    
     return {
-        key: catKey,
-        label: cat.label,
-        ui: cat.ui,
-        items: getItems(catKey)
+        ...category,
+        key,
+        items
     };
 }
+
 export function getItems(catKey) {
     const cat = MENU[catKey];
     if (!cat) return [];
@@ -52,30 +59,19 @@ export function getItems(catKey) {
             unit: item.unit,
             image: item.image
         });
-    
     }
     return out;
-
 }
 export function getOptions(catKey, itemKey) {
 
-    const item = MENU?.[catKey]?.items?.[itemKey];
-    if (!item?.options) return [];
-    const recommend=Array.isArray(item.recommend)?item.recommend:[];
-        const out = [];
-        for (const [optKey, opt] of Object.entries(item.options)) {
-            if (opt.active === false) continue;
-            out.push({
-                key: optKey,
-                label: opt.label,
-                price: opt.price,
-                unit: opt.unit,
-                recommend: recommend.includes(optKey),
-                description: opt.description
-            });
-        }
-        return out;
+    const options = MENU.categories?.[catKey]?.items?.[itemKey]?.options;
+    if (!options) return [];
+    return Object.entries(options).map(([optKey, opt]) => ({
+        ...opt,
+        key: optKey
+    }));
 }
+
 export function getArticle(key) {
     const cat = MENU[key];
     if (!cat) return [];
