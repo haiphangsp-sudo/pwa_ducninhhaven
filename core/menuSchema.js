@@ -8,10 +8,7 @@ export function validateMenu(menu){
   const errors=[];
   const validAllow = ["room", "table", "area"];
   const validUnits = ["item", "session", "kg", "hour", "person"];
-  for(const a of cat.allow){
-    if(!validAllow.includes(a))
-      errors.push(`Invalid allow: ${a}`);
-  }
+  
   
   for(const [catKey,cat] of Object.entries(menu)){
 
@@ -21,7 +18,10 @@ export function validateMenu(menu){
     req(cat, "items", catKey);
     req(cat, "allow", catKey);
 
-
+    for(const a of cat.allow){
+      if(!validAllow.includes(a))
+        errors.push(`Invalid allow: ${a}`);
+    }
     if(!["article","cart","instant"].includes(cat.ui))
       errors.push(`${catKey}: invalid ui`);
 
@@ -40,7 +40,7 @@ export function validateMenu(menu){
         for(const [optKey,opt] of Object.entries(item.options||{})){
           req(opt,"label",`${catKey}.${itemKey}.${optKey}`);
           req(opt, "active", `${catKey}.${itemKey}.${optKey}`);
-          
+
           if(opt.unit&&!validUnits.includes(opt.unit))
             errors.push(`${catKey}.${itemKey}.${optKey}: invalid unit`);
         }
