@@ -40,7 +40,7 @@ export function renderMenu(key){
 
   }).join("");
 
-
+  const container= document.querySelector(".category-panel");
   container.onclick = e => {
 
     const Btn = e.target.closest("button[data-ui]");
