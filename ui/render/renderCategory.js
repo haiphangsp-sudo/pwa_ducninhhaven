@@ -69,8 +69,8 @@ const articles = Array.isArray(category.articles)
   ? category.articles : [];
   return articles.map(article=>{
       const title = translate(article.label);
-      const body = Array.isArray(section.content)
-        ? section.content : [];
+      const body = Array.isArray(article.content)
+        ? article.content : [];
       const paragraphs = body
         .map(text =>`<p class="card-desc">${translate(text)}</p>`)
           .join("");
