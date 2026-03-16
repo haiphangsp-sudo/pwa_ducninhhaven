@@ -66,7 +66,6 @@ function ensureActive(){
 
  function renderIntro(panel){
 
-  const contentEl = document.querySelector(".category-panel");
 
   const article = getArticle(panel);
   if(!article){
@@ -104,7 +103,7 @@ function ensureActive(){
     </section>
   `;
 
-  contentEl.innerHTML = html;
+  return html;
 
 }
 
