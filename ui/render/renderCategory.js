@@ -65,7 +65,7 @@ function ensureActive(){
 /* ARTICLE */
 function renderArticle(category){
 
-  const lang = getLanguage()
+  //const lang = getLanguage()
   const sections = Object.values(category.items || {})
 
   return sections
@@ -79,7 +79,7 @@ function renderArticle(category){
         : []
 
       const body = paragraphs
-        .map(p => `<p class="card-desc">${p?.[lang] || ""}</p>`)
+        .map(p => `<p class="card-desc">${p?.[vi] || ""}</p>`)
         .join("")
 
       return `
