@@ -65,38 +65,28 @@ function ensureActive(){
 /* ARTICLE */
 function renderArticle(category){
 
-  const items = category.items || {}
+  const sections = Object.values(category.items || {})
 
-  const parts = []
+  return sections
+    .filter(s => s.active !== false)
+    .map(section => {
 
-  for (const key in items){
+      const title = translate(section.label)
 
-    if (!Object.hasOwn(items,key)) continue
+      const body = (section.content || [])
+        .map(p => `<p class="card-desc">${translate(p)}</p>`)
+        .join("")
 
-    const section = items[key]
-
-    if(section.active === false) continue
-
-    const title = translate(section.label)
-
-    const content = Array.isArray(section.content) ? section.content : [section.content]
-    const body = content
-      .filter(Boolean)
-      .map(p => `<p class="card-desc">${translate(p)}</p>`)
-      .join("")
-
-    parts.push(`
-      <div class="card">
-        <article class="article">
-          <h2 class="card-title">${title}</h2>
-          ${body}
-        </article>
-      </div>
-    `)
-
-  }
-
-  return parts.join("")
+      return `
+        <div class="card">
+          <article class="article">
+            <h2 class="card-title">${title}</h2>
+            ${body}
+          </article>
+        </div>
+      `
+    })
+    .join("")
 }
 
 /* ========================================================= */
