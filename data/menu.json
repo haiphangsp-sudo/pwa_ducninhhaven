@@ -342,7 +342,7 @@
   },
    "help":{
     "label":{"vi":"Dịch vụ","en":"Service"},
-    "allow":["room","area"],
+    "allow":["room","area","table"],
     "ui":"instant",
     "active":true,
     "icon":"service",
