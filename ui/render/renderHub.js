@@ -3,14 +3,16 @@
 import { UI, setState } from "../../core/state.js";
 import { translate } from "../utils/translate.js";
 import { renderCategory } from "./renderCategory.js";
-import { getCategories } from "../../core/menuQuery.js";
+import { getCategories, getPlaceType } from "../../core/menuQuery.js";
+import { getCategoriesForMode } from "../../data/helpers.js";
 
 
 export function renderHub(){
 
   const menuEl = document.getElementById("hubMenu");
 
-  const panels = getCategories();
+  const panels = getCategoriesForMode(getPlaceType());
+  //const panels = getCategories();
   /* =======================================================
      PANEL ACTIVE
   ======================================================= */
