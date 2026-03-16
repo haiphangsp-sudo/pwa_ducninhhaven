@@ -7,10 +7,10 @@ import { translate } from "../utils/translate.js";
 import { categoryOpt } from "../components/categoryOption.js";
 import { openPicker } from "../components/placePicker.js";
 
-export function renderMenu(key){
+export function renderMenu(key) {
 
     const category = getCategory(key);
-    if(!category) return;
+    if (!category) return;
 
     const type = category.ui;
 
@@ -23,7 +23,7 @@ export function renderMenu(key){
             return categoryOpt(opt, item.key, category.key, type)
         }).join("");
     
-    return `
+        return `
       <div class="menu-group">
 
         <h2 class="menu-group-title">
@@ -37,8 +37,8 @@ export function renderMenu(key){
       </div>
     `;
 
-  }).join("");
-
+    }).join("");
+}
   
   document.querySelector(".category-panel").onclick = e => {
 
@@ -55,7 +55,7 @@ export function renderMenu(key){
 
     dispatchAction(payload);
   };
-}
+
 function dispatchAction(payload) {
   if(!ensureActive()) return;
   if(payload.ui==="instant"){
