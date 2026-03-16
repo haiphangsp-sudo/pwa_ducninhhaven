@@ -63,8 +63,6 @@ function ensureActive(){
 }
 /* ========================================================= */
 /* ARTICLE */
-import { getArticle } from "../../core/menuQuery.js";
-import { translate } from "../utils/translate.js";
 
  function renderIntro(panel){
 
