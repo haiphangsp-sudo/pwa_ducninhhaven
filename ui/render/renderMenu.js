@@ -57,3 +57,12 @@ export function renderMenu(key){
     dispatchAction(payload);
   };
 }
+function dispatchAction(payload) {
+  if(!ensureActive()) return;
+  if(payload.ui==="instant"){
+    sendInstant(payload);
+  }
+  if(payload.ui==="cart"){
+    addToCart(payload);
+  }
+}
