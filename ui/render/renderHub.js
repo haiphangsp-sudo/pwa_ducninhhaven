@@ -5,6 +5,8 @@ import { MENU } from "../../core/menuStore.js";
 import { translate } from "../utils/translate.js";
 import { renderCategory } from "./renderCategory.js";
 import { getContext } from "../../core/context.js";
+import { getCategories } from "../../core/menuQuery.js";
+
 
 export function renderHub(){
 
@@ -17,22 +19,7 @@ export function renderHub(){
      LỌC CATEGORY THEO allow + active
   ======================================================= */
 
-  const panels = Object.keys(MENU).filter(key=>{
-
-    const cat = MENU[key];
-
-    if(!cat.active) return false;
-
-    if(!cat.allow) return true;
-
-    if(!anchorType){
-      return cat.allow.includes("table") || cat.allow.includes("area");
-    }
-
-    return cat.allow.includes(anchorType);
-
-  });
-
+  const panels = getCategories();
   /* =======================================================
      PANEL ACTIVE
   ======================================================= */
