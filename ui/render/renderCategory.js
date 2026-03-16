@@ -21,7 +21,8 @@ export function renderCategory(key){
   }
 
   if (category.ui === "article") {
-    contentEl.innerHTML = renderArticle(category);
+    const article = getArticle(key);
+    contentEl.innerHTML = renderArticle(article);
   }else{
       contentEl.innerHTML = renderCommon(category, key);
   }
@@ -64,46 +65,17 @@ function ensureActive(){
 /* ========================================================= */
 /* ARTICLE */
 
- function renderArticle(panel){
-
-
-  const article = getArticle(panel);
-  if(!article){
-    return;
-  }
-
-  const html = `
-    <section class="intro">
-
-      <h1 class="intro-title">
-        ${translate(article.label)}
-      </h1>
-
-      <div class="intro-body">
-
-        ${article.items.map(item=>`
-
-          <article class="intro-block">
-
-            <h3 class="intro-block-title">
-              ${translate(item.label)}
-            </h3>
-
-            <p class="intro-block-text">
-              ${translate(item.content)}
-            </p>
-
-          </article>
-
-        `).join("")}
-
+ function renderArticle(article){
+  return `
+    <div class="article">
+      <h2 class="article-title">${translate(article.label)}</h2>
+      <div class="article-content">
+      ${article.content
+    .map(p => `<p>${translate(p)}</p>`)
+    .join("")}
       </div>
-
-    </section>
+    </div>
   `;
-
-  return html;
-
 }
 
 /* ========================================================= */
