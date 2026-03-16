@@ -94,7 +94,7 @@ function renderCommon(group) {
     const options = getOptions(group.key, item.key)
     const cards = options.map(opt => {
         const recom=item.recommend&&item.recommend.includes(opt.key);
-        return categoryOpt(opt, opt.key, item.key, group.key, type, recom);
+        return categoryOpt(opt, item.key, group.key, type, recom);
       }).join("");
       return `
         <div class="menu-group">

@@ -2,7 +2,7 @@
 
 import { translate } from "../utils/translate.js";
 
-export function categoryOpt(opt, optKey, itemKey, categoryKey, type, Recommended) {
+export function categoryOpt(opt, itemKey, categoryKey, type, Recommended) {
     
     const title = translate(opt.label);
     const desc = opt.description ? translate(opt.description) : "";
