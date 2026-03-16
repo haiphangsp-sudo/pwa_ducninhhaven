@@ -8,7 +8,7 @@ import { getContext } from "./context.js";
 function getPlaceType() {
     const ctx = getContext();
     const anchor=ctx?.anchor;
-    if(!anchor) return "room";
+    if(!anchor) return "table";
     return anchor.type;
 }
 export function getCategories() {
