@@ -93,8 +93,7 @@ function renderCommon(group) {
     const title = translate(item.label);
     const options = getOptions(group.key, item.key)
     const cards = options.map(opt => {
-        const recom=item.recommend&&item.recommend.includes(opt.key);
-        return categoryOpt(opt, item.key, group.key, type, recom);
+        return categoryOpt(opt, item.key, group.key, type, item.recommend===opt.key);
       }).join("");
       return `
         <div class="menu-group">
