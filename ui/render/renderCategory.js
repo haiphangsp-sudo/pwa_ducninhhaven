@@ -64,25 +64,44 @@ function ensureActive(){
 /* ========================================================= */
 /* ARTICLE */
 
-function renderArticle(category){
-const articles = Array.isArray(category.articles)
-  ? category.articles : [];
-  return articles.map(article=>{
-      const title = translate(article.label);
-      const body = Array.isArray(article.content)
-        ? article.content : [];
-      body
-        .map(text =>`<p class="card-desc">${translate(text)}</p>`)
-          .join("");
-      return `
-      <div class="card">
-        <article class="article">
-          <h2 class="card-title">${title}</h2>
+
+export function renderArticle(category){
+
+  const articles = Array.isArray(category.articles)
+    ? category.articles
+    : [];
+
+  const html = articles.map(article=>{
+
+    const body = Array.isArray(article.content)
+      ? article.content
+      : [];
+
+    const paragraphs = body
+      .map(text=>`<p class="article-p">${translate(text)}</p>`)
+      .join("");
+
+    return `
+      <section class="article-block">
+
+        <h2 class="article-subtitle">
+          ${translate(article.title)}
+        </h2>
+
+        <div class="article-body">
           ${paragraphs}
-        </article>
         </div>
-      `;
-    }).join("");
+
+      </section>
+    `;
+
+  }).join("");
+
+  return `
+    <article class="article">
+      ${html}
+    </article>
+  `;
 }
 /* ========================================================= */
 /* INSTANT */
