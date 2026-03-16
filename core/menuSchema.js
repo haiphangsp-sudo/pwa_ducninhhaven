@@ -18,10 +18,12 @@ export function normalizeMenu(menu) {
         item.active = true;
       if (item.options === undefined)
         item.options = {};
-      
-      if (cat.ui === "cart" || cat.ui === "instant") {
+      if (cat.ui === "cart") {
         if (item.recommend === undefined)
         item.recommend = Object.keys(item.options)[0];
+      }
+      if (cat.ui === "cart" || cat.ui === "instant") {
+        
         for (const [optKey, opt] of Object.entries(item.options || {})) {
           if (opt.active === undefined)
             opt.active = true;
