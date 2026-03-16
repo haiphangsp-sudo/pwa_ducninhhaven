@@ -63,35 +63,35 @@ function ensureActive(){
 }
 /* ========================================================= */
 /* ARTICLE */
-function renderArticle(category){
+export function renderArticle(category, key) {
 
-  //const lang = getLanguage()
-  const sections = Object.values(category.items || {})
+  const group = MENU[key]
+  if (!group || !group.items) return
 
-  return sections
-    .filter(sec => sec.active !== false)
-    .map(section => {
+  const container = document.getElementById("panel")
+  if (!container) return
 
-      const title = translate(section.label)
+  let html = ""
 
-      const paragraphs = Array.isArray(section.content)
-        ? section.content
-        : []
+  for (const [itemKey, item] of Object.entries(group.items)) {
 
-      const body = paragraphs
-        .map(p => `<p class="card-desc">${p?.vi || ""}</p>`)
-        .join("")
+    if (!item.active) continue
 
-      return `
-        <div class="card">
-          <article class="article">
-            <h2 class="card-title">${title}</h2>
-            ${body}
-          </article>
-        </div>
-      `
-    })
-    .join("")
+    const title = translate(item.label)
+
+    const body = (item.content || [])
+      .map(p => `<p class="card-desc">${translate(p)}</p>`)
+      .join("")
+
+    html += `
+      <div class="card article">
+        <div class="card-title">${title}</div>
+        ${body}
+      </div>
+    `
+  }
+
+  container.innerHTML = html
 }
 
 /* ========================================================= */
