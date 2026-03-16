@@ -49,17 +49,19 @@ self.addEventListener("fetch", event=>{
     );
     return;
   }
-
-  /* ---- DEFAULT: cache first ---- */
-  event.respondWith(
-    caches.match(event.request).then(res=> {
-        if(res) return res;
-        return fetch(event.request).then(net=>{
-          const clone = net.clone();
-          caches.open(CACHE_NAME).then(cache=>cache.put(event.request,clone));
-          return net;
-        });
-      })
-  );
-
+  
+  /* ---- DEFAULT: Stale-While-Revalidate (Lấy cache dùng ngay, nhưng vẫn tải bản mới về cho lần sau) ---- */
+event.respondWith(
+  caches.match(event.request).then(cachedResponse => {
+    const fetchPromise = fetch(event.request).then(networkResponse => {
+      // Cập nhật bản mới vào cache cho lần truy cập tới
+      caches.open(CACHE_NAME).then(cache => {
+        cache.put(event.request, networkResponse.clone());
+      });
+      return networkResponse;
+    });
+    // Trả về bản cache ngay lập tức nếu có, nếu không thì đợi mạng
+    return cachedResponse || fetchPromise;
+  })
+);
 });
