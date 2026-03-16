@@ -23,7 +23,7 @@ export async function loadMenu(){
   }catch{}
 
   /* 4. merge */
-  MENU = deepMerge(data,state);
+  MENU = deepMerge(base,state);
 }
 
 function deepMerge(base,patch){
