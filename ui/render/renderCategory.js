@@ -65,31 +65,24 @@ function ensureActive(){
 /* ARTICLE */
 export function renderArticle(category, key) {
 
-  const group = getArticleContent(key)
-  const container = document.getElementById("panel")
-  if (!container) return
+  const article = getArticleContent(key)
+  if (!article) return;
 
-  let html = ""
+  const items = (article.items || [])
+    .filter(item => item.active !== false);
 
-  for (const [itemKey, item] of Object.entries(group.items)) {
-
-    if (!item.active) continue
-
-    const title = translate(item.label)
-
-    const body = (item.content || [])
-      .map(p => `<p class="card-desc">${translate(p)}</p>`)
-      .join("")
-
-    html += `
-      <div class="card article">
-        <div class="card-title">${title}</div>
-        ${body}
+  const html = `
+  <section class="article">
+  <h1 class="article__title">${translate(category.label)}</h1>
+  ${items.map(item => `
+    <div class="article-card">
+      <h3 class="article-card__title">${translate(item.label)}</h2>
+      ${item.desc ? `<p class="article-card__desc">${translate(item.desc)}</p>` : ""}
       </div>
-    `
-  }
-
-  container.innerHTML = html
+  `).join("")}
+  </section>
+  `;
+document.querySelector(".category-panel").innerHTML = html;
 }
 
 /* ========================================================= */

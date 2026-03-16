@@ -5,7 +5,8 @@
     "ui":"article",
     "active":true,
     "icon":"info",
-    "items":{
+    "items":
+    [{
       "welcome":{
         "label":{"vi":"Chào mừng","en":"Welcome"},
         "content":[
@@ -22,7 +23,7 @@
           ],
         "active":true
       }
-    }
+  }]
   },
 
   "food":{

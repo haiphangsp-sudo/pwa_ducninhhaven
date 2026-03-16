@@ -76,12 +76,7 @@ export function getOptions(catKey, itemKey) {
         }
         return out;
 }
-export function getArticleContent(catKey) {
-    const content=MENU?.[catKey]?.content;
-    if (!Array.isArray(content)) return [];
-    return content.map((text, index) => ({
-        id: index,
-        text
-    }));
-    
+export function getArticleContent(articleKey) {
+    return MENU.article?.[articleKey] || null;
 }
+    
