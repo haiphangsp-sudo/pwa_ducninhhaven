@@ -79,7 +79,7 @@ function renderArticle(category){
         : []
 
       const body = paragraphs
-        .map(p => `<p class="card-desc">${p?.[vi] || ""}</p>`)
+        .map(p => `<p class="card-desc">${p?.vi || ""}</p>`)
         .join("")
 
       return `
