@@ -4,6 +4,7 @@
     "allow":["room","table","area"],
     "ui":"article",
     "active":true,
+    "icon":"info",
     "items":{
       "welcome":{
         "label":{"vi":"Chào mừng","en":"Welcome"},
@@ -41,6 +42,7 @@
     "allow":["room","table"],
     "ui":"cart",
     "active":true,
+    "icon":"food",
     "items":{
       "breakfast":{
         "label":{"vi":"Bữa sáng","en":"Breakfast"},
@@ -143,6 +145,7 @@
     "allow":["room","table","area"],
     "ui":"cart",
     "active":true,
+    "icon":"drink",
     "items":{
       "blackcoffee":{
         "label":{"vi":"Cà phê đen","en":"Black Coffee"},
@@ -263,6 +266,7 @@
     "allow":["room","area"],
     "ui":"instant",
     "active":true,
+    "icon":"service",
     "items":{
       "room_service":{
         "label":{"vi":"Dịch vụ phòng","en":"Room Service"},
@@ -318,6 +322,7 @@
     "allow":["room"],
     "ui":"cart",
     "active":true,
+    "icon":"relax",
     "items":{
       "footbath":{
         "label":{"vi":"Ngâm chân thảo dược","en":"Herbal Foot Bath"},
