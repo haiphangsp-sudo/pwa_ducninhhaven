@@ -44,7 +44,7 @@ export function renderMenu(category) {
 const panel = document.querySelector(".category-panel");
 if (panel) {
   panel.onclick = e => {
-    const btn = e.target.closest("button[data-ui]");
+    const btn = e.target.closest("button[data-option]");
     if (!btn) return;
 
     const payload = {
