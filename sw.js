@@ -29,39 +29,37 @@ self.addEventListener("activate",event=>{
   event.waitUntil(clients.claim());
 });
 
-self.addEventListener("fetch", event=>{
-
+self.addEventListener("fetch", event => {
   const url = new URL(event.request.url);
 
-  /* never cache POST */
-  if(event.request.method==="POST") return;
+  // 1. Không bao giờ cache các yêu cầu POST (Yêu cầu dịch vụ/gọi món)
+  if (event.request.method === "POST") return;
 
-  /* ---- API & RUNTIME DATA: always network ---- */
-  if(
+  // 2. Với ảnh và API: Luôn lấy từ mạng để mới nhất
+  if (
     url.pathname.endsWith(".png") ||
     url.pathname.endsWith(".svg") ||
-    url.pathname.startsWith("/api/") ||
-    url.pathname.includes("/data/menu.json")
-  ){
-    event.respondWith(
-      fetch(event.request,{cache:"no-store"})
-        .catch(()=>new Response("{}",{status:200}))
-    );
+    url.pathname.startsWith("/api/")
+  ) {
+    event.respondWith(fetch(event.request).catch(() => new Response("{}")));
     return;
   }
-  
-  /* ---- DEFAULT: Stale-While-Revalidate (Lấy cache dùng ngay, nhưng vẫn tải bản mới về cho lần sau) ---- */
-event.respondWith(
-  caches.match(event.request).then(cachedResponse => {
-    const fetchPromise = fetch(event.request).then(networkResponse => {
-      // Cập nhật bản mới vào cache cho lần truy cập tới
-      caches.open(CACHE_NAME).then(cache => {
-        cache.put(event.request, networkResponse.clone());
-      });
-      return networkResponse;
-    });
-    // Trả về bản cache ngay lập tức nếu có, nếu không thì đợi mạng
-    return cachedResponse || fetchPromise;
-  })
-);
+
+  // 3. Chiến lược Stale-While-Revalidate cho các file tĩnh (HTML, CSS, JS)
+  event.respondWith(
+    caches.match(event.request).then(cachedResponse => {
+      const fetchPromise = fetch(event.request).then(networkResponse => {
+        // Chỉ lưu vào cache nếu phản hồi thành công (status 200)
+        if (networkResponse && networkResponse.status === 200) {
+          const responseToCache = networkResponse.clone(); // Nhân bản TRƯỚC khi trả về
+          caches.open(CACHE_NAME).then(cache => {
+            cache.put(event.request, responseToCache);
+          });
+        }
+        return networkResponse;
+      }).catch(() => cachedResponse); // Nếu mất mạng, dùng bản cache
+
+      return cachedResponse || fetchPromise;
+    })
+  );
 });
