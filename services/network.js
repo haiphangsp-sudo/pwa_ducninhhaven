@@ -37,3 +37,12 @@ export async function fetchWithTimeout(url,options={},timeout=8000){
     clearTimeout(id);
   }
 }
+export async function checkInternet() {
+  try {
+    const response = await fetch('https://www.google.com/favicon.ico',
+    { mode: 'no-cors' });
+    return response.ok || response.type === 'opaque';
+  } catch (e) {
+    return false;
+  }
+}
