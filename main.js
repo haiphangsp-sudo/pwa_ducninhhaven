@@ -13,8 +13,8 @@ import { updateNavContext } from "./ui/components/navBar.js";
 import { setDeliveryState } from "./ui/render/renderDelivery.js";
 import { setRecoveryState } from "./ui/render/renderRecovery.js";
 import { attachMenuEvents } from "./ui/render/renderMenu.js";
+import { loadCart } from "./core/events.js";
 
-boot();
 
 
 /* ---------- VERSION ---------- */
@@ -122,6 +122,7 @@ async function boot(){
   normalizeContext(); // đảm bảo context được lưu lại với timestamp mới, tránh bị xoá do TTL
   subscribe(renderApp);
   attachMenuEvents();
+  loadCart();
   renderApp();
   setDeliveryState("idle");
   setRecoveryState("idle");
