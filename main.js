@@ -10,6 +10,12 @@ import { resetIdleTimer } from "./core/idle.js";
 import { loadMenu, MENU } from "./core/menuStore.js";
 import { getContext, resolvePlace, setAnchor, setActive, normalizeContext } from "./core/context.js";
 import { updateNavContext } from "./ui/components/navBar.js";
+import { setDeliveryState } from "./ui/render/renderDelivery.js";
+import { setRecoveryState } from "./ui/render/renderRecovery.js";
+import { attachMenuEvents } from "./ui/render/renderMenu.js";
+
+boot();
+
 
 /* ---------- VERSION ---------- */
 // - Đảm bảo phiên bản SW khớp với phiên bản app
@@ -115,9 +121,10 @@ async function boot(){
   applyURLContext();   // ← phải chạy trước render
   normalizeContext(); // đảm bảo context được lưu lại với timestamp mới, tránh bị xoá do TTL
   subscribe(renderApp);
-
+  attachMenuEvents();
   renderApp();
-
+  setDeliveryState("idle");
+  setRecoveryState("idle");
   onNetworkChange(online=>{
     if(online)
       window.dispatchEvent(new Event("networkBack"));
