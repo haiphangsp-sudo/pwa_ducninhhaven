@@ -20,20 +20,20 @@ export function renderMenu(category) {
 }
   const type = category.ui;
 
-  return Object.entries(category.items)
+  return category.items
     // 1. Lọc các Item chính đang active
-    .filter(([_, item]) => item.active !== false)
-    .map(([itemKey, item]) => {
+    .filter(item => item.active !== false)
+    .map(item => {
       
       // 2. Lấy và lọc các Option con đang active
-      const activeOptions = getOptions(category.key, itemKey)
+      const options = getOptions(category.key, item.key)
         .filter(opt => opt.active !== false);
 
       // 3. NẾU KHÔNG CÓ OPTION NÀO ACTIVE -> KHÔNG VẼ NHÓM NÀY
-      if (activeOptions.length === 0) return "";
+      if (options.length === 0) return "";
 
-      const cards = activeOptions
-        .map(opt => categoryOpt(opt, itemKey, category.key, type))
+      const cards = options
+        .map(opt => categoryOpt(opt, item.key, category.key, type))
         .join("");
 
       return `
