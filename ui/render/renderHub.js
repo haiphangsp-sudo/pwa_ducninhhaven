@@ -54,7 +54,7 @@ export function renderHub(){
         view:{ panel:key }
       });
 
-      renderMenu(key);
+      renderPanel(key);
 
     };
 
@@ -64,6 +64,6 @@ export function renderHub(){
      RENDER CATEGORY
   ======================================================= */
 
-  renderMenu(panel);
+  renderPanel(panel);
 
 }
