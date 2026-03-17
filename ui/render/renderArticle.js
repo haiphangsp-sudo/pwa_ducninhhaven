@@ -2,33 +2,17 @@ import { getOptions } from "../../core/menuQuery.js";
 import { translate } from "../utils/translate.js";
 import { categoryOpt } from "../components/categoryOption.js";
 
-export function renderMenu(category){
+export function renderArticle(category){
 
-  const type = category.ui;   // cart | instant
-
-  return category.items.map(item => {
-
-    const title = translate(item.label);
-
-    const options = getOptions(category.key, item.key);
-
-    const cards = options.map(opt =>
-      categoryOpt(opt, item.key, category.key, type)
-    ).join("");
-
-    return `
-      <div class="menu-group">
-
-        <h2 class="menu-group-title">
-          ${title}
-        </h2>
-
-        <div class="menu-grid grid">
-          ${cards}
-        </div>
-
+  return category.items.map(item => `
+    <div class="article">
+      <h2 class="article-title">${translate(item.label)}</h2> 
+      <div class="article-content">
+      ${item.content
+    .map(p => `<p>${translate(p)}</p>`)
+    .join("")}
       </div>
-    `;
+    </div>
+  `).join("");
 
-  }).join("");
 }
