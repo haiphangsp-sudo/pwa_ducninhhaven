@@ -24,6 +24,7 @@ export function categoryOpt(opt, itemKey, categoryKey, type) {
                     }
                 </div>
                 <button class="btn btn-primary"
+                    data-ui="${type}"
                     data-category="${categoryKey}"
                     data-item="${itemKey}"
                     data-option="${opt.key}">

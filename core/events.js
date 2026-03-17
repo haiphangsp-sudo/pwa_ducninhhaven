@@ -9,10 +9,10 @@ import { openPicker } from "../ui/components/placePicker.js";
 
 export function dispatchAction(payload) {
   if(!ensureActive()) return;
-  if(payload.ui==="instant"){
+  if(payload.type==="instant"){
     sendInstant(payload);
   }
-  if(payload.ui==="cart"){
+  if(payload.type==="cart"){
     addToCart(payload);
   }
 }
