@@ -1,7 +1,7 @@
 // ui/renderApp.js
 // Điểm vào duy nhất để render.
 
-import { renderCartBar ,loadCart} from "./renderCart.js";
+import { renderCartBar } from "./renderCart.js";
 import { renderAck } from "./renderOverlay.js";
 import { setDeliveryState } from "./renderDelivery.js";
 import { setRecoveryState } from "./renderRecovery.js";
