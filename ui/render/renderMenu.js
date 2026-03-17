@@ -23,7 +23,8 @@ export function renderMenu(category) {
 
       const cards = options
         .map(opt => {
-          categoryOpt(opt, item.key, category.key, type, item.recommend)
+          const isRecommend = false;
+          categoryOpt(opt, item.key, category.key, type, isRecommend)
 
         })
         .join("");
