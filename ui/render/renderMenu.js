@@ -20,8 +20,10 @@ export function renderMenu(category) {
 
       // 3. NẾU KHÔNG CÓ OPTION NÀO ACTIVE -> KHÔNG VẼ NHÓM NÀY
       if (options.length === 0) return "";
+      const recommend = options.find(opt => opt.key === item.recommend);
+      
       const cards = options
-        .map(opt => categoryOpt(opt, item.key, category.key, type, item.recommend === item.key))
+        .map(opt => categoryOpt(opt, item.key, category.key, type, recommend))
         .join("");
 
       return `
