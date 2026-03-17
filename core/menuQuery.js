@@ -30,7 +30,7 @@ return out;
 
 }
 export function getCategory(key) {
-    const category = MENU.categories[key];
+    const category = MENU[key];
     if (!category) return null;
     
     const items = Object.entries(category.items || {}).map(([itemKey, item]) => ({
@@ -64,7 +64,7 @@ export function getItems(catKey) {
 }
 export function getOptions(catKey, itemKey) {
 
-    const options = MENU.categories?.[catKey]?.items?.[itemKey]?.options;
+    const options = MENU?.[catKey]?.items?.[itemKey]?.options;
     if (!options) return [];
     return Object.entries(options).map(([optKey, opt]) => ({
         ...opt,
