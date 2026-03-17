@@ -8,7 +8,6 @@ import { getRetryDelay } from "../services/retryPolicy.js";
 import { getContext } from "./context.js";
 import { clearCart } from "./events.js"
 import { setDeliveryState } from "../ui/render/renderDelivery.js";
-import { setRecoveryState } from "../ui/render/renderRecovery.js";
 
 
 
