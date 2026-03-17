@@ -64,14 +64,22 @@ export const UI = {
 let listeners=[];
 
 export function subscribe(fn){
+  
   listeners.push(fn);
+  return ()=>{
+    listeners=listeners.filter(f=>f!==fn);
+  };
 }
 
-export function setState(patch){
+export function setState(patch) {
+  
+  const prev = JSON.stringify(UI);
 
-  deepMerge(UI,patch);
+  deepMerge(UI, patch);
+  const next = JSON.stringify(UI);
 
-  listeners.forEach(fn=>fn(UI));
+  if (prev !== next) listeners.forEach(fn => fn(UI));
+  
 }
 
 /* ======================================================= */

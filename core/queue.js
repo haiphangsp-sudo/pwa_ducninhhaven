@@ -3,7 +3,7 @@
 
 
 import { sendRequest } from "../services/api.js";
-import { setState } from "./state.js";
+import { setState, getState } from "./state.js";
 import { getRetryDelay } from "../services/retryPolicy.js";
 import { getContext } from "./context.js";
 import { clearCart } from "./events.js"
@@ -14,7 +14,7 @@ import { setRecoveryState } from "../ui/render/renderRecovery.js";
 
 const STORAGE_KEY="haven_queue";
 const MAX_QUEUE = 50;
-
+let recoveryEmitted = false;
 let processing=false;
 
 /* ---------- STORAGE ---------- */
@@ -33,7 +33,9 @@ function emitDelivery(state,extra={}){
   setState({delivery:{state,...extra}});
 }
 
-function emitRecovery(state){
+function emitRecovery(state) {
+  const current = getState().recovery?.state;
+  if (current === state) return;
   setState({recovery:{state}});
 }
 
@@ -98,6 +100,11 @@ export async function processQueue(){
       queue.shift();
       saveQueue(queue);
 
+      if (queue.lenght === 0) {
+        recoveryEmitted = false;
+        emitRecovery("idle");
+      }
+
       if (!queue.length) {
         setDeliveryState("send"); //màu xanh: thành công
         setTimeout(() => {
@@ -134,8 +141,12 @@ export async function processQueue(){
 
 /* ---------- RECOVERY ---------- */
 
-export function detectRecovery(){
-  if(loadQueue().length){
+export function detectRecovery() {
+  const q = loadQueue();
+  if (!q.length) return;
+
+  if (q.length && !recoveryEmitted) {
+    recoveryEmitted = true;
     emitRecovery("found");
   }
 }
