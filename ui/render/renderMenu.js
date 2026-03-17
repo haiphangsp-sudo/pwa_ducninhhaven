@@ -1,69 +1,64 @@
 // ui/render/renderMenu.js
 
-import { getCategory, getOptions } from "../../core/menuQuery.js";
-import { addToCart, sendInstant } from "../../core/events.js";
+import { getOptions } from "../../core/menuQuery.js";
 import { getContext } from "../../core/context.js";
 import { translate } from "../utils/translate.js";
 import { categoryOpt } from "../components/categoryOption.js";
 import { openPicker } from "../components/placePicker.js";
+import { dispatchAction } from "../../core/events.js"; // Đảm bảo import đúng
 
-export function renderMenu(category){
-if(!category) return;
+export function renderMenu(category) {
+  if (!category || !category.items) return "";
   const type = category.ui;
 
   return Object.entries(category.items)
-    .filter(([_,item]) => item.active !== false)
+    // 1. Lọc các Item chính đang active
+    .filter(([_, item]) => item.active !== false)
     .map(([itemKey, item]) => {
-
-      const options = getOptions(category.key, itemKey)
+      
+      // 2. Lấy và lọc các Option con đang active
+      const activeOptions = getOptions(category.key, itemKey)
         .filter(opt => opt.active !== false);
 
-    const cards = options
-      .map(opt => categoryOpt(opt, itemKey, category.key, type))
-      .join("");
+      // 3. NẾU KHÔNG CÓ OPTION NÀO ACTIVE -> KHÔNG VẼ NHÓM NÀY
+      if (activeOptions.length === 0) return "";
 
-    return `
-      <section class="menu-group">
+      const cards = activeOptions
+        .map(opt => categoryOpt(opt, itemKey, category.key, type))
+        .join("");
 
-        <h2 class="menu-group-title">
-          ${translate(item.label)}
-        </h2>
-
-        <div class="menu-grid grid">
-          ${cards}
-        </div>
-
-      </section>
-    `;
-
-  }).join("");
-
+      return `
+        <section class="menu-group">
+          <h2 class="menu-group-title">
+            ${translate(item.label)}
+          </h2>
+          <div class="menu-grid grid">
+            ${cards}
+          </div>
+        </section>
+      `;
+    }).join("");
 }
-  document.querySelector(".category-panel").onclick = e => {
 
-    const Btn = e.target.closest("button[data-ui]");
-    if(!Btn) return;
+// KHỞI TẠO SỰ KIỆN (Gán một lần duy nhất hoặc đảm bảo tính nhất quán)
+const panel = document.querySelector(".category-panel");
+if (panel) {
+  panel.onclick = e => {
+    const btn = e.target.closest("button[data-ui]");
+    if (!btn) return;
 
     const payload = {
-      ui: Btn.dataset.ui,
-      category: Btn.dataset.category,
-      item: Btn.dataset.item,
-      option: Btn.dataset.option,
+      ui: btn.dataset.ui,
+      category: btn.dataset.category,
+      item: btn.dataset.item,
+      option: btn.dataset.option,
       qty: 1
     };
 
     dispatchAction(payload);
   };
-
-function dispatchAction(payload) {
-  if(!ensureActive()) return;
-  if(payload.ui==="instant"){
-    sendInstant(payload);
-  }
-  if(payload.ui==="cart"){
-    addToCart(payload);
-  }
 }
+
 function ensureActive(){
   const ctx = getContext();
   if(!ctx?.active){

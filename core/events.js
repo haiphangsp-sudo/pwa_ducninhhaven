@@ -6,7 +6,16 @@ import { getContext } from "./context.js";
 
 /* ---------- CART ---------- */
 
-export function addToCart(item){
+export function dispatchAction(payload) {
+  if(!ensureActive()) return;
+  if(payload.ui==="instant"){
+    sendInstant(payload);
+  }
+  if(payload.ui==="cart"){
+    addToCart(payload);
+  }
+}
+function addToCart(item){
   const Items = UI.cart?.items || [];
   const existing = Items.find(i =>
     i.category===item.category &&
@@ -34,7 +43,7 @@ export function addToCart(item){
 
 /* ---------- SEND ---------- */
 
-export function sendInstant(action){
+function sendInstant(action){
 
   if(UI.ack.state!=="hidden") return;
 
