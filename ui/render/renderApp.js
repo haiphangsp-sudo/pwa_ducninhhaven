@@ -15,7 +15,7 @@ import { detectRecovery } from "../../core/queue.js";
 
 
 export function renderApp(){
-  loadCart();
+  //loadCart();
   detectRecovery();
   attachMenuEvents();
   renderNavBar();
