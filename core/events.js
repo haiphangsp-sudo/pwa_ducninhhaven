@@ -55,8 +55,8 @@ function sendInstant(action){
 
   enqueue({
     type: "instant",
-    mode: ctx.active.id,
-    place: ctx.active.type,
+    place: ctx.active.id,
+    mode: ctx.active.type,
     category: action.category,
     item: action.item,
     option: action.option || "default",
@@ -70,8 +70,8 @@ export function sendCart(){
   const items = UI.cart.items;
   enqueue({
     type: "cart",
-    mode: ctx.active.id,
-    place: ctx.active.type,
+    place: ctx.active.id,
+    mode: ctx.active.type,
     item: items
   });
 
