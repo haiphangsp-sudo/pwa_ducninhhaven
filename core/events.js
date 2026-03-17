@@ -66,7 +66,7 @@ function sendInstant(action){
     place: ctx.active.id,
     placeType: ctx.active.type,
     category: action.category,
-    item: action.code,
+    item: action.item,
     option: action.option || "default",
     qty:1
   });
