@@ -3,70 +3,29 @@
 export const STRINGS = {
   
 recovery:{
-  found:{
-    vi:"Bạn có yêu cầu chưa gửi. Chạm để gửi lại.",
-    en:"Unsent request found. Tap to resend."
-  },
-  sending:{
-    vi:"Đang gửi lại...",
-    en:"Resending..."
-  },
-  done:{
-    vi:"Đã gửi thành công",
-    en:"Sent successfully"
-  },
-  discarded:{
-    vi:"Đã huỷ yêu cầu",
-    en:"Request discarded"
-  }
+  found:{vi:"Bạn có yêu cầu chưa gửi. Chạm để gửi lại.",en:"Unsent request found. Tap to resend."},
+  sending:{vi:"Đang gửi lại...",en:"Resending..."},
+  done:{vi:"Đã gửi thành công",en:"Sent successfully"},
+  discarded:{vi:"Đã huỷ yêu cầu",en:"Request discarded"}
 },
 delivery:{
-  pending:{
-    vi:"Đang gửi...",
-    en:"Sending..."
-  },
-  ack:{
-  vi:"Đã ghi nhận",
-  en:"Received"
-},
-  sent:{
-    vi:"Đã gửi tới bếp",
-    en:"Sent to kitchen"
-  },
-  delivered:{
-    vi:"Đã hoàn tất",
-    en:"Completed"
-  },
-  failed:{
-    vi:"Không gửi được — sẽ thử lại",
-    en:"Failed — will retry"
-  }
+  pending:{vi:"Đang gửi...",en:"Sending..."},
+  ack:{vi:"Đã ghi nhận",en:"Received"},
+  sent:{vi:"Đã gửi tới bếp",en:"Sent to kitchen"},
+  delivered:{vi:"Đã hoàn tất",en:"Completed"},
+  failed:{vi:"Không gửi được — sẽ thử lại",en:"Failed — will retry"}
 },
 cart_bar:{
-  cart_title:{
-    vi:"Giỏ hàng",
-    en:"View cart"
+  cart_title:{vi:"Giỏ hàng",en:"View cart"},
+  item:{vi:"món",en:"item"},
+  items:{vi:"món",en:"items"
   },
-  item:{
-    vi:"món",
-    en:"item"
+  order:{vi:"Gửi",en:"Order"},
+  free: {vi: "Miễn phí",en: "Free"
   },
-  items:{
-    vi:"món",
-    en:"items"
-  },
-  order:{
-    vi:"Thêm",
-    en:"Order"
-  },
-  free: {
-    vi: "Miễn phí",
-    en: "Free"
-  },
-  instant: {
-    vi: "Dịch vụ tức thời",
-    en: "Instant service"
-  }
+  instant: {vi: "Dịch vụ tức thời",en: "Instant service"},
+  add_to_order:{vi:"Thêm vào yêu cầu",en:"Add to order"},
+  send_request:{vi:"Gửi yêu cầu",en:"Send request"}
 },
 select_place:{vi:"Chọn vị trí phục vụ",en:"Select service location"},
 in_room:{vi:"Tại phòng",en:"In room"},
@@ -92,13 +51,6 @@ haven:{vi:"Haven",en:"Haven"},
   unable_send:{
     vi:"Không thể gửi. Vui lòng thử lại",
     en:"Unable to send. Please try again"
-  },
-  add_to_order:{
-    vi:"Thêm vào yêu cầu",
-    en:"Add to order"
-  },
-  send_request:{
-    vi:"Gửi yêu cầu",
-    en:"Send request"
   }
+  
 };
