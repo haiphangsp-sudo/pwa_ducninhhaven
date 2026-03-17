@@ -110,7 +110,7 @@ export async function processQueue(){
 
     }catch(e){
 
-      if(e.message!=="retry"){
+      if(e.message!=="retry"||e.message==="network"){
         queue.shift();
         saveQueue(queue);
         continue;

@@ -4,16 +4,22 @@ import { enqueue } from "./queue.js";
 import { getContext } from "./context.js";
 import { openPicker } from "../ui/components/placePicker.js";
 
+const CART_KEY = "haven_cart";
 
 /* ---------- CART ---------- */
 
 export function dispatchAction(payload) {
-  if(!ensureActive()) return;
-  if(payload.type==="instant"){
-    sendInstant(payload);
-  }
-  if(payload.type==="cart"){
-    addToCart(payload);
+  switch (payload.type) {
+
+    case "instant":
+      if (!ensureActive()) return;
+      return sendInstant(payload);
+  
+    case "cart":
+      return addToCart(payload);
+    
+    default:
+      return;
   }
 }
 
@@ -26,8 +32,10 @@ function ensureActive() {
   return true;
 }
 
-function addToCart(item){
-  const Items = UI.cart?.items || [];
+function addToCart(item) {
+  
+  const Items = [...(UI.cart?.items || [])];
+
   const existing = Items.find(i =>
     i.category===item.category &&
     i.item===item.item &&
@@ -38,7 +46,7 @@ function addToCart(item){
   else Items.push({...item,qty:1});
 
   localStorage.setItem(
-    "haven_cart",
+    CART_KEY,
     JSON.stringify(Items)
   );
 
@@ -64,21 +72,35 @@ function sendInstant(action){
   });
 }
 
-export function sendCart(){
+export function sendCart() {
+
+  if (!ensureActive()) return;
+  
   const ctx = getContext();
-  if(UI.ack.state!=="hidden") return;
+  if (UI.ack.state !== "hidden") return;
+  
   const items = UI.cart.items || [];
-  if(!items.length) return
+  if (!items.length) return;
+
   enqueue({
     type: "cart",
     place: ctx.active.id,
     mode: ctx.active.type,
     item: items
   });
-  clearCart();
+
   setState({ack: { state: "show" }});
 }
+
 export function clearCart() {
   setState({cart: { items: [] }});
-  localStorage.removeItem("haven_cart");
+  localStorage.removeItem(CART_KEY);
+}
+export function loadCart() {
+  try {
+    const items = JSON.parse(localStorage.getItem(CART_KEY) || "[]");
+    setState({ cart: { items } });
+  } catch {
+    clearCart();
+  }
 }

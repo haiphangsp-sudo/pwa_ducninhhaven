@@ -8,7 +8,6 @@ import { onNetworkChange } from "./services/network.js";
 import { CONFIG } from "./config.js";
 import { resetIdleTimer } from "./core/idle.js";
 import { loadMenu, MENU } from "./core/menuStore.js";
-import { detectRecovery } from "./core/queue.js";
 import { getContext, resolvePlace, setAnchor, setActive, normalizeContext } from "./core/context.js";
 import { updateNavContext } from "./ui/components/navBar.js";
 
@@ -118,7 +117,6 @@ async function boot(){
   subscribe(renderApp);
 
   renderApp();
-  detectRecovery();
 
   onNetworkChange(online=>{
     if(online)

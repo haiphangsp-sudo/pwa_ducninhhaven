@@ -39,11 +39,3 @@ export function updateTotal() {
   document.querySelector(".drawer-total").textContent = textTotal;
 
 }
-// - Lưu giỏ hàng vào localStorage để giữ nguyên khi reload trang
-export function loadCart(){
-  const saved = localStorage.getItem("haven_cart");
-  if(saved) {
-    UI.cart = JSON.parse(saved);
-    renderCartBar();
-  }
-}

@@ -39,13 +39,9 @@ export function renderMenu(category) {
 // KHỞI TẠO SỰ KIỆN (Gán một lần duy nhất hoặc đảm bảo tính nhất quán)
 
 export function attachMenuEvents(){
-
-  const panel = document.querySelector(".category-panel");
-  if(!panel) return;
-
-  panel.onclick = e => {
-
-    const btn = e.target.closest("button[data-option]");
+  document.addEventListener("click", e => {
+  
+    const btn = e.target.closest(".category-panel button[data-option]");
     if(!btn) return;
 
     dispatchAction({
@@ -62,5 +58,5 @@ export function attachMenuEvents(){
     setTimeout(() => {
       bar?.classList.remove("cart-bounce");
     }, 400);
-  };
+  });
 }
