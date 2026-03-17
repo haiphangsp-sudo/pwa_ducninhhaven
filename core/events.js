@@ -13,8 +13,8 @@ export function dispatchAction(payload) {
   switch (payload.type) {
 
     case "instant":
-      if (!ensureActive()) return;
-      return sendInstant(payload);
+      ensureActive();
+      sendInstant(payload);
   
     case "cart":
       return addToCart(payload);
