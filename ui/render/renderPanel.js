@@ -11,15 +11,14 @@ export function renderPanel(key){
   if(!container) return;
 
   const category = getCategory(key);
+  const type = category.ui;
+
   if(!category){
     container.innerHTML="";
     return;
   }
 
-  if(category.ui === "article"){
-    container.innerHTML = renderArticle(category);
-    return;
-  }
+  if(type === "article") container.innerHTML = renderArticle(category);
 
-  container.innerHTML = renderMenu(category);
+  if (type === "cart" || type === "instant") container.innerHTML = renderMenu(category);
 }
