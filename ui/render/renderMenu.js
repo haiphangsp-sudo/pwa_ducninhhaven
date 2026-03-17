@@ -48,7 +48,6 @@ if (panel) {
     if (!btn) return;
 
     const payload = {
-      ui: btn.dataset.ui,
       category: btn.dataset.category,
       item: btn.dataset.item,
       option: btn.dataset.option,
