@@ -6,18 +6,7 @@ import { categoryOpt } from "../components/categoryOption.js";
 import { dispatchAction } from "../../core/events.js"; // Đảm bảo import đúng
 
 export function renderMenu(category) {
-  if (typeof category === "undefined"){
-    console.error("undefined");
-    return;
-  }
-  if (category === null) {
-    console.error("null");
-    return;
-  }
-  if (typeof category === "string"){
-    console.error("string " + category);
-  return;
-}
+  
   const type = category.ui;
 
   return category.items
@@ -31,9 +20,8 @@ export function renderMenu(category) {
 
       // 3. NẾU KHÔNG CÓ OPTION NÀO ACTIVE -> KHÔNG VẼ NHÓM NÀY
       if (options.length === 0) return "";
-
       const cards = options
-        .map(opt => categoryOpt(opt, item.key, category.key, type, item.recommend === category.key))
+        .map(opt => categoryOpt(opt, item.key, category.key, type, item.recommend === item.key))
         .join("");
 
       return `
