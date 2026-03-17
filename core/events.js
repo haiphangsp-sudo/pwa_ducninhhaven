@@ -1,5 +1,4 @@
 
-import { CONFIG } from "../config.js";
 import { UI, setState } from "./state.js";
 import { enqueue } from "./queue.js";
 import { getContext } from "./context.js";
@@ -75,7 +74,7 @@ function sendInstant(action){
 export function sendCart(){
   const ctx = getContext();
   if(UI.ack.state!=="hidden") return;
-
+  const items = UI.cart.items;
   enqueue({
     type: "cart",
     place: ctx.active.id,
