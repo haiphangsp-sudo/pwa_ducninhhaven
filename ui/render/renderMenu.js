@@ -6,7 +6,6 @@ import { categoryOpt } from "../components/categoryOption.js";
 import { dispatchAction } from "../../core/events.js"; // Đảm bảo import đúng
 
 export function renderMenu(category) {
-  if (!category || !category.items) return "";
   const type = category.ui;
 
   return Object.entries(category.items)
