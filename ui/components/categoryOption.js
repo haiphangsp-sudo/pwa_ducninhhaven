@@ -2,16 +2,17 @@
 
 import { translate } from "../utils/translate.js";
 
-export function categoryOpt(opt, itemKey, categoryKey, type, recommend) {
+export function categoryOpt(opt, itemKey, categoryKey, type) {
     
     const title = translate(opt.label);
     const desc = opt.description ? translate(opt.description) : "";
     const price = opt.price;
+    const isRecommend = opt.recommend;
 
     return `
         <div class="card">
             <div class="stack menu-cart__info">
-                <div data-service="${opt.key}" class="menu-card__title ${recommend ? "is-default" : ""}">${title}</div>
+                <div data-service="${opt.key}" class="menu-card__title ${isRecommend ? "is-default" : ""}">${title}</div>
                 ${desc ? `<div class="card-desc menu-cart__desc">${desc}</div>` : ""}
             </div>
             <div class="row menu-cart__action card-bottom">
