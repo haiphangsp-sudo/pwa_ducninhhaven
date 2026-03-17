@@ -55,8 +55,8 @@ function sendInstant(action){
 
   enqueue({
     type: "instant",
-    place: ctx.active.id,
-    placeType: ctx.active.type,
+    mode: ctx.active.id,
+    place: ctx.active.type,
     category: action.category,
     item: action.item,
     option: action.option || "default",
@@ -70,9 +70,9 @@ export function sendCart(){
   const items = UI.cart.items;
   enqueue({
     type: "cart",
-    place: ctx.active.id,
-    placeType: ctx.active.type,
-    items: items
+    mode: ctx.active.id,
+    place: ctx.active.type,
+    item: items
   });
 
   setState({

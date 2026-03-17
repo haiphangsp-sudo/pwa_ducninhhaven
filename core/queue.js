@@ -82,7 +82,7 @@ export async function processQueue(){
 
         const body={
           id:req.id,
-          room: anchor?.type === "room" ? anchor.id : "Guest",
+          mode: anchor?.type === "room" ? anchor.id : "Guest",
           device: navigator.userAgent,
           time: Date.now(),
           ...job
