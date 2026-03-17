@@ -2,7 +2,7 @@
 
 import { UI, setState } from "../../core/state.js";
 import { translate } from "../utils/translate.js";
-import { renderMenu } from "./renderMenu.js";
+import { renderPanel } from "./renderPanel.js";
 import { getCategories } from "../../core/menuQuery.js";
 
 export function renderHub(){
