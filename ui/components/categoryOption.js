@@ -2,11 +2,12 @@
 
 import { translate } from "../utils/translate.js";
 
-export function categoryOpt(opt, itemKey, categoryKey, type, isRecommend) {
+export function categoryOpt(opt, itemKey, categoryKey, type) {
     
     const title = translate(opt.label);
     const desc = opt.description ? translate(opt.description) : "";
     const price = opt.price;
+    const isRecommend = opt.recommend;
 
     return `
         <div class="card">
