@@ -57,5 +57,11 @@ if (panel) {
     };
 
     dispatchAction(payload);
+    const bar=document.getElementById("cartBar");
+    bar?.classList.add("cart-bounce");
+
+    setTimeout(()=>{
+      bar?.classList.remove("cart-bounce");
+    },250);
   };
 }

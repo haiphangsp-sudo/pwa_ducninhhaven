@@ -32,9 +32,7 @@ export async function sendRequest(payload) {
         // Sử dụng text/plain để tránh kích hoạt CORS preflight (OPTIONS request) 
         // mà Google Apps Script đôi khi không xử lý tốt. 
         // Backend vẫn sẽ nhận và parse JSON bình thường.
-        headers: {
-          "Content-Type": "text/plain" 
-        },
+        headers: {"Content-Type": "text/plain" },
         body: JSON.stringify(fullPayload)
       },
       8000 // Tăng timeout lên 8 giây cho các đơn hàng lớn
