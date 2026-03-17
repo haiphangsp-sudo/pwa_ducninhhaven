@@ -23,9 +23,8 @@ export function renderMenu(category) {
 
       const cards = options
         .map(opt => {
-          let isRecommend = false;
-          if( item.recommend === category.key && opt.key === item.recommend) isRecommend = true;
-          return categoryOpt(opt, item.key, category.key, type, isRecommend)
+          const isRecommend = Array.Array(item.recommend) && item.recommend.includes(opt.key);
+          return categoryOpt({ ...opt, recommend: isRecommend }, item.key, category.key, type);
         })
         .join("");
 
