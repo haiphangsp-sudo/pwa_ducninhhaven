@@ -1,5 +1,5 @@
 
-
+import { CONFIG } from "../config.js";
 import { UI, setState } from "./state.js";
 import { enqueue } from "./queue.js";
 import { getContext } from "./context.js";
@@ -80,7 +80,7 @@ export function sendCart(){
     type: "cart",
     place: ctx.active.id,
     placeType: ctx.active.type,
-    items: structuredClone(UI.cart.items)
+    items: items
   });
 
   setState({

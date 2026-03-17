@@ -1,76 +1,75 @@
-
-
-
-
 // services/api.js
-// Gửi request dạng application/x-www-form-urlencoded (không gây CORS preflight)
+// Gửi request dạng JSON (tối ưu cho giỏ hàng và dữ liệu lồng nhau)
 
 import { CONFIG } from "../config.js";
 import { isOnline, fetchWithTimeout } from "./network.js";
 import { markSuccess } from "./health.js";
 
+/**
+ * Gửi gói dữ liệu lên Google Apps Script
+ * @param {Object} payload - Dữ liệu từ queue (bao gồm type, item, items, place...)
+ */
 export async function sendRequest(payload) {
-
+  // 1. Kiểm tra kết nối mạng
   if (!isOnline()) {
     throw new Error("offline");
   }
 
-  // Tạo body dạng form-urlencoded
-  const params = new URLSearchParams();
-
+  // 2. Chuẩn bị gói dữ liệu đầy đủ bao gồm mã bảo mật từ Config
   const fullPayload = {
     ...payload,
     secret: CONFIG.API_SECRET
   };
 
-  Object.keys(fullPayload).forEach(key => {
-    const value = fullPayload[key];
-
-    if (Array.isArray(value)) {
-      params.append(key, JSON.stringify(value));
-    } else if (value !== undefined && value !== null) {
-      params.append(key, value);
-    }
-  });
-
   let res;
 
   try {
-
+    // 3. Thực hiện gọi API
     res = await fetchWithTimeout(
       CONFIG.API_ENDPOINT,
       {
         method: "POST",
-        body: params
+        // Sử dụng text/plain để tránh kích hoạt CORS preflight (OPTIONS request) 
+        // mà Google Apps Script đôi khi không xử lý tốt. 
+        // Backend vẫn sẽ nhận và parse JSON bình thường.
+        headers: {
+          "Content-Type": "text/plain" 
+        },
+        body: JSON.stringify(fullPayload)
       },
-      6000
+      8000 // Tăng timeout lên 8 giây cho các đơn hàng lớn
     );
 
   } catch (e) {
     throw new Error("network");
   }
 
+  // 4. Kiểm tra phản hồi từ Server
   if (!res || !res.ok) {
     throw new Error("server");
   }
 
   let data;
-
   try {
     data = await res.json();
   } catch {
     throw new Error("invalid_json");
   }
 
-  if(data.status==="unauthorized") return {fatal:true};
-  if(data.status==="invalid") return {fatal:true};
-  if(data.status==="duplicate") return data;
-  if(data.status==="rate_limited") throw new Error("retry");
-
-  if(data.status!=="ok"){
+  // 5. Xử lý các trạng thái phản hồi đặc biệt từ Google Script
+  if (data.status === "unauthorized") return { fatal: true, message: "Sai mã bí mật" };
+  if (data.status === "invalid") return { fatal: true, message: "Dữ liệu không hợp lệ" };
+  
+  // Nếu server báo bận hoặc yêu cầu thử lại
+  if (data.status === "retry") {
     throw new Error("retry");
   }
 
-  markSuccess();
+  // Ghi nhận gửi thành công để cập nhật hệ thống sức khỏe của App
+  if (data.status === "ok") {
+    markSuccess();
+    return { success: true };
+  }
+
   return data;
 }

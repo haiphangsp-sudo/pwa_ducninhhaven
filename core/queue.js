@@ -80,17 +80,12 @@ export async function processQueue(){
       const ctx=getContext();
       const anchor=ctx?.anchor;
 
-      let body;
-
-        body={
+        const body={
           id:req.id,
-          type: job.type,
-          place:job.place,
-          placeType:job.placeType,
           room: anchor?.type === "room" ? anchor.id : "Guest",
           device: navigator.userAgent,
           time: Date.now(),
-          items:job.items
+          ...job
         };
 
       await sendRequest(body);
