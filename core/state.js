@@ -71,6 +71,14 @@ export function subscribe(fn){
   };
 }
 
+export function getState(){
+  return structuredClone(UI);
+}
+
+export function getUI(){
+  return ;
+}
+
 export function setState(patch) {
   
   const prev = JSON.stringify(UI);
