@@ -3,6 +3,10 @@
 import { UI, setState } from "./state.js";
 import { enqueue } from "./queue.js";
 import { getContext } from "./context.js";
+import { openPicker } from "../ui/components/placePicker.js";
+
+const ctx = getContext();
+
 
 /* ---------- CART ---------- */
 
@@ -15,6 +19,15 @@ export function dispatchAction(payload) {
     addToCart(payload);
   }
 }
+
+function ensureActive(c){
+  if(!ctx?.active){
+    openPicker();
+    return false;
+  }
+  return true;
+}
+
 function addToCart(item){
   const Items = UI.cart?.items || [];
   const existing = Items.find(i =>
@@ -45,15 +58,8 @@ function addToCart(item){
 
 function sendInstant(action){
 
-  if(UI.ack.state!=="hidden") return;
-
-  const ctx = getContext();
-
-  if(!ctx?.active){
-    window.dispatchEvent(new Event("openPlacePicker"));
-    return;
-  }
-
+  if (UI.ack.state !== "hidden") return;
+  
   setState({ack:{state:"show"}});
 
   enqueue({

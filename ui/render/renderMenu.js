@@ -1,10 +1,8 @@
 // ui/render/renderMenu.js
 
 import { getOptions } from "../../core/menuQuery.js";
-import { getContext } from "../../core/context.js";
 import { translate } from "../utils/translate.js";
 import { categoryOpt } from "../components/categoryOption.js";
-import { openPicker } from "../components/placePicker.js";
 import { dispatchAction } from "../../core/events.js"; // Đảm bảo import đúng
 
 export function renderMenu(category) {
@@ -57,13 +55,4 @@ if (panel) {
 
     dispatchAction(payload);
   };
-}
-
-function ensureActive(){
-  const ctx = getContext();
-  if(!ctx?.active){
-    openPicker();
-    return false;
-  }
-  return true;
 }
