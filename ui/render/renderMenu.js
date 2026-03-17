@@ -20,11 +20,12 @@ export function renderMenu(category) {
 
       // 3. NẾU KHÔNG CÓ OPTION NÀO ACTIVE -> KHÔNG VẼ NHÓM NÀY
       if (options.length === 0) return "";
-      const isRecommend = item.recommend && item.recommend.includes(opt.key);
       
       const cards = options
-        .map(opt => categoryOpt({ ...opt, recommend: isRecommend }, item.key, category.key, type))
-        .join("");
+        .map(opt => {
+          const isRecommend = item.recommend && item.recommend.includes(opt.key);
+          categoryOpt({ ...opt, recommend: isRecommend }, item.key, category.key, type);
+        }).join("");
 
       return `
         <section class="menu-group">
