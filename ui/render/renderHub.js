@@ -17,7 +17,7 @@ export function renderHub(){
   let panel = UI.view.panel;
 
   if(!panels.find(p => p.key === panel)){
-    panel = panels[0]?.key || "intro";
+    panel = panels[0]?.key;
   }
 
   /* =======================================================
