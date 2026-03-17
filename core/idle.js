@@ -6,11 +6,12 @@ import { UI, setState } from "./state.js";
 export function resetIdleTimer(){
 
   clearTimeout(UI.idle.timer);
+  const home = UI.view.panel;
 
   UI.idle.timer = setTimeout(() => {
 
     setState({
-      view:{ panel:"intro" },
+      view:{ panel: home },
       ack:{state:"hidden"}   // chỉ đóng overlay xác nhận nếu còn
     });
 

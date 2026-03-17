@@ -59,7 +59,7 @@ function sendInstant(action){
     mode: ctx.active.type,
     category: action.category,
     item: action.item,
-    option: action.option || "default",
+    option: action.option,
     qty:1
   });
 }
@@ -67,18 +67,18 @@ function sendInstant(action){
 export function sendCart(){
   const ctx = getContext();
   if(UI.ack.state!=="hidden") return;
-  const items = UI.cart.items;
+  const items = UI.cart.items || [];
+  if(!items.length) return
   enqueue({
     type: "cart",
     place: ctx.active.id,
     mode: ctx.active.type,
     item: items
   });
-
-  setState({
-    ack:{state:"show"},
-    cart:{items:[]}
-  });
-
+  clearCart();
+  setState({ack: { state: "show" }});
+}
+export function clearCart() {
+  setState({cart: { items: [] }});
   localStorage.removeItem("haven_cart");
 }

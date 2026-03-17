@@ -1,9 +1,16 @@
+// core/queue.js
+
 
 
 import { sendRequest } from "../services/api.js";
 import { setState } from "./state.js";
 import { getRetryDelay } from "../services/retryPolicy.js";
 import { getContext } from "./context.js";
+import { clearCart } from "./events.js"
+import { setDeliveryState } from "../ui/render/renderDelivery.js";
+import { setRecoveryState } from "../ui/render/renderRecovery.js";
+
+
 
 const STORAGE_KEY="haven_queue";
 const MAX_QUEUE = 50;
@@ -68,8 +75,7 @@ export async function processQueue(){
   }
 
   processing=true;
-  emitDelivery("sending");
-
+  setDeliveryState("sending"); //đang gửi
   while(queue.length){
 
     const req=queue[0];
@@ -82,20 +88,24 @@ export async function processQueue(){
 
         const body={
           id:req.id,
-          mode: anchor?.type === "room" ? anchor.id : "Guest",
           device: navigator.userAgent,
           time: Date.now(),
           ...job
         };
 
       await sendRequest(body);
-
+        if(job.type === "cart") clearCart();
       queue.shift();
       saveQueue(queue);
 
-      if(!queue.length){
-        emitDelivery("sent");
-        setTimeout(()=>emitDelivery("idle"),2000);
+      if (!queue.length) {
+        setDeliveryState("send"); //màu xanh: thành công
+        setTimeout(() => {
+          setDeliveryState("idle");
+          setState({
+            ack: { state: "hidden" }
+          });
+        },2500);
       }
 
     }catch(e){
@@ -109,7 +119,7 @@ export async function processQueue(){
       req.retries++;
       saveQueue(queue);
 
-      emitDelivery("failed",{retries:req.retries});
+      setDeliveryState("failed",{retries:req.retries}); // Hiện màu đỏ, thử lại
 
       const delay=getRetryDelay(req.retries);
 

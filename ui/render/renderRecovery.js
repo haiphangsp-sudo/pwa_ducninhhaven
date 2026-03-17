@@ -2,6 +2,8 @@
 // Banner hiển thị khi phát hiện có yêu cầu chưa gửi (do mất mạng hoặc đóng app đột ngột)
 
 import { translate } from "../utils/translate.js";
+import { showOverlay, closeOverlay } from "../interactions/overlayManager.js";
+
 
 let state="idle";
 
@@ -16,12 +18,13 @@ function render(){
   if(!el) return;
 
   if(state==="idle"){
-    el.classList.add("hidden");
+    closeOverlay("recoveryBanner");
     return;
   }
 
   el.textContent=translate(`recovery.${state}`);
-  el.classList.remove("hidden");
+  showOverlay("recoveryBanner");
+
 
   if(state==="found"){
     el.onclick=()=>{

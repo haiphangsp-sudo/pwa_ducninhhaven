@@ -4,6 +4,7 @@
   border-radius:50%;
   background:#2f4f3e;
   animation:ack .5s ease;
+  white-space: nowrap;
 }
 
 

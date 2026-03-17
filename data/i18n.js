@@ -10,7 +10,7 @@ recovery:{
 },
 delivery:{
   pending:{vi:"Đang gửi...",en:"Sending..."},
-  ack:{vi:"Đã ghi nhận",en:"Received"},
+  ack_success:{vi:"Đã ghi nhận",en:"Received"},
   sent:{vi:"Đã gửi tới bếp",en:"Sent to kitchen"},
   delivered:{vi:"Đã hoàn tất",en:"Completed"},
   failed:{vi:"Không gửi được — sẽ thử lại",en:"Failed — will retry"}
