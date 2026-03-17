@@ -14,6 +14,7 @@ import { setDeliveryState } from "./ui/render/renderDelivery.js";
 import { setRecoveryState } from "./ui/render/renderRecovery.js";
 import { attachMenuEvents } from "./ui/render/renderMenu.js";
 import { loadCart } from "./core/events.js";
+import { detectRecovery } from "./core/queue.js";
 
 
 
@@ -123,6 +124,7 @@ async function boot(){
   subscribe(renderApp);
   attachMenuEvents();
   loadCart();
+  detectRecovery();
   renderApp();
   setDeliveryState("idle");
   setRecoveryState("idle");
