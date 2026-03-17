@@ -6,7 +6,7 @@ import { categoryOpt } from "../components/categoryOption.js";
 import { dispatchAction } from "../../core/events.js"; // Đảm bảo import đúng
 
 export function renderMenu(category) {
-  
+ 
   const type = category.ui;
 
   return category.items
@@ -20,12 +20,10 @@ export function renderMenu(category) {
 
       // 3. NẾU KHÔNG CÓ OPTION NÀO ACTIVE -> KHÔNG VẼ NHÓM NÀY
       if (options.length === 0) return "";
-      
+
       const cards = options
-        .map(opt => {
-          const isRecommend = item.recommend && item.recommend.includes(opt.key);
-          categoryOpt({ ...opt, recommend: isRecommend }, item.key, category.key, type);
-        }).join("");
+        .map(opt => categoryOpt(opt, item.key, category.key, type, opt.recommend))
+        .join("");
 
       return `
         <section class="menu-group">
