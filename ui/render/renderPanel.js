@@ -6,17 +6,15 @@ import { renderArticle } from "./renderArticle.js";
 import { renderMenu } from "./renderMenu.js";
 
 export function renderPanel(key){
-
+  
   const container = document.querySelector(".category-panel");
   if(!container) return;
-
   const category = getCategory(key);
-  const type = category.ui;
-
   if(!category){
     container.innerHTML="";
     return;
   }
+  const type = category.ui;
 
   if(type === "article") container.innerHTML = renderArticle(category);
 

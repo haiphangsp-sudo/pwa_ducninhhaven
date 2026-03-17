@@ -8,16 +8,12 @@ import { dispatchAction } from "../../core/events.js"; // Đảm bảo import đ
 export function renderMenu(category) {
 
   const type = category.ui;
-  return category.items
-    // 1. Lọc các Item chính đang active
-    .filter(item => item.active !== false)
-    .map(item => {
-      
-      // 2. Lấy và lọc các Option con đang active
+  return category.items.map(item => {
+      // 1. Lấy và lọc các Option con đang active
       const options = getOptions(category.key, item.key)
         .filter(opt => opt.active !== false);
 
-      // 3. NẾU KHÔNG CÓ OPTION NÀO ACTIVE -> KHÔNG VẼ NHÓM NÀY
+      // 2. NẾU KHÔNG CÓ OPTION NÀO ACTIVE -> KHÔNG VẼ NHÓM NÀY
       if (options.length === 0) return "";
 
       const cards = options
@@ -41,26 +37,30 @@ export function renderMenu(category) {
 }
 
 // KHỞI TẠO SỰ KIỆN (Gán một lần duy nhất hoặc đảm bảo tính nhất quán)
-const panel = document.querySelector(".category-panel");
-if (panel) {
-  panel.onclick = e => {
-    const btn = e.target.closest("button[data-option]");
-    if (!btn) return;
 
-    const payload = {
+export function attachMenuEvents(){
+
+  const panel = document.querySelector(".category-panel");
+  if(!panel) return;
+
+  panel.onclick = e => {
+
+    const btn = e.target.closest("button[data-option]");
+    if(!btn) return;
+
+    dispatchAction({
       type: btn.dataset.ui,
       category: btn.dataset.category,
       item: btn.dataset.item,
       option: btn.dataset.option,
       qty: 1
-    };
+    });
 
-    dispatchAction(payload);
-    const bar=document.getElementById("cartBar");
+    const bar = document.getElementById("cartBar");
     bar?.classList.add("cart-bounce");
 
-    setTimeout(()=>{
+    setTimeout(() => {
       bar?.classList.remove("cart-bounce");
-    },400);
+    }, 400);
   };
 }

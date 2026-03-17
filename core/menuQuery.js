@@ -62,15 +62,20 @@ export function getItems(catKey) {
     }
     return out;
 }
+
 export function getOptions(catKey, itemKey) {
 
-    const options = MENU?.[catKey]?.items?.[itemKey]?.options;
-    if (!options) return [];
-    return Object.entries(options).map(([optKey, opt]) => ({
-        ...opt,
-        key: optKey
-    }));
+  const options = MENU?.[catKey]?.items?.[itemKey]?.options;
+  if (!options) return [];
+
+  return Object.entries(options)
+    .map(([optKey, opt]) => ({
+      ...opt,
+      key: optKey
+    }))
+    .filter(opt => opt.active !== false);
 }
+
 
 export function getArticle(key) {
     const cat = MENU[key];
