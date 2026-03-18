@@ -11,9 +11,59 @@
   .instant-btn{
     width:100%;
   }
+  
+  .drawer-panel{
+    padding:
+      18px
+      16px
+      calc(22px + env(safe-area-inset-bottom));
+    max-height:80vh;
+  }
 
+  .drawer__header{
+    gap:12px;
+  }
+
+  .drawer__header h3,
+  .drawer__header-title,
+  .drawer__header-count{
+    font-size:20px;
+  }
+
+  .drawer__item{
+    padding:14px 12px;
+    gap:10px;
+  }
+
+  .drawer__info strong{
+    font-size:19px;
+  }
+
+  .drawer__info div,
+  .drawer__variant{
+    font-size:18px;
+  }
+
+  .drawer-qty{
+    grid-template-columns:38px 28px 38px;
+    column-gap:8px;
+  }
+
+  .drawer-qty button{
+    width:38px;
+    height:38px;
+    font-size:22px;
+  }
+
+  .drawer-qty .qty{
+    min-width:28px;
+    font-size:18px;
+  }
+
+  .drawer-send{
+    min-height:54px;
+  }
 }
-
 @media(min-width:600px){
   .menu-grid{
     grid-template-columns: 1fr 1fr;
