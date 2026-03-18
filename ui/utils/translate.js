@@ -1,66 +1,60 @@
-
-
-// ui/utils/translate.js
-
 import { STRINGS } from "../../data/i18n.js";
-import { setState, getState } from "../../core/state.js";
+import { getState, setState } from "../../core/state.js";
 
-
-/* ---------- TRANSLATE ---------- */
-
-export function translate(label){
-
-  if (!label) return "";
+export function translate(label) {
   const currentLang = getState().lang.current;
 
-  if(typeof label === "string")
+  if (!label) return "";
+
+  if (typeof label === "string") {
     return t(label, currentLang);
+  }
 
   return label[currentLang] || label.vi || "";
 }
 
-function t(key){
-
+function t(key, currentLang) {
   const parts = key.split(".");
   let obj = STRINGS;
 
-  for(const p of parts){
+  for (const p of parts) {
     obj = obj?.[p];
   }
 
-  return obj?.[lang] || key;
+  return obj?.[currentLang] || key;
 }
 
-/* ---------- LANGUAGE ---------- */
+export function setLanguage(lang) {
+  const next = lang === "en" ? "en" : "vi";
 
-function setLanguage(lang) {
-  setState({ lang: { current: lang } });
-  localStorage.setItem("haven_lang", currentLang);
-  window.dispatchEvent(new Event("languagechange"));
+  localStorage.setItem("haven_lang", next);
+
+  setState({
+    lang: {
+      current: next
+    }
+  });
 }
 
-/* ---------- UI SWITCH ---------- */
-
-export function initLangSwitch(){
-
+export function initLangSwitch() {
   const el = document.getElementById("langSwitch");
-  if(!el) return;
+  if (!el) return;
 
   updateActive();
 
-  el.querySelectorAll("button").forEach(btn=>{
-    btn.onclick = ()=>{
+  el.querySelectorAll("button").forEach(btn => {
+    btn.onclick = () => {
       const lang = btn.dataset.lang;
       setLanguage(lang);
       updateActive();
     };
   });
 
-  function updateActive(){
-    const currentLang = getState().lang.current;
-    el.querySelectorAll("button").forEach(btn=>{
-      btn.classList.toggle("active", btn.dataset.lang===currentLang);
-    });
+  function updateActive() {
+    const current = getState().lang.current;
 
+    el.querySelectorAll("button").forEach(btn => {
+      btn.classList.toggle("active", btn.dataset.lang === current);
+    });
   }
 }

@@ -8,7 +8,7 @@ import { getContext } from "./context.js";
 export const UI = {
 
   lang:{
-    current:"vi"
+    current: localStorage.getItem("haven_lang") || "vi"
   },
   meta: {
     version:1

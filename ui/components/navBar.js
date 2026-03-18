@@ -30,8 +30,6 @@ export function renderNavBar(){
   identityLabel = document.querySelector(".identity-label");
   locLabel = document.querySelector(".loc-label");
 
-  updateNavContext();
-  initLangSwitch();
   document.querySelector(".nav-center button").onclick = openPicker;
 }
 /* ===================================================== */
