@@ -1,19 +1,13 @@
 // ui/components/placePicker.js
-// Component cho phép khách chọn điểm phục vụ (phòng/bàn/khu vực) thủ công, nếu QR code không hoạt động hoặc khách muốn đổi điểm phục vụ
-
 import { showOverlay, closeOverlay } from "../interactions/backdropManager.js";
-import { getIcon } from "./navBar.js"; 
+import { getIcon } from "./navBar.js";
 import { PLACES } from "../../data/places.js";
-import { setActive, getContext } from "../../core/context.js";
+import { getContext, applyPlaceById } from "../../core/context.js";
 import { translate } from "../utils/translate.js";
-import { getState } from "../../core/state.js";
-
-
-/* -------------------------------------------------- */
 
 function initPlacePicker() {
-  const el=document.getElementById("placePicker");
-  el.innerHTML=`
+  const el = document.getElementById("placePicker");
+  el.innerHTML = `
     <div class="picker-panel">
       <h3 class="picker-panel_title"></h3>
       <div class="picker-group grid" data-group="room"></div>
@@ -22,16 +16,16 @@ function initPlacePicker() {
     </div>
   `;
 }
-/* -------------------------------------------------- */
 
-export function openPicker(){
-  initPlacePicker()
+export function openPicker() {
+  initPlacePicker();
+
   const ctx = getContext();
-  const anchor = ctx.anchor;
-  const active = ctx.active;
-  if (anchor === "room") {
-    const myRoom = { [active.room]: PLACES.room[active.anchor.id] }
-    renderGroup("room", PLACES.room[myRoom]);
+  const anchor = ctx?.anchor;
+
+  if (anchor?.type === "room") {
+    const myRoom = { [anchor.id]: PLACES.room[anchor.id] };
+    renderGroup("room", myRoom);
     renderGroup("table", PLACES.table);
     renderGroup("area", PLACES.area);
   } else if (anchor?.type === "area") {
@@ -43,45 +37,38 @@ export function openPicker(){
     clearGroup("room");
     clearGroup("area");
   }
+
+  document.querySelector(".picker-panel_title").textContent = translate("select_place");
   showOverlay("placePicker");
 }
-/* -------------------------------------------------- */
 
-function renderGroup(type,data){
-  
-  const group=document.querySelector(`[data-group="${type}"]`);
-  if(!group) return;
+function renderGroup(type, data) {
+  const group = document.querySelector(`[data-group="${type}"]`);
+  if (!group) return;
 
-  group.innerHTML =`
+  group.innerHTML = `
     <div class="flex gap-s">
       <span class="${type}-icon">${getIcon(type)}</span>
       <span class="picker-title">${translate(type)}</span>
     </div>
     <div class="picker-list">
-      ${Object.entries(data).map(([id,p])=>`
+      ${Object.entries(data).map(([id, p]) => `
         <button class="picker-option btn center" data-type="${type}" data-id="${id}">
           ${translate(p.label)}
         </button>
       `).join("")}
     </div>
   `;
-  
- 
-  group.querySelectorAll("button").forEach(btn=>{
-    btn.onclick=()=>{
-      setActive({
-        type:btn.dataset.type,
-        id:btn.dataset.id
-      });
-        closeOverlay();
+
+  group.querySelectorAll("button").forEach(btn => {
+    btn.onclick = () => {
+      applyPlaceById(btn.dataset.id);
+      closeOverlay();
     };
   });
-  document.querySelector(".picker-panel_title").textContent = translate("select_place");
-  closeOverlay();
 }
 
-function clearGroup(type){
-  const group=document.querySelector(`[data-group="${type}"]`);
-  if(group) group.innerHTML="";
+function clearGroup(type) {
+  const group = document.querySelector(`[data-group="${type}"]`);
+  if (group) group.innerHTML = "";
 }
-/* -------------------------------------------------- */
