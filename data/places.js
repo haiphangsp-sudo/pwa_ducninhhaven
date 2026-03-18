@@ -33,7 +33,3 @@ export const PLACE_RULES = {
   table: ["table"]
 };
 
-export function canSelectPlace(anchorType, targetType) {
-  if (!anchorType || !targetType) return false;
-  return PLACE_RULES[anchorType]?.includes(targetType) ?? false;
-}
