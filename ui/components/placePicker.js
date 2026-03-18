@@ -4,6 +4,8 @@ import { getIcon } from "./navBar.js";
 import { PLACES } from "../../data/places.js";
 import { getContext, applyPlaceById } from "../../core/context.js";
 import { translate } from "../utils/translate.js";
+import { getAllowedPlaceTypes } from "../../data/places.js";
+
 
 function initPlacePicker() {
   const el = document.getElementById("placePicker");
@@ -17,28 +19,22 @@ function initPlacePicker() {
   `;
 }
 
+
 export function openPicker() {
   initPlacePicker();
 
   const ctx = getContext();
-  const anchor = ctx?.anchor;
-  clearGroup("area");
-  clearGroup("table");
-  clearGroup("room");
+  const mode = ctx?.anchor?.type || "table";
+  const allowedTypes = getAllowedPlaceTypes(mode);
 
-  if (anchor?.type === "room") {
-    const myRoom = { [anchor.id]: PLACES.room[anchor.id] };
-    renderGroup("room", myRoom);
-    renderGroup("table", PLACES.table);
-    renderGroup("area", PLACES.area);
-  } else if (anchor?.type === "area") {
-    renderGroup("area", PLACES.area);
-    renderGroup("table", PLACES.table);
-  } else {
-    renderGroup("table", PLACES.table);
-  }
+  ["room", "area", "table"].forEach(type => {
+    if (allowedTypes.includes(type)) {
+      renderGroup(type, PLACES[type]);
+    } else {
+      clearGroup(type);
+    }
+  });
 
-  document.querySelector(".picker-panel_title").textContent = translate("select_place");
   showOverlay("placePicker");
 }
 

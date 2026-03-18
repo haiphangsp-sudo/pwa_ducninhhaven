@@ -22,4 +22,22 @@ const places = {
 
 };
 
-export const PLACES = {room:places.rooms,table:places.tables,area:places.areas}
+export const PLACES = {
+  room: places.rooms,
+  table: places.tables,
+  area: places.areas
+}
+export const PLACE_CONFIG = {
+  room: {
+    mode: ["area", "table"]
+  },
+  area: {
+    mode: ["area", "table"]
+  },
+  table: {
+    mode: ["table"]
+  }
+};
+export function getAllowedPlaceTypes(anchorType) {
+  return PLACE_CONFIG[anchorType]?.mode || ["table"];
+}
