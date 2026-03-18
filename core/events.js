@@ -6,27 +6,32 @@ import { openPicker } from "../ui/components/placePicker.js";
 
 
 const CART_KEY = "haven_cart";
+let pendingAction = null;
 
 /* ---------- CART ---------- */
 
 export function dispatchAction(payload) {
   switch (payload.type) {
 
-    case "instant":
-      ensureActive();
+    case "instant": 
+      if(!ensureActive())return;
       sendInstant(payload);
-  
+      return;
+
     case "cart":
       return addToCart(payload);
-    
+  
     default:
       return;
   }
 }
 
-function ensureActive() {
+function ensureActive(payload) {
   const ctx = getContext();
-  if(!ctx?.active){
+  if (!ctx?.active) {
+    enqueue({
+    payload
+    });
     openPicker();
     return false;
   }
@@ -75,7 +80,7 @@ function sendInstant(action){
 
 export function sendCart() {
 
-  ensureActive();
+  if(!ensureActive()) return;
   
   const ctx = getContext();
   if (UI.ack.state !== "hidden") return;
