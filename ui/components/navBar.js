@@ -75,8 +75,7 @@ function formatLocation(ctx){
   }
 
   const {type,id} = ctx.active;
-  const group = type + "s";
-  const place = PLACES[group]?.[id];
+  const place = PLACES[type]?.[id];
 
   if(ctx.active.type === "room" && ctx.anchor?.type==="room" && ctx.active.id === ctx.anchor.id){
     return translate("in_room");
