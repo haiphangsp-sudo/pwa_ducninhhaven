@@ -4,14 +4,14 @@
 import { MENU } from "../core/menuStore.js";
 import { getContext } from "../core/context.js";
 
-function getPlaceType() {
+function getMode() {
     const ctx = getContext();
     const anchor=ctx?.anchor;
     if(!anchor) return "table";
     return anchor.type;
 }
 export function getCategoriesForMode(){
-  const placeType = getPlaceType();
+  const placeType = getMode();
   return Object.entries(MENU)
 
     .filter(([k,v]) =>

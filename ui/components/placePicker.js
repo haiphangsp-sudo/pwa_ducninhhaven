@@ -29,15 +29,15 @@ export function openPicker(){
   const anchor=getAnchor();
   
   if (anchor?.type === "room") {
-    renderGroup("room", { [anchor.id]: PLACES.rooms[anchor.id] });
-    renderGroup("table", PLACES.tables);
-    renderGroup("area", PLACES.areas);
+    renderGroup("room", PLACES.room );
+    renderGroup("table", PLACES.table);
+    renderGroup("area", PLACES.area);
   } else if (anchor?.type === "area") {
-    renderGroup("area", PLACES.areas);
-    renderGroup("table", PLACES.tables);
+    renderGroup("area", PLACES.area);
+    renderGroup("table", PLACES.table);
     clearGroup("room");
   } else {
-    renderGroup("table", PLACES.tables);
+    renderGroup("table", PLACES.table);
     clearGroup("room");
     clearGroup("area");
   }

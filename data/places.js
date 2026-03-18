@@ -1,4 +1,4 @@
-export const PLACES = {
+const places = {
 
   rooms:{
     Olive:{ label:{vi:"Phòng Olive",en:"Olive Room"} },
@@ -21,3 +21,5 @@ export const PLACES = {
   }
 
 };
+
+export const PLACES = {room:places.rooms,table:places.tables,area:places.areas}

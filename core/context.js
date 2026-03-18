@@ -14,9 +14,9 @@ const ANCHOR_TTL = 24*60*60*1000;   // 24 giờ
 
 export function resolvePlace(id){
 
-  if(PLACES.rooms[id])  return {type:"room",id};
-  if(PLACES.tables[id]) return {type:"table",id};
-  if(PLACES.areas[id])  return {type:"area",id};
+  if(PLACES.room[id])  return {mode:"room",id};
+  if(PLACES.table[id]) return {mode:"table",id};
+  if(PLACES.area[id])  return {mode:"area",id};
 
   return null;
 }
@@ -34,25 +34,18 @@ function load(){
 
 function save(ctx){
   localStorage.setItem(KEY,JSON.stringify(ctx));
-  updateNavContext();
   window.dispatchEvent(new Event("contextChanged"));
 }
 
 /* -------------------------------------------------- */
 /* QR scan → identity */
 
-export function setAnchor(place){
+export function setAnchor(mode){
 
   const ctx=load();
-  const now=Date.now();
   ctx.anchor={
-    ...place,
-    ts:now
-  };
-
-  ctx.active={
-    ...place,
-    ts:now
+    ...mode,
+    ts:Date.now()
   };
 
   save(ctx);
@@ -64,12 +57,12 @@ export function setAnchor(place){
 export function setActive(place){
 
   const ctx=load();
-
-  // khách ngoài không được set phòng
-  if(place.type==="room" && ctx.anchor?.type!=="room")
-    return;
-
-  ctx.active={
+  const mode = ctx.anchor?.type;
+  if (mode === "table" && place.type === "table") return;
+  if (mode === "area" && place.type === "area" && place.type === "table") return;
+  if (mode === "room" && place.type === "room" && place.type === "area" && place.type === "table") return;
+  
+  ctx.active = {
     ...place,
     ts:Date.now()
   };
@@ -139,8 +132,7 @@ export function initContext(){
 /* ===================================================== */
 
 export function needsPlaceSelection(){
-  const ctx=getContext();
-  if (!ctx) return true;
-  if (!ctx.anchor) return true;
+  const mode = getAnchor()?.type;
+  if (mode === "room") return false;
   return false;
 }
