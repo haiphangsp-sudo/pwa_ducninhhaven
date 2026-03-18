@@ -4,9 +4,9 @@
 import { showOverlay, closeOverlay } from "../interactions/backdropManager.js";
 import { getIcon } from "./navBar.js"; 
 import { PLACES } from "../../data/places.js";
-import { setActive, getAnchor } from "../../core/context.js";
+import { setActive } from "../../core/context.js";
 import { translate } from "../utils/translate.js";
-
+import { getState } from "../../core/state.js";
 
 
 /* -------------------------------------------------- */
@@ -26,10 +26,11 @@ function initPlacePicker() {
 
 export function openPicker(){
   initPlacePicker()
-  const anchor=getAnchor();
-  
-  if (anchor?.type === "room") {
-    renderGroup("room", PLACES.room[anchor.active]);
+  const anchors = getState().context;
+  const anchor = anchors.anchor;
+  const active = anchors.active;
+  if (anchor === "room") {
+    renderGroup("room", PLACES.room[active]);
     renderGroup("table", PLACES.table);
     renderGroup("area", PLACES.area);
   } else if (anchor?.type === "area") {

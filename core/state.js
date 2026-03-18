@@ -110,3 +110,14 @@ function deepMerge(target,source){
     }
   }
 }
+export function syncContextToState() {
+  const ctx = getContext();
+  if (!ctx) return;
+  setState({
+    context: {
+      anchor: ctx?.anchor|| null,
+      active: ctx?.active|| null
+    }
+  });
+
+}
