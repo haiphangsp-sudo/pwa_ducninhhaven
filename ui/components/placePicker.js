@@ -28,7 +28,7 @@ const ctx = getContext();
   const anchor = ctx?.anchor;
   const mode = anchor?.type || "table";
   PLACE_RULES[mode].forEach(type => {
-    if (!allowedTypes.includes(type)) {
+    if (!mode.includes(type)) {
       return;
     }
   });
