@@ -2,6 +2,8 @@
 
 // core/state.js
 // Single source of truth.
+import { getContext } from "./context.js";
+
 
 export const UI = {
 
