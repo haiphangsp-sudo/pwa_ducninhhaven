@@ -15,7 +15,7 @@ import { setRecoveryState } from "./ui/render/renderRecovery.js";
 import { attachMenuEvents } from "./ui/render/renderMenu.js";
 import { loadCart } from "./core/events.js";
 import { detectRecovery } from "./core/queue.js";
-import { shouldSetAnchor } from "./core/context.js";
+import { ANCHOR_PRIORITY } from "./core/context.js";
 
 
 /* ---------- VERSION ---------- */
@@ -58,7 +58,15 @@ function applyURLContext(){
   // quan trọng: xoá param để tránh reset khi reload
   history.replaceState({}, "", location.pathname);
 }
+function shouldSetAnchor(currentType, nextType) {
+  
+  if(!nextType) return false;
+  if (!currentType) return true;
 
+  const currentPriority = ANCHOR_PRIORITY[currentType]??0;
+  const nextPriority = ANCHOR_PRIORITY[nextType]??0;
+  return nextPriority > currentPriority;
+}
 /* ---------- SW ---------- */
 // - Đăng ký Service Worker để hỗ trợ offline và background sync
 function registerSW(){

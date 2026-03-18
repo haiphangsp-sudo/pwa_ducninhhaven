@@ -12,20 +12,8 @@ import { syncContextToState } from "./state.js";
 const KEY="haven_context";
 const ACTIVE_TTL = 30*60*1000;      // 60 phút
 const ANCHOR_TTL = 24*60*60*1000;   // 24 giờ
-const ANCHOR_PRIORITY = {
-  area: 1,
-  table: 2,
-  room: 3
-}
-export function shouldSetAnchor(currentType, nextType) {
-  
-  if(!nextType) return false;
-  if (!currentType) return true;
-  
-  const currentPriority = ANCHOR_PRIORITY[currentType]??0;
-  const nextPriority = ANCHOR_PRIORITY[nextType]??0;
-  return nextPriority > currentPriority;
-}
+export const ANCHOR_PRIORITY = { table: 1, area: 2, room: 3 };
+
 /* -------------------------------------------------- */
 /* resolve id → place object */
 
