@@ -27,7 +27,7 @@ export const PLACES = {
   table: places.tables,
   area: places.areas
 }
-PLACE_RULES = {
+export const PLACE_RULES = {
   room: {
     mode: ["area", "table"]
   },
