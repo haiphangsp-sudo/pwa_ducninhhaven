@@ -2,7 +2,7 @@
 
 import { CONFIG } from "../config.js";
 import { MENU } from "./menuStore.js";
-import { PLACES } from "../data/places.js";
+import { PLACES, PLACE_RULES} from "../data/places.js";
 
 /* ---------- CONTEXT STATE ---------- */
 
@@ -69,14 +69,9 @@ export function setActive(place) {
 
 /* ---------- PLACE PRIORITY ---------- */
 
-export const PLACE_PRIORITY = {
-  area: 1,
-  table: 2,
-  room: 3
-};
-
-export function getPlacePriority(type) {
-  return PLACE_PRIORITY[type] ?? 0;
+export function canSelectPlace(anchorType, targetType) {
+  if (!anchorType || !targetType) return false;
+  return PLACE_RULES[anchorType]?.includes(targetType) ?? false;
 }
 
 export function shouldReplaceAnchor(currentType, nextType) {
@@ -91,15 +86,19 @@ export function shouldReplaceAnchor(currentType, nextType) {
 export function applyResolvedPlace(resolved) {
   if (!resolved) return false;
 
-  const currentType = context?.anchor?.type;
+  const anchorType = context?.anchor?.type;
   const nextType = resolved.type;
 
-  // luôn set active
-  context.active = resolved;
-
-  // chỉ set anchor khi đủ điều kiện
-  if (shouldReplaceAnchor(currentType, nextType)) {
+  // luôn cho set active nếu hợp lệ
+  if (!anchorType) {
+    // lần đầu (QR)
     context.anchor = resolved;
+    context.active = resolved;
+  } else if (canSelectPlace(anchorType, nextType)) {
+    // chỉ đổi active
+    context.active = resolved;
+  } else {
+    return false; // không hợp lệ
   }
 
   saveContext();

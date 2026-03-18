@@ -27,7 +27,7 @@ export const PLACES = {
   table: places.tables,
   area: places.areas
 }
-export const PLACE_CONFIG = {
+PLACE_RULES = {
   room: {
     mode: ["area", "table"]
   },
@@ -39,5 +39,5 @@ export const PLACE_CONFIG = {
   }
 };
 export function getAllowedPlaceTypes(anchorType) {
-  return PLACE_CONFIG[anchorType]?.mode || ["table"];
+  return PLACE_RULES[anchorType]?.mode || ["table"];
 }
