@@ -6,7 +6,6 @@ import { openPicker } from "../ui/components/placePicker.js";
 
 
 const CART_KEY = "haven_cart";
-let pendingAction = null;
 
 /* ---------- CART ---------- */
 

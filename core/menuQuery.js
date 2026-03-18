@@ -5,19 +5,19 @@ import { MENU } from "./menuStore.js";
 import { getContext } from "./context.js";
 
 
-function getPlaceType() {
+function getPlace() {
     const ctx = getContext();
     const anchor=ctx?.anchor;
     if(!anchor) return "table";
     return anchor.type;
 }
 export function getCategories() {
-    const placeType = getPlaceType();
+    const place = getPlace();
     const out = [];
     for (const [key, cat] of Object.entries(MENU)) {
         if (typeof cat!== "object") continue
         if (cat.active === false) continue;
-        if (cat.allow&&!cat.allow.includes(placeType)) continue;
+        if (cat.allow&&!cat.allow.includes(place)) continue;
         out.push({
             key,
             label: cat.label,

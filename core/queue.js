@@ -100,12 +100,13 @@ export async function processQueue(){
       saveQueue(queue);
 
       if (queue.lenght === 0) {
+        setDeliveryState("send"); //màu xanh: thành công
         recoveryEmitted = false;
         emitRecovery("idle");
       }
 
       if (!queue.length) {
-        setDeliveryState("send"); //màu xanh: thành công
+        
         setTimeout(() => {
           setDeliveryState("idle");
           setState({
