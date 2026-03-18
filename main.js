@@ -15,7 +15,7 @@ import { setRecoveryState } from "./ui/render/renderRecovery.js";
 import { attachMenuEvents } from "./ui/render/renderMenu.js";
 import { loadCart } from "./core/events.js";
 import { detectRecovery } from "./core/queue.js";
-
+import { shouldSetAnchor } from "./core/context.js";
 
 
 /* ---------- VERSION ---------- */
@@ -52,9 +52,7 @@ function applyURLContext(){
 
   setActive(resolved);
 
-  if(!currentType){
-    setAnchor(resolved);
-  }else if(currentType !== "room" && nextType=="room"){
+  if(shouldSetAnchor(currentType,nextType)){
     setAnchor(resolved);
   }
   // quan trọng: xoá param để tránh reset khi reload
