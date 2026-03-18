@@ -20,45 +20,6 @@
   background:#e7e5e0;
 }
 
-.drawer-panel{
-  position:absolute;
-  bottom:0;
-  left:0;
-  right:0;
-  background:white;
-  border-radius:20px 20px 0 0;
-  padding:20px;
-  max-height:70vh;
-  overflow:auto;
-  animation:drawerUp .25s ease;
-}
-
-
-
-.drawer-footer{
-  margin-top:16px;
-}
-
-.drawer-send{
-  margin-top: 16px;
-  width:100%;
-  padding:14px;
-  border:none;
-  border-radius:14px;
-
-  background:var(--brand);
-  color:var(--text-invert);
-  font-weight:600;
-  cursor:pointer;
-  transition:.15s ease;
-}
-
-.drawer-send:active{
-  transform:scale(.96);
-  background:var(--brand-hover);
-  color:white;
-  font-weight:600;
-}
 .picker-option{
   width: 110px;
   font-size:var(--font-s);
