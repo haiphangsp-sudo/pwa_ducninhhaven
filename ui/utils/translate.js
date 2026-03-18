@@ -3,18 +3,18 @@
 // ui/utils/translate.js
 
 import { STRINGS } from "../../data/i18n.js";
-import { setState } from "../../core/state.js";
+import { setState, getState } from "../../core/state.js";
 
-let currentLang = localStorage.getItem("haven_lang") || "vi";
 
 /* ---------- TRANSLATE ---------- */
 
 export function translate(label){
 
-  if(!label) return "";
+  if (!label) return "";
+  const currentLang = getState().lang.current;
 
   if(typeof label === "string")
-    return t(label);
+    return t(label, currentLang);
 
   return label[currentLang] || label.vi || "";
 }
@@ -28,17 +28,13 @@ function t(key){
     obj = obj?.[p];
   }
 
-  return obj?.[currentLang] || key;
+  return obj?.[lang] || key;
 }
 
 /* ---------- LANGUAGE ---------- */
 
-export function getLanguage(){
-  return currentLang;
-}
-
-export function setLanguage(lang) {
-  currentLang = lang === "en" ? "en" : "vi";
+function setLanguage(lang) {
+  setState({ lang: { current: lang } });
   localStorage.setItem("haven_lang", currentLang);
   window.dispatchEvent(new Event("languagechange"));
 }
@@ -55,16 +51,13 @@ export function initLangSwitch(){
   el.querySelectorAll("button").forEach(btn=>{
     btn.onclick = ()=>{
       const lang = btn.dataset.lang;
-
       setLanguage(lang);
       updateActive();
-
-     // setState({}); // re-render app
     };
   });
 
   function updateActive(){
-
+    const currentLang = getState().lang.current;
     el.querySelectorAll("button").forEach(btn=>{
       btn.classList.toggle("active", btn.dataset.lang===currentLang);
     });
