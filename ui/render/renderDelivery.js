@@ -2,7 +2,6 @@
 // Banner hiển thị trạng thái giao hàng (đang giao, giao thành công, giao thất bại)
 
 import { translate } from "../utils/translate.js";
-import { showOverlay, closeOverlay } from "../interactions/overlayManager.js";
 
 let state="idle";
 
@@ -17,7 +16,7 @@ function render(){
   if(!el) return;
 
   if(state==="idle"){
-    closeOverlay("deliveryBanner");
+    el.classList.add("hidden");
     return;
   }
   const themes = {
@@ -31,13 +30,12 @@ function render(){
   el.innerHTML = `
   <div class="banner-content">
     <span class="banner-icon>
-    ${state==="send"?"✓":"..."}
+    ${state === "send" ? "✓" : "..."}
     </span>
     <span class="banner-text">${translate(`delivery.${state}`)}</span>
   </div
-  `
-  showOverlay("deliveryBanner");
-
+  `;
+  el.classList.remove("hidden");
 
   // chỉ trạng thái lỗi mới cho tương tác
   if(state==="failed"){

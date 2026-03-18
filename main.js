@@ -129,8 +129,7 @@ async function boot(){
   setDeliveryState("idle");
   setRecoveryState("idle");
   onNetworkChange(online=>{
-    if(online)
-      window.dispatchEvent(new Event("networkBack"));
+    if(online) window.dispatchEvent(new Event("networkBack"));
   });
 
   ["touchstart","pointerdown","click"].forEach(evt=>{
