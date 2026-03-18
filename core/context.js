@@ -1,4 +1,4 @@
-import { resolvePlaceFromData, getAllowedPlaceTypes } from "../data/places.js";
+import { resolvePlaceFromData, getAllowedPlaceTypes } from "../core/placesStore.js";
 
 /* ---------- CONTEXT STATE ---------- */
 

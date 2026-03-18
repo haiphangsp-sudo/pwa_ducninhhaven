@@ -1,6 +1,6 @@
 import { showOverlay, closeOverlay } from "../interactions/backdropManager.js";
 import { getIcon } from "./navBar.js";
-import { PLACES, getAllowedPlaceTypes } from "../../data/places.js";
+import { PLACES, getAllowedPlaceTypes } from "../../core/placesStore.js";
 import { getContext, applyPlaceById } from "../../core/context.js";
 import { translate } from "../utils/translate.js";
 
