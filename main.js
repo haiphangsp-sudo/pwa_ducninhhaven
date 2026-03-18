@@ -128,6 +128,7 @@ async function boot() {
   window.addEventListener("contextchange", updateNavContext);
   window.addEventListener("languagechange", () => {
     renderApp();
+    updateNavContext();
   });
 
 }
