@@ -8,7 +8,7 @@ import { onNetworkChange } from "./services/network.js";
 import { CONFIG } from "./config.js";
 import { resetIdleTimer } from "./core/idle.js";
 import { loadMenu, MENU } from "./core/menuStore.js";
-import { applyPlaceById, normalizeContext } from "./core/context.js";
+import { applyEntryPlaceById, normalizeContext } from "./core/context.js";
 import { updateNavContext } from "./ui/components/navBar.js";
 import { setDeliveryState } from "./ui/render/renderDelivery.js";
 import { setRecoveryState } from "./ui/render/renderRecovery.js";
@@ -42,7 +42,7 @@ function applyURLContext() {
 
   if (!placeId) return;
 
-  applyPlaceById(placeId);
+  applyEntryPlaceById(placeId);
   history.replaceState({}, "", location.pathname);
 }
 /* ---------- SW ---------- */

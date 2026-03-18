@@ -114,6 +114,15 @@ export function applyPlaceById(placeId) {
   return applyResolvedPlace(resolved);
 }
 
+export function applyEntryPlaceById(placeId) {
+  if(!placeId) return false;
+
+  const resolved = resolvePlace(placeId);
+  if(!resolved) return false;
+
+  return applyResolvedPlace(resolved);
+  
+}
 /* ---------- NORMALIZE ---------- */
 
 export function normalizeContext() {

@@ -37,6 +37,3 @@ export function canSelectPlace(anchorType, targetType) {
   if (!anchorType || !targetType) return false;
   return PLACE_RULES[anchorType]?.includes(targetType) ?? false;
 }
-export function getAllowedPlaceTypes(anchorType) {
-  return PLACE_RULES[anchorType]?.mode || ["table"];
-}
