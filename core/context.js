@@ -4,6 +4,10 @@
 
 import { PLACES } from "../data/places.js";
 import { updateNavContext } from "../ui/components/navBar.js";
+import { syncContextToState } from "./state.js";
+
+/* -------------------------------------------------- */
+
 
 const KEY="haven_context";
 const ACTIVE_TTL = 30*60*1000;      // 60 phút
@@ -54,13 +58,18 @@ export function setAnchor(place){
   };
 
   save(ctx);
+  syncContextToState();
 }
 
 /* -------------------------------------------------- */
 /* picker → service location */
 
 export function setActive(place){
-
+  const ctx=load()
+  const mode = ctx.anchor?.type || "table";
+  if (mode === "table" && place.type !== table) return;
+  if (mode === "area" && place.type !== area) return;
+  if (mode === "room" && !["room", "area", "table"].includes(place.type)) return;
   
   ctx.active = {
     mode:place.id,
@@ -68,6 +77,7 @@ export function setActive(place){
   };
 
   save(ctx);
+  syncContextToState();
 }
 
 /* -------------------------------------------------- */
@@ -122,6 +132,7 @@ export function clearContext(){
   localStorage.removeItem(KEY);
   updateNavContext();
   window.dispatchEvent(new Event("contextChanged"));
+  syncContextToState();
 }
 // Cập nhật giao diện nav bar theo context mới, ví dụ sau khi quét QR code hoặc chọn nơi phục vụ
 export function initContext(){
