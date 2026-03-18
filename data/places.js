@@ -28,7 +28,7 @@ export const PLACES = {
   area: places.areas
 }
 export const PLACE_RULES = {
-  room: ["area", "table"],
+  room: ["room","area", "table"],
   area: ["area", "table"],
   table: ["table"]
 };

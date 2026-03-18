@@ -1,20 +1,17 @@
+//  ui/components/placePicker.js
 
-// ui/components/placePicker.js
 
 import { showOverlay, closeOverlay } from "../interactions/backdropManager.js";
 import { getIcon } from "./navBar.js";
-import { PLACES, PLACE_RULES } from "../../data/places.js";
+import { PLACES , PLACE_RULES } from "../../data/places.js";
 import { getContext, applyPlaceById } from "../../core/context.js";
 import { translate } from "../utils/translate.js";
 
-/* -------------------------------------------------- */
 
-const PLACE_ORDER = ["room", "area", "table"];
+/* ---------- INIT ---------- */
 
 function initPlacePicker() {
   const el = document.getElementById("placePicker");
-  if (!el) return;
-
   el.innerHTML = `
     <div class="picker-panel">
       <h3 class="picker-panel_title"></h3>
@@ -25,49 +22,58 @@ function initPlacePicker() {
   `;
 }
 
-/* -------------------------------------------------- */
+/* ---------- OPEN ---------- */
 
 export function openPicker() {
   initPlacePicker();
 
   const ctx = getContext();
-  const anchorType = ctx?.anchor?.type || "table";
-  const allowedTypes = PLACE_RULES[anchorType] || ["table"];
+  const anchor = ctx?.anchor;
+  const mode = anchor?.type || "table";
 
-  document.querySelector(".picker-panel_title").textContent = translate("select_place");
+  const allowedTypes = PLACE_RULES[mode] || ["table"];
 
-  PLACE_ORDER.forEach(type => {
-    if (allowedTypes.includes(type)) {
-      renderGroup(type, PLACES[type]);
-    } else {
+  ["room", "area", "table"].forEach(type => {
+    if (!allowedTypes.includes(type)) {
       clearGroup(type);
+      return;
     }
+
+    // ROOM: chỉ hiển thị phòng của chính user
+    if (type === "room" && anchor?.type === "room") {
+      renderGroup("room", { [anchor.id]: anchor }, true);
+      return;
+    }
+
+    renderGroup(type, PLACES[type]);
   });
+
+  document.querySelector(".picker-panel_title").textContent =
+    translate("select_place");
 
   showOverlay("placePicker");
 }
 
-/* -------------------------------------------------- */
+/* ---------- RENDER ---------- */
 
-function renderGroup(type, data) {
+function renderGroup(type, data, isAnchorRoom = false) {
   const group = document.querySelector(`[data-group="${type}"]`);
   if (!group) return;
 
-  const entries = Object.entries(data || {});
-  if (!entries.length) {
-    group.innerHTML = "";
-    return;
-  }
+  const title = getGroupTitle(type, isAnchorRoom);
 
   group.innerHTML = `
     <div class="flex gap-s">
       <span class="${type}-icon">${getIcon(type)}</span>
-      <span class="picker-title">${translate(type)}</span>
+      <span class="picker-title">${title}</span>
     </div>
+
     <div class="picker-list">
-      ${entries.map(([id, place]) => `
-        <button class="picker-option btn center" data-id="${id}">
-          ${translate(place.label)}
+      ${Object.entries(data).map(([id, p]) => `
+        <button class="picker-option btn center"
+          data-type="${type}"
+          data-id="${id}">
+          ${translate(p.label)}
         </button>
       `).join("")}
     </div>
@@ -81,11 +87,22 @@ function renderGroup(type, data) {
   });
 }
 
-/* -------------------------------------------------- */
+/* ---------- TITLE ---------- */
+
+function getGroupTitle(type, isAnchorRoom) {
+  if (type === "room" && isAnchorRoom) {
+    return translate("my_room"); // nên thêm key này
+  }
+
+  if (type === "area") return translate("area");
+  if (type === "table") return translate("table");
+
+  return type;
+}
+
+/* ---------- CLEAR ---------- */
 
 function clearGroup(type) {
   const group = document.querySelector(`[data-group="${type}"]`);
   if (group) group.innerHTML = "";
 }
-
-/* -------------------------------------------------- */
