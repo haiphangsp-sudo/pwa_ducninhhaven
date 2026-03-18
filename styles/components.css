@@ -34,37 +34,7 @@
 }
 
 
-.drawer-qty{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:4px 6px;
-  width: 110px;
-  border-radius:12px;
-}
-.drawer-qty .qty{
-  color:var(--brand);
-  font-weight:600;
-  font-size:var(--font-m);
-  text-align: center;
-}
-.drawer-qty button{
-  width:32px;
-  height:32px;
-  border:none;
-  border-radius:50%;
-  background:var(--bg-soft);
-  color:var(--brand);
-  font-weight: 600;
-  font-size: var(--font-m);
-}
-.drawer-qty button:active{
-  transform:scale(.92);
-}
-.drawer-qty button:hover{
-  background:var(--brand-hover);
-  transform:scale(1.05);
-}
+
 .drawer-footer{
   margin-top:16px;
 }
