@@ -1,6 +1,6 @@
 
 
-const places = {
+const haven = {
   place: {
     rooms: {
       Olive: { label: { vi: "Phòng Olive", en: "Olive Room" } },
@@ -30,13 +30,13 @@ const places = {
   }
 }
 export const PLACES = {
-  room: places.place.rooms,
-  table: places.place.tables,
-  area: places.place.areas
+  room: haven.place.rooms,
+  table: haven.place.tables,
+  area: haven.place.areas
 }
 export const PLACE_RULES = {
-  room: places.mode.room,
-  area: places.mode.room,
-  table: places.mode.room
+  room:[ haven.mode.room],
+  area: [haven.mode.room],
+  table: [haven.mode.room]
 };
 
