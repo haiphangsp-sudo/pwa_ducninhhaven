@@ -36,7 +36,6 @@ function checkVersion(){
 
 /* ---------- READ QR ---------- */
 // - Nếu URL có param "place", giải mã và lưu vào context để dùng cho các thao tác sau này (gửi yêu cầu, hiển thị ở nav, ...)
-import { applyEntryPlaceById } from "./core/context.js";
 
 function applyURLContext() {
   const params = new URLSearchParams(location.search);
