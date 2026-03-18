@@ -40,11 +40,16 @@ function save(ctx){
 /* -------------------------------------------------- */
 /* QR scan → identity */
 
-export function setAnchor(mode){
+export function setAnchor(place){
 
-  const ctx=load();
+  const ctx = getContext();
+
+  ctx.active = {
+    ...place,
+    ts:Date.now()
+  }
   ctx.anchor={
-    ...mode,
+    mode:place.id,
     ts:Date.now()
   };
 
@@ -56,14 +61,9 @@ export function setAnchor(mode){
 
 export function setActive(place){
 
-  const ctx=load();
-  const mode = ctx.anchor?.type;
-  if (mode === "table" && place.type === "table") return;
-  if (mode === "area" && place.type === "area" && place.type === "table") return;
-  if (mode === "room" && place.type === "room" && place.type === "area" && place.type === "table") return;
   
   ctx.active = {
-    ...place,
+    mode:place.id,
     ts:Date.now()
   };
 
@@ -132,7 +132,12 @@ export function initContext(){
 /* ===================================================== */
 
 export function needsPlaceSelection(){
-  const mode = getAnchor()?.type;
-  if (mode === "room") return false;
-  return false;
+  const ctx=getContext();
+  const mode = ctx.anchor?.type || "table";
+  if (mode === "table") return !ctx?.active?.table;
+  if (mode === "area" ) return !ctx?.active?.area&&!ctx?.active?.table;
+  if (mode === "room") return !ctx?.active?.room && !ctx?.active?.area && !ctx?.active?.table;
+  
+  return true;
+  
 }

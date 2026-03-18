@@ -29,7 +29,7 @@ export function openPicker(){
   const anchor=getAnchor();
   
   if (anchor?.type === "room") {
-    renderGroup("room", PLACES.room );
+    renderGroup("room", PLACES.room[anchor.id]);
     renderGroup("table", PLACES.table);
     renderGroup("area", PLACES.area);
   } else if (anchor?.type === "area") {
