@@ -13,11 +13,10 @@ export const UI = {
   },
   /* ---------------- SERVICE CONTEXT ---------------- */
 
-  context:{
-    anchor:null,   // {type:"room|table|area", id:string}
-    active:null    // {type:"room|table|area", id:string}
+  context: {
+    anchor: null,   // {mode:"room|table|area", id:string, ts: number}
+    active: null, // {place:"T1|T2|T3...", id:string}
   },
-
   /* ---------------- NAVIGATION ---------------- */
 
   view:{
@@ -41,6 +40,11 @@ export const UI = {
   delivery:{
     state:"idle",    // idle | pending | sending | sent | failed
     retries:0
+  },
+  /* ---------------- RECOVERY STATE MACHINE ---------------- */
+
+  recovery:{
+    state:"idle"
   },
 
   /* ---------------- ERROR ---------------- */
@@ -73,10 +77,6 @@ export function subscribe(fn){
 
 export function getState(){
   return structuredClone(UI);
-}
-
-export function getUI(){
-  return ;
 }
 
 export function setState(patch) {
