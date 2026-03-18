@@ -7,8 +7,9 @@ const backdrop = document.getElementById("overlayBackdrop");
 
 export function showOverlay(id) {
     if (!current) {
-        el = document.getElementById(id).classList.remove("hidden");
-        //el.style.opacity = 0;
+        el = document.getElementById(id);
+        el.classList.remove("hidden");
+        el.style.opacity = 0;
             
         setTimeout(() => {
             el.style.opacity = 1;
