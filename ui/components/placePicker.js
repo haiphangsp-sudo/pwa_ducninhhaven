@@ -41,10 +41,15 @@ export function openPicker() {
   document.querySelector(".picker-panel_title").textContent = translate("select_place");
   showOverlay("placePicker");
 }
-
 function renderGroup(type, data, isAnchorRoom = false) {
   const group = document.querySelector(`[data-group="${type}"]`);
   if (!group) return;
+
+  const entries = Object.entries(data || {});
+  if (!entries.length) {
+    group.innerHTML = "";
+    return;
+  }
 
   const title = getGroupTitle(type, isAnchorRoom);
 
@@ -54,8 +59,8 @@ function renderGroup(type, data, isAnchorRoom = false) {
       <span class="picker-title">${title}</span>
     </div>
     <div class="picker-list">
-      ${Object.entries(data).map(([id, p]) => `
-        <button class="picker-option btn center" data-id="${id}" data-type="${type}">
+      ${entries.map(([id, p]) => `
+        <button class="picker-option btn center" data-id="${id}">
           ${translate(p.label)}
         </button>
       `).join("")}
