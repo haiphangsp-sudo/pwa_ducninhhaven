@@ -86,3 +86,4 @@ function clearGroup(type) {
   const group = document.querySelector(`[data-group="${type}"]`);
   if (group) group.innerHTML = "";
 }
+document.querySelector(".nav-center button").onclick = openPicker;
