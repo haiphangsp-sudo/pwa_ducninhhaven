@@ -77,7 +77,7 @@ async function watchMenu(){
     const old = window.__menuHash;
 
     await loadMenu();
-    await loadPlaces();
+    
     const next = JSON.stringify(MENU);
 
     if(old !== next){
@@ -106,7 +106,7 @@ async function boot(){
   registerSW();
 
   await loadMenu();
-
+  await loadPlaces();
   applyURLContext();   // ← phải chạy trước render
   normalizeContext(); // đảm bảo context được lưu lại với timestamp mới, tránh bị xoá do TTL
   subscribe(renderApp);

@@ -3,7 +3,7 @@ export let PLACES = {};
 export let PLACE_UI = {};
 
 export async function loadPlaces() {
-    const data = await fetch("/data/places.json", { cache: "no-cache" }).then(res => res.json());
+    const data = await fetch("/data/places.json", { cache: "no-store" }).then(res => res.json());
     PLACES = data.places || {};
     PLACE_UI = data.ui || {};
 };
