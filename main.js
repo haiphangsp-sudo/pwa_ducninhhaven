@@ -15,6 +15,8 @@ import { setRecoveryState } from "./ui/render/renderRecovery.js";
 import { attachMenuEvents } from "./ui/render/renderMenu.js";
 import { loadCart } from "./core/events.js";
 import { detectRecovery } from "./core/queue.js";
+import { loadPlaces } from "./core/placesStore.js";
+
 
 
 /* ---------- VERSION ---------- */
@@ -75,6 +77,7 @@ async function watchMenu(){
     const old = window.__menuHash;
 
     await loadMenu();
+    await loadPlaces();
     const next = JSON.stringify(MENU);
 
     if(old !== next){
