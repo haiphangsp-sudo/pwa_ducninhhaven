@@ -1,11 +1,11 @@
-//  ui/components/placePicker.js
 
 
 import { showOverlay, closeOverlay } from "../interactions/backdropManager.js";
 import { getIcon } from "./navBar.js";
-import { PLACES , PLACE_RULES } from "../../data/places.js";
+import { PLACES, PLACE_RULES } from "../../data/places.js";
 import { getContext, applyPlaceById } from "../../core/context.js";
 import { translate } from "../utils/translate.js";
+
 
 
 /* ---------- INIT ---------- */
@@ -23,23 +23,22 @@ function initPlacePicker() {
 }
 
 /* ---------- OPEN ---------- */
-function getMode() {
-const ctx = getContext();
-  const anchor = ctx?.anchor;
-  const mode = anchor?.type || "table";
-  PLACE_RULES[mode].forEach(type => {
-    if (!mode.includes(type)) {
-      return;
-    }
-  });
-  return type;
-}
 
 export function openPicker() {
   initPlacePicker();
 
-  const type = getMode();
-  
+  const ctx = getContext();
+  const anchor = ctx?.anchor;
+  const mode = anchor?.type || "table";
+
+  const allowedTypes = PLACE_RULES[mode] || ["table"];
+
+  ["room", "area", "table"].forEach(type => {
+    if (!allowedTypes.includes(type)) {
+      clearGroup(type);
+      return;
+    }
+
     // ROOM: chỉ hiển thị phòng của chính user
     if (type === "room" && anchor?.type === "room") {
       renderGroup("room", { [anchor.id]: anchor }, true);
@@ -47,6 +46,7 @@ export function openPicker() {
     }
 
     renderGroup(type, PLACES[type]);
+  });
 
   document.querySelector(".picker-panel_title").textContent =
     translate("select_place");
