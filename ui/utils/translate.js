@@ -37,11 +37,10 @@ export function getLanguage(){
   return currentLang;
 }
 
-export function setLanguage(lang){
-
-  currentLang = lang==="en" ? "en" : "vi";
+export function setLanguage(lang) {
+  currentLang = lang === "en" ? "en" : "vi";
   localStorage.setItem("haven_lang", currentLang);
-
+  window.dispatchEvent(new Event("languagechange"));
 }
 
 /* ---------- UI SWITCH ---------- */
@@ -60,7 +59,7 @@ export function initLangSwitch(){
       setLanguage(lang);
       updateActive();
 
-      setState({}); // re-render app
+     // setState({}); // re-render app
     };
   });
 

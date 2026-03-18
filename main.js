@@ -100,7 +100,7 @@ function showMenuUpdated(){
 
 /* ---------- BOOT ---------- */
 // - Hàm khởi động ứng dụng, chạy tất cả các thiết lập cần thiết và render giao diện lần đầu
-async function boot(){
+async function boot() {
 
   checkVersion();
   registerSW();
@@ -116,16 +116,19 @@ async function boot(){
   renderApp();
   setDeliveryState("idle");
   setRecoveryState("idle");
-  onNetworkChange(online=>{
-    if(online) window.dispatchEvent(new Event("networkBack"));
+  onNetworkChange(online => {
+    if (online) window.dispatchEvent(new Event("networkBack"));
   });
 
-  ["touchstart","pointerdown","click"].forEach(evt=>{
-    document.addEventListener(evt, resetIdleTimer, {passive:true});
+  ["touchstart", "pointerdown", "click"].forEach(evt => {
+    document.addEventListener(evt, resetIdleTimer, { passive: true });
   });
 
   watchMenu();
   window.addEventListener("contextchange", updateNavContext);
-}
+  window.addEventListener("languagechange", () => {
+    renderApp();
+  });
 
+}
 boot();
