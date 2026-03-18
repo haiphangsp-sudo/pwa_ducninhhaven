@@ -1,7 +1,7 @@
 // ui/components/placePicker.js
 // Component cho phép khách chọn điểm phục vụ (phòng/bàn/khu vực) thủ công, nếu QR code không hoạt động hoặc khách muốn đổi điểm phục vụ
 
-import { showOverlay, closeOverlay } from "../../ui/interactions/overlayManager.js";
+import { showOverlay, closeOverlay } from "../interactions/backdropManager.js";
 import { getIcon } from "./navBar.js"; 
 import { PLACES } from "../../data/places.js";
 import { setActive, getAnchor } from "../../core/context.js";

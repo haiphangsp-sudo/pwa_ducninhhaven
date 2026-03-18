@@ -1,7 +1,7 @@
  //    ui/render/renderDrawer.js
 
 import { updateTotal } from "./renderCart.js";
-import { showOverlay, closeOverlay } from "../../ui/interactions/overlayManager.js"
+import { showOverlay, closeOverlay } from "../interactions/backdropManager.js"
 import { sendCart } from "../../core/events.js";
 import { UI } from "../../core/state.js";
 import { translate } from "../utils/translate.js";
