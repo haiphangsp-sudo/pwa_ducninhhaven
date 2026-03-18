@@ -46,13 +46,14 @@ function save(ctx){
 
 export function setAnchor(place){
 
-  const ctx = getContext();
+  const ctx = load();
 
-  ctx.active = {
-    ...place,
+  ctx.anchor = {
+    type:place.type,
+    id:place.id,
     ts:Date.now()
   }
-  ctx.anchor={
+  ctx.active={
     mode:place.id,
     ts:Date.now()
   };
@@ -69,12 +70,15 @@ export function setActive(place){
   const mode = ctx.anchor?.type || "table";
   if (mode === "table" && place.type !== table) return;
   if (mode === "area" && place.type !== area) return;
-  if (mode === "room" && !["room", "area", "table"].includes(place.type)) return;
-  
-  ctx.active = {
-    mode:place.id,
-    ts:Date.now()
-  };
+
+  if(mode===place.type){
+    ctx.active={
+      mode:place.id,
+      ts:Date.now()
+    };
+  }else{
+    ctx.active=null;
+  }
 
   save(ctx);
   syncContextToState();
@@ -111,7 +115,7 @@ export function getContext(){
 /* -------------------------------------------------- */
 /* convenience */
 
-export function getActivePlace(){
+export function getActive(){
   return getContext()?.active || null;
 }
 
@@ -130,14 +134,8 @@ export function normalizeContext(){
 //  Xoá context, ví dụ khi khách rời đi mà quên quét QR code để xoá anchor, hoặc quên chọn nơi phục vụ để xoá active. Hoặc đơn giản là để test.
 export function clearContext(){
   localStorage.removeItem(KEY);
-  updateNavContext();
   window.dispatchEvent(new Event("contextChanged"));
   syncContextToState();
-}
-// Cập nhật giao diện nav bar theo context mới, ví dụ sau khi quét QR code hoặc chọn nơi phục vụ
-export function initContext(){
-  normalizeContext();
-  bindClick();
 }
 
 /* ===================================================== */
