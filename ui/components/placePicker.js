@@ -22,6 +22,9 @@ export function openPicker() {
 
   const ctx = getContext();
   const anchor = ctx?.anchor;
+  clearGroup("area");
+  clearGroup("table");
+  clearGroup("room");
 
   if (anchor?.type === "room") {
     const myRoom = { [anchor.id]: PLACES.room[anchor.id] };
@@ -31,11 +34,8 @@ export function openPicker() {
   } else if (anchor?.type === "area") {
     renderGroup("area", PLACES.area);
     renderGroup("table", PLACES.table);
-    clearGroup("room");
   } else {
     renderGroup("table", PLACES.table);
-    clearGroup("room");
-    clearGroup("area");
   }
 
   document.querySelector(".picker-panel_title").textContent = translate("select_place");
