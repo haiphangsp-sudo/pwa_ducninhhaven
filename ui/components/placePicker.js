@@ -30,7 +30,7 @@ export function openPicker(){
   const anchor = a.anchor;
   const active = a.active;
   if (anchor === "room") {
-    const myRoom ={...PLACES.room[active.room]}
+    const myRoom = { [active.room]: PLACES.room[active.anchor.id] }
     renderGroup("room", PLACES.room[myRoom]);
     renderGroup("table", PLACES.table);
     renderGroup("area", PLACES.area);
