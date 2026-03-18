@@ -4,7 +4,7 @@
 import { renderCartBar } from "./renderCart.js";
 import { renderAck } from "./renderOverlay.js";
 import { initLangSwitch } from "../utils/translate.js";
-import { renderNavBar } from "../components/navBar.js";
+import { renderNavBar, updateNavContext } from "../components/navBar.js";
 import { renderHub } from "./renderHub.js";
 
 
