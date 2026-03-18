@@ -1,0 +1,42 @@
+{
+  "ui": {
+    "room": ["room", "area", "table"],
+    "area": ["area", "table"],
+    "table": ["table"]
+  },
+  "places": {
+    "room": {
+      "Olive": {
+        "label": { "vi": "Phòng Olive", "en": "Olive Room" }
+      },
+      "Juniper": {
+        "label": { "vi": "Phòng Juniper", "en": "Juniper Room" }
+      },
+      "Cloud": {
+        "label": { "vi": "Phòng Cloud", "en": "Cloud Room" }
+      }
+    },
+    "area": {
+      "Lounge": {
+        "label": { "vi": "Phòng chờ", "en": "Lounge" }
+      },
+      "Garden": {
+        "label": { "vi": "Vườn", "en": "Garden" }
+      },
+      "Pergola": {
+        "label": { "vi": "Giàn Pergola", "en": "Pergola" }
+      }
+    },
+    "table": {
+      "T1": {
+        "label": { "vi": "Bàn T1", "en": "Table T1" }
+      },
+      "T2": {
+        "label": { "vi": "Bàn T2", "en": "Table T2" }
+      },
+      "T3": {
+        "label": { "vi": "Bàn T3", "en": "Table T3" }
+      }
+    }
+  }
+}

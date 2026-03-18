@@ -1,46 +1,42 @@
-// ui/renderDelivery.js
-// Banner hiển thị trạng thái giao hàng (đang giao, giao thành công, giao thất bại)
+import { DELIVERY_STATES } from "../../core/deliveryStates.js";
 
-import { translate } from "../utils/translate.js";
+let currentDeliveryState = "idle";
 
-let state="idle";
-
-export function setDeliveryState(s){
-  state=s;
-  render();
+export function setDeliveryState(nextState) {
+  currentDeliveryState = nextState;
+  renderDeliveryState();
 }
 
-function render(){
+export function getDeliveryState() {
+  return currentDeliveryState;
+}
 
-  const el=document.getElementById("deliveryBanner");
-  if(!el) return;
+export function renderDeliveryState() {
+  const state = DELIVERY_STATES[currentDeliveryState] || DELIVERY_STATES.idle;
 
-  if(state==="idle"){
-    el.classList.add("hidden");
+  renderSendButton(state);
+  renderDeliveryBanner(state);
+}
+
+function renderSendButton(state) {
+  const btn = document.querySelector(".send-button");
+  if (!btn) return;
+
+  btn.disabled = !state.canSend;
+  btn.dataset.state = currentDeliveryState;
+  btn.textContent = state.buttonKey;
+}
+
+function renderDeliveryBanner(state) {
+  const banner = document.querySelector(".delivery-banner");
+  if (!banner) return;
+
+  if (!state.banner) {
+    banner.innerHTML = "";
+    banner.hidden = true;
     return;
   }
-  const themes = {
-    sending: "banner-blue",
-    send: "banner-green",
-    failed: "banner-red"
-  };
-  if (themes[state]) {
-    el.classList.add(themes[state]);
-  }
-  el.innerHTML = `
-  <div class="banner-content">
-    <span class="banner-icon>
-    ${state === "send" ? "✓" : "..."}
-    </span>
-    <span class="banner-text">${translate(`delivery.${state}`)}</span>
-  </div
-  `;
-  el.classList.remove("hidden");
 
-  // chỉ trạng thái lỗi mới cho tương tác
-  if(state==="failed"){
-    el.onclick=()=>window.dispatchEvent(new Event("resumeQueue"));
-  }else{
-    el.onclick=null;
-  }
+  banner.hidden = false;
+  banner.textContent = state.banner;
 }

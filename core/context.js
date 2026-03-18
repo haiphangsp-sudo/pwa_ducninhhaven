@@ -1,13 +1,9 @@
-// core/context.js
-
-import { CONFIG } from "../config.js";
-import { MENU } from "./menuStore.js";
-import { PLACES, PLACE_RULES} from "../data/places.js";
+import { resolvePlaceFromData, getAllowedPlaceTypes } from "../data/places.js";
 
 /* ---------- CONTEXT STATE ---------- */
 
 const STORAGE_KEY = "app_context";
-const TTL = 1000 * 60 * 30; // 30 phút
+const TTL = 1000 * 60 * 30;
 
 let context = loadContext();
 
@@ -19,10 +15,7 @@ function loadContext() {
     if (!raw) return createEmptyContext();
 
     const parsed = JSON.parse(raw);
-
-    if (isExpired(parsed)) {
-      return createEmptyContext();
-    }
+    if (isExpired(parsed)) return createEmptyContext();
 
     return parsed;
   } catch {
@@ -36,11 +29,6 @@ function saveContext() {
   dispatchContextChange();
 }
 
-function isExpired(ctx) {
-  if (!ctx?.updatedAt) return true;
-  return Date.now() - ctx.updatedAt > TTL;
-}
-
 function createEmptyContext() {
   return {
     anchor: null,
@@ -49,32 +37,62 @@ function createEmptyContext() {
   };
 }
 
-/* ---------- PUBLIC GET ---------- */
+function isExpired(ctx) {
+  if (!ctx?.updatedAt) return true;
+  return Date.now() - ctx.updatedAt > TTL;
+}
+
+/* ---------- GET ---------- */
 
 export function getContext() {
   return context;
 }
 
-/* ---------- CORE SET ---------- */
+/* ---------- NORMALIZE ---------- */
 
-export function setAnchor(place) {
-  context.anchor = place;
+export function normalizeContext() {
+  if (isExpired(context)) {
+    context = createEmptyContext();
+  }
   saveContext();
 }
 
-export function setActive(place) {
-  context.active = place;
-  saveContext();
+/* ---------- RESOLVE ---------- */
+
+export function resolvePlace(placeId) {
+  return resolvePlaceFromData(placeId);
 }
 
-/* ---------- PLACE PRIORITY ---------- */
+/* ---------- RULE ---------- */
 
 export function canSelectPlace(anchorType, targetType) {
   if (!anchorType || !targetType) return false;
-  return PLACE_RULES[anchorType]?.includes(targetType) ?? false;
+  return getAllowedPlaceTypes(anchorType).includes(targetType);
 }
 
-/* ---------- APPLY PLACE ---------- */
+/* ---------- ENTRY ---------- */
+// dùng cho QR / URL / deep link
+
+export function applyEntryPlace(resolved) {
+  if (!resolved) return false;
+
+  context.anchor = resolved;
+  context.active = resolved;
+  saveContext();
+  return true;
+}
+
+export function applyEntryPlaceById(placeId) {
+  if (!placeId) return false;
+
+  const resolved = resolvePlace(placeId);
+  if (!resolved) return false;
+
+  return applyEntryPlace(resolved);
+}
+
+/* ---------- PICKER ---------- */
+// dùng cho chọn place trong app
 
 export function applyResolvedPlace(resolved) {
   if (!resolved) return false;
@@ -82,18 +100,18 @@ export function applyResolvedPlace(resolved) {
   const anchorType = context?.anchor?.type;
   const nextType = resolved.type;
 
-  // luôn cho set active nếu hợp lệ
   if (!anchorType) {
-    // lần đầu (QR)
     context.anchor = resolved;
     context.active = resolved;
-  } else if (canSelectPlace(anchorType, nextType)) {
-    // chỉ đổi active
-    context.active = resolved;
-  } else {
-    return false; // không hợp lệ
+    saveContext();
+    return true;
   }
 
+  if (!canSelectPlace(anchorType, nextType)) {
+    return false;
+  }
+
+  context.active = resolved;
   saveContext();
   return true;
 }
@@ -107,63 +125,29 @@ export function applyPlaceById(placeId) {
   return applyResolvedPlace(resolved);
 }
 
-export function applyEntryPlace(resolved) {
-if (!resolved) return false;
+/* ---------- RETURN ---------- */
 
-  context.anchor = resolved;
-  context.active = resolved;
+export function returnToAnchor() {
+  if (!context.anchor) return false;
+
+  context.active = context.anchor;
   saveContext();
   return true;
 }
 
-export function applyEntryPlaceById(placeId) {
-  if(!placeId) return false;
-
-  const resolved = resolvePlace(placeId);
-  if(!resolved) return false;
-
-  return applyEntryPlace(resolved);
-  
-}
-/* ---------- NORMALIZE ---------- */
-
-export function normalizeContext() {
-  if (isExpired(context)) {
-    context = createEmptyContext();
-    saveContext();
-    return;
-  }
-
-  // refresh TTL
+/* ---------- OPTIONAL DIRECT SET ---------- */
+// chỉ giữ nếu thực sự cần
+export function setAnchor(place) {
+  context.anchor = place;
   saveContext();
 }
 
-/* ---------- RESOLVE PLACE ---------- */
-export function resolvePlace(placeId) {
-  const directPlace =
-    MENU?.places?.[placeId] ??
-    MENU?.place?.[placeId] ??
-    CONFIG?.PLACES?.[placeId] ??
-    CONFIG?.places?.[placeId];
-
-  if (directPlace) return directPlace;
-
-  if (PLACES.room?.[placeId]) {
-    return { type: "room", id: placeId, ...PLACES.room[placeId] };
-  }
-
-  if (PLACES.table?.[placeId]) {
-    return { type: "table", id: placeId, ...PLACES.table[placeId] };
-  }
-
-  if (PLACES.area?.[placeId]) {
-    return { type: "area", id: placeId, ...PLACES.area[placeId] };
-  }
-
-  return null;
+export function setActive(place) {
+  context.active = place;
+  saveContext();
 }
 
-/* ---------- EVENTS ---------- */
+/* ---------- EVENT ---------- */
 
 function dispatchContextChange() {
   window.dispatchEvent(new Event("contextchange"));
