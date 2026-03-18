@@ -74,13 +74,6 @@ export function canSelectPlace(anchorType, targetType) {
   return PLACE_RULES[anchorType]?.includes(targetType) ?? false;
 }
 
-export function shouldReplaceAnchor(currentType, nextType) {
-  if (!nextType) return false;
-  if (!currentType) return true;
-
-  return getPlacePriority(nextType) > getPlacePriority(currentType);
-}
-
 /* ---------- APPLY PLACE ---------- */
 
 export function applyResolvedPlace(resolved) {
@@ -114,13 +107,22 @@ export function applyPlaceById(placeId) {
   return applyResolvedPlace(resolved);
 }
 
+export function applyEntryPlace(resolved) {
+if (!resolved) return false;
+
+  context.anchor = resolved;
+  context.active = resolved;
+  saveContext();
+  return true;
+}
+
 export function applyEntryPlaceById(placeId) {
   if(!placeId) return false;
 
   const resolved = resolvePlace(placeId);
   if(!resolved) return false;
 
-  return applyResolvedPlace(resolved);
+  return applyEntryPlace(resolved);
   
 }
 /* ---------- NORMALIZE ---------- */

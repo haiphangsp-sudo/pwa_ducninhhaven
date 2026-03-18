@@ -4,7 +4,7 @@
 import { showOverlay, closeOverlay } from "../interactions/backdropManager.js";
 import { getIcon } from "./navBar.js";
 import { PLACES, PLACE_RULES } from "../../data/places.js";
-import { getContext, resolvePlace, setActive } from "../../core/context.js";
+import { getContext, applyPlaceById } from "../../core/context.js";
 import { translate } from "../utils/translate.js";
 
 /* -------------------------------------------------- */
@@ -75,10 +75,7 @@ function renderGroup(type, data) {
 
   group.querySelectorAll(".picker-option").forEach(btn => {
     btn.onclick = () => {
-      const resolved = resolvePlace(btn.dataset.id);
-      if (!resolved) return;
-
-      setActive(resolved);
+      applyPlaceById(btn.dataset.id);
       closeOverlay();
     };
   });
