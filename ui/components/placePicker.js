@@ -26,11 +26,11 @@ function initPlacePicker() {
 
 export function openPicker(){
   initPlacePicker()
-  const anchors = getState().context;
-  const anchor = anchors.anchor;
-  const active = anchors.active;
+  const a = getState().context;
+  const anchor = a.anchor;
+  const active = a.active;
   if (anchor === "room") {
-    renderGroup("room", PLACES.room);
+    renderGroup("room", PLACES.room[anchor]);
     renderGroup("table", PLACES.table);
     renderGroup("area", PLACES.area);
   } else if (anchor?.type === "area") {
