@@ -15,6 +15,6 @@ export function renderApp(){
   renderCartBar()
   initLangSwitch();
   renderAck();
-  
+  updateNavContext();
 }
 
