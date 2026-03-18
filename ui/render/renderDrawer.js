@@ -1,94 +1,146 @@
- //    ui/render/renderDrawer.js
+
+// ui/render/renderDrawer.js
 
 import { updateTotal } from "./renderCart.js";
-import { showOverlay, closeOverlay } from "../interactions/backdropManager.js"
+import { showOverlay, closeOverlay } from "../interactions/backdropManager.js";
 import { sendCart } from "../../core/events.js";
 import { UI } from "../../core/state.js";
 import { translate } from "../utils/translate.js";
 import { MENU } from "../../core/menuStore.js";
 
-
-export function openCartDrawer(){
+export function openCartDrawer() {
   renderDrawer();
   showOverlay("cartDrawer");
 }
-  
-function renderDrawer(){
-  let textOrder="";
-  if(UI.delivery.state==="sending"){
-    textOrder="delivery.pending";
-  }else{
-    textOrder= "cart_bar.order";
-  }
-  document.getElementById("drawerSend").textContent = translate(textOrder);
-  document.querySelector(".drawer-title").textContent = translate("cart_bar.cart_title");
 
-  const el=document.getElementById("drawerItems");
+function renderDrawer() {
+  const sendLabel =
+    UI.delivery.state === "sending"
+      ? "delivery.pending"
+      : "cart_bar.order";
 
-  el.innerHTML="";
-  UI.cart.items.forEach((i,index)=>{
-    const ItemDrawer = translate(MENU[i.category].items[i.item].label);
-    const OptionDrawer = translate(MENU[i.category].items[i.item].options[i.option].label);
-    const row=document.createElement("div");
+  const sendBtn = document.getElementById("drawerSend");
+  const titleEl = document.querySelector(".drawer-title");
+  const itemsEl = document.getElementById("drawerItems");
+  const closeBtn = document.getElementById("drawerClose");
+
+  if (!sendBtn || !titleEl || !itemsEl || !closeBtn) return;
+
+  sendBtn.textContent = translate(sendLabel);
+  titleEl.textContent = translate("cart_bar.cart_title");
+
+  itemsEl.innerHTML = "";
+
+  UI.cart.items.forEach((cartItem, index) => {
+    const itemId = getCartItemId(cartItem, index);
+
+    const menuItem = MENU?.[cartItem.category]?.items?.[cartItem.item];
+    const menuOption = menuItem?.options?.[cartItem.option];
+
+    const itemLabel = translate(menuItem?.label || cartItem.item);
+    const optionLabel = translate(menuOption?.label || "");
+
+    const row = document.createElement("div");
     row.className = "drawer__item";
-    row.dataset.i = index;
-    row.innerHTML=`
+    row.dataset.id = itemId;
+
+    row.innerHTML = `
       <div class="drawer__info">
-        <strong>${ItemDrawer}</strong>
-        <div>${OptionDrawer}</div>
+        <strong>${itemLabel}</strong>
+        <div>${optionLabel}</div>
       </div>
+
       <div class="drawer-qty">
-        <button data-i="${index}" class="qty-minus center">−</button>
-        <span class="qty">${i.qty}</span>
-        <button data-i="${index}" class="qty-plus center">+</button>
+        <button data-id="${itemId}" class="qty-minus center" type="button">−</button>
+        <span class="qty">${cartItem.qty}</span>
+        <button data-id="${itemId}" class="qty-plus center" type="button">+</button>
       </div>
-      <div class="drawer__footer"></div>
     `;
-    el.appendChild(row);
+
+    itemsEl.appendChild(row);
   });
-  
-  document.getElementById("drawerSend").onclick=()=>{ 
-    sendCart(); 
+
+  sendBtn.onclick = () => {
+    sendCart();
     closeOverlay();
-    el.innerHTML="";
+    itemsEl.innerHTML = "";
   };
-  document.getElementById("drawerClose").onclick = closeOverlay;
+
+  closeBtn.onclick = closeOverlay;
 }
 
+/* ---------- CLICK HANDLER ---------- */
+
 document.addEventListener("click", (e) => {
-  
-  const i = e.target.dataset.i;
-  const row = e.target.closest(".drawer__item");
-  if(!row) return;
+  const btn = e.target.closest(".qty-plus, .qty-minus");
+  if (!btn) return;
 
-  if(e.target.classList.contains("qty-plus")){
-    UI.cart.items[i].qty++;
+  const row = btn.closest(".drawer__item");
+  if (!row) return;
+
+  const id = btn.dataset.id;
+  if (!id) return;
+
+  const index = findCartItemIndexById(id);
+  if (index === -1) return;
+
+  const cartItem = UI.cart.items[index];
+  if (!cartItem) return;
+
+  // tăng số lượng
+  if (btn.classList.contains("qty-plus")) {
+    cartItem.qty += 1;
+    syncDrawerRowQty(row, cartItem.qty);
+    updateTotal();
+    return;
   }
 
-  if (e.target.classList.contains("qty-minus")) {
+  // giảm số lượng
+  if (btn.classList.contains("qty-minus")) {
+    cartItem.qty -= 1;
 
-    UI.cart.items[i].qty--;
-
-    if (UI.cart.items[i].qty <= 0) {
-      UI.cart.items.splice(i, 1);
-    
-      if (UI.cart.items.length == 0) {
-        document.getElementById("drawerItems").innerHTML = "";
-        closeOverlay();
-        return;
-      }
-      reindexDrawer();
+    // nếu còn > 0 thì chỉ update dòng hiện tại
+    if (cartItem.qty > 0) {
+      syncDrawerRowQty(row, cartItem.qty);
+      updateTotal();
+      return;
     }
-  }
-  row.querySelector(".qty").textContent = UI.cart.items[i]?.qty||0;
-  updateTotal();
 
+    // nếu về 0 thì xoá item khỏi cart
+    UI.cart.items.splice(index, 1);
+
+    // hết giỏ thì đóng drawer
+    if (UI.cart.items.length === 0) {
+      const itemsEl = document.getElementById("drawerItems");
+      if (itemsEl) itemsEl.innerHTML = "";
+      updateTotal();
+      closeOverlay();
+      return;
+    }
+
+    // còn item thì render lại toàn bộ drawer để đồng bộ data-id và UI
+    renderDrawer();
+    updateTotal();
+  }
 });
 
-function reindexDrawer() {
-  document
-    .querySelectorAll(".drawer__item")
-    .forEach((row, i) => {
-      row.dataset.i = i;
-    });
+/* ---------- HELPERS ---------- */
+
+function syncDrawerRowQty(row, qty) {
+  const qtyEl = row.querySelector(".qty");
+  if (qtyEl) qtyEl.textContent = qty;
+}
+
+function findCartItemIndexById(id) {
+  return UI.cart.items.findIndex((item, index) => {
+    return String(getCartItemId(item, index)) === String(id);
+  });
+}
+
+function getCartItemId(item, fallbackIndex = 0) {
+  // nếu item đã có id thật thì dùng
+  if (item?.id != null) return item.id;
+
+  // fallback tạm thời để code chạy ngay cả khi dữ liệu cũ chưa có id
+  return `${item.category}-${item.item}-${item.option}-${fallbackIndex}`;
 }
