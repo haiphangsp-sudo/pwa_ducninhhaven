@@ -2,7 +2,7 @@
 //   NAVBAR: hiển thị nơi phục vụ hiện tại, và nút chuyển ngôn ngữ
 import { initLangSwitch, translate } from "../utils/translate.js";
 import { getContext } from "../../core/context.js";
-import { PLACES } from "../../data/places.js";
+import { PLACES } from "../../core/placesStore.js";
 import { openPicker } from "./placePicker.js";
 
 /* ===================================================== */
