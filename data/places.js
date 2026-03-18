@@ -28,16 +28,15 @@ export const PLACES = {
   area: places.areas
 }
 export const PLACE_RULES = {
-  room: {
-    mode: ["area", "table"]
-  },
-  area: {
-    mode: ["area", "table"]
-  },
-  table: {
-    mode: ["table"]
-  }
+  room: ["area", "table"],
+  area: ["area", "table"],
+  table: ["table"]
 };
+
+export function canSelectPlace(anchorType, targetType) {
+  if (!anchorType || !targetType) return false;
+  return PLACE_RULES[anchorType]?.includes(targetType) ?? false;
+}
 export function getAllowedPlaceTypes(anchorType) {
   return PLACE_RULES[anchorType]?.mode || ["table"];
 }
