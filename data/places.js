@@ -35,8 +35,8 @@ export const PLACES = {
   area: haven.place.areas
 }
 export const PLACE_RULES = {
-  room:[ haven.mode.room],
-  area: [haven.mode.room],
-  table: [haven.mode.room]
+  room: haven.mode.room,
+  area: haven.mode.room,
+  table: haven.mode.room
 };
 
