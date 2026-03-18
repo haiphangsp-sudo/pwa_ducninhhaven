@@ -23,22 +23,23 @@ function initPlacePicker() {
 }
 
 /* ---------- OPEN ---------- */
+function getMode() {
+const ctx = getContext();
+  const anchor = ctx?.anchor;
+  const mode = anchor?.type || "table";
+  PLACE_RULES.forEach(mode => {
+    if (!allowedTypes.includes(mode)) {
+      return;
+    }
+  });
+  return mode;
+}
 
 export function openPicker() {
   initPlacePicker();
 
-  const ctx = getContext();
-  const anchor = ctx?.anchor;
-  const mode = anchor?.type || "table";
-
-  const allowedTypes = PLACE_RULES[mode] || ["table"];
-
-  ["room", "area", "table"].forEach(type => {
-    if (!allowedTypes.includes(type)) {
-      clearGroup(type);
-      return;
-    }
-
+  const type = getMode();
+  
     // ROOM: chỉ hiển thị phòng của chính user
     if (type === "room" && anchor?.type === "room") {
       renderGroup("room", { [anchor.id]: anchor }, true);
@@ -46,7 +47,6 @@ export function openPicker() {
     }
 
     renderGroup(type, PLACES[type]);
-  });
 
   document.querySelector(".picker-panel_title").textContent =
     translate("select_place");

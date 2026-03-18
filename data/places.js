@@ -40,19 +40,3 @@ export const PLACE_RULES = {
   table: places.mode.room
 };
 
-function getMode() {
-const ctx = getContext();
-  const anchor = ctx?.anchor;
-  const mode = anchor?.type || "table";
-
-  const allowedTypes = PLACE_UI[mode] || ["table"];
-
-  ["room", "area", "table"].forEach(type => {
-    if (!allowedTypes.includes(type)) {
-      clearGroup(type);
-      return;
-    }
-  });
-
-  return mode;
-}
