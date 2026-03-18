@@ -1,153 +1,160 @@
 // core/context.js
-// Quản lý ngữ cảnh phục vụ (phòng/bàn/điểm phục vụ) của khách
-// Lưu trong localStorage để tồn tại qua các phiên, nhưng có TTL để tránh lỗi khi khách quên đóng app
 
+import { CONFIG } from "../config.js";
+import { MENU } from "./menuStore.js";
 import { PLACES } from "../data/places.js";
-import { updateNavContext } from "../ui/components/navBar.js";
-import { syncContextToState } from "./state.js";
 
-/* -------------------------------------------------- */
+/* ---------- CONTEXT STATE ---------- */
 
+const STORAGE_KEY = "app_context";
+const TTL = 1000 * 60 * 30; // 30 phút
 
-const KEY="haven_context";
-const ACTIVE_TTL = 30*60*1000;      // 60 phút
-const ANCHOR_TTL = 24*60*60*1000;   // 24 giờ
-export const ANCHOR_PRIORITY = { table: 1, area: 2, room: 3 };
+let context = loadContext();
 
-/* -------------------------------------------------- */
-/* resolve id → place object */
+/* ---------- LOAD / SAVE ---------- */
 
-export function resolvePlace(id){
+function loadContext() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return createEmptyContext();
 
-  if(PLACES.room[id])  return {mode:"room",id};
-  if(PLACES.table[id]) return {mode:"table",id};
-  if(PLACES.area[id])  return {mode:"area",id};
+    const parsed = JSON.parse(raw);
+
+    if (isExpired(parsed)) {
+      return createEmptyContext();
+    }
+
+    return parsed;
+  } catch {
+    return createEmptyContext();
+  }
+}
+
+function saveContext() {
+  context.updatedAt = Date.now();
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(context));
+  dispatchContextChange();
+}
+
+function isExpired(ctx) {
+  if (!ctx?.updatedAt) return true;
+  return Date.now() - ctx.updatedAt > TTL;
+}
+
+function createEmptyContext() {
+  return {
+    anchor: null,
+    active: null,
+    updatedAt: Date.now()
+  };
+}
+
+/* ---------- PUBLIC GET ---------- */
+
+export function getContext() {
+  return context;
+}
+
+/* ---------- CORE SET ---------- */
+
+export function setAnchor(place) {
+  context.anchor = place;
+  saveContext();
+}
+
+export function setActive(place) {
+  context.active = place;
+  saveContext();
+}
+
+/* ---------- PLACE PRIORITY ---------- */
+
+export const PLACE_PRIORITY = {
+  area: 1,
+  table: 2,
+  room: 3
+};
+
+export function getPlacePriority(type) {
+  return PLACE_PRIORITY[type] ?? 0;
+}
+
+export function shouldReplaceAnchor(currentType, nextType) {
+  if (!nextType) return false;
+  if (!currentType) return true;
+
+  return getPlacePriority(nextType) > getPlacePriority(currentType);
+}
+
+/* ---------- APPLY PLACE ---------- */
+
+export function applyResolvedPlace(resolved) {
+  if (!resolved) return false;
+
+  const currentType = context?.anchor?.type;
+  const nextType = resolved.type;
+
+  // luôn set active
+  context.active = resolved;
+
+  // chỉ set anchor khi đủ điều kiện
+  if (shouldReplaceAnchor(currentType, nextType)) {
+    context.anchor = resolved;
+  }
+
+  saveContext();
+  return true;
+}
+
+export function applyPlaceById(placeId) {
+  if (!placeId) return false;
+
+  const resolved = resolvePlace(placeId);
+  if (!resolved) return false;
+
+  return applyResolvedPlace(resolved);
+}
+
+/* ---------- NORMALIZE ---------- */
+
+export function normalizeContext() {
+  if (isExpired(context)) {
+    context = createEmptyContext();
+    saveContext();
+    return;
+  }
+
+  // refresh TTL
+  saveContext();
+}
+
+/* ---------- RESOLVE PLACE ---------- */
+export function resolvePlace(placeId) {
+  const directPlace =
+    MENU?.places?.[placeId] ??
+    MENU?.place?.[placeId] ??
+    CONFIG?.PLACES?.[placeId] ??
+    CONFIG?.places?.[placeId];
+
+  if (directPlace) return directPlace;
+
+  if (PLACES.room?.[placeId]) {
+    return { type: "room", id: placeId, ...PLACES.room[placeId] };
+  }
+
+  if (PLACES.table?.[placeId]) {
+    return { type: "table", id: placeId, ...PLACES.table[placeId] };
+  }
+
+  if (PLACES.area?.[placeId]) {
+    return { type: "area", id: placeId, ...PLACES.area[placeId] };
+  }
 
   return null;
 }
 
-/* -------------------------------------------------- */
-/* INTERNAL */
+/* ---------- EVENTS ---------- */
 
-function load(){
-  try{
-    return JSON.parse(localStorage.getItem(KEY)) || {};
-  }catch{
-    return {};
-  }
-}
-
-function save(ctx){
-  localStorage.setItem(KEY,JSON.stringify(ctx));
-  window.dispatchEvent(new Event("contextChanged"));
-}
-
-/* -------------------------------------------------- */
-/* QR scan → identity */
-
-export function setAnchor(place){
-
-  const ctx = load();
-
-  ctx.anchor = {
-    type:place.type,
-    id:place.id,
-    ts:Date.now()
-  }
-  ctx.active={
-    mode:place.id,
-    ts:Date.now()
-  };
-
-  save(ctx);
-  syncContextToState();
-}
-
-/* -------------------------------------------------- */
-/* picker → service location */
-
-export function setActive(place){
-  const ctx=load()
-  const mode = ctx.anchor?.type || "table";
-  if (mode === "table" && place.type !== table) return;
-  if (mode === "area" && place.type !== area) return;
-
-  if(mode===place.type){
-    ctx.active={
-      mode:place.id,
-      ts:Date.now()
-    };
-  }else{
-    ctx.active=null;
-  }
-
-  save(ctx);
-  syncContextToState();
-}
-
-/* -------------------------------------------------- */
-
-export function getContext(){
-
-  const ctx=load();
-  if(!ctx.anchor && !ctx.active) return null;
-
-  const now=Date.now();
-
-  let changed=false;
-  // Xoá anchor nếu quá cũ, coi như khách quên quét QR code
-  if(ctx.anchor && now-ctx.anchor.ts>ANCHOR_TTL){
-    ctx.anchor=null;
-    ctx.active=null;
-    changed=true;
-  }
-// Xoá active nếu quá cũ, coi như khách quên chọn nơi phục vụ
-  if(ctx.active && now-ctx.active.ts>ACTIVE_TTL){
-    ctx.active=null;
-    changed=true;
-  }
-
-
-  if(changed) save(ctx);
-  
-  return ctx;
-}
-
-/* -------------------------------------------------- */
-/* convenience */
-
-export function getActive(){
-  return getContext()?.active || null;
-}
-
-export function getAnchor(){
-  return getContext()?.anchor || null;
-}
-
-// Chuẩn hoá lại context khi app load, để xoá những chỗ phục vụ đã quá cũ
-export function normalizeContext(){
-
-  const ctx=getContext();
-  if(!ctx) return;
-
-  save(ctx);
-}
-//  Xoá context, ví dụ khi khách rời đi mà quên quét QR code để xoá anchor, hoặc quên chọn nơi phục vụ để xoá active. Hoặc đơn giản là để test.
-export function clearContext(){
-  localStorage.removeItem(KEY);
-  window.dispatchEvent(new Event("contextChanged"));
-  syncContextToState();
-}
-
-/* ===================================================== */
-
-export function needsPlaceSelection(){
-  const ctx=getContext();
-  const mode = ctx.anchor?.type || "table";
-  if (mode === "table") return !ctx?.active?.table;
-  if (mode === "area" ) return !ctx?.active?.area&&!ctx?.active?.table;
-  if (mode === "room") return !ctx?.active?.room && !ctx?.active?.area && !ctx?.active?.table;
-  
-  return true;
-  
+function dispatchContextChange() {
+  window.dispatchEvent(new Event("contextchange"));
 }

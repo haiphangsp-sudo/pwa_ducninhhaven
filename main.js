@@ -8,14 +8,13 @@ import { onNetworkChange } from "./services/network.js";
 import { CONFIG } from "./config.js";
 import { resetIdleTimer } from "./core/idle.js";
 import { loadMenu, MENU } from "./core/menuStore.js";
-import { getContext, resolvePlace, setAnchor, setActive, normalizeContext } from "./core/context.js";
+import { applyPlaceById, normalizeContext } from "./core/context.js";
 import { updateNavContext } from "./ui/components/navBar.js";
 import { setDeliveryState } from "./ui/render/renderDelivery.js";
 import { setRecoveryState } from "./ui/render/renderRecovery.js";
 import { attachMenuEvents } from "./ui/render/renderMenu.js";
 import { loadCart } from "./core/events.js";
 import { detectRecovery } from "./core/queue.js";
-import { ANCHOR_PRIORITY } from "./core/context.js";
 
 
 /* ---------- VERSION ---------- */
@@ -37,35 +36,14 @@ function checkVersion(){
 
 /* ---------- READ QR ---------- */
 // - Nếu URL có param "place", giải mã và lưu vào context để dùng cho các thao tác sau này (gửi yêu cầu, hiển thị ở nav, ...)
-function applyURLContext(){
-
+function applyURLContext() {
   const params = new URLSearchParams(location.search);
   const placeId = params.get("place");
-  if(!placeId) return;
 
-  const resolved = resolvePlace(placeId);
-  if(!resolved) return;
+  if (!placeId) return;
 
-  const ctx = getContext();
-  const currentType = ctx?.anchor?.type;
-  const nextType = resolved.type;
-
-  setActive(resolved);
-
-  if(shouldSetAnchor(currentType,nextType)){
-    setAnchor(resolved);
-  }
-  // quan trọng: xoá param để tránh reset khi reload
+  applyPlaceById(placeId);
   history.replaceState({}, "", location.pathname);
-}
-function shouldSetAnchor(currentType, nextType) {
-  
-  if(!nextType) return false;
-  if (!currentType) return true;
-
-  const currentPriority = ANCHOR_PRIORITY[currentType]??0;
-  const nextPriority = ANCHOR_PRIORITY[nextType]??0;
-  return nextPriority > currentPriority;
 }
 /* ---------- SW ---------- */
 // - Đăng ký Service Worker để hỗ trợ offline và background sync
