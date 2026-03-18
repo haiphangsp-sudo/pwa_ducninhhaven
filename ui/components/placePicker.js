@@ -27,12 +27,12 @@ function getMode() {
 const ctx = getContext();
   const anchor = ctx?.anchor;
   const mode = anchor?.type || "table";
-  PLACE_RULES.forEach(mode => {
-    if (!allowedTypes.includes(mode)) {
+  PLACE_RULES[mode].forEach(type => {
+    if (!allowedTypes.includes(type)) {
       return;
     }
   });
-  return mode;
+  return type;
 }
 
 export function openPicker() {
