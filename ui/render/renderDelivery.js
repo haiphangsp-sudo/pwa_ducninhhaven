@@ -20,8 +20,22 @@ function render(){
     closeOverlay("deliveryBanner");
     return;
   }
-
-  el.textContent = translate(`delivery.${state}`);
+  const themes = {
+    sending: "banner-blue",
+    send: "banner-green",
+    failed: "banner-red"
+  };
+  if (themes[state]) {
+    el.classList.add(themes[state]);
+  }
+  el.innerHTML = `
+  <div class="banner-content">
+    <span class="banner-icon>
+    ${state==="send"?"✓":"..."}
+    </span>
+    <span class="banner-text">${translate(`delivery.${state}`)}</span>
+  </div
+  `
   showOverlay("deliveryBanner");
 
 

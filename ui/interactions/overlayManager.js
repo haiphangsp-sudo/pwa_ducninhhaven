@@ -7,8 +7,12 @@ const backdrop = document.getElementById("overlayBackdrop");
 
 export function showOverlay(id) {
     if (!current) {
-        el = document.getElementById(id);
-        el.classList.remove("hidden");
+        el = document.getElementById(id)
+            .style.opacity = 0
+            .classList.remove("hidden");
+        setTimeout(() => {
+            el.style.opacity = 1;
+        }, 10);
         backdrop.classList.remove("hidden");
         backdrop.onclick = closeOverlay;
         current = true;
