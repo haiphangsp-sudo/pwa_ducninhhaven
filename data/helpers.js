@@ -2,6 +2,7 @@
 //Hàm đọc menu theo mode (lọc hiển thị).
 
 import { MENU } from "../core/menuStore.js";
+import { getContext } from "../core/context.js";
 
 function getPlaceType() {
     const ctx = getContext();
