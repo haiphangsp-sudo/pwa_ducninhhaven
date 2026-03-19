@@ -33,20 +33,6 @@ function renderDrawer() {
 
   // 2. Vẽ nội dung giỏ hàng
 
-  const sendBtn = document.getElementById("drawerSend");
-  const titleEl = document.querySelector(".drawer-title");
-  const itemsEl = document.getElementById("drawerItems");
-  const closeBtn = document.getElementById("drawerClose");
-
-  if (!sendBtn || !titleEl || !itemsEl || !closeBtn) return;
-
-  titleEl.textContent = translate("cart_bar.cart_title");
-
-    const itemLabel = translate(menuItem?.label || cartItem.item);
-    const optionLabel = translate(menuOption?.label || "");
-
-
-
   el.innerHTML =  `
    <div class="drawer__item">
       <div class="drawer__info">
