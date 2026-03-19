@@ -15,7 +15,10 @@
   touch-action:manipulation;
   min-height: 0;
   flex: 1;
+  padding-bottom:96px;
+  padding-bottom:calc(96px + env(safe-area-inset-bottom));
 }
+
 /* ===== Delivery Banner ===== */
 
 .delivery-banner {
