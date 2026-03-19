@@ -46,3 +46,114 @@
   max-width: 90vw;
   width: 480px;
 }
+/* =====================
+   BANNERS (Delivery & Recovery)
+===================== */
+
+.delivery-banner, 
+.recovery-banner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 9999;
+    padding: 12px 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-invert);
+    box-shadow: var(--shadow);
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    transform: translateY(0);
+}
+
+.delivery-banner.hidden, 
+.recovery-banner.hidden {
+    transform: translateY(-100%);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.banner-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.banner-icon {
+    font-size: 18px;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Themes dựa trên Tokens */
+.banner-info {
+    background-color: var(--brand); /* Màu xanh rừng của Haven */
+}
+
+.banner-success {
+    background-color: var(--success); /* Xanh lá cây phục vụ */
+}
+
+.banner-error {
+    background-color: var(--error); /* Đỏ báo lỗi */
+}
+
+.banner-warning {
+    background-color: var(--warning); /* Cam nhắc nhở recovery */
+}
+
+/* Hiệu ứng nhấp nháy nhẹ cho trạng thái "Sending" */
+.banner-info .banner-icon {
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+/* =====================
+   ACK OVERLAY (Haptic Visual)
+===================== */
+
+#ackOverlay {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10000;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px); /* Hiệu ứng kính mờ sang trọng */
+    color: white;
+    padding: 20px 30px;
+    border-radius: var(--radius-l, 16px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+}
+
+#ackOverlay.hidden {
+    opacity: 0;
+}
+
+.ack-icon {
+    font-size: 32px;
+    color: var(--success);
+    animation: bounceIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes bounceIn {
+    0% { transform: scale(0.3); opacity: 0; }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); opacity: 1; }
+}
