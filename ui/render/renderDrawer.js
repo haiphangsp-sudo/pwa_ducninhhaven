@@ -41,16 +41,21 @@ function renderDrawer() {
 
         const menuItem = MENU?.[item.category]?.items?.[item.item];
         const menuOption = menuItem?.options?.[item.option];
-
+        const priceOption = menuOption?.price;
+        
         const itemLabel = translate(menuItem?.label || item.item);
         const optionLabel = translate(menuOption?.label || "");
 
         return `
             <div class="drawer-item row items-center justify-between p-s border-b">
                 <div class="stack">
-                    <strong>${item.name}</strong>
+                    <strong>${menuItem}</strong>
                     <span>${optionLabel}</span>
-                    <span class="text-s text-muted">${item.price ? item.price.toLocaleString() : ''}</span>
+                    <span class="text-s text-muted">${price > 0
+                        ? price.toLocaleString("vi-VN") + " đ"
+                        : price === 0 ? translate("cart_bar.free")
+                        : translate("cart_bar.instant")
+                    }</span>
                 </div>
                 <div class="row items-center gap-s">
                     <button class="qty-btn min" data-action="minus" data-index="${index}">-</button>
