@@ -3,13 +3,12 @@
 import { attachCartBarEvents } from "../render/renderCart.js";
 import { networkBackEvent } from "../../services/network.js";
 import { resetIdleTimer } from "../../core/idle.js";
-import { attachNarBarEvents } from "../components/navBar.js";
 import { attachMenuEvents } from "../components/categoryOption.js";
 import { setDeliveryState } from "../render/renderDelivery.js";
 import { setRecoveryState } from "../render/renderRecovery.js";
 import { attachPlacePickerEvents } from "../components/placePicker.js";
 import { attachHubEvents } from "../render/renderHub.js";
-import { attachLangguegeEvents } from "../components/navBar.js";
+import { attachLangguegeEvents, attachNarBarEvents } from "../components/navBar.js";
 
 
 

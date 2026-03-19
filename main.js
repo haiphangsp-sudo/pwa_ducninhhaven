@@ -102,10 +102,11 @@ async function boot() {
   await loadPlaces();
   applyURLContext();   // ← phải chạy trước render
   normalizeContext(); // đảm bảo context được lưu lại với timestamp mới, tránh bị xoá do TTL
-  subscribe(renderApp);
+  
   loadCart();
   detectRecovery();
   renderApp();
   eventsApp();
   watchMenu();
+  subscribe(renderApp);
 }
