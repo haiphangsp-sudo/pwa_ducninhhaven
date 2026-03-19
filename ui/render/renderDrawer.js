@@ -14,13 +14,6 @@ export function openCartDrawer() {
   showOverlay("cartDrawer");
 }
 
-export function attachDrawerEvents() {
-  if (attached) return;
-  attached = true;
-
-  document.addEventListener("click", handleDrawerClick);
-}
-
 function renderDrawer() {
   const el = document.getElementById("cartDrawer");
   if (!el) return;
