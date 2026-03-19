@@ -4,8 +4,7 @@ import { translate } from "../utils/translate.js";
 import { getContext } from "../../core/context.js";
 import { PLACES } from "../../core/placesStore.js";
 import { openPicker } from "./placePicker.js";
-
-
+import { getState, setState } from "../../core/state.js";
 
 /* ===================================================== */
   let identityIcon;
