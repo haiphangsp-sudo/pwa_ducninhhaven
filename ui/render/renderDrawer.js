@@ -2,7 +2,7 @@
  
 import { updateCartBarTotal } from "./renderCart.js";
 import { showOverlay, closeOverlay } from "../interactions/backdropManager.js";
-import { sendCart } from "../../core/events.js";
+import { sendCart, updateCart } from "../../core/events.js";
 import { UI } from "../../core/state.js";
 import { translate } from "../utils/translate.js";
 import { MENU } from "../../core/menuStore.js";
@@ -159,4 +159,15 @@ function findIndexByLineId(id) {
 function getLineId(item, fallbackIndex = 0) {
   if (item?.lineId) return item.lineId;
   return `${item.category}-${item.item}-${item.option}-${fallbackIndex}`;
+}
+
+function handleSend() {
+  if (UI.cart.changed) {
+    updateCart(); 
+    closeOverlay();
+    return;
+  }
+
+  sendCart();    
+  closeOverlay();
 }

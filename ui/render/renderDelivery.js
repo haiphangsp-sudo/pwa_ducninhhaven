@@ -1,42 +1,51 @@
-import { DELIVERY_STATES } from "../../core/deliveryStates.js";
+// ui/render/renderDelivery.js
+// Banner hiển thị trạng thái đơn hàng (sending, sent, failed)
 
-let currentDeliveryState = "idle";
+import { translate } from "../utils/translate.js";
 
-export function setDeliveryState(nextState) {
-  currentDeliveryState = nextState;
-  renderDeliveryState();
+let state = "idle";
+
+export function setDeliveryState(s) {
+  state = s;
+  render();
 }
 
-export function getDeliveryState() {
-  return currentDeliveryState;
-}
+function render() {
+  const el = document.getElementById("deliveryBanner");
+  if (!el) return;
 
-export function renderDeliveryState() {
-  const state = DELIVERY_STATES[currentDeliveryState] || DELIVERY_STATES.idle;
-
-  renderSendButton(state);
-  renderDeliveryBanner(state);
-}
-
-function renderSendButton(state) {
-  const btn = document.querySelector(".send-button");
-  if (!btn) return;
-
-  btn.disabled = !state.canSend;
-  btn.dataset.state = currentDeliveryState;
-  btn.textContent = state.buttonKey;
-}
-
-function renderDeliveryBanner(state) {
-  const banner = document.querySelector(".delivery-banner");
-  if (!banner) return;
-
-  if (!state.banner) {
-    banner.innerHTML = "";
-    banner.hidden = true;
+  if (state === "idle") {
+    el.className = "delivery-banner hidden";
     return;
   }
 
-  banner.hidden = false;
-  banner.textContent = state.banner;
+  // Cấu trúc nội dung chuyên nghiệp
+  let icon = "...";
+  let theme = "banner-info";
+
+  if (state === "sent") {
+    icon = "✓";
+    theme = "banner-success";
+  } else if (state === "failed") {
+    icon = "!";
+    theme = "banner-error";
+  }
+
+  el.className = `delivery-banner ${theme} active`;
+  el.innerHTML = `
+    <div class="banner-content">
+      <span class="banner-icon">${icon}</span>
+      <span class="banner-text">${translate(`delivery.${state}`)}</span>
+    </div>
+  `;
+
+  // Chỉ trạng thái lỗi mới cho phép nhấn để thử lại
+  if (state === "failed") {
+    el.onclick = () => {
+      // Phát sự kiện để queue.js bắt đầu xử lý lại
+      window.dispatchEvent(new Event("resumeQueue"));
+    };
+  } else {
+    el.onclick = null;
+  }
 }

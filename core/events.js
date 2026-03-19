@@ -58,6 +58,15 @@ function addToCart(item) {
   setState({cart:{items:Items}});
 }
 
+export function updateCart() {
+
+  setState({
+    cart: {
+      ...UI.cart,
+      changed: false
+    }
+  });
+}
 /* ---------- SEND ---------- */
 
 function sendInstant(action){

@@ -1,163 +1,153 @@
 // core/queue.js
 
-
-
 import { sendRequest } from "../services/api.js";
-import { setState, getState } from "./state.js";
+import { setState, UI } from "./state.js"; // Sử dụng UI trực tiếp từ state
 import { getRetryDelay } from "../services/retryPolicy.js";
-import { getContext } from "./context.js";
-import { clearCart } from "./events.js"
+import { clearCart } from "./events.js";
 import { setDeliveryState } from "../ui/render/renderDelivery.js";
+import { setRecoveryState } from "../ui/render/renderRecovery.js";
 
-
-
-const STORAGE_KEY="haven_queue";
+const STORAGE_KEY = "haven_queue";
 const MAX_QUEUE = 50;
-let recoveryEmitted = false;
-let processing=false;
+let processing = false;
 
 /* ---------- STORAGE ---------- */
 
-function loadQueue(){
-  return JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]");
+function loadQueue() {
+  return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
 }
 
-function saveQueue(q){
-  localStorage.setItem(STORAGE_KEY,JSON.stringify(q));
-}
-
-/* ---------- STATE ---------- */
-
-function emitDelivery(state,extra={}){
-  setState({delivery:{state,...extra}});
-}
-
-function emitRecovery(state) {
-  const current = getState().recovery?.state;
-  if (current === state) return;
-  setState({recovery:{state}});
+function saveQueue(q) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(q));
 }
 
 /* ---------- ENQUEUE ---------- */
 
-export function enqueue(payload){
-
-  const queue=loadQueue();
+export function enqueue(payload) {
+  const queue = loadQueue();
   
   if (queue.length >= MAX_QUEUE) {
     queue.shift();
   }
 
+  const newId = crypto.randomUUID();
   queue.push({
-    id:crypto.randomUUID(),
+    id: newId,
     payload,
-    retries:0,
-    createdAt:Date.now()
+    retries: 0,
+    createdAt: Date.now()
   });
 
   saveQueue(queue);
 
-  emitDelivery("pending",{count: queue.length});
+  // Khi có đơn mới vào hàng đợi, báo trạng thái "đang chờ"
+  setDeliveryState("pending");
 
-  if(!processing) processQueue();
+  if (!processing) processQueue();
 }
 
 /* ---------- PROCESS ---------- */
 
-export async function processQueue(){
-
-  if(processing) return;
-
-  let queue=loadQueue();
-
-  if(!queue.length){
-    emitDelivery("idle");
+export async function processQueue() {
+  if (processing) return;
+  
+  const queue = loadQueue();
+  if (queue.length === 0) {
+    processing = false;
     return;
   }
 
-  processing=true;
-  setDeliveryState("sending"); //đang gửi
-  while(queue.length){
+  processing = true;
 
-    const req=queue[0];
-    const job=req.payload;
+  while (queue.length > 0) {
+    const req = queue[0];
+    const job = req.payload;
 
-    try{
+    try {
+      // Nguyên tắc 1: Báo trạng thái "Đang gửi"
+      setDeliveryState("sending");
 
-      const ctx=getContext();
-      const anchor=ctx?.anchor;
-
-        const body={
-          id:req.id,
-          device: navigator.userAgent,
-          time: Date.now(),
-          ...job
-        };
+      const body = {
+        id: req.id,
+        device: navigator.userAgent,
+        time: Date.now(),
+        ...job // Giữ nguyên các trường: mode, items, category...
+      };
 
       await sendRequest(body);
-        if(job.type === "cart") clearCart();
+
+      // Nguyên tắc 2: Gửi thành công
+      if (job.type === "cart") {
+        clearCart(); // Xóa giỏ hàng ngay khi đơn đầu tiên trong queue thành công
+      }
+
       queue.shift();
       saveQueue(queue);
 
-      if (queue.lenght === 0) {
-        setDeliveryState("send"); //màu xanh: thành công
-        recoveryEmitted = false;
-        emitRecovery("idle");
-      }
-
-      if (!queue.length) {
+      // Nếu đã gửi hết sạch hàng đợi
+      if (queue.length === 0) {
+        // Nguyên tắc 3: Báo thành công (Hiện tích xanh)
+        setDeliveryState("sent");
         
+        // Phản hồi xúc giác (Rung nhẹ nếu mobile hỗ trợ)
+        if (navigator.vibrate) navigator.vibrate(50);
+
+        // Tự động dọn dẹp Banner sau 2.5 giây (Nguyên tắc Auto-dismiss)
         setTimeout(() => {
           setDeliveryState("idle");
-          setState({
-            ack: { state: "hidden" }
-          });
-        },2500);
+          setRecoveryState("idle"); // Dọn luôn recovery nếu có
+        }, 2500);
       }
 
-    }catch(e){
-
-      if(e.message!=="retry"||e.message==="network"){
-        queue.shift();
-        saveQueue(queue);
-        continue;
+    } catch (e) {
+      // Nguyên tắc 4: Xử lý lỗi (Không tự ẩn để khách xử lý)
+      console.error("Queue Error:", e);
+      
+      if (e.message === "network" || !navigator.onLine) {
+        setDeliveryState("failed"); 
+        processing = false;
+        return; // Dừng vòng lặp để chờ mạng quay lại
       }
 
+      // Xử lý Retry nếu là lỗi logic tạm thời từ server
       req.retries++;
-      saveQueue(queue);
-
-      setDeliveryState("failed",{retries:req.retries}); // Hiện màu đỏ, thử lại
-
-      const delay=getRetryDelay(req.retries);
-
-      processing=false;
-      setTimeout(processQueue,delay);
-      return;
+      if (req.retries > 3) {
+        queue.shift(); // Bỏ qua nếu lỗi quá nhiều lần
+        saveQueue(queue);
+      } else {
+        saveQueue(queue);
+        const delay = getRetryDelay(req.retries);
+        setDeliveryState("pending"); 
+        
+        await new Promise(res => setTimeout(res, delay));
+        // Tiếp tục vòng lặp while
+      }
     }
   }
 
-  processing=false;
+  processing = false;
 }
 
 /* ---------- RECOVERY ---------- */
 
 export function detectRecovery() {
   const q = loadQueue();
-  if (!q.length) return;
-
-  if (q.length && !recoveryEmitted) {
-    recoveryEmitted = true;
-    emitRecovery("found");
+  if (q.length > 0) {
+    // Nếu có đơn cũ chưa gửi xong từ lần trước, báo cho khách biết
+    setRecoveryState("found");
   }
 }
 
 /* ---------- EVENTS ---------- */
 
-window.addEventListener("resumeQueue",()=>{
-  emitRecovery("sending");
-  processQueue();
+// Lắng nghe tín hiệu thử lại từ Banner
+window.addEventListener("resumeQueue", () => {
+  if (!processing) processQueue();
 });
 
-window.addEventListener("networkBack",()=>{
-  if(loadQueue().length) processQueue();
+// Tự động resume khi mạng quay lại
+window.addEventListener("online", () => {
+  if (loadQueue().length > 0) {
+    processQueue();
+  }
 });
