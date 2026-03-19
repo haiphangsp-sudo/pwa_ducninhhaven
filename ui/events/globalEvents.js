@@ -8,6 +8,7 @@ import { attachMenuEvents } from "../components/categoryOption.js";
 import { setDeliveryState } from "../render/renderDelivery.js";
 import { setRecoveryState } from "../render/renderRecovery.js";
 import { attachPlacePickerEvents } from "../components/placePicker.js";
+import { attachHubEvents } from "../render/renderHub.js";
 
 
 
@@ -16,7 +17,7 @@ export function eventsApp() {
     attachMenuEvents();
     attachCartBarEvents();
     attachPlacePickerEvents();
-    
+    attachHubEvents();
 
 
     networkBackEvent();

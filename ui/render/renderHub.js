@@ -42,32 +42,17 @@ export function renderHub(){
 
   `).join("");
 
-  /* =======================================================
-     CLICK EVENT
-  ======================================================= */
-
-  menuEl.querySelectorAll(".hub-btn").forEach(btn=>{
-
-    btn.onclick = ()=>{
-
-      if(btn.classList.contains("is-active")) return;
-
-      const key = btn.dataset.key;
-
-      setState({
-        view:{ panel:key }
-      });
-
-      renderPanel(key);
-
-    };
-
-  });
-
-  /* =======================================================
-     RENDER CATEGORY
-  ======================================================= */
-
   renderPanel(panel);
 
+}
+export function attachHubEvents() {
+  document.addEventListener("click", e => {
+    const btn = e.target.closest(".hub-btn");
+    if (!btn || btn.classList.contains("is-active")) return;
+    const key = btn.dataset.key;
+    setState({
+      view: { panel: key }
+    });
+    renderPanel(key);
+  });
 }
