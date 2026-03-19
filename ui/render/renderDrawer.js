@@ -56,16 +56,12 @@ function renderDrawer() {
         sendBtn.classList.add("hidden");
     } else {
         sendBtn.classList.remove("hidden");
-        sendBtn.textContent = isModified ? translate("cart_bar.confirm_changes") : translate("cart.send_order");
+        sendBtn.textContent = isModified ? translate("cart_bar.confirm_changes") : translate("cart_bar.send_order");
         // Gán class để CSS đổi màu
         sendBtn.className = `drawer-send ${isModified ? 'state-confirm' : 'state-send'}`;
     }
-    
 }
 
-/**
- * "Nhốt" toàn bộ sự kiện vào đây
- */
 export function attachDrawerEvents(drawer) {
     // A. Sự kiện đóng (nút X)
     document.getElementById("drawerClose").addEventListener("click", () => {

@@ -18,6 +18,7 @@ import { attachDrawerEvents } from "../render/renderDrawer.js";
 
 export function eventsApp() {
     if (!eventsAttached) {
+        eventsAttached = true;
         attachNavBarEvents();
         attachMenuEvents();
         attachCartBarEvents();
