@@ -100,7 +100,7 @@ function setLanguage(l) {
 }
 
 function updateActive() {
-  document.querySelectorAll("").forEach(el =>
+  document.querySelectorAll("#langSwitch button").forEach(el =>
     el.classList.toggle("is-active", el.dataset.lang=== getState().lang.current)
   )
 }
