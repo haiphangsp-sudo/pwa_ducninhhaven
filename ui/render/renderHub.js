@@ -27,6 +27,7 @@ export function renderHub(){
 
   const panel = UI.view.panel;
   renderPanel(panel);
+  updateActive(panel);
 }
 
 function updateActive(acitveId) {
@@ -36,6 +37,7 @@ function updateActive(acitveId) {
 }
 
 export function attachHubEvents() {
+
   document.addEventListener("click", e => {
 
     const btn = e.target.closest("[data-action]");
