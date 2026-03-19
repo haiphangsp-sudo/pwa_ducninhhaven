@@ -6,7 +6,12 @@ import { updateCartQuantity, sendCart } from "../../core/events.js";
 // Biến cờ để theo dõi trạng thái chỉnh sửa trong phiên mở giỏ hàng này
 let isModified = false;
 
-export function renderDrawer() {
+export function openCartDrawer() {
+  renderDrawer();
+  showOverlay("cartDrawer");
+}
+
+function renderDrawer() {
   const el = document.getElementById("cartDrawer");
   if (!el) return;
 
