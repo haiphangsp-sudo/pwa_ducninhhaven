@@ -2,6 +2,9 @@
 import { UI, setState } from "../../core/state.js";
 import { translate } from "../utils/translate.js";
 import { updateCartQuantity, sendCart } from "../../core/events.js";
+import { updateCartBarTotal } from "./renderCart.js";
+import { showOverlay } from "../interactions/backdropManager.js";
+
 
 // Biến cờ để theo dõi trạng thái chỉnh sửa trong phiên mở giỏ hàng này
 let isModified = false;
