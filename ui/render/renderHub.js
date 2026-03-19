@@ -13,7 +13,7 @@ export function renderHub(){
   const panels = getCategories();
 
   menuEl.innerHTML = panels.map(cat=>`
-    <button class="hub-btn btn center is-active"
+    <button class="hub-btn btn center"
       data-action="menu"
       data-key="${cat.key}">
       <span class="hub-icon">
@@ -32,8 +32,7 @@ export function renderHub(){
 function updateActive(acitveId) {
 
   document.querySelectorAll("[data-action='menu']").forEach(el =>
-    el.classList.toggle("is-active", el.dataset.key === acitveId)
-  )
+    el.classList.toggle("is-active",el.dataset.key === acitveId))
 }
 
 export function attachHubEvents() {
