@@ -5,6 +5,7 @@ import { UI } from "../../core/state.js";
 import { getContext } from "../../core/context.js";
 import { translate } from "../utils/translate.js";
 import { openCartDrawer } from "./renderDrawer.js";
+import { openPicker } from "../components/placePicker.js";
 
 
 export function renderCartBar(){
