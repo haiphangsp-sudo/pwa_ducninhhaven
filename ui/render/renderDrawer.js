@@ -121,13 +121,13 @@ function handleDrawerClick(e) {
 
     if (UI.cart.items.length === 0) {
       clearDrawer();
-      updateTotal();
+      updateCartBarTotal();
       closeOverlay();
       return;
     }
 
     renderDrawer(); // cần rebuild khi xoá
-    updateTotal();
+    updateCartBarTotal();
   }
 }
 
