@@ -14,6 +14,7 @@ export function renderHub(){
 
   menuEl.innerHTML = panels.map(cat=>`
     <button class="hub-btn btn center is-active"
+      data-action="menu"
       data-key="${cat.key}">
       <span class="hub-icon">
         <img src="/icons/${cat.key}.svg">
@@ -23,19 +24,31 @@ export function renderHub(){
       </span>
     </button>
   `).join("");
-  
+
   const panel = UI.view.panel;
   renderPanel(panel);
 }
 
+function updateActive(acitveId) {
+
+  document.querySelectorAll("[data-action='menu']").forEach(el =>
+    el.classList.toggle("is-active", el.dataset.key === acitveId)
+  )
+}
+
 export function attachHubEvents() {
   document.addEventListener("click", e => {
-    const btn = e.target.closest(".hub-btn");
+
+    const btn = e.target.closest("[data-action]");
     if (!btn || btn.classList.contains("is-active")) return;
-    const key = btn.dataset.key;
-    setState({
-      view: { panel: key }
-    });
-    renderPanel(key);
+
+    switch(btn.dataset.action){
+      case "menu":
+        const p = btn.dataset.key;
+        updateActive(p);
+        setState({view: p});
+        renderPanel(p);
+        break;
+    }
   });
 }

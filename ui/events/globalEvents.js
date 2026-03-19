@@ -10,6 +10,7 @@ import { setRecoveryState } from "../render/renderRecovery.js";
 import { attachPlacePickerEvents } from "../components/placePicker.js";
 import { attachHubEvents } from "../render/renderHub.js";
 import { attachLangguegeEvents } from "../components/navBar.js";
+import { attachHubEvents } from "../render/renderHub.js";
 
 
 
@@ -20,7 +21,7 @@ export function eventsApp() {
     attachPlacePickerEvents();
     attachHubEvents();
     attachLangguegeEvents();
-
+    attachHubEvents();
 
     networkBackEvent();
 
