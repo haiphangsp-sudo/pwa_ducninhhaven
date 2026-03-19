@@ -70,60 +70,62 @@ function renderDrawer() {
 }
 
 /* ---------- CLICK HANDLER ---------- */
+export function attachCartDrawerEvents() {
 
-document.addEventListener("click", (e) => {
-  const btn = e.target.closest(".qty-plus, .qty-minus");
-  if (!btn) return;
 
-  const row = btn.closest(".drawer__item");
-  if (!row) return;
+  document.addEventListener("click", (e) => {
+    const btn = e.target.closest(".qty-plus, .qty-minus");
+    if (!btn) return;
 
-  const id = btn.dataset.id;
-  if (!id) return;
+    const row = btn.closest(".drawer__item");
+    if (!row) return;
 
-  const index = findCartItemIndexById(id);
-  if (index === -1) return;
+    const id = btn.dataset.id;
+    if (!id) return;
 
-  const cartItem = UI.cart.items[index];
-  if (!cartItem) return;
+    const index = findCartItemIndexById(id);
+    if (index === -1) return;
 
-  // tăng số lượng
-  if (btn.classList.contains("qty-plus")) {
-    cartItem.qty += 1;
-    syncDrawerRowQty(row, cartItem.qty);
-    updateCartBarTotal();
-    return;
-  }
+    const cartItem = UI.cart.items[index];
+    if (!cartItem) return;
 
-  // giảm số lượng
-  if (btn.classList.contains("qty-minus")) {
-    cartItem.qty -= 1;
-
-    // nếu còn > 0 thì chỉ update dòng hiện tại
-    if (cartItem.qty > 0) {
+    // tăng số lượng
+    if (btn.classList.contains("qty-plus")) {
+      cartItem.qty += 1;
       syncDrawerRowQty(row, cartItem.qty);
       updateCartBarTotal();
       return;
     }
 
-    // nếu về 0 thì xoá item khỏi cart
-    UI.cart.items.splice(index, 1);
+    // giảm số lượng
+    if (btn.classList.contains("qty-minus")) {
+      cartItem.qty -= 1;
 
-    // hết giỏ thì đóng drawer
-    if (UI.cart.items.length === 0) {
-      const itemsEl = document.getElementById("drawerItems");
-      if (itemsEl) itemsEl.innerHTML = "";
+      // nếu còn > 0 thì chỉ update dòng hiện tại
+      if (cartItem.qty > 0) {
+        syncDrawerRowQty(row, cartItem.qty);
+        updateCartBarTotal();
+        return;
+      }
+
+      // nếu về 0 thì xoá item khỏi cart
+      UI.cart.items.splice(index, 1);
+
+      // hết giỏ thì đóng drawer
+      if (UI.cart.items.length === 0) {
+        const itemsEl = document.getElementById("drawerItems");
+        if (itemsEl) itemsEl.innerHTML = "";
+        updateCartBarTotal();
+        closeOverlay();
+        return;
+      }
+
+      // còn item thì render lại toàn bộ drawer để đồng bộ data-id và UI
+      renderDrawer();
       updateCartBarTotal();
-      closeOverlay();
-      return;
     }
-
-    // còn item thì render lại toàn bộ drawer để đồng bộ data-id và UI
-    renderDrawer();
-    updateCartBarTotal();
-  }
-});
-
+  });
+}
 /* ---------- HELPERS ---------- */
 
 function syncDrawerRowQty(row, qty) {
