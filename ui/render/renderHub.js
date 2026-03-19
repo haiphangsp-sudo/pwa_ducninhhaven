@@ -26,7 +26,7 @@ export function renderHub(){
     </button>
 
   `).join("");
-  renderPanel(panel);
+  //renderPanel(panel);
 }
 
 export function attachHubEvents() {
