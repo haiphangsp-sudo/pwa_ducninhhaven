@@ -4,21 +4,15 @@
 
 import { subscribe } from "./core/state.js";
 import { renderApp } from "./ui/render/renderApp.js";
-import { onNetworkChange } from "./services/network.js";
 import { CONFIG } from "./config.js";
-import { resetIdleTimer } from "./core/idle.js";
 import { loadMenu, MENU } from "./core/menuStore.js";
 import { applyEntryPlaceById, normalizeContext } from "./core/context.js";
-import { updateNavContext } from "./ui/components/navBar.js";
-import { setDeliveryState } from "./ui/render/renderDelivery.js";
-import { setRecoveryState } from "./ui/render/renderRecovery.js";
-import { attachMenuEvents } from "./ui/render/renderMenu.js";
 import { loadCart } from "./core/events.js";
 import { detectRecovery } from "./core/queue.js";
 import { loadPlaces } from "./core/placesStore.js";
+import { eventsApp } from "./ui/events/globalEvents.js";    
 
-
-
+boot();
 /* ---------- VERSION ---------- */
 // - Đảm bảo phiên bản SW khớp với phiên bản app
 function checkVersion(){
@@ -69,34 +63,33 @@ function registerSW(){
 
 /* ---------- MENU WATCH ---------- */
 // - Theo dõi thay đổi của menu (thông qua polling), nếu có thay đổi thì render lại app để cập nhật menu mới nhất
-async function watchMenu(){
+async function watchMenu() {
 
   window.__menuHash = JSON.stringify(MENU);
 
-  setInterval(async ()=>{
+  setInterval(async () => {
     const old = window.__menuHash;
 
     await loadMenu();
     
     const next = JSON.stringify(MENU);
 
-    if(old !== next){
+    if (old !== next) {
       renderApp();
       window.__menuHash = next;
       showMenuUpdated();
     }
 
-  },10000);
-}
+  }, 10000);
 
-function showMenuUpdated(){
-  const el=document.createElement("div");
-  el.className="menu-update-banner";
-  el.textContent="Thực đơn vừa được cập nhật";
-  document.getSelection(".app-version").appendChild(el);
-  setTimeout(()=>el.remove(),2500);
+  function showMenuUpdated() {
+    const el = document.createElement("div");
+    el.className = "menu-update-banner";
+    el.textContent = "Thực đơn vừa được cập nhật";
+    document.getSelection(".app-version").appendChild(el);
+    setTimeout(() => el.remove(), 2500);
+  }
 }
-
 
 /* ---------- BOOT ---------- */
 // - Hàm khởi động ứng dụng, chạy tất cả các thiết lập cần thiết và render giao diện lần đầu
@@ -110,26 +103,9 @@ async function boot() {
   applyURLContext();   // ← phải chạy trước render
   normalizeContext(); // đảm bảo context được lưu lại với timestamp mới, tránh bị xoá do TTL
   subscribe(renderApp);
-  attachMenuEvents();
   loadCart();
   detectRecovery();
   renderApp();
-  setDeliveryState("idle");
-  setRecoveryState("idle");
-  onNetworkChange(online => {
-    if (online) window.dispatchEvent(new Event("networkBack"));
-  });
-
-  ["touchstart", "pointerdown", "click"].forEach(evt => {
-    document.addEventListener(evt, resetIdleTimer, { passive: true });
-  });
-
+  eventsApp();
   watchMenu();
-  window.addEventListener("contextchange", updateNavContext);
-  window.addEventListener("languagechange", () => {
-    renderApp();
-    updateNavContext();
-  });
-
 }
-boot();

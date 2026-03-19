@@ -6,6 +6,7 @@ import { getContext } from "../../core/context.js";
 import { translate } from "../utils/translate.js";
 import { openCartDrawer } from "./renderDrawer.js";
 
+
 export function renderCartBar(){
 
   const bar = document.getElementById("cartBar");  
@@ -39,3 +40,21 @@ export function updateTotal() {
   document.querySelector(".drawer-total").textContent = textTotal;
 
 }
+
+export function bounceCartBar() {
+  const bar = document.getElementById("cartBar");
+  bar?.classList.add("cart-bounce");
+
+  setTimeout(() => {
+    bar?.classList.remove("cart-bounce");
+  }, 400);
+}
+export function attachCartBarEvents() {
+  document.addEventListener("click", e => {
+    const btn = e.target.closest(".nav-center button");
+    if(!btn) return;
+    openPicker();
+  });
+}
+
+

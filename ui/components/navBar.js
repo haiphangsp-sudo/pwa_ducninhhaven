@@ -29,8 +29,6 @@ export function renderNavBar(){
   identityIcon = document.querySelector(".identity-icon");
   identityLabel = document.querySelector(".identity-label");
   locLabel = document.querySelector(".loc-label");
-
-  document.querySelector(".nav-center button").onclick = openPicker;
 }
 /* ===================================================== */
 /* EXTERNAL REFRESH */
@@ -83,4 +81,11 @@ function formatLocation(ctx){
   return translate(place.label);
 
 }
-
+export function attachNarBarEvents() {
+  document.addEventListener("click", e => {
+    const btn = e.target.closest(".nav-center button");
+    if(!btn) return;
+    openPicker();
+  });
+  window.addEventListener("contextchange", updateNavContext);
+}

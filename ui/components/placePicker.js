@@ -66,13 +66,6 @@ function renderGroup(type, data, isAnchorRoom = false) {
       `).join("")}
     </div>
   `;
-
-  group.querySelectorAll(".picker-option").forEach(btn => {
-    btn.onclick = () => {
-      applyPlaceById(btn.dataset.id);
-      closeOverlay();
-    };
-  });
 }
 
 function getGroupTitle(type, isAnchorRoom) {
@@ -86,4 +79,12 @@ function clearGroup(type) {
   const group = document.querySelector(`[data-group="${type}"]`);
   if (group) group.innerHTML = "";
 }
-document.querySelector(".nav-center button").onclick = openPicker;
+
+export function attachPlacePickerEvents() {
+  document.addEventListener("click", e => {
+    const btn = e.target.closest(".picker-option");
+    if(!btn) return;
+    applyPlaceById(btn.dataset.id);
+    closeOverlay();
+  });
+}

@@ -1,6 +1,7 @@
 // ui/components/categoryCard.js
 
 import { translate } from "../utils/translate.js";
+import { dispatchAction } from "../../core/events.js";
 
 export function categoryOpt(opt, itemKey, categoryKey, type) {
     
@@ -33,4 +34,21 @@ export function categoryOpt(opt, itemKey, categoryKey, type) {
             </div>
         </div>`;
 
+}
+// KHỞI TẠO SỰ KIỆN (Gán một lần duy nhất hoặc đảm bảo tính nhất quán)
+
+export function attachMenuEvents(){
+  document.addEventListener("click", e => {
+  
+    const btn = e.target.closest(".category-panel button[data-option]");
+    if(!btn) return;
+
+    dispatchAction({
+      type: btn.dataset.ui,
+      category: btn.dataset.category,
+      item: btn.dataset.item,
+      option: btn.dataset.option,
+      qty: 1
+    });
+  });
 }

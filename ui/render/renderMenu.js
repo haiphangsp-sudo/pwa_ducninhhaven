@@ -3,7 +3,6 @@
 import { getOptions } from "../../core/menuQuery.js";
 import { translate } from "../utils/translate.js";
 import { categoryOpt } from "../components/categoryOption.js";
-import { dispatchAction } from "../../core/events.js"; // Đảm bảo import đúng
 
 export function renderMenu(category) {
 
@@ -34,27 +33,3 @@ export function renderMenu(category) {
     }).join("");
 }
 
-// KHỞI TẠO SỰ KIỆN (Gán một lần duy nhất hoặc đảm bảo tính nhất quán)
-
-export function attachMenuEvents(){
-  document.addEventListener("click", e => {
-  
-    const btn = e.target.closest(".category-panel button[data-option]");
-    if(!btn) return;
-
-    dispatchAction({
-      type: btn.dataset.ui,
-      category: btn.dataset.category,
-      item: btn.dataset.item,
-      option: btn.dataset.option,
-      qty: 1
-    });
-
-    const bar = document.getElementById("cartBar");
-    bar?.classList.add("cart-bounce");
-
-    setTimeout(() => {
-      bar?.classList.remove("cart-bounce");
-    }, 400);
-  });
-}
