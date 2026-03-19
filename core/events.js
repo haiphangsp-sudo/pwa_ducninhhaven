@@ -37,7 +37,7 @@ function ensureActive(payload) {
   return true;
 }
 
-function addToCart(item) {
+export function addToCart(item) {
   
   const Items = [...(UI.cart?.items || [])];
 
