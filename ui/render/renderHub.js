@@ -28,7 +28,7 @@ export function renderHub() {
   `).join("");
 
   const panel = UI.view?.panel || panels[0]?.key;
-  updateActive(panel);
+  
   renderPanel(panel);
 }
 
@@ -40,6 +40,7 @@ function updateActive(activeId) {
 }
 
 export function attachHubEvents() {
+  updateActive(panel);
   if (hubEventsAttached) return;
   hubEventsAttached = true;
 
