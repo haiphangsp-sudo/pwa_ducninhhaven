@@ -47,8 +47,8 @@ function renderDrawer() {
         const optionLabel = translate(menuOption?.label || "");
 
         return `
-            <div class="drawer-item row items-center justify-between p-s border-b">
-                <div class="stack">
+            <div class="drawer__item drawer-item">
+                <div class="drawer__info">
                     <strong>${itemLabel}</strong>
                     <span>${optionLabel}</span>
                     <span class="text-s text-muted">${price > 0
@@ -68,18 +68,18 @@ function renderDrawer() {
 
     // 3. Cập nhật nút Gửi/Xác nhận (#drawerSend)
     const sendBtn = document.getElementById("drawerSend");
-    if (items.length === 0) {
-        sendBtn.classList.add("hidden");
-    } else {
-        sendBtn.classList.remove("hidden");
-        sendBtn.textContent = isModified ? translate("cart_bar.confirm_changes") : translate("cart_bar.send_order");
-        // Gán class để CSS đổi màu
-        sendBtn.className = `drawer-send ${isModified ? 'state-confirm' : 'state-send'}`;
-    }
+  if (items.length === 0) {
+    sendBtn.classList.add("hidden");
+  } else {
+    sendBtn.classList.remove("hidden");
+    sendBtn.textContent = isModified ? translate("cart_bar.confirm_changes") : translate("cart_bar.send_order");
+    // Gán class để CSS đổi màu
+    sendBtn.className = `drawer-send ${isModified ? 'state-confirm' : 'state-send'}`;
+  }
   function getLineId(item, fallbackIndex = 0) {
   if (item?.lineId) return item.lineId;
-  return `${item.category}-${item.item}-${item.option}-${fallbackIndex}`;
-}
+    return `${item.category}-${item.item}-${item.option}-${fallbackIndex}`;
+  }
 }
 
 export function attachDrawerEvents(drawer) {
