@@ -3,7 +3,7 @@
 import { UI, setState } from "../../core/state.js";
 import { translate } from "../utils/translate.js";
 import { updateCartQuantity, sendCart } from "../../core/events.js";
-import { showOverlay, closeOverlay } from "../interactions/overlayManager.js";
+import { showOverlay, closeOverlay } from "../interactions/backdropManager.js";
 
 let isModified = false;
 let eventsAttached = false; // Cờ đảm bảo addEventListener chỉ chạy 1 lần
