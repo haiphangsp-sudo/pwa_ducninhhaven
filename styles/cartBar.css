@@ -252,6 +252,21 @@
   font-size:30px;
   font-weight:500;
 }
+/* Màu cho trạng thái XÁC NHẬN (Vàng/Cam) */
+.drawer-send.state-confirm {
+    background-color: var(--warning);
+    color: var(--text-main);
+}
+
+/* Màu cho trạng thái GỬI (Xanh Haven) */
+.drawer-send.state-send {
+    background-color: var(--brand);
+    color: var(--text-invert);
+}
+
+.drawer-send {
+    transition: background-color 0.3s ease, transform 0.1s active;
+}
 /* =========================
    CART BAR
 ========================= */
