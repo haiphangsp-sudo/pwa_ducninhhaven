@@ -25,6 +25,12 @@ export function getCategoriesForMode(){
     }));
 
 }
+export function getPlaceIcon(type) {
+  if (type === "room") return "🛏";
+  if (type === "table") return "☕";
+  if (type === "area") return "🌿";
+  return "📍";
+}
 
 
 

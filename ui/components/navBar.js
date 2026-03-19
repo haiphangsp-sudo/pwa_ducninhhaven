@@ -5,6 +5,8 @@ import { getContext } from "../../core/context.js";
 import { PLACES } from "../../core/placesStore.js";
 import { openPicker } from "./placePicker.js";
 import { getState, setState } from "../../core/state.js";
+import { getPlaceIcon } from "../../data/helpers.js";
+
 
 /* =========================
    CACHE
@@ -111,13 +113,6 @@ function cacheNavElements() {
 
 function normalizeLanguage(lang) {
   return lang === "en" ? "en" : "vi";
-}
-
-function getPlaceIcon(type) {
-  if (type === "room") return "🛏";
-  if (type === "table") return "☕";
-  if (type === "area") return "🌿";
-  return "📍";
 }
 
 function getIdentityLabel(anchor) {

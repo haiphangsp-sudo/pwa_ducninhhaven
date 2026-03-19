@@ -1,8 +1,9 @@
 import { showOverlay, closeOverlay } from "../interactions/backdropManager.js";
-import { getIcon } from "./navBar.js";
 import { PLACES, getAllowedPlaceTypes } from "../../core/placesStore.js";
 import { getContext, applyPlaceById } from "../../core/context.js";
 import { translate } from "../utils/translate.js";
+import { getPlaceIcon } from "../../data/helpers.js";
+
 
 function initPlacePicker() {
   const el = document.getElementById("placePicker");
@@ -55,7 +56,7 @@ function renderGroup(type, data, isAnchorRoom = false) {
 
   group.innerHTML = `
     <div class="flex gap-s">
-      <span class="${type}-icon">${getIcon(type)}</span>
+      <span class="${type}-icon">${getPlaceIcon(type)}</span>
       <span class="picker-title">${title}</span>
     </div>
     <div class="picker-list">
