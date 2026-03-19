@@ -1,12 +1,37 @@
+//.   ui/components/placePicker.js
 import { showOverlay, closeOverlay } from "../interactions/backdropManager.js";
 import { PLACES, getAllowedPlaceTypes } from "../../core/placesStore.js";
 import { getContext, applyPlaceById } from "../../core/context.js";
 import { translate } from "../utils/translate.js";
 import { getPlaceIcon } from "../../data/helpers.js";
 
+let shellReady = false;
+let pickerEventsAttached = false;
 
-function initPlacePicker() {
+/* =========================
+   PUBLIC
+========================= */
+
+export function openPicker() {
+  renderPlacePicker();
+  showOverlay("placePicker");
+}
+
+export function renderPlacePicker() {
+  renderPlacePickerShell();
+  renderPlacePickerContent();
+}
+
+/* =========================
+   SHELL
+========================= */
+
+function renderPlacePickerShell() {
+  if (shellReady) return;
+
   const el = document.getElementById("placePicker");
+  if (!el) return;
+
   el.innerHTML = `
     <div class="picker-panel">
       <h3 class="picker-panel_title"></h3>
@@ -15,15 +40,21 @@ function initPlacePicker() {
       <div class="picker-group grid" data-group="table"></div>
     </div>
   `;
+
+  shellReady = true;
 }
 
-export function openPicker() {
-  initPlacePicker();
+/* =========================
+   CONTENT
+========================= */
 
+function renderPlacePickerContent() {
   const ctx = getContext();
   const anchor = ctx?.anchor;
   const mode = anchor?.type || "table";
   const allowedTypes = getAllowedPlaceTypes(mode);
+
+  updatePickerTitle();
 
   ["room", "area", "table"].forEach(type => {
     if (!allowedTypes.includes(type)) {
@@ -38,10 +69,23 @@ export function openPicker() {
 
     renderGroup(type, PLACES[type]);
   });
-
-  document.querySelector(".picker-panel_title").textContent = translate("select_place");
-  showOverlay("placePicker");
 }
+
+/* =========================
+   UPDATE
+========================= */
+
+function updatePickerTitle() {
+  const titleEl = document.querySelector(".picker-panel_title");
+  if (!titleEl) return;
+
+  titleEl.textContent = translate("select_place");
+}
+
+/* =========================
+   GROUP
+========================= */
+
 function renderGroup(type, data, isAnchorRoom = false) {
   const group = document.querySelector(`[data-group="${type}"]`);
   if (!group) return;
@@ -59,14 +103,23 @@ function renderGroup(type, data, isAnchorRoom = false) {
       <span class="${type}-icon">${getPlaceIcon(type)}</span>
       <span class="picker-title">${title}</span>
     </div>
+
     <div class="picker-list">
       ${entries.map(([id, p]) => `
-        <button class="picker-option btn center" data-id="${id}">
+        <button
+          class="picker-option btn center"
+          type="button"
+          data-id="${id}">
           ${translate(p.label)}
         </button>
       `).join("")}
     </div>
   `;
+}
+
+function clearGroup(type) {
+  const group = document.querySelector(`[data-group="${type}"]`);
+  if (group) group.innerHTML = "";
 }
 
 function getGroupTitle(type, isAnchorRoom) {
@@ -76,16 +129,21 @@ function getGroupTitle(type, isAnchorRoom) {
   return type;
 }
 
-function clearGroup(type) {
-  const group = document.querySelector(`[data-group="${type}"]`);
-  if (group) group.innerHTML = "";
-}
+/* =========================
+   EVENTS
+========================= */
 
 export function attachPlacePickerEvents() {
-  document.addEventListener("click", e => {
-    const btn = e.target.closest(".picker-option");
-    if(!btn) return;
-    applyPlaceById(btn.dataset.id);
-    closeOverlay();
-  });
+  if (pickerEventsAttached) return;
+  pickerEventsAttached = true;
+
+  document.addEventListener("click", handlePlacePickerClick);
+}
+
+function handlePlacePickerClick(e) {
+  const btn = e.target.closest(".picker-option");
+  if (!btn) return;
+
+  applyPlaceById(btn.dataset.id);
+  closeOverlay();
 }
