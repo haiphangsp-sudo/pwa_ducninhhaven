@@ -1,6 +1,6 @@
 //     ui/render/renderDrawer.js
  
-import { updateTotal } from "./renderCart.js";
+import { updateCartBarTotal } from "./renderCart.js";
 import { showOverlay, closeOverlay } from "../interactions/backdropManager.js";
 import { sendCart } from "../../core/events.js";
 import { UI } from "../../core/state.js";
@@ -104,7 +104,7 @@ function handleDrawerClick(e) {
   if (action === "plus") {
     item.qty += 1;
     updateDrawerRowQty(row, item.qty);
-    updateTotal();
+    updateCartBarTotal();
     return;
   }
 
@@ -113,7 +113,7 @@ function handleDrawerClick(e) {
 
     if (item.qty > 0) {
       updateDrawerRowQty(row, item.qty);
-      updateTotal();
+      updateCartBarTotal();
       return;
     }
 

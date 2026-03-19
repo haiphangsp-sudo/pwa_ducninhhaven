@@ -2,7 +2,6 @@
 // Thanh giỏ dưới cùng (state-driven)
 
 import { UI } from "../../core/state.js";
-import { getContext } from "../../core/context.js";
 import { translate } from "../utils/translate.js";
 import { openCartDrawer } from "./renderDrawer.js";
 
@@ -35,7 +34,8 @@ export function renderCartBar() {
    UPDATE
 ========================= */
 
-export function updateCartBarTotal(total = getCartTotal()) {
+export function updateCartBarTotal(total) {
+  if (!total) total = getCartTotal();
   const countEl = document.getElementById("cartCount");
   const drawerTotal = document.querySelector(".drawer-total");
 
