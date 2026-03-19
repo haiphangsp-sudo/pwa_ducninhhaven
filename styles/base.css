@@ -46,3 +46,8 @@ a{
   color:inherit;
   text-decoration:none;
 }
+.is-active{
+  color: var(--brand);
+  font-weight: 600;
+  pointer-events:none;
+}

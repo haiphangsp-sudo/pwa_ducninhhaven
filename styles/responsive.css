@@ -11,7 +11,7 @@
   .instant-btn{
     width:100%;
   }
-  
+
   .drawer-panel{
     padding:
       18px
@@ -63,7 +63,33 @@
   .drawer-send{
     min-height:54px;
   }
+
+  .hub-menu{
+    gap:10px;
+    padding:10px 12px 0;
+  }
+
+  .hub-btn{
+    flex:0 0 94px;
+    min-height:102px;
+    padding:12px 8px 16px;
+    border-radius:22px 22px 0 0;
+  }
+
+  .hub-label{
+    font-size:14px;
+  }
+
+  .hub-icon{
+    width:28px;
+    height:28px;
+  }
+
+  .hub-content{
+    padding:14px;
+  }
 }
+
 @media(min-width:600px){
   .menu-grid{
     grid-template-columns: 1fr 1fr;

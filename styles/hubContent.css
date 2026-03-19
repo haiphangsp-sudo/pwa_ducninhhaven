@@ -9,6 +9,9 @@
   flex: 1;
   padding-bottom: 110px;
   contain: layout paint;
+  min-height:0;
+  padding:16px;
+  background:var(--bg-main);
 }
 .page-container{
   max-width: var(--content-max);
