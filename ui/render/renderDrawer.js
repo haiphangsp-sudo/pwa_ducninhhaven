@@ -35,10 +35,20 @@ function renderDrawer() {
         itemsContainer.innerHTML = `<div class="p-m center text-muted">${translate("cart_bar.empty")}</div>`;
         isModified = false;
     } else {
-        itemsContainer.innerHTML = items.map((item, index) => `
+      itemsContainer.innerHTML = items.map((item, index) => {
+        const lineId = getLineId(cartItem, index);
+
+        const menuItem = MENU?.[cartItem.category]?.items?.[cartItem.item];
+        const menuOption = menuItem?.options?.[cartItem.option];
+
+        const itemLabel = translate(menuItem?.label || cartItem.item);
+        const optionLabel = translate(menuOption?.label || "");
+
+        return `
             <div class="drawer-item row items-center justify-between p-s border-b">
                 <div class="stack">
                     <strong>${item.name}</strong>
+                    <span>${optionLabel}</span>
                     <span class="text-s text-muted">${item.price ? item.price.toLocaleString() : ''}</span>
                 </div>
                 <div class="row items-center gap-s">
@@ -47,7 +57,7 @@ function renderDrawer() {
                     <button class="qty-btn plus" data-action="plus" data-index="${index}">+</button>
                 </div>
             </div>
-        `).join('');
+        `}).join('');
     }
 
     // 3. Cập nhật nút Gửi/Xác nhận (#drawerSend)
@@ -60,6 +70,10 @@ function renderDrawer() {
         // Gán class để CSS đổi màu
         sendBtn.className = `drawer-send ${isModified ? 'state-confirm' : 'state-send'}`;
     }
+  function getLineId(item, fallbackIndex = 0) {
+  if (item?.lineId) return item.lineId;
+  return `${item.category}-${item.item}-${item.option}-${fallbackIndex}`;
+}
 }
 
 export function attachDrawerEvents(drawer) {
