@@ -37,6 +37,6 @@ export function attachHubEvents() {
     setState({
       view: { panel: key }
     });
-    //renderPanel(key);
+    renderPanel(key);
   });
 }
