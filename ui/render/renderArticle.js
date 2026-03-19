@@ -1,6 +1,4 @@
-import { getOptions } from "../../core/menuQuery.js";
 import { translate } from "../utils/translate.js";
-import { categoryOpt } from "../components/categoryOption.js";
 
 export function renderArticle(category){
 
