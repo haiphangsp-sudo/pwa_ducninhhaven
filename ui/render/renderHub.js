@@ -13,7 +13,7 @@ export function renderHub(){
   const panels = getCategories();
 
   menuEl.innerHTML = panels.map(cat=>`
-    <button class="hub-btn btn center"
+    <button class="hub-btn btn center is-active"
       data-action="menu"
       data-key="${cat.key}">
       <span class="hub-icon">
