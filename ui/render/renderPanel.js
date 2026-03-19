@@ -3,7 +3,7 @@
 
 import { getCategory } from "../../core/menuQuery.js";
 import { renderArticle } from "./renderArticle.js";
-import { renderMenu } from "./renderMenu.js";
+import { renderMenu } from "./renderCategory.js";
 
 export function renderPanel(key){
   
