@@ -24,7 +24,7 @@ function renderDrawer() {
     const items = UI.cart.items || [];
     
     // 1. Cập nhật Tiêu đề và Tổng cộng
-    drawer.querySelector(".drawer-title").textContent = translate("cart.title");
+    drawer.querySelector(".drawer-title").textContent = translate("cart_bar.cart_title");
     
     const total = items.reduce((sum, item) => sum + (item.price * item.qty), 0);
     drawer.querySelector(".drawer-total").textContent = total > 0 ? total.toLocaleString() + "đ" : "";
@@ -32,19 +32,19 @@ function renderDrawer() {
     // 2. Bơm danh sách món vào #drawerItems
     const itemsContainer = document.getElementById("drawerItems");
     if (items.length === 0) {
-        itemsContainer.innerHTML = `<div class="p-m center text-muted">${translate("cart.empty")}</div>`;
+        itemsContainer.innerHTML = `<div class="p-m center text-muted">${translate("cart_bar.empty")}</div>`;
         isModified = false;
     } else {
         itemsContainer.innerHTML = items.map((item, index) => `
             <div class="drawer-item row items-center justify-between p-s border-b">
                 <div class="stack">
-                    <span class="weight-600">${item.name}</span>
+                    <strong>${item.name}</strong>
                     <span class="text-s text-muted">${item.price ? item.price.toLocaleString() : ''}</span>
                 </div>
                 <div class="row items-center gap-s">
-                    <button class="qty-btn min" data-index="${index}">-</button>
-                    <span class="qty-val weight-600">${item.qty}</span>
-                    <button class="qty-btn plus" data-index="${index}">+</button>
+                    <button class="qty-btn min" data-action="minus" data-index="${index}">-</button>
+                    <span class="qty qty-val">${item.qty}</span>
+                    <button class="qty-btn plus" data-action="plus" data-index="${index}">+</button>
                 </div>
             </div>
         `).join('');
@@ -56,7 +56,7 @@ function renderDrawer() {
         sendBtn.classList.add("hidden");
     } else {
         sendBtn.classList.remove("hidden");
-        sendBtn.textContent = isModified ? translate("cart.confirm_changes") : translate("cart.send_order");
+        sendBtn.textContent = isModified ? translate("cart_bar.confirm_changes") : translate("cart.send_order");
         // Gán class để CSS đổi màu
         sendBtn.className = `drawer-send ${isModified ? 'state-confirm' : 'state-send'}`;
     }
