@@ -8,15 +8,11 @@ import { getCategories } from "../../core/menuQuery.js";
 export function renderHub(){
 
   const menuEl = document.getElementById("hubMenu");
+  if(!menuEl) return;
 
   const panels = getCategories();
-  
-
-  /* =======================================================
-     RENDER MENU
-  ======================================================= */
-  //${renderIcon(key,"hub-icon")}
   const panel = UI.view.panel;
+
   menuEl.innerHTML = panels.map(cat=>`
     
     <button class="hub-btn btn center${panel===cat.key ? " is-active" : ""}"
@@ -30,10 +26,9 @@ export function renderHub(){
     </button>
 
   `).join("");
-
   renderPanel(panel);
-
 }
+
 export function attachHubEvents() {
   document.addEventListener("click", e => {
     const btn = e.target.closest(".hub-btn");
@@ -42,6 +37,6 @@ export function attachHubEvents() {
     setState({
       view: { panel: key }
     });
-    renderPanel(key);
+    //renderPanel(key);
   });
 }
