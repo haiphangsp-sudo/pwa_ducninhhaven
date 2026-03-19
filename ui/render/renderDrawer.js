@@ -36,12 +36,12 @@ function renderDrawer() {
         isModified = false;
     } else {
       itemsContainer.innerHTML = items.map((item, index) => {
-        const lineId = getLineId(cartItem, index);
+        const lineId = getLineId(item, index);
 
-        const menuItem = MENU?.[cartItem.category]?.items?.[cartItem.item];
-        const menuOption = menuItem?.options?.[cartItem.option];
+        const menuItem = MENU?.[item.category]?.items?.[item.item];
+        const menuOption = menuItem?.options?.[item.option];
 
-        const itemLabel = translate(menuItem?.label || cartItem.item);
+        const itemLabel = translate(menuItem?.label || item.item);
         const optionLabel = translate(menuOption?.label || "");
 
         return `
