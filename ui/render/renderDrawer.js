@@ -57,7 +57,7 @@ function renderDrawer() {
                         : translate("cart_bar.instant")
                     }</span>
                 </div>
-                <div class="row items-center gap-s">
+                <div class="row drawer-qty items-center gap-s">
                     <button class="qty-btn min" data-action="minus" data-index="${index}">-</button>
                     <span class="qty qty-val">${item.qty}</span>
                     <button class="qty-btn plus" data-action="plus" data-index="${index}">+</button>
