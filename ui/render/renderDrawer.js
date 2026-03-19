@@ -41,7 +41,7 @@ function renderDrawer() {
 
         const menuItem = MENU?.[item.category]?.items?.[item.item];
         const menuOption = menuItem?.options?.[item.option];
-        const priceOption = menuOption?.price;
+        const price = menuOption?.price;
         
         const itemLabel = translate(menuItem?.label || item.item);
         const optionLabel = translate(menuOption?.label || "");
@@ -49,7 +49,7 @@ function renderDrawer() {
         return `
             <div class="drawer-item row items-center justify-between p-s border-b">
                 <div class="stack">
-                    <strong>${menuItem}</strong>
+                    <strong>${itemLabel}</strong>
                     <span>${optionLabel}</span>
                     <span class="text-s text-muted">${price > 0
                         ? price.toLocaleString("vi-VN") + " đ"
