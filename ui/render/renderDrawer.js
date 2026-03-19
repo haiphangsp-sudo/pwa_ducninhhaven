@@ -33,7 +33,6 @@ function renderDrawer() {
 
   // 2. Vẽ nội dung giỏ hàng
 
-let attached = false;
   const sendBtn = document.getElementById("drawerSend");
   const titleEl = document.querySelector(".drawer-title");
   const itemsEl = document.getElementById("drawerItems");
@@ -42,34 +41,43 @@ let attached = false;
   if (!sendBtn || !titleEl || !itemsEl || !closeBtn) return;
 
   titleEl.textContent = translate("cart_bar.cart_title");
-  sendBtn.textContent = UI.cart.changed
-    ? translate("cart_bar.confirm")
-    : translate("cart_bar.order");
-
-  itemsEl.innerHTML = UI.cart.items.map((cartItem, index) => {
-    const lineId = getLineId(cartItem, index);
-
-    const menuItem = MENU?.[cartItem.category]?.items?.[cartItem.item];
-    const menuOption = menuItem?.options?.[cartItem.option];
 
     const itemLabel = translate(menuItem?.label || cartItem.item);
     const optionLabel = translate(menuOption?.label || "");
 
-    return `
-      <div class="drawer__item" data-line-id="${lineId}">
-        <div class="drawer__info">
-          <strong>${itemLabel}</strong>
-          <div>${optionLabel}</div>
-        </div>
 
-        <div class="drawer-qty">
-          <button data-action="minus" data-line-id="${lineId}" class="qty-minus center" type="button">−</button>
-          <span class="qty">${cartItem.qty}</span>
-          <button data-action="plus" data-line-id="${lineId}" class="qty-plus center" type="button">+</button>
-        </div>
+
+  el.innerHTML =  `
+   <div class="drawer__item">
+      <div class="drawer__info">
+        <strong>${itemLabel}</strong>
+        <div>${optionLabel}</div>
       </div>
-    `;
-  }).join("");
+      
+      <div class="cart-list">
+        ${items.map((item, index) => `
+          <div class="cart-item">
+            <div class="item-info">
+              <span class="item-name">${item.name}</span>
+              <span class="item-price">${item.price ? item.price.toLocaleString() : ''}</span>
+            </div>
+            <div class="qty-control drawer-qty">
+              <button class="qty-min" data-index="${index}">-</button>
+              <span class="qty-value">${item.qty}</span>
+              <button class="qty-plus" data-index="${index}">+</button>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+
+      <div class="drawer-footer">
+        <button id="cartMainAction" class="btn-primary w-100 ${isModified ? 'state-confirm' : 'state-send'}">
+          ${isModified ? translate("cart.confirm_changes") : translate("cart.send_order")}
+        </button>
+      </div>
+    </div>
+  `;
+  
 
   closeBtn.onclick = closeOverlay;
 }
