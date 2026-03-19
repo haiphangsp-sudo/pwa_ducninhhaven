@@ -9,6 +9,7 @@ import { setDeliveryState } from "../render/renderDelivery.js";
 import { setRecoveryState } from "../render/renderRecovery.js";
 import { attachPlacePickerEvents } from "../components/placePicker.js";
 import { attachHubEvents } from "../render/renderHub.js";
+import { attachLangguegeEvents } from "../utils/translate.js";
 
 
 
@@ -18,6 +19,7 @@ export function eventsApp() {
     attachCartBarEvents();
     attachPlacePickerEvents();
     attachHubEvents();
+    attachLangguegeEvents();
 
 
     networkBackEvent();

@@ -24,37 +24,18 @@ function t(key, currentLang) {
   return obj?.[currentLang] || key;
 }
 
-export function setLanguage(lang) {
-  const next = lang === "en" ? "en" : "vi";
-
-  localStorage.setItem("haven_lang", next);
-
-  setState({
-    lang: {
-      current: next
-    }
-  });
+function setLanguage(l) {
+  const current = getState().lang.current;
+  if (!l || current === l) return;
+  localStorage.setItem("haven_lang", l);
+  setState({lang: {current: l}});
 }
 
-export function initLangSwitch() {
-  const el = document.getElementById("langSwitch");
-  if (!el) return;
-
-  updateActive();
-
-  el.querySelectorAll("button").forEach(btn => {
-    btn.onclick = () => {
-      const lang = btn.dataset.lang;
-      setLanguage(lang);
-      updateActive();
-    };
+export function attachLangguegeEvents() {
+  document.addEventListener("click", e => {
+    const btn = e.target.closest("#langSwitch button");
+    if (!btn || btn.classList.contains("is-active")) return;
+    const key = btn.dataset.lang;
+    setLanguage(key)
   });
-
-  function updateActive() {
-    const current = getState().lang.current;
-
-    el.querySelectorAll("button").forEach(btn => {
-      btn.classList.toggle("active", btn.dataset.lang === current);
-    });
-  }
 }
