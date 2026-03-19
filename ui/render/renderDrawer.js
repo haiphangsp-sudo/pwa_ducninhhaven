@@ -2,95 +2,100 @@
 import { UI, setState } from "../../core/state.js";
 import { translate } from "../utils/translate.js";
 import { updateCartQuantity, sendCart } from "../../core/events.js";
-import { showOverlay, closeOverlay } from "../interactions/backdropManager.js";
+import { showOverlay, closeOverlay } from "../interactions/overlayManager.js";
 
-// Biến cờ cục bộ để theo dõi trạng thái thay đổi
 let isModified = false;
 
-  function renderDrawer() {
+/**
+ * Hàm mở giỏ hàng từ nút "Xem giỏ"
+ */
+export function openCartDrawer() {
+    renderDrawer(); // Cập nhật dữ liệu vào HTML
+    showOverlay("cartDrawer"); // Mở giao diện
+}
+
+/**
+ * Hàm Render nội bộ - Bơm dữ liệu vào HTML có sẵn
+ */
+function renderDrawer() {
     const drawer = document.getElementById("cartDrawer");
-    if (!drawer || UI.cart.items === undefined) return;
+    if (!drawer) return;
 
-    const items = UI.cart.items;
-    const titleEl = drawer.querySelector(".drawer-title");
+    const items = UI.cart.items || [];
+    
+    // 1. Cập nhật Tiêu đề và Tổng cộng
+    drawer.querySelector(".drawer-title").textContent = translate("cart.title");
+    
+    const total = items.reduce((sum, item) => sum + (item.price * item.qty), 0);
+    drawer.querySelector(".drawer-total").textContent = total > 0 ? total.toLocaleString() + "đ" : "";
+
+    // 2. Bơm danh sách món vào #drawerItems
     const itemsContainer = document.getElementById("drawerItems");
-    const sendBtn = document.getElementById("drawerSend");
-    const closeBtn = document.getElementById("drawerClose");
-
-    // 1. Cập nhật Tiêu đề
-    titleEl.textContent = translate("cart.title");
-
-    // 2. Xử lý nút Đóng
-    closeBtn.onclick = () => {
-        isModified = false; // Reset trạng thái khi đóng
-        closeOverlay();
-    };
-
-    // 3. Render danh sách món ăn vào #drawerItems
     if (items.length === 0) {
+        itemsContainer.innerHTML = `<div class="p-m center text-muted">${translate("cart.empty")}</div>`;
         isModified = false;
-        itemsContainer.innerHTML = `<p class="empty-msg">${translate("cart.empty")}</p>`;
-        sendBtn.classList.add("hidden"); // Ẩn nút gửi nếu giỏ trống
     } else {
-        sendBtn.classList.remove("hidden");
         itemsContainer.innerHTML = items.map((item, index) => `
-            <div class="drawer-item row items-center justify-between">
+            <div class="drawer-item row items-center justify-between p-s border-b">
                 <div class="stack">
-                    <span class="item-name">${item.name}</span>
-                    <span class="item-price">${item.price ? item.price.toLocaleString() : ''}</span>
+                    <span class="weight-600">${item.name}</span>
+                    <span class="text-s text-muted">${item.price ? item.price.toLocaleString() : ''}</span>
                 </div>
                 <div class="row items-center gap-s">
                     <button class="qty-btn min" data-index="${index}">-</button>
-                    <span class="qty-val">${item.qty}</span>
+                    <span class="qty-val weight-600">${item.qty}</span>
                     <button class="qty-btn plus" data-index="${index}">+</button>
                 </div>
             </div>
         `).join('');
     }
 
-    // 4. Cập nhật nút Gửi/Xác nhận (#drawerSend)
-    updateSendButton(sendBtn);
-
-    // 5. Gán sự kiện
-    attachEvents(itemsContainer, sendBtn);
-}
-
-function updateSendButton(btn) {
-    if (isModified) {
-        btn.textContent = translate("cart.confirm_changes");
-        btn.className = "drawer-send state-confirm"; // Đổi class để đổi màu CSS
+    // 3. Cập nhật nút Gửi/Xác nhận (#drawerSend)
+    const sendBtn = document.getElementById("drawerSend");
+    if (items.length === 0) {
+        sendBtn.classList.add("hidden");
     } else {
-        btn.textContent = translate("cart.send_order");
-        btn.className = "drawer-send state-send";
+        sendBtn.classList.remove("hidden");
+        sendBtn.textContent = isModified ? translate("cart.confirm_changes") : translate("cart.send_order");
+        // Gán class để CSS đổi màu
+        sendBtn.className = `drawer-send ${isModified ? 'state-confirm' : 'state-send'}`;
     }
+    
 }
 
-function attachEvents(container, sendBtn) {
-    // Sự kiện tăng giảm số lượng
-    container.querySelectorAll(".qty-btn").forEach(btn => {
-        btn.onclick = () => {
-            const index = parseInt(btn.dataset.index);
-            const delta = btn.classList.contains("plus") ? 1 : -1;
-            
-            isModified = true; // Bật cờ chỉnh sửa
-            updateCartQuantity(index, delta);
-            // RenderDrawer sẽ tự chạy lại nhờ subscribe(renderApp) trong main.js
-        };
+/**
+ * "Nhốt" toàn bộ sự kiện vào đây
+ */
+export function attachDrawerEvents(drawer) {
+    // A. Sự kiện đóng (nút X)
+    document.getElementById("drawerClose").addEventListener("click", () => {
+        isModified = false; // Reset trạng thái chỉnh sửa khi đóng
+        closeOverlay();
     });
 
-    // Sự kiện nút Gửi/Xác nhận
-    sendBtn.onclick = () => {
+    // B. Sự kiện cho nút Gửi/Xác nhận (Event Delegation không cần thiết ở đây vì ID cố định)
+    document.getElementById("drawerSend").addEventListener("click", () => {
         if (isModified) {
-            isModified = false;
-            renderDrawer(); // Vẽ lại để nút trở về chữ "GỬI"
+            isModified = false; 
+            renderDrawer(); // Vẽ lại để nút quay về màu xanh "Gửi"
             if (navigator.vibrate) navigator.vibrate(30);
         } else {
             sendCart();
-            closeOverlay(); // Đóng giỏ sau khi gửi thành công
+            closeOverlay();
         }
-    };
-}
-export function openCartDrawer() {
-  renderDrawer();
-  showOverlay("cartDrawer");
+    });
+
+    // C. EVENT DELEGATION cho các nút cộng trừ (+) (-)
+    // Gán vào #drawerItems, bất kể bên trong render bao nhiêu lần thì event vẫn chạy đúng
+    document.getElementById("drawerItems").addEventListener("click", (e) => {
+        const btn = e.target.closest(".qty-btn");
+        if (!btn) return;
+
+        const index = parseInt(btn.dataset.index);
+        const delta = btn.classList.contains("plus") ? 1 : -1;
+
+        isModified = true; // Chuyển sang chế độ "Cần xác nhận"
+        updateCartQuantity(index, delta); 
+        // Note: updateCartQuantity gọi setState -> renderApp -> gọi lại renderDrawer() tự động
+    });
 }

@@ -13,19 +13,24 @@ import { attachDrawerEvents } from "../render/renderDrawer.js";
 
 
 
-export function eventsApp() {
-    attachNavBarEvents();
-    attachMenuEvents();
-    attachCartBarEvents();
-    attachPlacePickerEvents();
-    attachHubEvents();
-    attachLanguageEvents();
-    attachDrawerEvents();
-    networkBackEvent();
+    let eventsAttached = false;
+    
 
-    setDeliveryState("idle");
-    setRecoveryState("idle");
-    ["touchstart", "pointerdown", "click"].forEach(evt => {
-        document.addEventListener(evt, resetIdleTimer, { passive: true });
-    });
+export function eventsApp() {
+    if (!eventsAttached) {
+        attachNavBarEvents();
+        attachMenuEvents();
+        attachCartBarEvents();
+        attachPlacePickerEvents();
+        attachHubEvents();
+        attachLanguageEvents();
+        attachDrawerEvents();
+        networkBackEvent();
+
+        setDeliveryState("idle");
+        setRecoveryState("idle");
+        ["touchstart", "pointerdown", "click"].forEach(evt => {
+            document.addEventListener(evt, resetIdleTimer, { passive: true });
+        });
+    }
 }
