@@ -1,24 +1,24 @@
-
+//     ui/render/renderDrawer.js
+ 
 import { updateCartBarTotal } from "./renderCart.js";
 import { showOverlay, closeOverlay } from "../interactions/backdropManager.js";
-import { addToCart, sendCart, updateCart } from "../../core/events.js";
+import { sendCart, updateCart } from "../../core/events.js";
 import { UI } from "../../core/state.js";
 import { translate } from "../utils/translate.js";
 import { MENU } from "../../core/menuStore.js";
 
-let attached = false;
+/* =========================
+   PUBLIC
+========================= */
 
 export function openCartDrawer() {
   renderDrawer();
   showOverlay("cartDrawer");
 }
 
-export function attachDrawerEvents() {
-  if (attached) return;
-  attached = true;
-
-  document.addEventListener("click", handleDrawerClick);
-}
+/* =========================
+   RENDER
+========================= */
 
 function renderDrawer() {
   const sendBtn = document.getElementById("drawerSend");
@@ -28,31 +28,31 @@ function renderDrawer() {
 
   if (!sendBtn || !titleEl || !itemsEl || !closeBtn) return;
 
+  const sendLabel =
+    UI.delivery.state === "sending"
+      ? "delivery.pending"
+      : "cart_bar.order";
+
+  sendBtn.textContent = translate(sendLabel);
   titleEl.textContent = translate("cart_bar.cart_title");
-  sendBtn.textContent = UI.cart.changed
-    ? translate("cart_bar.confirm")
-    : translate("cart_bar.order");
 
   itemsEl.innerHTML = UI.cart.items.map((cartItem, index) => {
-    const lineId = getLineId(cartItem, index);
+    const itemId = getLineId(cartItem, index);
 
     const menuItem = MENU?.[cartItem.category]?.items?.[cartItem.item];
     const menuOption = menuItem?.options?.[cartItem.option];
 
-    const itemLabel = translate(menuItem?.label || cartItem.item);
-    const optionLabel = translate(menuOption?.label || "");
-
     return `
-      <div class="drawer__item" data-line-id="${lineId}">
+      <div class="drawer__item" data-line-id="${itemId}">
         <div class="drawer__info">
-          <strong>${itemLabel}</strong>
-          <div>${optionLabel}</div>
+          <strong>${translate(menuItem?.label || cartItem.item)}</strong>
+          <div>${translate(menuOption?.label || "")}</div>
         </div>
 
         <div class="drawer-qty">
-          <button data-action="minus" data-line-id="${lineId}" class="qty-minus center" type="button">−</button>
+          <button data-action="minus" data-line-id="${itemId}" class="center">−</button>
           <span class="qty">${cartItem.qty}</span>
-          <button data-action="plus" data-line-id="${lineId}" class="qty-plus center" type="button">+</button>
+          <button data-action="plus" data-line-id="${itemId}" class="center">+</button>
         </div>
       </div>
     `;
@@ -62,15 +62,38 @@ function renderDrawer() {
   closeBtn.onclick = closeOverlay;
 }
 
+/* =========================
+   UPDATE
+========================= */
+
+function updateDrawerRowQty(row, qty) {
+  const el = row.querySelector(".qty");
+  if (el) el.textContent = qty;
+}
+
+/* =========================
+   EVENTS
+========================= */
+
+let attached = false;
+
+export function attachDrawerEvents() {
+  if (attached) return;
+  attached = true;
+
+  document.addEventListener("click", handleDrawerClick);
+}
+
 function handleDrawerClick(e) {
   const btn = e.target.closest("[data-action]");
   if (!btn) return;
 
   const action = btn.dataset.action;
-  const lineId = btn.dataset.lineId;
-  if (!lineId) return;
+  const id = btn.dataset.lineId;
 
-  const index = findIndexByLineId(lineId);
+  if (!id) return;
+
+  const index = findIndexByLineId(id);
   if (index === -1) return;
 
   const item = UI.cart.items[index];
@@ -79,22 +102,22 @@ function handleDrawerClick(e) {
   const row = btn.closest(".drawer__item");
 
   if (action === "plus") {
-    addToCart(item, 1);
-
-    const nextIndex = findIndexByLineId(lineId);
-    const nextItem = UI.cart.items[nextIndex];
-
-    if (nextItem && row) {
-      updateDrawerRowQty(row, nextItem.qty);
-    }
-
-    refreshDrawerAction();
+    item.qty += 1;
+    updateDrawerRowQty(row, item.qty);
     updateCartBarTotal();
     return;
   }
 
   if (action === "minus") {
-    addToCart(item, -1);
+    item.qty -= 1;
+
+    if (item.qty > 0) {
+      updateDrawerRowQty(row, item.qty);
+      updateCartBarTotal();
+      return;
+    }
+
+    UI.cart.items.splice(index, 1);
 
     if (UI.cart.items.length === 0) {
       clearDrawer();
@@ -103,53 +126,34 @@ function handleDrawerClick(e) {
       return;
     }
 
-    const nextIndex = findIndexByLineId(lineId);
-
-    if (nextIndex !== -1) {
-      const nextItem = UI.cart.items[nextIndex];
-      if (nextItem && row) {
-        updateDrawerRowQty(row, nextItem.qty);
-      }
-    } else {
-      renderDrawer();
-    }
-
-    refreshDrawerAction();
+    renderDrawer(); // cần rebuild khi xoá
     updateCartBarTotal();
   }
 }
 
+/* =========================
+   ACTIONS
+========================= */
 function handleSend() {
   if (UI.cart.changed) {
-    updateCart();
-    renderDrawer();
+    updateCart(); 
     closeOverlay();
     return;
   }
 
-  sendCart();
-  clearDrawer();
+  sendCart();    
   closeOverlay();
 }
 
-function refreshDrawerAction() {
-  const sendBtn = document.getElementById("drawerSend");
-  if (!sendBtn) return;
-
-  sendBtn.textContent = UI.cart.changed
-    ? translate("cart_bar.confirm")
-    : translate("cart_bar.order");
-}
-
-function updateDrawerRowQty(row, qty) {
-  const qtyEl = row.querySelector(".qty");
-  if (qtyEl) qtyEl.textContent = qty;
-}
 
 function clearDrawer() {
-  const itemsEl = document.getElementById("drawerItems");
-  if (itemsEl) itemsEl.innerHTML = "";
+  const el = document.getElementById("drawerItems");
+  if (el) el.innerHTML = "";
 }
+
+/* =========================
+   HELPERS
+========================= */
 
 function findIndexByLineId(id) {
   return UI.cart.items.findIndex((item, index) =>
@@ -161,3 +165,4 @@ function getLineId(item, fallbackIndex = 0) {
   if (item?.lineId) return item.lineId;
   return `${item.category}-${item.item}-${item.option}-${fallbackIndex}`;
 }
+

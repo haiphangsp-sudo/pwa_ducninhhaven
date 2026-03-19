@@ -1,3 +1,4 @@
+// core/events.js
 
 import { UI, setState } from "./state.js";
 import { enqueue } from "./queue.js";
@@ -117,4 +118,24 @@ export function loadCart() {
   } catch {
     clearCart();
   }
+}
+
+
+// Hàm cập nhật số lượng món trong giỏ (Chạy ngay khi bấm + / -)
+export function updateCartQuantity(index, delta) {
+    const newItems = [...UI.cart.items];
+    const item = newItems[index];
+    
+    if (!item) return;
+    
+    item.qty += delta;
+    
+    // Nếu số lượng về 0 thì xóa món đó
+    if (item.qty <= 0) {
+        newItems.splice(index, 1);
+    }
+
+    // Cập nhật vào State và LocalStorage
+    setState({ cart: { items: newItems } });
+    localStorage.setItem("haven_cart", JSON.stringify(newItems));
 }
