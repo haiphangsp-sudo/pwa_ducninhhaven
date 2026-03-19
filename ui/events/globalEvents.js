@@ -8,17 +8,17 @@ import { setDeliveryState } from "../render/renderDelivery.js";
 import { setRecoveryState } from "../render/renderRecovery.js";
 import { attachPlacePickerEvents } from "../components/placePicker.js";
 import { attachHubEvents } from "../render/renderHub.js";
-import { attachLangguegeEvents, attachNarBarEvents } from "../components/navBar.js";
+import { attachLanguageEvents, attachNavBarEvents } from "../components/navBar.js";
 
 
 
 export function eventsApp() {
-    attachNarBarEvents();
+    attachNavBarEvents();
     attachMenuEvents();
     attachCartBarEvents();
     attachPlacePickerEvents();
     attachHubEvents();
-    attachLangguegeEvents();
+    attachLanguageEvents();
 
     networkBackEvent();
 
