@@ -5,6 +5,8 @@ import { getContext } from "../../core/context.js";
 import { PLACES } from "../../core/placesStore.js";
 import { openPicker } from "./placePicker.js";
 
+
+
 /* ===================================================== */
   let identityIcon;
   let identityLabel;
@@ -88,4 +90,26 @@ export function attachNarBarEvents() {
     openPicker();
   });
   window.addEventListener("contextchange", updateNavContext);
+}
+
+function setLanguage(l) {
+  const current = getState().lang.current;
+  if (!l || current === l) return;
+  localStorage.setItem("haven_lang", l);
+  setState({lang: {current: l}});
+}
+
+function updateActive() {
+  document.querySelectorAll("").forEach(el =>
+    el.classList.toggle("is-active", el.dataset.lang=== getState().lang.current)
+  )
+}
+export function attachLangguegeEvents() {
+  document.addEventListener("click", e => {
+    const btn = e.target.closest("#langSwitch button");
+    if (!btn || btn.classList.contains("is-active")) return;
+    const key = btn.dataset.lang;
+    updateActive();
+    setLanguage(key)
+  });
 }

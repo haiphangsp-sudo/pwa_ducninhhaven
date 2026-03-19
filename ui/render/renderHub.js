@@ -11,10 +11,9 @@ export function renderHub(){
   if(!menuEl) return;
 
   const panels = getCategories();
-  const panel = UI.view.panel;
 
   menuEl.innerHTML = panels.map(cat=>`
-    <button class="hub-btn btn center${panel===cat.key ? " is-active" : ""}"
+    <button class="hub-btn btn center is-active"
       data-key="${cat.key}">
       <span class="hub-icon">
         <img src="/icons/${cat.key}.svg">
@@ -25,6 +24,7 @@ export function renderHub(){
     </button>
   `).join("");
   
+  const panel = UI.view.panel;
   renderPanel(panel);
 }
 
