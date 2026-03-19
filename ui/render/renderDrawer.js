@@ -50,7 +50,7 @@ function renderDrawer() {
             <div class="drawer__item drawer-item">
                 <div class="drawer__info">
                     <strong>${itemLabel}</strong>
-                    <span>${optionLabel}</span>
+                    <span class="drawer__variant">${optionLabel}</span>
                     <span class="text-s text-muted">${price > 0
                         ? price.toLocaleString("vi-VN") + " đ"
                         : price === 0 ? translate("cart_bar.free")
@@ -80,6 +80,7 @@ function renderDrawer() {
   if (item?.lineId) return item.lineId;
     return `${item.category}-${item.item}-${item.option}-${fallbackIndex}`;
   }
+  attachDrawerEvents(drawer);
 }
 
 export function attachDrawerEvents(drawer) {
