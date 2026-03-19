@@ -120,6 +120,11 @@
   box-shadow:0 -1px 0 rgba(0,0,0,0.02), 0 8px 20px rgba(0,0,0,0.04);
 }
 
+.hub-btn:not(.is-active){
+  background:transparent;
+  color:var(--text-soft);
+  opacity: .82;
+}
 .hub-btn.is-active::after{
   content:"";
   position:absolute;
