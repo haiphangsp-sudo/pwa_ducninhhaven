@@ -33,7 +33,8 @@ export function renderHub() {
 }
 
 function updateActive(activeId) {
-  document.querySelectorAll("[data-action='menu']").forEach(el => {
+  const menuEl = document.getElementById("hubMenu");
+  menuEl.querySelectorAll("[data-action]").forEach(el => {
     el.classList.toggle("is-active", el.dataset.key === activeId);
   });
 }
