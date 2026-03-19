@@ -40,6 +40,7 @@ function updateActive(activeId) {
 }
 
 export function attachHubEvents() {
+  const panel = btn.dataset.key;
   updateActive(panel);
   if (hubEventsAttached) return;
   hubEventsAttached = true;
@@ -47,8 +48,6 @@ export function attachHubEvents() {
   document.addEventListener("click", e => {
     const btn = e.target.closest("[data-action='menu']");
     if (!btn || btn.classList.contains("is-active")) return;
-
-    const panel = btn.dataset.key;
 
     updateActive(panel);
     setState({
