@@ -134,12 +134,17 @@ function handleDrawerClick(e) {
 /* =========================
    ACTIONS
 ========================= */
-
 function handleSend() {
-  sendCart();
-  clearDrawer();
+  if (UI.cart.changed) {
+    updateCart(); 
+    closeOverlay();
+    return;
+  }
+
+  sendCart();    
   closeOverlay();
 }
+
 
 function clearDrawer() {
   const el = document.getElementById("drawerItems");
@@ -161,13 +166,3 @@ function getLineId(item, fallbackIndex = 0) {
   return `${item.category}-${item.item}-${item.option}-${fallbackIndex}`;
 }
 
-function handleSend() {
-  if (UI.cart.changed) {
-    updateCart(); 
-    closeOverlay();
-    return;
-  }
-
-  sendCart();    
-  closeOverlay();
-}
