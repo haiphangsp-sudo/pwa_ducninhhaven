@@ -98,9 +98,9 @@ function setLanguage(l) {
   setState({lang: {current: l}});
 }
 
-function updateActive() {
+function updateActive(acitveId) {
   document.querySelectorAll("#langSwitch button").forEach(el =>
-    el.classList.toggle("is-active")
+    el.classList.toggle("is-active", el.dataset.lang === acitveId)
   )
 }
 export function attachLangguegeEvents() {
@@ -108,7 +108,7 @@ export function attachLangguegeEvents() {
     const btn = e.target.closest("#langSwitch button");
     if (!btn || btn.classList.contains("is-active")) return;
     const key = btn.dataset.lang;
-    updateActive();
+    updateActive(key);
     setLanguage(key)
   });
 }
