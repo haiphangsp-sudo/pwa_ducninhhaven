@@ -1,23 +1,25 @@
-// ui/renderHub.js
+
+// ui/render/renderHub.js
 
 import { UI, setState } from "../../core/state.js";
 import { translate } from "../utils/translate.js";
 import { renderPanel } from "./renderPanel.js";
 import { getCategories } from "../../core/menuQuery.js";
 
-export function renderHub(){
+let hubEventsAttached = false;
 
+export function renderHub() {
   const menuEl = document.getElementById("hubMenu");
-  if(!menuEl) return;
+  if (!menuEl) return;
 
   const panels = getCategories();
 
-  menuEl.innerHTML = panels.map(cat=>`
-    <button class="hub-btn btn center is-active"
+  menuEl.innerHTML = panels.map(cat => `
+    <button class="hub-btn btn center"
       data-action="menu"
       data-key="${cat.key}">
       <span class="hub-icon">
-        <img src="/icons/${cat.key}.svg">
+        <img src="/icons/${cat.key}.svg" alt="">
       </span>
       <span class="hub-label">
         ${translate(cat.label)}
@@ -25,31 +27,33 @@ export function renderHub(){
     </button>
   `).join("");
 
-  const panel = UI.view.panel;
-  renderPanel(panel);
+  const panel = UI.view?.panel || panels[0]?.key;
   updateActive(panel);
+  renderPanel(panel);
 }
 
-function updateActive(acitveId) {
-
-  document.querySelectorAll("[data-action='menu']").forEach(el =>
-    el.classList.toggle("is-active",el.dataset.key === acitveId))
+function updateActive(activeId) {
+  document.querySelectorAll("[data-action='menu']").forEach(el => {
+    el.classList.toggle("is-active", el.dataset.key === activeId);
+  });
 }
 
 export function attachHubEvents() {
+  if (hubEventsAttached) return;
+  hubEventsAttached = true;
 
   document.addEventListener("click", e => {
-
-    const btn = e.target.closest("[data-action]");
+    const btn = e.target.closest("[data-action='menu']");
     if (!btn || btn.classList.contains("is-active")) return;
 
-    switch(btn.dataset.action){
-      case "menu":
-        const p = btn.dataset.key;
-        updateActive(p);
-        setState({view: p});
-        renderPanel(p);
-        break;
-    }
+    const panel = btn.dataset.key;
+
+    updateActive(panel);
+    setState({
+      view: {
+        panel
+      }
+    });
+    renderPanel(panel);
   });
 }
