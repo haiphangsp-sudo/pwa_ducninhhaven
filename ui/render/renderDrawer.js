@@ -2,12 +2,12 @@
 import { UI, setState } from "../../core/state.js";
 import { translate } from "../utils/translate.js";
 import { updateCartQuantity, sendCart } from "../../core/events.js";
-import { closeOverlay, closeOverlay } from "../interactions/backdropManager.js";
+import { showOverlay, closeOverlay } from "../interactions/backdropManager.js";
 
 // Biến cờ cục bộ để theo dõi trạng thái thay đổi
 let isModified = false;
 
-export function renderDrawer() {
+  function renderDrawer() {
     const drawer = document.getElementById("cartDrawer");
     if (!drawer || UI.cart.items === undefined) return;
 
@@ -89,4 +89,8 @@ function attachEvents(container, sendBtn) {
             closeOverlay(); // Đóng giỏ sau khi gửi thành công
         }
     };
+}
+export function openCartDrawer() {
+  renderDrawer();
+  showOverlay("cartDrawer");
 }
