@@ -1,93 +1,98 @@
- //    ui/render/renderDrawer.js
-
-import { updateCartBarTotal } from "./renderCart.js";
-import { showOverlay, closeOverlay } from "../interactions/backdropManager.js"
-import { sendCart } from "../../core/events.js";
-import { UI } from "../../core/state.js";
+// ui/render/renderDrawer.js
+import { UI, setState } from "../../core/state.js";
 import { translate } from "../utils/translate.js";
-import { MENU } from "../../core/menuStore.js";
+import { updateCartQuantity, sendCart } from "../../core/events.js";
 
+// Biến cờ để theo dõi trạng thái chỉnh sửa trong phiên mở giỏ hàng này
+let isModified = false;
 
-export function openCartDrawer(){
-  renderDrawer();
-  showOverlay("cartDrawer");
-}
-  
-function renderDrawer(){
-  let textOrder="";
-  if(UI.delivery.state==="sending"){
-    textOrder="delivery.pending";
-  }else{
-    textOrder= "cart_bar.order";
-  }
-  document.getElementById("drawerSend").textContent = translate(textOrder);
-  document.querySelector(".drawer-title").textContent = translate("cart_bar.cart_title");
+export function renderDrawer() {
+  const el = document.getElementById("cartDrawer");
+  if (!el) return;
 
-  const el=document.getElementById("drawerItems");
+  const items = UI.cart.items || [];
 
-  el.innerHTML="";
-  UI.cart.items.forEach((i,index)=>{
-    const ItemDrawer = translate(MENU[i.category].items[i.item].label);
-    const OptionDrawer = translate(MENU[i.category].items[i.item].options[i.option].label);
-    const row=document.createElement("div");
-    row.className = "drawer__item";
-    row.innerHTML=`
-      <div class="drawer__info">
-        <strong>${ItemDrawer}</strong>
-        <div>${OptionDrawer}</div>
+  // 1. Trường hợp giỏ hàng trống
+  if (items.length === 0) {
+    isModified = false; // Reset cờ
+    el.innerHTML = `
+      <div class="drawer-empty">
+        <p>${translate("cart.empty")}</p>
       </div>
-      <div class="drawer-qty">
-        <button data-id="${i.id}" class="qty-minus center">−</button>
-        <span class="qty">${i.qty}</span>
-        <button data-id="${i.id}" class="qty-plus center">+</button>
-      </div>
-      <div class="drawer__footer"></div>
     `;
-    el.appendChild(row);
-  });
-  
-  document.getElementById("drawerSend").onclick=()=>{ 
-    sendCart(); 
-    closeOverlay();
-    el.innerHTML="";
-  };
-  document.getElementById("drawerClose").onclick = closeOverlay;
+    return;
+  }
+
+  // 2. Vẽ nội dung giỏ hàng
+  el.innerHTML = `
+    <div class="drawer-container">
+      <div class="drawer-header">
+        <h3>${translate("cart.title")}</h3>
+      </div>
+      
+      <div class="cart-list">
+        ${items.map((item, index) => `
+          <div class="cart-item">
+            <div class="item-info">
+              <span class="item-name">${item.name}</span>
+              <span class="item-price">${item.price ? item.price.toLocaleString() : ''}</span>
+            </div>
+            <div class="qty-control">
+              <button class="qty-min" data-index="${index}">-</button>
+              <span class="qty-value">${item.qty}</span>
+              <button class="qty-plus" data-index="${index}">+</button>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+
+      <div class="drawer-footer">
+        <button id="cartMainAction" class="btn-primary w-100 ${isModified ? 'state-confirm' : 'state-send'}">
+          ${isModified ? translate("cart.confirm_changes") : translate("cart.send_order")}
+        </button>
+      </div>
+    </div>
+  `;
+
 }
-export function attachDrawerEvents(){
-  document.addEventListener("click", (e) => {
-  
-    const i = e.target.dataset.i;
-    const row = e.target.closest(".drawer__item");
-    if (!row) return;
 
-    if (e.target.classList.contains("qty-plus")) {
-      UI.cart.items[i].qty++;
-    }
+export function attachDrawerEvents() {
+  const parent = document.getElementById("cartDrawer");
+  if (!parent) return;
 
-    if (e.target.classList.contains("qty-minus")) {
-
-      UI.cart.items[i].qty--;
-
-      if (UI.cart.items[i].qty <= 0) {
-        UI.cart.items.splice(i, 1);
-    
-        if (UI.cart.items.length == 0) {
-          document.getElementById("drawerItems").innerHTML = "";
-          closeOverlay();
-          return;
-        }
-        reindexDrawer();
+  // Sự kiện nút Tăng/Giảm
+  parent.querySelectorAll(".qty-control button").forEach(btn => {
+    btn.onclick = (e) => {
+      const index = parseInt(btn.dataset.index);
+      const isPlus = btn.classList.contains("qty-plus");
+      
+      // Đánh dấu là đã có sự thay đổi
+      isModified = true;
+      
+      // Gọi hàm update từ events.js
+      updateCartQuantity(index, isPlus ? 1 : -1);
+      
+      // Vì updateCartQuantity gọi setState, và main.js đã subscribe(renderApp),
+      // nên renderDrawer sẽ tự động được gọi lại với isModified = true
+      updateCartBarTotal();
+    };
+  });
+  updateCartBarTotal();
+  // Sự kiện nút Chính (Xác nhận/Gửi)
+  const mainBtn = parent.querySelector("#cartMainAction");
+  if (mainBtn) {
+    mainBtn.onclick = () => {
+      if (isModified) {
+        // Nếu đang ở trạng thái Xác nhận -> chuyển về trạng thái Sẵn sàng gửi
+        isModified = false;
+        renderDrawer(); // Vẽ lại giao diện để nút đổi chữ thành "Gửi"
+        
+        // Phản hồi xúc giác nhẹ để khách biết đã xác nhận thành công
+        if (navigator.vibrate) navigator.vibrate(30);
+      } else {
+        // Nếu không còn chỉnh sửa -> Thực hiện gửi đơn
+        sendCart();
       }
-    }
-    row.querySelector(".qty").textContent = UI.cart.items[i]?.qty || 0;
-    updateCartBarTotal();
-
-  });
-}
-function reindexDrawer() {
-  document
-    .querySelectorAll(".drawer__item")
-    .forEach((row, i) => {
-      row.dataset.i = i;
-    });
+    };
+  }
 }
