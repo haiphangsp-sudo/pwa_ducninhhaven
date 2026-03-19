@@ -30,7 +30,9 @@ function render() {
     icon = "!";
     theme = "banner-error";
   }
-
+  if (state === "sending") {
+    icon = `<span class="loader loader-invert"></span>`;
+  }
   el.className = `delivery-banner ${theme} active`;
   el.innerHTML = `
     <div class="banner-content">

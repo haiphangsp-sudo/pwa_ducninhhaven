@@ -157,3 +157,49 @@
     50% { transform: scale(1.1); }
     100% { transform: scale(1); opacity: 1; }
 }
+/* =====================
+   LOADING SPINNER (Premium Style)
+===================== */
+
+.loader {
+    width: 24px;
+    height: 24px;
+    border: 1.5px solid var(--border-soft); /* Đường viền mờ phía dưới */
+    border-top: 1.5px solid var(--brand);   /* Đường viền đậm màu thương hiệu */
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 0.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+/* Spinner cỡ lớn cho các màn hình chờ hoặc Overlay */
+.loader-l {
+    width: 40px;
+    height: 40px;
+    border-width: 2px;
+}
+
+/* Spinner trắng khi nằm trên nền đậm (như Banner) */
+.loader-invert {
+    border-color: rgba(255, 255, 255, 0.2);
+    border-top-color: var(--text-invert);
+}
+
+@keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Hiệu ứng mờ dần khi xuất hiện */
+.loader-fade-in {
+    animation: rotation 0.8s infinite, fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}

@@ -17,7 +17,10 @@ export function renderAck(){
     clearTimeout(timer);
     return;
   }
-  el.innerHTML = `<div class="loader ack-dot">${translate("delivery.ack_success")}</div>`;
+  el.innerHTML = `
+  <div class="loader loader-l"></div>
+  <div class="ack-text">${translate("delivery.ack_success")}</div>
+`;
   el.classList.remove("hidden");
   clearTimeout(timer);
   
