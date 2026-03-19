@@ -2,7 +2,7 @@
 import { UI, setState } from "../../core/state.js";
 import { translate } from "../utils/translate.js";
 import { updateCartQuantity, sendCart } from "../../core/events.js";
-import { closeOverlay } from "../interactions/overlayManager.js";
+import { closeOverlay, closeOverlay } from "../interactions/backdropManager.js";
 
 // Biến cờ cục bộ để theo dõi trạng thái thay đổi
 let isModified = false;
