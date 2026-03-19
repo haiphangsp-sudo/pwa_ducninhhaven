@@ -70,9 +70,8 @@ function renderDrawer() {
 }
 
 /* ---------- CLICK HANDLER ---------- */
+
 export function attachCartDrawerEvents() {
-
-
   document.addEventListener("click", (e) => {
     const btn = e.target.closest(".qty-plus, .qty-minus");
     if (!btn) return;
