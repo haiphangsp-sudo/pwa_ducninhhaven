@@ -17,7 +17,7 @@ export function isOnline(){
   return online;
 }
 
-export function onNetworkChange(fn){
+ function onNetworkChange(fn){
   listeners.push(fn);
 }
 
@@ -45,4 +45,10 @@ export async function checkInternet() {
   } catch (e) {
     return false;
   }
+}
+
+export function networkBackEvent(){
+  onNetworkChange(online => {
+    if (online) window.dispatchEvent(new Event("networkBack"));
+  });
 }
