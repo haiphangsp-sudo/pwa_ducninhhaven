@@ -1,33 +1,64 @@
-// ui/interactions/overlayManager.js
+// ui/interactions/backdropManager.js
 
-
-let current = false;
-let el = null;
+let currentOverlay = null;
 const backdrop = document.getElementById("overlayBackdrop");
 
+/**
+ * Hiển thị một Overlay cụ thể
+ * @param {string} id - ID của element trong index.html
+ */
 export function showOverlay(id) {
-    if (!current) {
-        el = document.getElementById(id);
-        el.classList.remove("hidden");
-        el.style.opacity = 0;
-            
-        setTimeout(() => {
-            el.style.opacity = 1;
-        }, 10);
+    // Nếu đang có một cái mở rồi thì không mở thêm cái mới (tránh chồng chéo)
+    if (currentOverlay) return;
+
+    const el = document.getElementById(id);
+    if (!el) {
+        console.warn(`Overlay với ID "${id}" không tồn tại.`);
+        return;
+    }
+
+    currentOverlay = el;
+    
+    // Hiển thị backdrop
+    if (backdrop) {
         backdrop.classList.remove("hidden");
         backdrop.onclick = closeOverlay;
-        current = true;
     }
+
+    // Hiển thị Overlay với hiệu ứng mượt
+    el.classList.remove("hidden");
+    el.style.opacity = "0";
+    
+    // Force reflow để trình duyệt nhận diện trạng thái opacity = 0 trước khi transition
+    el.offsetHeight; 
+    
+    setTimeout(() => {
+        el.style.opacity = "1";
+    }, 10);
 }
 
+/**
+ * Đóng Overlay đang mở
+ */
 export function closeOverlay() {
-    if (current) { 
-        el.classList.add("hidden");
-        backdrop.classList.add("hidden");
-        current = false;
-    }   
+    if (!currentOverlay) return;
+
+    // Hiệu ứng mờ dần trước khi ẩn hoàn toàn
+    currentOverlay.style.opacity = "0";
+    
+    // Đợi hiệu ứng CSS hoàn tất (thường là 300ms) rồi mới thêm class hidden
+    setTimeout(() => {
+        if (currentOverlay) {
+            currentOverlay.classList.add("hidden");
+            currentOverlay = null;
+        }
+        if (backdrop) {
+            backdrop.classList.add("hidden");
+        }
+    }, 300); // Bạn nên khớp con số này với transition trong CSS
 }
 
+// Lắng nghe phím Escape để đóng nhanh (UX tốt cho khách dùng laptop)
 document.addEventListener("keydown", e => {
     if (e.key === "Escape") closeOverlay();
 });
