@@ -4,9 +4,7 @@
 // Single source of truth.
 import { getContext } from "./context.js";
 
-
 export const UI = {
-
   lang:{
     current: localStorage.getItem("haven_lang") || "vi"
   },
@@ -46,7 +44,7 @@ export const UI = {
   /* ---------------- RECOVERY STATE MACHINE ---------------- */
 
   recovery:{
-    state:"idle"
+    state:"idle"   // idle | found | sending
   },
 
   /* ---------------- ERROR ---------------- */

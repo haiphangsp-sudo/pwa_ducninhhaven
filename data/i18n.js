@@ -17,8 +17,9 @@ export const STRINGS = {
   },
   cart_bar: {
     cart_title: { vi: "Giỏ hàng", en: "View cart" },
-    item: { vi: "món", en: "item" },
-    items: { vi: "món", en: "items" },
+    unique: { vi: "món", en: "dishes" },
+    item: { vi: "phần", en: "item" },
+    items: { vi: "phần", en: "items" },
     order: { vi: "Gửi", en: "Order" },
     free: { vi: "Miễn phí", en: "Free" },
     instant: { vi: "Dịch vụ tức thời", en: "Instant service" },

@@ -1,5 +1,4 @@
-//
-//
+// core/menuQuery.js
 
 import { MENU } from "./menuStore.js";
 import { getContext } from "./context.js";

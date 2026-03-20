@@ -1,9 +1,10 @@
 // ui/renderCart.js
 // Thanh giỏ dưới cùng (state-driven)
 
-import { UI } from "../../core/state.js";
+import { getCartTotals } from "../../data/helpers.js";
 import { translate } from "../utils/translate.js";
-import { openCartDrawer } from "./renderDrawer.js";
+import { openCartDrawer } from "./renderDrawer.js"
+
 
 /* =========================
    RENDER
@@ -35,9 +36,8 @@ export function renderCartBar() {
 ========================= */
 
 export function updateCartBarTotal() {
-  const total = getCartTotal();
+  const total = getCartTotals();
   const countEl = document.getElementById("cartCount");
-  const drawerTotal = document.querySelector(".drawer-total");
 
   const label =
     total > 1
@@ -45,7 +45,6 @@ export function updateCartBarTotal() {
       : `${total} ${translate("cart_bar.item")}`;
 
   if (countEl) countEl.textContent = label;
-  if (drawerTotal) drawerTotal.textContent = label;
 }
 
 /* =========================
@@ -56,14 +55,6 @@ export function attachCartBarEvents() {
   const btn = document.getElementById("cartOpen");
   if (!btn) return;
   btn.onclick = openCartDrawer;
-}
-
-/* =========================
-   HELPERS
-========================= */
-
-function getCartTotal() {
-  return UI.cart.items.reduce((a, b) => a + b.qty, 0);
 }
 
 /* =========================

@@ -3,7 +3,6 @@
 import { UI, setState } from "./state.js";
 import { enqueue } from "./queue.js";
 import { getContext } from "./context.js";
-import { openPicker } from "../ui/components/placePicker.js";
 
 const CART_KEY = "haven_cart";
 
@@ -31,7 +30,6 @@ function ensureActive(payload) {
     enqueue({
     payload
     });
-    openPicker();
     return false;
   }
   return true;
