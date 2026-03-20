@@ -2,7 +2,7 @@
 import { UI } from "../../core/state.js";
 import { translate } from "../utils/translate.js";
 import { updateCartQuantity, sendCart } from "../../core/events.js";
-import { closeOverlay } from "../interactions/backdropManager.js"; 
+import { closeOverlay, showOverlay } from "../interactions/backdropManager.js"; 
 import { MENU } from "../../core/menuStore.js";
 
 // Chúng ta chỉ cần lưu "Ảnh chụp lúc mở" để so sánh
