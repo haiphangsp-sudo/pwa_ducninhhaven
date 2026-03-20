@@ -6,6 +6,7 @@ import { renderAck } from "./renderOverlay.js";
 import { renderNavBar } from "../components/navBar.js";
 import { renderHub } from "./renderHub.js";
 import { renderDrawer } from "./renderDrawer.js";
+import { updateCartBarTotal } from "./renderCart.js";
 
 
 export function renderApp(){
@@ -14,5 +15,6 @@ export function renderApp(){
   renderCartBar()
   renderAck();
   renderDrawer();
+  updateCartBarTotal();
 }
 
