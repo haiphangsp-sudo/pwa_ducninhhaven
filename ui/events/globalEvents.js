@@ -9,29 +9,23 @@ import { setRecoveryState } from "../render/renderRecovery.js";
 import { attachPlacePickerEvents } from "../components/placePicker.js";
 import { attachHubEvents } from "../render/renderHub.js";
 import { attachLanguageEvents, attachNavBarEvents } from "../components/navBar.js";
-import { attachDrawerEvents } from "../render/renderDrawer.js";
 
-
-
-    let eventsAttached = false;
-    
 
 export function eventsApp() {
-    if (!eventsAttached) {
-        eventsAttached = true;
-        attachNavBarEvents();
-        attachMenuEvents();
-        attachCartBarEvents();
-        attachPlacePickerEvents();
-        attachHubEvents();
-        attachLanguageEvents();
-        attachDrawerEvents();
-        networkBackEvent();
 
-        setDeliveryState("idle");
-        setRecoveryState("idle");
-        ["touchstart", "pointerdown", "click"].forEach(evt => {
-            document.addEventListener(evt, resetIdleTimer, { passive: true });
-        });
+    attachNavBarEvents();
+    attachMenuEvents();
+    attachCartBarEvents();
+    attachPlacePickerEvents();
+    attachHubEvents();
+    attachLanguageEvents();
+    networkBackEvent();
+
+    setDeliveryState("idle");
+    setRecoveryState("idle");
+
+    ["touchstart", "pointerdown", "click"].forEach(evt => {
+        document.addEventListener(evt, resetIdleTimer, { passive: true });
+    });
+
     }
-}
