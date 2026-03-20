@@ -29,7 +29,7 @@ export function renderDrawer() {
     // So sánh giỏ hàng hiện tại với ảnh chụp lúc mở
     const currentSnapshot = JSON.stringify(items);
     const hasChanged = currentSnapshot !== initialCartSnapshot;
-
+    drawer.querySelector(".drawer-title").textContent = translate("cart_bar.cart_title");
     // 3. Tính tổng tiền
     let total = 0;
     items.forEach(it => {
@@ -48,14 +48,22 @@ export function renderDrawer() {
     } else {
         if (sendBtn) sendBtn.classList.remove("hidden");
         itemsContainer.innerHTML = items.map((item, index) => {
-            const menuItem = MENU?.[item.category]?.items?.[item.item];
-            const option = menuItem?.options?.[item.option];
+          const menuItem = MENU?.[item.category]?.items?.[item.item];
+          const option = menuItem?.options?.[item.option];
+          const price = option?.price;
+
             return `
                 <div class="drawer__item drawer-item">
                     <div class="drawer__info">
                         <strong>${translate(menuItem?.label || item.item)}</strong>
                         <span class="drawer__variant">${option?.label ? translate(option.label) : ""}</span>
-                        <span class="text-s text-muted">${(option?.price || 0).toLocaleString()}đ</span>
+                        <span class="text-s text-muted">
+                        ${option.price > 0
+                          ? price.toLocaleString("vi-VN") + " đ"
+                          : price === 0 ? translate("cart_bar.free")
+                          : translate("cart_bar.instant")
+                        }
+                        </span>
                     </div>
                     <div class="drawer-qty row items-center gap-s">
                         <button class="qty-btn min" data-index="${index}">-</button>
