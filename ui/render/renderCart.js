@@ -1,9 +1,9 @@
 // ui/renderCart.js
 // Thanh giỏ dưới cùng (state-driven)
 
-import { getCartTotals } from "../../data/helpers.js";
+import { getCartTotals, textCart } from "../utils/cartCalculators.js";
 import { translate } from "../utils/translate.js";
-import { openCartDrawer } from "./renderDrawer.js"
+import { openCartDrawer } from "./renderDrawer.js";
 
 
 /* =========================
@@ -16,7 +16,7 @@ export function renderCartBar() {
 
   if (!bar || !btn) return;
 
-  const total = getCartTotal();
+  const total = getCartTotals();
 
   // hide nếu không có item
   if (total === 0) {
@@ -36,15 +36,9 @@ export function renderCartBar() {
 ========================= */
 
 export function updateCartBarTotal() {
-  const total = getCartTotals();
   const countEl = document.getElementById("cartCount");
-
-  const label =
-    total > 1
-      ? `${total} ${translate("cart_bar.items")}`
-      : `${total} ${translate("cart_bar.item")}`;
-
-  if (countEl) countEl.textContent = label;
+  if (!countEl) return;
+  countEl.textContent = textCart();
 }
 
 /* =========================

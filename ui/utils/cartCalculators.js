@@ -9,7 +9,7 @@ export function getCartTotals() {
     const items = UI.cart.items;
     let totalQuantity = 0; // Tổng số lượng (vd: 2 trà + 3 cafe = 5)
     let totalPrice = 0;    // Tổng tiền (vd: 200.000đ)
-    const totalUnique = items.length; // Tổng số dòng món (vd: trà và cafe = 2 món)
+    const totalUnique = Number(items.length); // Tổng số dòng món (vd: trà và cafe = 2 món)
     
     items.forEach(it => {
         // Lấy giá từ MENU store
@@ -38,3 +38,9 @@ export const getCartStats = (items = []) => {
         isEmpty: items.length === 0
     };
 };
+export function textCart() {
+    const qty = getCartTotals().totalQuantity;
+    return qty > 1
+        ? qty + " " + translate("cart_bar.items")
+        : qty + " " + translate("cart_bar.item");
+}
