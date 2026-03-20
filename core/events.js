@@ -61,20 +61,21 @@ export function addToCart(item) {
 function sendInstant(action){
   const ctx = getContext();
   if (UI.ack.state !== "hidden") return;
-  
-  setState({ack:{state:"show"}});
+
+  setState({ ack:{ state:"show" } });
 
   enqueue({
     type: "instant",
     place: ctx.active.id,
     mode: ctx.active.type,
-    category: action.category,
-    item: action.item,
-    option: action.option,
-    qty:1
+    items: [{
+      category: action.category,
+      item: action.item,
+      option: action.option,
+      qty: 1
+    }]
   });
 }
-
 export function sendCart() {
   const ctx = getContext();
   if (UI.ack.state !== "hidden") return;
@@ -86,7 +87,7 @@ export function sendCart() {
     type: "cart",
     place: ctx.active.id,
     mode: ctx.active.type,
-    item: items
+    items: items
   });
 
   setState({ack: { state: "show" }});
