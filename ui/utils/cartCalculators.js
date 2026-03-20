@@ -1,4 +1,6 @@
 import { MENU } from "../../core/menuStore.js";
+import { UI } from "../../core/state.js";
+import { translate } from "../utils/translate.js";
 
 
 /**
