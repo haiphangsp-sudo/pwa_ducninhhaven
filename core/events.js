@@ -133,7 +133,6 @@ export function updateCartQuantity(index, delta) {
     }
 
     // 2. Gửi bản sao mới vào setState
-    // Bây giờ prev !== next sẽ trả về TRUE, kích hoạt renderApp ngay lập tức
     setState({ cart: { items: newItems } });
     
     // Lưu lại vào bộ nhớ
