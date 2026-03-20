@@ -6,6 +6,7 @@ import { getContext } from "./context.js";
 import { openPicker } from "../ui/components/placePicker.js";
 
 
+
 const CART_KEY = "haven_cart";
 
 /* ---------- CART ---------- */
@@ -120,22 +121,24 @@ export function loadCart() {
   }
 }
 
-
 // Hàm cập nhật số lượng món trong giỏ (Chạy ngay khi bấm + / -)
 export function updateCartQuantity(index, delta) {
-    const newItems = [...UI.cart.items];
+    // 1. TẠO BẢN SAO SÂU (Clone) để không làm thay đổi UI trực tiếp
+    const newItems = JSON.parse(JSON.stringify(UI.cart.items));
     const item = newItems[index];
-    
+
     if (!item) return;
-    
+
     item.qty += delta;
-    
-    // Nếu số lượng về 0 thì xóa món đó
+
+    // Nếu về 0 thì xóa khỏi giỏ
     if (item.qty <= 0) {
         newItems.splice(index, 1);
     }
 
-    // Cập nhật vào State và LocalStorage
+    // 2. Gửi bản sao đã chỉnh sửa vào setState
+    // Lúc này prev !== next sẽ đúng, và renderApp() sẽ được gọi ngay lập tức
     setState({ cart: { items: newItems } });
+    
     localStorage.setItem("haven_cart", JSON.stringify(newItems));
 }
