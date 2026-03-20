@@ -49,10 +49,10 @@ export function renderDrawer() {
                         <span class="text-s text-muted">${option?.label ? translate(option.label) : ""}</span>
                         <span class="text-s">${price.toLocaleString()}đ</span>
                     </div>
-                    <div class="drawer-qty row items-center gap-s">
-                        <button class="qty-btn min" data-index="${index}">-</button>
-                        <span class="qty-val weight-600">${item.qty}</span>
-                        <button class="qty-btn plus" data-index="${index}">+</button>
+                    <div class="drawer-qty">
+                        <button class="qty-minus center" data-index="${index}" type="button">-</button>
+                        <span class="qty">${item.qty}</span>
+                        <button class="qty-plus center" data-index="${index}" type="button">+</button>
                     </div>
                 </div>
             `;
