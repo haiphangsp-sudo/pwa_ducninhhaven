@@ -6,7 +6,6 @@ import { showOverlay, closeOverlay } from "../interactions/backdropManager.js";
 import { MENU } from "../../core/menuStore.js";
 
 let isModified = false;
-let eventsAttached = false;
 /**
  * Hàm mở giỏ hàng từ nút "Xem giỏ"
  */
@@ -18,7 +17,7 @@ export function openCartDrawer() {
 /**
  * Hàm Render nội bộ - Bơm dữ liệu vào HTML có sẵn
  */
-function renderDrawer() {
+export function renderDrawer() {
     const drawer = document.getElementById("cartDrawer");
     if (!drawer) return;
 
@@ -80,13 +79,9 @@ function renderDrawer() {
   if (item?.lineId) return item.lineId;
     return `${item.category}-${item.item}-${item.option}-${fallbackIndex}`;
   }
-  if (!eventsAttached) {
-        attachDrawerEvents(drawer);
-        eventsAttached = true;
-    }
 }
 
-export function attachDrawerEvents(drawer) {
+export function attachDrawerEvents() {
     // A. Sự kiện đóng (nút X)
     document.getElementById("drawerClose").addEventListener("click", () => {
         isModified = false; // Reset trạng thái chỉnh sửa khi đóng

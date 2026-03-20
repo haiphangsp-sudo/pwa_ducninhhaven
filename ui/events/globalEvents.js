@@ -9,6 +9,7 @@ import { setRecoveryState } from "../render/renderRecovery.js";
 import { attachPlacePickerEvents } from "../components/placePicker.js";
 import { attachHubEvents } from "../render/renderHub.js";
 import { attachLanguageEvents, attachNavBarEvents } from "../components/navBar.js";
+import { attachDrawerEvents } from "../render/renderDrawer.js";
 
 
 export function eventsApp() {
@@ -20,6 +21,7 @@ export function eventsApp() {
     attachHubEvents();
     attachLanguageEvents();
     networkBackEvent();
+    attachDrawerEvents()
 
     setDeliveryState("idle");
     setRecoveryState("idle");
