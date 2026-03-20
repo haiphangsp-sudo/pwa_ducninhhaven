@@ -26,7 +26,7 @@
 
   .drawer__header h3,
   .drawer__header-title,
-  .drawer__header-count{
+  .drawer__header-price{
     font-size:20px;
   }
 
@@ -55,7 +55,7 @@
     font-size:22px;
   }
 
-  .drawer-qty .qty{
+  .drawer-qty .qty-val{
     min-width:28px;
     font-size:18px;
   }

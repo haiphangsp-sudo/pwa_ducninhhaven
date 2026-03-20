@@ -12,7 +12,7 @@ import { attachLanguageEvents, attachNavBarEvents } from "../components/navBar.j
 import { attachDrawerEvents } from "../render/renderDrawer.js";
 
 
-export function eventsApp() {
+export function attachAppEvents() {
 
     attachNavBarEvents();
     attachMenuEvents();

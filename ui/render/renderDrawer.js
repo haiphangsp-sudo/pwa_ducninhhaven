@@ -5,6 +5,7 @@ import { updateCartQuantity, sendCart } from "../../core/events.js";
 import { closeOverlay, showOverlay } from "../interactions/backdropManager.js"; 
 import { MENU } from "../../core/menuStore.js";
 import { getCartTotals, textItemItems } from "../utils/cartCalculators.js";
+import { updateCartBarTotal } from "./renderCart.js";
 
 // Chúng ta chỉ cần lưu "Ảnh chụp lúc mở" để so sánh
 let initialCartSnapshot = ""; 
@@ -72,38 +73,40 @@ export function renderDrawer() {
   if (sendBtn) {
       // Nếu có thay đổi so với ban đầu -> Hiện "XÁC NHẬN" (Vàng)
       // Nếu quay về như cũ -> Hiện "GỬI" (Xanh)
-      sendBtn.textContent = hasChanged ? translate("cart_bar.confirm_changes") : translate("cart_bar.send_order");
-      sendBtn.className = `drawer-send ${hasChanged ? 'state-confirm' : 'state-send'}`;
+    sendBtn.textContent = hasChanged ? translate("cart_bar.confirm_changes") : translate("cart_bar.send_order");
+    sendBtn.className = `drawer-send ${hasChanged ? 'state-confirm' : 'state-send'}`;
       
       // Lưu trạng thái vào dataset để hàm click biết cần làm gì
-      sendBtn.dataset.modified = hasChanged;
+    sendBtn.dataset.modified = hasChanged;
   }
 }
 
 export function attachDrawerEvents() {
-    const drawer = document.getElementById("cartDrawer");
     const sendBtn = document.getElementById("drawerSend");
 
     // Click +/-
     document.getElementById("drawerItems").addEventListener("click", (e) => {
-        const btn = e.target.closest(".qty-btn");
-        if (!btn) return;
-        updateCartQuantity(parseInt(btn.dataset.index), btn.classList.contains("plus") ? 1 : -1);
+      const btn = e.target.closest(".qty-btn");
+      if (!btn) return;
+      updateCartQuantity(parseInt(btn.dataset.index), btn.classList.contains("plus") ? 1 : -1);
     });
 
     // Click Gửi / Xác nhận
     sendBtn.addEventListener("click", () => {
-        const isModified = sendBtn.dataset.modified === "true";
+      const isModified = sendBtn.dataset.modified === "true";
 
-        if (isModified) {
-            // Khi bấm xác nhận: Chụp ảnh mới để coi đây là trạng thái "gốc"
-            initialCartSnapshot = JSON.stringify(UI.cart.items);
-            renderDrawer(); // Nút sẽ tự động về màu Xanh
-            if (navigator.vibrate) navigator.vibrate(30);
-        } else {
-            sendCart();
-            closeOverlay();
-        }
+      if (isModified) {
+          // Khi bấm xác nhận: Chụp ảnh mới để coi đây là trạng thái "gốc"
+          initialCartSnapshot = JSON.stringify(UI.cart.items);
+          renderDrawer(); // Nút sẽ tự động về màu Xanh
+        if (navigator.vibrate) navigator.vibrate(30);
+        updateCartBarTotal();
+        renderDrawer();
+
+      } else {
+          sendCart();
+          closeOverlay();
+      }
     });
 
     document.getElementById("drawerClose").onclick = closeOverlay;
