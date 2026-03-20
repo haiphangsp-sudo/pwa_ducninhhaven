@@ -2,16 +2,14 @@
 import { UI } from "../../core/state.js";
 import { translate } from "../utils/translate.js";
 import { updateCartQuantity, sendCart } from "../../core/events.js";
-import { closeOverlay, showOverlay } from "../interactions/backdropManager.js"; 
+import { closeOverlay } from "../interactions/backdropManager.js"; 
 import { MENU } from "../../core/menuStore.js";
 
-let isModified = false;
-
-// Biến lưu trạng thái gốc lúc vừa mở Giỏ hàng
+// Chúng ta chỉ cần lưu "Ảnh chụp lúc mở" để so sánh
 let initialCartSnapshot = ""; 
 
 export function openCartDrawer() {
-    // CHỤP ẢNH: Lưu lại trạng thái giỏ hàng ngay lúc khách bấm "Xem giỏ"
+    // 1. Chụp ảnh giỏ hàng ngay lúc khách vừa bấm mở
     initialCartSnapshot = JSON.stringify(UI.cart.items);
     
     renderDrawer();
@@ -27,12 +25,12 @@ export function renderDrawer() {
     const sendBtn = document.getElementById("drawerSend");
     const totalEl = drawer.querySelector(".drawer-total");
 
-    // SO SÁNH THÔNG MINH:
-    // Nếu dữ liệu hiện tại khác với lúc vừa mở -> isModified = true
-    const currentCartState = JSON.stringify(items);
-    const isModified = currentCartState !== initialCartSnapshot;
+    // 2. TÍNH TOÁN THÔNG MINH (Derived State)
+    // So sánh giỏ hàng hiện tại với ảnh chụp lúc mở
+    const currentSnapshot = JSON.stringify(items);
+    const hasChanged = currentSnapshot !== initialCartSnapshot;
 
-    // 1. Tính tổng tiền
+    // 3. Tính tổng tiền
     let total = 0;
     items.forEach(it => {
         const price = MENU?.[it.category]?.items?.[it.item]?.options?.[it.option]?.price || 0;
@@ -43,22 +41,21 @@ export function renderDrawer() {
         totalEl.textContent = total > 0 ? total.toLocaleString("vi-VN") + "đ" : "";
     }
 
-    // 2. Render danh mục món ăn (giữ nguyên logic cũ của bạn)
+    // 4. Render danh sách món (Giữ nguyên logic đa ngôn ngữ của bạn)
     if (items.length === 0) {
-        itemsContainer.innerHTML = `<div class="p-m center">${translate("cart_bar.empty")}</div>`;
+        itemsContainer.innerHTML = `<div class="p-m center text-muted">${translate("cart_bar.empty")}</div>`;
         if (sendBtn) sendBtn.classList.add("hidden");
     } else {
         if (sendBtn) sendBtn.classList.remove("hidden");
         itemsContainer.innerHTML = items.map((item, index) => {
             const menuItem = MENU?.[item.category]?.items?.[item.item];
             const option = menuItem?.options?.[item.option];
-            const price = option?.price || 0;
             return `
                 <div class="drawer__item drawer-item">
                     <div class="drawer__info">
                         <strong>${translate(menuItem?.label || item.item)}</strong>
                         <span class="drawer__variant">${option?.label ? translate(option.label) : ""}</span>
-                        <span class="text-s text-muted">${price.toLocaleString()}đ</span>
+                        <span class="text-s text-muted">${(option?.price || 0).toLocaleString()}đ</span>
                     </div>
                     <div class="drawer-qty row items-center gap-s">
                         <button class="qty-btn min" data-index="${index}">-</button>
@@ -70,51 +67,43 @@ export function renderDrawer() {
         }).join('');
     }
 
-    // 3. Cập nhật nút bấm: Nếu quay về như cũ, nút sẽ tự động chuyển về màu Xanh (Gửi)
+    // 5. Cập nhật nút bấm dựa trên kết quả so sánh (hasChanged)
     if (sendBtn) {
-        sendBtn.textContent = isModified ? translate("cart_bar.confirm_changes") : translate("cart_bar.send_order");
-        sendBtn.className = `drawer-send ${isModified ? 'state-confirm' : 'state-send'}`;
+        // Nếu có thay đổi so với ban đầu -> Hiện "XÁC NHẬN" (Vàng)
+        // Nếu quay về như cũ -> Hiện "GỬI" (Xanh)
+        sendBtn.textContent = hasChanged ? translate("cart_bar.confirm_changes") : translate("cart_bar.send_order");
+        sendBtn.className = `drawer-send ${hasChanged ? 'state-confirm' : 'state-send'}`;
+        
+        // Lưu trạng thái vào dataset để hàm click biết cần làm gì
+        sendBtn.dataset.modified = hasChanged;
     }
 }
 
-// Hàm attachDrawerEvents giữ nguyên như bản trước (nhớ xóa biến isModified bên trong nó)
-
 export function attachDrawerEvents() {
-    const itemsContainer = document.getElementById("drawerItems");
+    const drawer = document.getElementById("cartDrawer");
     const sendBtn = document.getElementById("drawerSend");
-    const closeBtn = document.getElementById("drawerClose");
 
-    // Click +/- (Event Delegation)
-    itemsContainer.addEventListener("click", (e) => {
+    // Click +/-
+    document.getElementById("drawerItems").addEventListener("click", (e) => {
         const btn = e.target.closest(".qty-btn");
         if (!btn) return;
-
-        const index = parseInt(btn.dataset.index);
-        const delta = btn.classList.contains("plus") ? 1 : -1;
-
-        isModified = true; // Chuyển sang nút Vàng "Xác nhận"
-        updateCartQuantity(index, delta);
+        updateCartQuantity(parseInt(btn.dataset.index), btn.classList.contains("plus") ? 1 : -1);
     });
 
-    // Click Gửi/Xác nhận
+    // Click Gửi / Xác nhận
     sendBtn.addEventListener("click", () => {
-      const currentItems = UI.cart.items;
-      const currentCartState = JSON.stringify(currentItems);
-      isModified = currentCartState !== initialCartSnapshot;
+        const isModified = sendBtn.dataset.modified === "true";
 
-      if (isModified) {
-          // Cập nhật lại "ảnh chụp gốc" bằng dữ liệu mới đã xác nhận
-          initialCartSnapshot = currentCartState;
-          renderDrawer(); // Vẽ lại để nút trở về Xanh
-      } else {
-          sendCart();
-          closeOverlay();
-      }
+        if (isModified) {
+            // Khi bấm xác nhận: Chụp ảnh mới để coi đây là trạng thái "gốc"
+            initialCartSnapshot = JSON.stringify(UI.cart.items);
+            renderDrawer(); // Nút sẽ tự động về màu Xanh
+            if (navigator.vibrate) navigator.vibrate(30);
+        } else {
+            sendCart();
+            closeOverlay();
+        }
     });
 
-    // Click đóng
-    closeBtn.addEventListener("click", () => {
-        isModified = false;
-        closeOverlay();
-    });
+    document.getElementById("drawerClose").onclick = closeOverlay;
 }
