@@ -15,11 +15,8 @@ export function renderCartBar() {
   const btn = document.getElementById("cartOpen");
 
   if (!bar || !btn) return;
-
-  const total = getCartTotals();
-
   // hide nếu không có item
-  if (total === 0) {
+  if (getCartTotals().isEmpty) {
     bar.classList.add("hidden");
     return;
   }
