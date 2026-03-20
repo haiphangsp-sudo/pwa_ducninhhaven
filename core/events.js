@@ -24,15 +24,9 @@ export function dispatchAction(payload) {
   }
 }
 
-export function ensureActive(payload) {
+export function ensureActive() {
   const ctx = getContext();
-  if (!ctx?.active) {
-    enqueue({
-    payload
-    });
-    return false;
-  }
-  return true;
+  return !!ctx?.active;
 }
 
 export function addToCart(item) {

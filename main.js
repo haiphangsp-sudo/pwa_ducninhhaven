@@ -46,7 +46,7 @@ function applyURLContext() {
 /* ---------- SW ---------- */
 // - Đăng ký Service Worker để hỗ trợ offline và background sync
 function registerSW(){
-  if(!"serviceWorker" in navigator) return;
+  if (!("serviceWorker" in navigator)) return;
     navigator.serviceWorker.register("/sw.js?v="+CONFIG.VERSION).then(reg=>{
       reg.addEventListener("updatefound", ()=>{
         const newSW = reg.installing;
@@ -87,7 +87,7 @@ async function watchMenu() {
     const el = document.createElement("div");
     el.className = "menu-update-banner";
     el.textContent = "Thực đơn vừa được cập nhật";
-    document.getSelection(".app-version").appendChild(el);
+    document.querySelector(".app-version").appendChild(el);
     setTimeout(() => el.remove(), 2500);
   }
 }
