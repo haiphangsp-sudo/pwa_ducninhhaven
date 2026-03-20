@@ -6,7 +6,7 @@ import { closeOverlay, showOverlay } from "../interactions/backdropManager.js";
 import { MENU } from "../../core/menuStore.js";
 import { getCartTotals, textItemItems } from "../utils/cartCalculators.js";
 import { updateCartBarTotal } from "./renderCart.js";
-//import { openPicker } from "../components/placePicker";
+import { openPicker } from "../components/placePicker";
 
 // Chúng ta chỉ cần lưu "Ảnh chụp lúc mở" để so sánh
 let initialCartSnapshot = ""; 
@@ -106,11 +106,11 @@ export function attachDrawerEvents() {
 
       } else {
         if (!ensureActive()) {
-          //openPicker();
+          openPicker();
           return; 
-          }
-          sendCart();
-          closeOverlay();
+        }
+        sendCart();
+        closeOverlay();
       }
     });
 
