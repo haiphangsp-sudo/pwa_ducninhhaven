@@ -64,7 +64,8 @@ export function attachCartBarEvents() {
 function handleCartBarClick(e) {
   const btn = e.target.closest("#cartOpen");
   if (!btn) return;
-
+  
+  showOverlay("cartDrawer");
   openCartDrawer();
 }
 
