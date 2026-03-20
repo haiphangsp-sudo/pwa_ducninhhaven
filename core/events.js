@@ -120,8 +120,7 @@ export function loadCart() {
 // Hàm cập nhật số lượng món trong giỏ (Chạy ngay khi bấm + / -)
 export function updateCartQuantity(index, delta) {
     // 1. TẠO BẢN SAO SÂU (Deep Clone) - Đây là bước quan trọng nhất
-    // Sử dụng structuredClone để đảm bảo mảng mới hoàn toàn khác mảng cũ về ô nhớ
-    const newItems = structuredClone(UI.cart.items);
+  const newItems = JSON.parse(JSON.stringify(UI.cart.items));
     const item = newItems[index];
 
     if (!item) return;
