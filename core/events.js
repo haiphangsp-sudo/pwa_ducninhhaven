@@ -56,15 +56,6 @@ export function addToCart(item) {
   setState({cart:{items:Items}});
 }
 
-export function updateCart() {
-
-  setState({
-    cart: {
-      ...UI.cart,
-      changed: false
-    }
-  });
-}
 /* ---------- SEND ---------- */
 
 function sendInstant(action){
@@ -118,7 +109,7 @@ export function loadCart() {
 }
 
 // Hàm cập nhật số lượng món trong giỏ (Chạy ngay khi bấm + / -)
-export function updateCartQuantity(index, delta) {
+export function updateCart(index, delta) {
     // 1. TẠO BẢN SAO SÂU (Deep Clone) - Đây là bước quan trọng nhất
   const newItems = JSON.parse(JSON.stringify(UI.cart.items));
     const item = newItems[index];
@@ -137,4 +128,23 @@ export function updateCartQuantity(index, delta) {
     
     // Lưu lại vào bộ nhớ
     localStorage.setItem("haven_cart", JSON.stringify(newItems));
+}
+export function updateCartQuantity(id, delta) {
+  const newItems = JSON.parse(JSON.stringify(UI.cart.items));
+
+  const index = newItems.findIndex(i =>
+    `${i.category}-${i.item}-${i.option}` === id
+  );
+
+  if (index === -1) return;
+
+  const item = newItems[index];
+  item.qty += delta;
+
+  if (item.qty <= 0) {
+    newItems.splice(index, 1);
+  }
+
+  setState({ cart: { items: newItems } });
+  localStorage.setItem("haven_cart", JSON.stringify(newItems));
 }
