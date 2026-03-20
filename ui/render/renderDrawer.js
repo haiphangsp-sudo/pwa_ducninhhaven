@@ -1,11 +1,12 @@
 // ui/render/renderDrawer.js
 import { UI } from "../../core/state.js";
 import { translate } from "../utils/translate.js";
-import { updateCartQuantity, sendCart } from "../../core/events.js";
+import { updateCartQuantity, sendCart, ensureActive } from "../../core/events.js";
 import { closeOverlay, showOverlay } from "../interactions/backdropManager.js"; 
 import { MENU } from "../../core/menuStore.js";
 import { getCartTotals, textItemItems } from "../utils/cartCalculators.js";
 import { updateCartBarTotal } from "./renderCart.js";
+import { openPicker } from "./renderPlacePicker.js";
 
 // Chúng ta chỉ cần lưu "Ảnh chụp lúc mở" để so sánh
 let initialCartSnapshot = ""; 
@@ -104,6 +105,10 @@ export function attachDrawerEvents() {
         renderDrawer();
 
       } else {
+        if (!ensureActive()) {
+          openPicker();
+          return; 
+          }
           sendCart();
           closeOverlay();
       }
