@@ -330,7 +330,7 @@
     }
   },
    "help":{
-    "label":{"vi": "Hỗ trợ","en": "Suport"},
+    "label":{"vi": "Hỗ trợ","en": "Support"},
     "allow":["room","area","table"],
     "ui":"instant",
     "active":true,
