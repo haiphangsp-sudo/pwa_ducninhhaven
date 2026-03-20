@@ -40,7 +40,7 @@ export const getCartStats = (items = []) => {
         isEmpty: items.length === 0
     };
 };
-export function textCart() {
+export function textItemItems() {
     const qty = getCartTotals().totalQuantity;
     return qty > 1
         ? qty + " " + translate("cart_bar.items")

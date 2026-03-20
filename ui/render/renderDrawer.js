@@ -4,7 +4,7 @@ import { translate } from "../utils/translate.js";
 import { updateCartQuantity, sendCart } from "../../core/events.js";
 import { closeOverlay, showOverlay } from "../interactions/backdropManager.js"; 
 import { MENU } from "../../core/menuStore.js";
-import { getCartTotals, textCart } from "../utils/cartCalculators.js";
+import { getCartTotals, textItemItems } from "../utils/cartCalculators.js";
 
 // Chúng ta chỉ cần lưu "Ảnh chụp lúc mở" để so sánh
 let initialCartSnapshot = ""; 
@@ -27,7 +27,7 @@ export function renderDrawer() {
   const sendBtn = document.getElementById("drawerSend");
   drawer.querySelector(".drawer__header-title").textContent = translate("cart_bar.cart_title");
   drawer.querySelector(".drawer__header-price").textContent = totalPrice > 0 ? totalPrice.toLocaleString("vi-VN") + "đ" : "";
-  drawer.querySelector(".drawer__header-count").textContent = totalQuantity + " " + textCart();
+  drawer.querySelector(".drawer__header-count").textContent = textItemItems();
   drawer.querySelector(".drawer__header-unique").textContent = totalUnique + " " + translate("cart_bar.unique");
     // 2. TÍNH TOÁN THÔNG MINH (Derived State)
     // So sánh giỏ hàng hiện tại với ảnh chụp lúc mở

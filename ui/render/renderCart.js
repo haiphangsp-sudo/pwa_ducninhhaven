@@ -1,7 +1,7 @@
 // ui/renderCart.js
 // Thanh giỏ dưới cùng (state-driven)
 
-import { getCartTotals, textCart } from "../utils/cartCalculators.js";
+import { getCartTotals, textItemItems } from "../utils/cartCalculators.js";
 import { translate } from "../utils/translate.js";
 import { openCartDrawer } from "./renderDrawer.js";
 
@@ -38,7 +38,7 @@ export function renderCartBar() {
 export function updateCartBarTotal() {
   const countEl = document.getElementById("cartCount");
   if (!countEl) return;
-  countEl.textContent = textCart();
+  countEl.textContent = textItemItems();
 }
 
 /* =========================
