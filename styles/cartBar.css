@@ -26,12 +26,6 @@
   margin-bottom:16px;
 }
 
-.drawer__items{
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-}
-
 .drawer__item{
   display:grid;
   justify-content:space-between;
@@ -268,6 +262,57 @@
 
 .drawer-send {
     transition: background-color 0.3s ease, transform 0.1s active;
+}
+/* Header Container */
+.drawer-header {
+    padding: 20px 20px 10px 20px;
+    border-bottom: 1px solid var(--border-soft);
+    background: var(--bg-soft);
+}
+
+/* Tiêu đề */
+.drawer-title {
+    color: var(--text-main);
+    margin: 0;
+    letter-spacing: -0.5px;
+}
+
+/* Nút đóng */
+.btn-close {
+    background: var(--bg-main);
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--text-soft);
+    transition: all 0.2s;
+}
+
+.btn-close:active {
+    transform: scale(0.9);
+    background: var(--border-soft);
+}
+
+/* Khu vực tổng kết */
+.drawer-summary {
+    border: 1px solid var(--border-light);
+}
+
+.color-brand {
+    color: var(--brand);
+}
+
+.dot-divider {
+    opacity: 0.5;
+}
+
+.summary-icon {
+    font-size: 24px;
+    opacity: 0.2;
 }
 /* =========================
    CART BAR

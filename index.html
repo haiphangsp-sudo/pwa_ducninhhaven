@@ -63,12 +63,22 @@
         <div id="optionSheet" class="overlay-panel option-sheet hidden"></div>
         <div id="cartDrawer" class="overlay__panel overlay__panel--bottom overlay-drawer hidden">
             <div class="drawer-panel">
-                <div class="row drawer__header">
-                    <span class="drawer__header-title"></span>
-                    <span class="drawer__header-unique"></span>
-                    <span class="drawer__header-count"></span>
-                    <span class="drawer__header-price"></span>
-                    <button id="drawerClose" class="drawer__close">✕</button>
+                <div class="drawer__header stack gap-m drawer-header">
+                    <div class="row items-center justify-between">
+                        <span class="drawer__header-title"></span>
+                        <button id="drawerClose" class="drawer__close">✕</button>
+                    </div>
+                    <div class="drawer-summary bg-muted p-m radius-m row items-center justify-between">
+                        <div class="stack gap-xs">
+                            <span class="drawer__header-price"></span>
+                            <div class="row items-center gap-s text-s text-muted">
+                                <span class="drawer__header-unique stat-lines"></span>
+                                <span class="dot-divider">•</span>
+                                <span class="drawer__header-count"></span>
+                            </div>
+                        </div>
+                        <div class="summary-icon">🛒</div>
+                    </div>
                 </div>
                 <div id="drawerItems" class="stack drawer__items"></div>
                 <div class="drawer-footer">
