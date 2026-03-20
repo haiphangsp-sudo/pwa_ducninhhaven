@@ -6,7 +6,7 @@ import { showOverlay, closeOverlay } from "../interactions/backdropManager.js";
 import { MENU } from "../../core/menuStore.js";
 
 let isModified = false;
-
+let eventsAttached = false;
 /**
  * Hàm mở giỏ hàng từ nút "Xem giỏ"
  */
@@ -47,7 +47,7 @@ function renderDrawer() {
         const optionLabel = translate(menuOption?.label || "");
 
         return `
-            <div class="drawer__item drawer-item">
+            <div class="drawer__item drawer-item" data-line-id="${lineId}">
                 <div class="drawer__info">
                     <strong>${itemLabel}</strong>
                     <span class="drawer__variant">${optionLabel}</span>
@@ -57,7 +57,7 @@ function renderDrawer() {
                         : translate("cart_bar.instant")
                     }</span>
                 </div>
-                <div class="row drawer-qty items-center gap-s">
+                <div class="drawer-qty items-center gap-s">
                     <button class="qty-btn min" data-action="minus" data-index="${index}">-</button>
                     <span class="qty qty-val">${item.qty}</span>
                     <button class="qty-btn plus" data-action="plus" data-index="${index}">+</button>
@@ -80,7 +80,10 @@ function renderDrawer() {
   if (item?.lineId) return item.lineId;
     return `${item.category}-${item.item}-${item.option}-${fallbackIndex}`;
   }
-  attachDrawerEvents(drawer);
+  if (!eventsAttached) {
+        attachDrawerEvents(drawer);
+        eventsAttached = true;
+    }
 }
 
 export function attachDrawerEvents(drawer) {
