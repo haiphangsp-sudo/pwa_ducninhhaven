@@ -27,15 +27,15 @@ export function renderCartBar() {
 
   btn.textContent = translate("cart_bar.cart_title");
 
-  updateCartBarTotal(total);
+  updateCartBarTotal();
 }
 
 /* =========================
    UPDATE
 ========================= */
 
-export function updateCartBarTotal(total) {
-  if (!total) total = getCartTotal();
+export function updateCartBarTotal() {
+  const total = getCartTotal();
   const countEl = document.getElementById("cartCount");
   const drawerTotal = document.querySelector(".drawer-total");
 
@@ -52,13 +52,10 @@ export function updateCartBarTotal(total) {
    EVENTS
 ========================= */
 
-let attached = false;
-
 export function attachCartBarEvents() {
-  if (attached) return;
-  attached = true;
-
-  document.addEventListener("click", openCartDrawer);
+  const btn = document.getElementById("cartOpen");
+  if (!btn) return;
+  btn.onclick = openCartDrawer;
 }
 
 /* =========================
