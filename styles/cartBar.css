@@ -167,7 +167,7 @@
   flex-shrink:0;
 }
 
-.drawer-qty .qty{
+.drawer-qty .qty-val{
   display:flex;
   align-items:center;
   justify-content:center;

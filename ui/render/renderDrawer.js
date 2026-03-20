@@ -43,16 +43,16 @@ export function renderDrawer() {
             const price = option?.price || 0;
             
             return `
-                <div class="drawer__item drawer-item row items-center justify-between">
+                <div class="drawer__item drawer-item">
                     <div class="drawer__info stack">
                         <strong class="weight-600">${translate(menuItem?.label || item.item)}</strong>
                         <span class="text-s text-muted">${option?.label ? translate(option.label) : ""}</span>
                         <span class="text-s">${price.toLocaleString()}đ</span>
                     </div>
-                    <div class="drawer-qty row items-center gap-s">
-                        <button class="qty-btn min" data-index="${index}">-</button>
-                        <span class="qty-val weight-600">${item.qty}</span>
-                        <button class="qty-btn plus" data-index="${index}">+</button>
+                    <div class="drawer-qty items-center">
+                        <button type="button" class="qty-btn min" data-index="${index}">-</button>
+                        <span class="qty-val">${item.qty}</span>
+                        <button type="button" class="qty-btn plus" data-index="${index}">+</button>
                     </div>
                 </div>
             `;

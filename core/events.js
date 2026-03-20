@@ -5,8 +5,6 @@ import { enqueue } from "./queue.js";
 import { getContext } from "./context.js";
 import { openPicker } from "../ui/components/placePicker.js";
 
-
-
 const CART_KEY = "haven_cart";
 
 /* ---------- CART ---------- */
