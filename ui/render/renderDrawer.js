@@ -1,7 +1,7 @@
 // ui/render/renderDrawer.js
 import { UI } from "../../core/state.js";
 import { translate } from "../utils/translate.js";
-import { updateCartQuantity, sendCart, ensureActive } from "../../core/events.js";
+import { updateCartQuantity, sendCart, ensureActive, clearCart } from "../../core/events.js";
 import { closeOverlay, showOverlay } from "../interactions/backdropManager.js"; 
 import { MENU } from "../../core/menuStore.js";
 import { getCartTotals, textItemItems } from "../utils/cartCalculators.js";
@@ -97,6 +97,12 @@ export function attachDrawerEvents() {
       const isModified = sendBtn.dataset.modified === "true";
 
       if (isModified) {
+        if (getCartTotals().isEmpty) {
+          closeOverlay();
+          clearCart();
+          return;
+          
+        }
           // Khi bấm xác nhận: Chụp ảnh mới để coi đây là trạng thái "gốc"
           initialCartSnapshot = JSON.stringify(UI.cart.items);
           renderDrawer(); // Nút sẽ tự động về màu Xanh
