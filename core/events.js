@@ -24,7 +24,7 @@ export function dispatchAction(payload) {
   }
 }
 
-function ensureActive(payload) {
+export function ensureActive(payload) {
   const ctx = getContext();
   if (!ctx?.active) {
     enqueue({
@@ -76,9 +76,6 @@ function sendInstant(action){
 }
 
 export function sendCart() {
-
-  if(!ensureActive()) return;
-  
   const ctx = getContext();
   if (UI.ack.state !== "hidden") return;
   
@@ -108,37 +105,11 @@ export function loadCart() {
   }
 }
 
-// Hàm cập nhật số lượng món trong giỏ (Chạy ngay khi bấm + / -)
-export function updateCart(index, delta) {
-    // 1. TẠO BẢN SAO SÂU (Deep Clone) - Đây là bước quan trọng nhất
-  const newItems = JSON.parse(JSON.stringify(UI.cart.items));
-    const item = newItems[index];
-
-    if (!item) return;
-
-    item.qty += delta;
-
-    // Xóa món nếu số lượng về 0
-    if (item.qty <= 0) {
-        newItems.splice(index, 1);
-    }
-
-    // 2. Gửi bản sao mới vào setState
-    setState({ cart: { items: newItems } });
-    
-    // Lưu lại vào bộ nhớ
-    localStorage.setItem("haven_cart", JSON.stringify(newItems));
-}
-export function updateCartQuantity(id, delta) {
-  const newItems = JSON.parse(JSON.stringify(UI.cart.items));
-
-  const index = newItems.findIndex(i =>
-    `${i.category}-${i.item}-${i.option}` === id
-  );
-
-  if (index === -1) return;
-
+export function updateCartQuantity(index, delta) {
+  const newItems = JSON.parse(JSON.stringify(UI.cart.items || []));
   const item = newItems[index];
+  if (!item) return;
+
   item.qty += delta;
 
   if (item.qty <= 0) {
@@ -146,5 +117,5 @@ export function updateCartQuantity(id, delta) {
   }
 
   setState({ cart: { items: newItems } });
-  localStorage.setItem("haven_cart", JSON.stringify(newItems));
+  localStorage.setItem(CART_KEY, JSON.stringify(newItems));
 }
