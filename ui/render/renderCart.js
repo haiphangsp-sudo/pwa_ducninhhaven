@@ -3,7 +3,7 @@
 
 import { UI } from "../../core/state.js";
 import { translate } from "../utils/translate.js";
-import { openCartDrawer } from "./renderDrawer.js";
+import { renderDrawer } from "./renderDrawer.js";
 import { showOverlay } from "../interactions/backdropManager.js";
 
 /* =========================
@@ -65,9 +65,8 @@ export function attachCartBarEvents() {
 function handleCartBarClick(e) {
   const btn = e.target.closest("#cartOpen");
   if (!btn) return;
-  
+  renderDrawer();
   showOverlay("cartDrawer");
-  openCartDrawer();
 }
 
 /* =========================
