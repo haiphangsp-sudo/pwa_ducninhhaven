@@ -123,20 +123,24 @@ export function loadCart() {
 
 // Hàm cập nhật số lượng món trong giỏ (Chạy ngay khi bấm + / -)
 export function updateCartQuantity(index, delta) {
-  // 1. TẠO BẢN SAO SÂU (Clone) để không làm thay đổi UI trực tiếp
-  //     "đánh lừa" setState rằng dữ liệu đã thực sự khác
-  const newItems = JSON.parse(JSON.stringify(UI.cart.items));
-  const item = newItems[index];
-  if (!item) return;
-  item.qty += delta;
-  // Xóa món nếu số lượng về 0
-  if (item.qty <= 0) {
-    newItems.splice(index, 1);
-  }
-/* 2. Gửi bản sao đã chỉnh sửa vào setState
-** Lúc này prev !== next sẽ đúng,
-** 2. Cập nhật vào State - Lúc này renderApp sẽ nhận diện được thay đổi và chạy ngay
-*/
-  setState({ cart: { items: newItems } });
-  localStorage.setItem("haven_cart", JSON.stringify(newItems));
+    // 1. TẠO BẢN SAO SÂU (Deep Clone) - Đây là bước quan trọng nhất
+    // Sử dụng structuredClone để đảm bảo mảng mới hoàn toàn khác mảng cũ về ô nhớ
+    const newItems = structuredClone(UI.cart.items);
+    const item = newItems[index];
+
+    if (!item) return;
+
+    item.qty += delta;
+
+    // Xóa món nếu số lượng về 0
+    if (item.qty <= 0) {
+        newItems.splice(index, 1);
+    }
+
+    // 2. Gửi bản sao mới vào setState
+    // Bây giờ prev !== next sẽ trả về TRUE, kích hoạt renderApp ngay lập tức
+    setState({ cart: { items: newItems } });
+    
+    // Lưu lại vào bộ nhớ
+    localStorage.setItem("haven_cart", JSON.stringify(newItems));
 }
