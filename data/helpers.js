@@ -3,7 +3,6 @@
 
 import { MENU } from "../core/menuStore.js";
 import { getContext } from "../core/context.js";
-import { MENU } from "../core/menuStore.js";
 
 function getMode() {
     const ctx = getContext();
