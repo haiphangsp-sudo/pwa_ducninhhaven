@@ -6,7 +6,6 @@ import { closeOverlay } from "../interactions/backdropManager.js";
 import { MENU } from "../../core/menuStore.js";
 
 let isModified = false;
-let eventsAttached = false;
 
 export function renderDrawer() {
     const drawer = document.getElementById("cartDrawer");
@@ -64,12 +63,6 @@ export function renderDrawer() {
     if (sendBtn) {
         sendBtn.textContent = isModified ? translate("cart_bar.confirm_changes") : translate("cart_bar.send_order");
         sendBtn.className = `drawer-send ${isModified ? 'state-confirm' : 'state-send'}`;
-    }
-
-    // 5. Chỉ gán sự kiện một lần duy nhất
-    if (!eventsAttached) {
-        attachDrawerEvents();
-        eventsAttached = true;
     }
 }
 
