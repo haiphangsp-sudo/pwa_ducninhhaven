@@ -17,14 +17,6 @@
   gap:8px;
 }
 
-.drawer__header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  font-size:18px;
-  font-weight:600;
-  margin-bottom:16px;
-}
 
 .drawer__item{
   display:grid;
@@ -71,23 +63,8 @@
   animation:drawerUp .25s ease;
 }
 
-.drawer__header{
-  display:grid;
-  grid-template-columns:1fr auto auto;
-  align-items:center;
-  gap:var(--space-3);
-  margin-bottom:var(--space-3);
-}
 
-.drawer__header h3,
-.drawer__header-title{
-  font-size:var(--font-l);
-  font-weight:700;
-  line-height:1.15;
-  color:var(--text-main);
-}
-
-.drawer__header-count{
+.drawer__header-price{
   font-size:var(--font-l);
   font-weight:700;
   line-height:1.15;
@@ -243,11 +220,6 @@
   font-size:var(--font-s);
 }
 
-.drawer__close{
-  color:#2f6fed;
-  font-size:30px;
-  font-weight:500;
-}
 /* Màu cho trạng thái XÁC NHẬN (Vàng/Cam) */
 .drawer-send.state-confirm {
     background-color: var(--warning);
@@ -295,6 +267,11 @@
 .btn-close:active {
     transform: scale(0.9);
     background: var(--border-soft);
+}
+.drawer-total{
+  font: var(--font-xl);
+  font-weight: 700;
+  color: var(--brand);
 }
 
 /* Khu vực tổng kết */
