@@ -4,7 +4,6 @@
 
 export function normalizeMenu(menu) {
   for (const [catKey, cat] of Object.entries(menu)){
-    const cat = menu[catKey];
     if(cat.active===undefined)
       cat.active=true;
     if(cat.ui===undefined)

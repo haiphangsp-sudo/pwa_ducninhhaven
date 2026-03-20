@@ -6,21 +6,18 @@ import { validateMenu, normalizeMenu } from "./menuSchema.js";
 
 export let MENU = {};
 
-export async function loadMenu(){
-
-  /* 1. tải menu chuẩn */
+export async function loadMenu() {
   const base = await fetch("/data/menu.json", { cache: "no-store" }).then(r => r.json());
-  
+
   normalizeMenu(base);
   validateMenu(base);
-  /* 3. tải state vận hành */
-  let state={};
-  try{
-    state = await fetch("/api/menu/state").then(r=>r.json());
-  }catch{}
 
-  /* 4. merge */
-  MENU = deepMerge(base,state);
+  let state = {};
+  try {
+    state = await fetch("/api/menu/state", { cache: "no-store" }).then(r => r.json());
+  } catch {}
+
+  MENU = deepMerge(base, state);
 }
 
 function deepMerge(base,patch){
