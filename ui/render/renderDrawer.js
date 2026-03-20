@@ -5,6 +5,8 @@ import { updateCartQuantity, sendCart } from "../../core/events.js";
 import { closeOverlay, showOverlay } from "../interactions/backdropManager.js"; 
 import { MENU } from "../../core/menuStore.js";
 
+let isModified = false;
+
 // Biến lưu trạng thái gốc lúc vừa mở Giỏ hàng
 let initialCartSnapshot = ""; 
 
@@ -98,7 +100,7 @@ export function attachDrawerEvents() {
     sendBtn.addEventListener("click", () => {
       const currentItems = UI.cart.items;
       const currentCartState = JSON.stringify(currentItems);
-      const isModified = currentCartState !== initialCartSnapshot;
+      isModified = currentCartState !== initialCartSnapshot;
 
       if (isModified) {
           // Cập nhật lại "ảnh chụp gốc" bằng dữ liệu mới đã xác nhận
