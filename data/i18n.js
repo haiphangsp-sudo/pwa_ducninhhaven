@@ -30,7 +30,12 @@ export const STRINGS = {
     send_order: { vi: "GỬI YÊU CẦU NGAY", en: "SEND ORDER NOW" }
   },
 
-    select_place: { vi: "Chọn vị trí phục vụ", en: "Select service location" },
+  select_place: { vi: "Chọn vị trí phục vụ", en: "Select service location" },
+  place:{
+    my_room: { vi: "Phòng tôi", en: "My room" },
+    my_table: { vi: "Bàn tôi", en: "My table" },
+    my_area: { vi: "Khu vực tôi", en: "My area" }
+  },
     in_room: { vi: "Tại phòng", en: "In room" },
     room: { vi: "Phòng", en: "Room" },
     table: { vi: "Bàn", en: "Tables" },

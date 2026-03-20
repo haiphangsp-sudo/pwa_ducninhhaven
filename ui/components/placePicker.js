@@ -123,7 +123,7 @@ function clearGroup(type) {
 }
 
 function getGroupTitle(type, isAnchorRoom) {
-  if (type === "room" && isAnchorRoom) return translate("my_room");
+  if (type === "room" && isAnchorRoom) return translate("place.my_room");
   if (type === "area") return translate("area");
   if (type === "table") return translate("table");
   return type;
