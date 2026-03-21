@@ -24,7 +24,6 @@ export function attachAppEvents() {
     attachLanguageEvents();
     networkBackEvent();
     attachDrawerEvents();
-    attachBackdropEvents();
     attachOrchestrator();
 
     setDeliveryState("idle");
