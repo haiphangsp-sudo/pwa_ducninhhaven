@@ -8,8 +8,8 @@ const backdrop = document.getElementById("overlayBackdrop");
  * @param {string} id - ID của element trong index.html
  */
 export function showOverlay(id) {
-    // Nếu đang có một cái mở rồi thì không mở thêm cái mới (tránh chồng chéo)
-    if (currentOverlay) return;
+    // Nếu đang có một cái mở rồi thì
+    if (currentOverlay) closeOverlay();
 
     const el = document.getElementById(id);
     if (!el) {
