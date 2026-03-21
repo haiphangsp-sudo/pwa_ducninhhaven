@@ -10,9 +10,9 @@ import { attachPlacePickerEvents } from "../components/placePicker.js";
 import { attachHubEvents } from "../render/renderHub.js";
 import { attachLanguageEvents, attachNavBarEvents } from "../components/navBar.js";
 import { attachDrawerEvents } from "../render/renderDrawer.js";
-import { attachBackdropEvents } from "../../ui/interactions/backdropManager.js"
 import { syncContextToState } from "../../core/state.js";
 import { attachOrchestrator } from "../../core/events.js";
+import { closeOverlay } from "../interactions/backdropManager.js";
 
 export function attachAppEvents() {
 
@@ -34,5 +34,7 @@ export function attachAppEvents() {
         document.addEventListener(evt, resetIdleTimer, { passive: true });
     });
     window.addEventListener("contextchange", syncContextToState);
-
+    window.addEventListener("keydown", e => {
+            if (e.key === "Escape") closeOverlay();
+        });
     }

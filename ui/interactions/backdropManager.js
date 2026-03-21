@@ -57,9 +57,3 @@ export function closeOverlay() {
    // }, 300); // Bạn nên khớp con số này với transition trong CSS
     
 }
-
-export function attachBackdropEvents() {
-    document.addEventListener("keydown", e => {
-        if (e.key === "Escape") closeOverlay();
-    });
-}
