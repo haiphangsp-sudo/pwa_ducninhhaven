@@ -80,7 +80,7 @@ export function onOrderSuccess() {
 }
 
 export function sendCart() {
-  if(!ensureActive()) return;
+  const ctx = getContext();
   if (UI.ack.state !== "hidden") return;
 
   const items = UI.cart.items || [];
