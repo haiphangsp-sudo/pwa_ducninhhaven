@@ -23,10 +23,24 @@ function loadContext() {
   }
 }
 
-function saveContext() {
+function saveContext(meta = {}) {
+  const prev = structuredClone(context);
+
   context.updatedAt = Date.now();
   localStorage.setItem(STORAGE_KEY, JSON.stringify(context));
-  dispatchContextChange();
+
+  dispatchContextChange(prev, context, meta);
+}
+
+export function dispatchContextChange(prev, next, meta = {}) {
+  window.dispatchEvent(new CustomEvent("contextchange", {
+    detail: {
+      source: meta.source || "unknown",
+      reason: meta.reason || null,
+      prev,
+      next
+    }
+  }));
 }
 
 function createEmptyContext() {
@@ -73,28 +87,25 @@ export function canSelectPlace(anchorType, targetType) {
 /* ---------- ENTRY ---------- */
 // dùng cho QR / URL / deep link
 
-export function applyEntryPlace(resolved) {
+export function applyEntryPlace(resolved, meta = {}) {
   if (!resolved) return false;
 
   context.anchor = resolved;
   context.active = resolved;
-  saveContext();
+  saveContext({ source: meta.source || "entry", reason: meta.reason || null });
   return true;
 }
 
-export function applyEntryPlaceById(placeId) {
+export function applyEntryPlaceById(placeId, meta = {}) {
   if (!placeId) return false;
 
   const resolved = resolvePlace(placeId);
   if (!resolved) return false;
 
-  return applyEntryPlace(resolved);
+  return applyEntryPlace(resolved, meta);
 }
 
-/* ---------- PICKER ---------- */
-// dùng cho chọn place trong app
-
-export function applyResolvedPlace(resolved) {
+export function applyResolvedPlace(resolved, meta = {}) {
   if (!resolved) return false;
 
   const anchorType = context?.anchor?.type;
@@ -103,7 +114,7 @@ export function applyResolvedPlace(resolved) {
   if (!anchorType) {
     context.anchor = resolved;
     context.active = resolved;
-    saveContext();
+    saveContext({ source: meta.source || "picker", reason: meta.reason });
     return true;
   }
 
@@ -112,19 +123,18 @@ export function applyResolvedPlace(resolved) {
   }
 
   context.active = resolved;
-  saveContext();
+  saveContext({ source: meta.source || "picker", reason: meta.reason });
   return true;
 }
 
-export function applyPlaceById(placeId) {
+export function applyPlaceById(placeId, meta = {}) {
   if (!placeId) return false;
 
   const resolved = resolvePlace(placeId);
   if (!resolved) return false;
 
-  return applyResolvedPlace(resolved);
+  return applyResolvedPlace(resolved, meta);
 }
-
 /* ---------- RETURN ---------- */
 
 export function returnToAnchor() {
@@ -147,8 +157,3 @@ export function setActive(place) {
   saveContext();
 }
 
-/* ---------- EVENT ---------- */
-
-function dispatchContextChange() {
-  window.dispatchEvent(new Event("contextchange"));
-}

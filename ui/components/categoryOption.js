@@ -3,6 +3,10 @@
 import { translate } from "../utils/translate.js";
 import { dispatchAction } from "../../core/events.js";
 
+/* =========================
+   PUBLIC
+========================= */
+
 export function categoryOpt(opt, itemKey, categoryKey, type) {
     
     const title = translate(opt.label);

@@ -11,7 +11,8 @@ import { attachHubEvents } from "../render/renderHub.js";
 import { attachLanguageEvents, attachNavBarEvents } from "../components/navBar.js";
 import { attachDrawerEvents } from "../render/renderDrawer.js";
 import { attachBackdropEvents } from "../../ui/interactions/backdropManager.js"
-
+import { syncContextToState } from "../../core/state.js";
+import { attachOrchestrator } from "../../core/events.js";
 
 export function attachAppEvents() {
 
@@ -24,6 +25,7 @@ export function attachAppEvents() {
     networkBackEvent();
     attachDrawerEvents();
     attachBackdropEvents();
+    attachOrchestrator();
 
     setDeliveryState("idle");
     setRecoveryState("idle");
@@ -31,5 +33,6 @@ export function attachAppEvents() {
     ["touchstart", "pointerdown", "click"].forEach(evt => {
         document.addEventListener(evt, resetIdleTimer, { passive: true });
     });
+    window.addEventListener("contextchange", syncContextToState);
 
     }

@@ -1,4 +1,5 @@
-//.   ui/components/placePicker.js
+// ui/components/placePicker.js
+
 import { showOverlay, closeOverlay } from "../interactions/backdropManager.js";
 import { PLACES, getAllowedPlaceTypes } from "../../core/placesStore.js";
 import { getContext, applyPlaceById } from "../../core/context.js";
@@ -6,13 +7,18 @@ import { translate } from "../utils/translate.js";
 import { getPlaceIcon } from "../../data/helpers.js";
 
 let shellReady = false;
-let pickerEventsAttached = false;
+let pickerMeta = { source: "picker", reason: null };
 
 /* =========================
    PUBLIC
 ========================= */
 
-export function openPicker() {
+export function openPicker(meta = {}) {
+  pickerMeta = {
+    source: meta.source || "picker",
+    reason: meta.reason || null
+  };
+
   renderPlacePicker();
   showOverlay("placePicker");
 }
@@ -134,9 +140,6 @@ function getGroupTitle(type, isAnchorRoom) {
 ========================= */
 
 export function attachPlacePickerEvents() {
-  if (pickerEventsAttached) return;
-  pickerEventsAttached = true;
-
   document.addEventListener("click", handlePlacePickerClick);
 }
 
@@ -144,6 +147,8 @@ function handlePlacePickerClick(e) {
   const btn = e.target.closest(".picker-option");
   if (!btn) return;
 
-  applyPlaceById(btn.dataset.id);
+  applyPlaceById(btn.dataset.id, pickerMeta);
   closeOverlay();
+
+  pickerMeta = { source: "picker", reason: null };
 }
