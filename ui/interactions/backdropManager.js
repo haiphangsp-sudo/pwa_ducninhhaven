@@ -36,7 +36,7 @@ export function showOverlay(id) {
         newOverlay.style.opacity = "1";
     }, 10);
 
-    currentOverlay = newOverlay;
+    currentOverlay = id;
 }
 
 /**
