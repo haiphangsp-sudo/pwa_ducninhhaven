@@ -134,7 +134,7 @@ export function submitItems(items, orderType = "cart") {
     place: ctx.active.place,
     id: Date.now().toString(),
     mode: ctx.active.type,
-    item: items
+    items: items
   });
 
   return true;
