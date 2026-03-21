@@ -37,7 +37,6 @@ export function renderDrawer() {
 
   const currentSnapshot = JSON.stringify(items);
   const hasChanged = currentSnapshot !== initialCartSnapshot;
-
   if (isEmpty) {
     itemsContainer.innerHTML = `
       <div class="p-m center text-muted">
@@ -88,8 +87,8 @@ export function renderDrawer() {
   }
 }
 export function resetCartSnapshot() {
-  //initialCartSnapshot = [];
-  initialCartSnapshot = JSON.stringify(UI.cart.items || []);
+  initialCartSnapshot = "[]";
+  //initialCartSnapshot = JSON.stringify(UI.cart.items || []);
 }
 export function attachDrawerEvents() {
   const itemsRoot = document.getElementById("drawerItems");
