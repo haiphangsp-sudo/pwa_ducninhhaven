@@ -1,7 +1,6 @@
 // ui/interactions/backdropManager.js
 
 let currentOverlay = null;
-let newOverlay = null;
 const backdrop = document.getElementById("overlayBackdrop");
 
 /**
@@ -9,6 +8,7 @@ const backdrop = document.getElementById("overlayBackdrop");
  * @param {string} id - ID của element trong index.html
  */
 export function showOverlay(id) {
+    let newOverlay = null;
     // Nếu đang có một cái mở rồi thì
     if (currentOverlay) {
         closeOverlay(currentOverlay);
@@ -18,8 +18,6 @@ export function showOverlay(id) {
         console.warn(`Overlay với ID "${id}" không tồn tại.`);
         return;
     }
-
-    currentOverlay = newOverlay;
     
     // Hiển thị backdrop
     if (backdrop) {
@@ -37,6 +35,8 @@ export function showOverlay(id) {
     setTimeout(() => {
         newOverlay.style.opacity = "1";
     }, 10);
+
+    currentOverlay = newOverlay;
 }
 
 /**
