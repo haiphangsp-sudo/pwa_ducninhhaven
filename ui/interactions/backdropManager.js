@@ -16,6 +16,7 @@ export function showOverlay(id) {
     // 2. Hiển thị backdrop
     if (backdrop) {
         backdrop.classList.remove("hidden");
+        backdrop.onclick = () => closeOverlay();
     }
 
     // 3. Hiển thị Overlay mới
