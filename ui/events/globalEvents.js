@@ -10,6 +10,7 @@ import { attachPlacePickerEvents } from "../components/placePicker.js";
 import { attachHubEvents } from "../render/renderHub.js";
 import { attachLanguageEvents, attachNavBarEvents } from "../components/navBar.js";
 import { attachDrawerEvents } from "../render/renderDrawer.js";
+import { attachBackdropEvents } from "../../ui/interactions/backdropManager.js"
 
 
 export function attachAppEvents() {
@@ -21,7 +22,8 @@ export function attachAppEvents() {
     attachHubEvents();
     attachLanguageEvents();
     networkBackEvent();
-    attachDrawerEvents()
+    attachDrawerEvents();
+    attachBackdropEvents();
 
     setDeliveryState("idle");
     setRecoveryState("idle");

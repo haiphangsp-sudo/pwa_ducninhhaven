@@ -1,6 +1,7 @@
 // ui/interactions/backdropManager.js
 
 let currentOverlay = null;
+let newOverlay = null;
 const backdrop = document.getElementById("overlayBackdrop");
 
 /**
@@ -10,8 +11,7 @@ const backdrop = document.getElementById("overlayBackdrop");
 export function showOverlay(id) {
     // Nếu đang có một cái mở rồi thì
     if (currentOverlay) {
-        closeOverlay();
-        return;
+        closeOverlay(currentOverlay);
     }
     const el = document.getElementById(id);
     if (!el) {
@@ -19,7 +19,7 @@ export function showOverlay(id) {
         return;
     }
 
-    currentOverlay = el;
+    currentOverlay = id;
     
     // Hiển thị backdrop
     if (backdrop) {
@@ -60,7 +60,8 @@ export function closeOverlay() {
     }, 300); // Bạn nên khớp con số này với transition trong CSS
 }
 
-// Lắng nghe phím Escape để đóng nhanh (UX tốt cho khách dùng laptop)
-document.addEventListener("keydown", e => {
-    if (e.key === "Escape") closeOverlay();
-});
+export function attachBackdropEvents() {
+    document.addEventListener("keydown", e => {
+        if (e.key === "Escape") closeOverlay();
+    });
+}
