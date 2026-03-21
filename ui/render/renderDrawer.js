@@ -126,7 +126,6 @@ export function attachDrawerEvents() {
         if (navigator.vibrate) navigator.vibrate(30);
         return;
       }
-      closeOverlay();
       dispatchAction({ type: "send_cart" });
       
     });

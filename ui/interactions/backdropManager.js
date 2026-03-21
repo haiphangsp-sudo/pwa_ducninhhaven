@@ -3,35 +3,25 @@
 let currentOverlay = null;
 const backdrop = document.getElementById("overlayBackdrop");
 
-/**
- * Hiển thị một Overlay cụ thể
- * @param {string} id - ID của element trong index.html
- */
 export function showOverlay(id) {
-    
-    // Nếu đang có một cái mở rồi thì
+    // 1. Nếu đang có cái khác mở, đóng nó trước
     if (currentOverlay) {
-        closeOverlay(currentOverlay);
-        currentOverlay = null;
-    }
-    const el = document.getElementById(id);
-    if (!el) {
-        console.warn(`Overlay với ID "${id}" không tồn tại.`);
-        return;
-    }
-    
-    // Hiển thị backdrop
-    if (backdrop) {
-        backdrop.classList.remove("hidden");
-        backdrop.onclick = closeOverlay;
+        // Không truyền tham số vì hàm closeOverlay() của bạn không nhận tham số
+        closeOverlay(); 
     }
 
-    // Hiển thị Overlay với hiệu ứng mượt
+    const el = document.getElementById(id);
+    if (!el) return;
+
+    // 2. Hiển thị backdrop
+    if (backdrop) {
+        backdrop.classList.remove("hidden");
+    }
+
+    // 3. Hiển thị Overlay mới
     el.classList.remove("hidden");
     el.style.opacity = "0";
-    
-    // Force reflow để trình duyệt nhận diện trạng thái opacity = 0 trước khi transition
-    el.offsetHeight; 
+    el.offsetHeight; // Force reflow
     
     setTimeout(() => {
         el.style.opacity = "1";
@@ -40,20 +30,17 @@ export function showOverlay(id) {
     currentOverlay = el;
 }
 
-/**
- * Đóng Overlay đang mở
- */
 export function closeOverlay() {
     if (!currentOverlay) return;
 
-    // Hiệu ứng mờ dần trước khi ẩn hoàn toàn
+    // 4. Ẩn overlay hiện tại
     currentOverlay.style.opacity = "0";
+    currentOverlay.classList.add("hidden");
     
-    // Đợi hiệu ứng CSS hoàn tất (thường là 300ms) rồi mới thêm class hidden
-    //setTimeout(() => {
-        currentOverlay.classList.add("hidden");
-        currentOverlay = null;
+    // 5. Ẩn backdrop nếu không còn overlay nào khác (Logic an toàn)
+    if (backdrop) {
         backdrop.classList.add("hidden");
-   // }, 300); // Bạn nên khớp con số này với transition trong CSS
-    
+    }
+
+    currentOverlay = null;
 }
