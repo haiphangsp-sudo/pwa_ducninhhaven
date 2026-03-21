@@ -12,6 +12,7 @@ export function showOverlay(id) {
     // Nếu đang có một cái mở rồi thì
     if (currentOverlay) {
         closeOverlay(currentOverlay);
+        currentOverlay = null;
     }
     const el = document.getElementById(id);
     if (!el) {
