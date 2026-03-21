@@ -8,13 +8,13 @@ const backdrop = document.getElementById("overlayBackdrop");
  * @param {string} id - ID của element trong index.html
  */
 export function showOverlay(id) {
-    let newOverlay = null;
+    
     // Nếu đang có một cái mở rồi thì
     if (currentOverlay) {
         closeOverlay(currentOverlay);
     }
-    newOverlay = document.getElementById(id);
-    if (!newOverlay) {
+    const el = document.getElementById(id);
+    if (!el) {
         console.warn(`Overlay với ID "${id}" không tồn tại.`);
         return;
     }
@@ -26,17 +26,17 @@ export function showOverlay(id) {
     }
 
     // Hiển thị Overlay với hiệu ứng mượt
-    newOverlay.classList.remove("hidden");
-    newOverlay.style.opacity = "0";
+    el.classList.remove("hidden");
+    el.style.opacity = "0";
     
     // Force reflow để trình duyệt nhận diện trạng thái opacity = 0 trước khi transition
-    newOverlay.offsetHeight; 
+    el.offsetHeight; 
     
     setTimeout(() => {
-        newOverlay.style.opacity = "1";
+        el.style.opacity = "1";
     }, 10);
 
-    currentOverlay = id;
+    currentOverlay = el;
 }
 
 /**
@@ -58,6 +58,7 @@ export function closeOverlay() {
             backdrop.classList.add("hidden");
         }
     }, 300); // Bạn nên khớp con số này với transition trong CSS
+    currentOverlay = null;
 }
 
 export function attachBackdropEvents() {
