@@ -124,19 +124,17 @@ function getIdentityLabel(anchor) {
   }
 
   if (anchor.type === "table") {
-    return translate("table_guest");
+    return translate("mode.table_guest");
   }
 
   if (anchor.type === "area") {
-    return translate("area_guest");
+    return translate("mode.area_guest");
   }
-
-  return translate("haven");
 }
 
 function getLocationLabel(ctx) {
   if (!ctx?.active) {
-    return translate("select_place");
+    return translate("place.select");
   }
 
   const { type, id } = ctx.active;
@@ -147,7 +145,7 @@ function getLocationLabel(ctx) {
     ctx.anchor?.type === "room" &&
     ctx.active.id === ctx.anchor.id
   ) {
-    return translate("in_room");
+    return translate("mode.in_room");
   }
 
   if (!place) return id;

@@ -79,7 +79,7 @@ function updatePickerTitle() {
   const titleEl = document.querySelector(".picker-panel_title");
   if (!titleEl) return;
 
-  titleEl.textContent = translate("select_place");
+  titleEl.textContent = translate("place.select");
 }
 
 /* =========================

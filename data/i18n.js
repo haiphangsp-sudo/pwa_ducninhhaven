@@ -30,19 +30,22 @@ export const STRINGS = {
     send_order: { vi: "GỬI YÊU CẦU NGAY", en: "SEND ORDER NOW" }
   },
 
-  select_place: { vi: "Chọn vị trí phục vụ", en: "Select service location" },
-  place:{
+  
+  place: {
+    select: { vi: "Bạn muốn phục vụ ở đâu?", en: "Where would you like to serve?" },
     my_room: { vi: "Phòng tôi", en: "My room" },
     my_table: { vi: "Bàn tôi", en: "My table" },
     my_area: { vi: "Khu vực tôi", en: "My area" }
   },
+  mode: {
     in_room: { vi: "Tại phòng", en: "In room" },
     room: { vi: "Phòng", en: "Room" },
     table: { vi: "Bàn", en: "Tables" },
     area: { vi: "Khu vực", en: "Areas" },
     guest: { vi: "Khách", en: "Guest" },
     table_guest: { vi: "Khách bàn", en: "Table guest" },
-    area_guest: { vi: "Khách khu vực", en: "Area guest" },
+    area_guest: { vi: "Khách khu vực", en: "Area guest" }
+  },
     haven: { vi: "Haven", en: "Haven" },
     sending: {
       vi: "Đang gửi yêu cầu…",
