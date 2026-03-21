@@ -50,15 +50,11 @@ export function closeOverlay() {
     
     // Đợi hiệu ứng CSS hoàn tất (thường là 300ms) rồi mới thêm class hidden
     setTimeout(() => {
-        if (currentOverlay) {
-            currentOverlay.classList.add("hidden");
-            currentOverlay = null;
-        }
-        if (backdrop) {
-            backdrop.classList.add("hidden");
-        }
+        currentOverlay.classList.add("hidden");
+        currentOverlay = null;
+        backdrop.classList.add("hidden");
     }, 300); // Bạn nên khớp con số này với transition trong CSS
-    currentOverlay = null;
+    
 }
 
 export function attachBackdropEvents() {
