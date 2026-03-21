@@ -125,8 +125,8 @@ export function dispatchAction(product) {
     const { type } = product;
     pendingIntent = product;
 
-    if ({ type } = "instant") addToCart();
-    if ({ type } = "cart") sendCart(product);
+    if (product.type  = "instant") addToCart();
+    if (product.type  = "cart") sendCart(product);
   } else {
     openPicker();
     return;
