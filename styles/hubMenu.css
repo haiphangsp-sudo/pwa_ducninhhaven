@@ -44,8 +44,6 @@
 .hub-btn{
   position:relative;
   flex:0 0 98px;
-  min-height:108px;
-
   display:flex;
   flex-direction:column;
   align-items:center;
