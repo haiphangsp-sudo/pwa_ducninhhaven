@@ -122,8 +122,6 @@ export function attachOrchestrator() {
 }
 export function dispatchAction(product) {
   if (ensureActive()) {
-    const { type } = product;
-    pendingIntent = product;
 
     if (product.type  = "instant") addToCart();
     if (product.type  = "cart") sendCart(product);
