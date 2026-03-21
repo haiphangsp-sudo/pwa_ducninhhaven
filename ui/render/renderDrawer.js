@@ -36,7 +36,10 @@ export function renderDrawer() {
     totalUnique + " " + translate("cart_bar.unique");
 
   const currentSnapshot = JSON.stringify(items);
-  const hasChanged = currentSnapshot !== initialCartSnapshot;
+  let hasChanged = false;
+  if (currentSnapshot !== initialCartSnapshot&&initialCartSnapshot!=="[]") {
+    hasChanged = true;
+  }
   if (isEmpty) {
     itemsContainer.innerHTML = `
       <div class="p-m center text-muted">
