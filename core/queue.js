@@ -117,7 +117,7 @@ export async function processQueue() {
       } else {
         saveQueue(queue);
         const delay = getRetryDelay(req.retries);
-        setDeliveryState("pending"); 
+        setDeliveryState("queued"); 
         
         await new Promise(res => setTimeout(res, delay));
         // Tiếp tục vòng lặp while

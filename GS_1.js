@@ -67,7 +67,7 @@ function parseData(p) {
     mode: p.mode,
     place: p.place,
     category: p.category,
-    item: p.items,
+    items: Array.isArray(p.items) ? p.items : [],
     option: p.option,
     qty: p.qty,
     device: p.device
@@ -77,9 +77,8 @@ function parseData(p) {
 /* ================= VALIDATION ================= */
 
 function validate(d){
-  if(!VALID_PLACES.includes(d.place)) return false;
-  if (!d.item && (!Array.isArray(d.items) || d.items.length === 0))
-    return false;
+  if (!VALID_PLACES.includes(d.place)) return false;
+  if (!Array.isArray(d.items) || d.items.length === 0) return false;
   return true;
 }
 
@@ -88,29 +87,25 @@ function validate(d){
 function saveCart(data) {
   const sheet = getSheet(SHEET_LIVE);
   const now = new Date();
-  const items=data.item||[];
-  if (data.type === "instant") {
-  const item = data.items[0];
-}
+  const items = data.items || [];
+  if (!items.length) return;
 
-if (data.type === "cart") {
-  const items = data.items;
-}
   const rows = items.map(it => [
-        data.id,
-        now,
-        data.mode,
-        data.place,
-        it.category,
-        it.item,
-        it.option,
-        it.qty,
-        getPriority(it.category),
-        "NEW",
-        data.type,
-        data.device
-      ]);
-      sheet.getRange(sheet.getLastRow() + 1,1,rows.length,rows[0].length).setValues(rows);
+    data.id,
+    now,
+    data.mode,
+    data.place,
+    it.category,
+    it.item,
+    it.option,
+    it.qty,
+    getPriority(it.category),
+    "NEW",
+    data.type,
+    data.device
+  ]);
+
+  sheet.getRange(sheet.getLastRow() + 1, 1, rows.length, rows[0].length).setValues(rows);
 }
 
 /* ================= DUPLICATE ================= */
