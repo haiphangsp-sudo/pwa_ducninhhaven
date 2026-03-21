@@ -88,8 +88,8 @@ export function renderDrawer() {
   }
 }
 export function resetCartSnapshot() {
-  initialCartSnapshot = [];
-    //initialCartSnapshot = JSON.stringify(UI.cart.items || []);
+  //initialCartSnapshot = [];
+  initialCartSnapshot = JSON.stringify(UI.cart.items || []);
 }
 export function attachDrawerEvents() {
   const itemsRoot = document.getElementById("drawerItems");
