@@ -3,13 +3,38 @@
 import { UI, setState } from "./state.js";
 import { enqueue } from "./queue.js";
 import { getContext } from "./context.js";
-import { resetCartSnapshot } from "../ui/render/renderDrawer.js";
 import { openPicker } from "../ui/components/placePicker.js";
+import { resetCartSnapshot } from "../ui/render/renderDrawer.js";
+
+const CART_KEY = "haven_cart";
 
 let pendingIntent = null;
 
+/* ---------- PUBLIC ---------- */
 
-const CART_KEY = "haven_cart";
+export function dispatchAction(payload) {
+  switch (payload.type) {
+    case "cart":
+      return addToCart(toLineItem(payload));
+
+    case "instant":
+      return requestSubmit([toLineItem(payload)], {
+        reason: "send_instant",
+        source: "menu",
+        orderType: "instant"
+      });
+
+    case "send_cart":
+      return requestSubmit(UI.cart.items || [], {
+        reason: "send_cart",
+        source: "drawer",
+        orderType: "cart"
+      });
+
+    default:
+      return;
+  }
+}
 
 export function ensureActive() {
   const ctx = getContext();
@@ -18,17 +43,26 @@ export function ensureActive() {
 
 /* ---------- CART ---------- */
 
-export function addToCart(item) {
+function toLineItem(payload) {
+  return {
+    category: payload.category,
+    item: payload.item,
+    option: payload.option,
+    qty: payload.qty || 1
+  };
+}
+
+export function addToCart(line) {
   const items = [...(UI.cart?.items || [])];
 
   const existing = items.find(i =>
-    i.category === item.category &&
-    i.item === item.item &&
-    i.option === item.option
+    i.category === line.category &&
+    i.item === line.item &&
+    i.option === line.option
   );
 
-  if (existing) existing.qty += 1;
-  else items.push({ ...item, qty: 1 });
+  if (existing) existing.qty += line.qty || 1;
+  else items.push({ ...line, qty: line.qty || 1 });
 
   localStorage.setItem(CART_KEY, JSON.stringify(items));
   setState({ cart: { items } });
@@ -37,7 +71,7 @@ export function addToCart(item) {
 export function clearCart() {
   setState({ cart: { items: [] } });
   localStorage.removeItem(CART_KEY);
-  resetCartSnapshot(); // Reset mốc so sánh về rỗng
+  resetCartSnapshot();
 }
 
 export function loadCart() {
@@ -64,40 +98,58 @@ export function updateCartQuantity(index, delta) {
   localStorage.setItem(CART_KEY, JSON.stringify(newItems));
 }
 
+/* ---------- SUBMIT ---------- */
 
-// 1. Hàm này sẽ được gọi nhận được status "success" từ GS
-export function onOrderSuccess() {
-  clearCart();             // Xóa giỏ trong State & LocalStorage
-  resetCartSnapshot();     // Reset mốc so sánh để nút Drawer về màu xanh
-  
-  // Hiển thị thông báo thành công cho khách (Ack)
-  setState({ ack: { state: "show", status: "success" } });
-  
-  // Tự động ẩn thông báo sau 2.5 giây
-  setTimeout(() => {
-    setState({ ack: { state: "hidden" } });
-  }, 2500);
-}
+export function requestSubmit(items, meta = {}) {
+  if (!items?.length) return false;
 
-export function sendCart() {
-  const ctx = getContext();
-  if (UI.ack.state !== "hidden") return;
+  if (ensureActive()) {
+    return submitItems(items, meta.orderType || "cart");
+  }
 
-  const items = UI.cart.items || [];
-  if (!items.length) return;
+  pendingIntent = {
+    type: meta.reason || "send_cart",
+    items,
+    orderType: meta.orderType || "cart"
+  };
 
-  // Đẩy vào hàng đợi với key đã chuẩn hóa là 'items'
-  enqueue({
-    type: "cart",
-    place: ctx.active.id,
-    mode: ctx.active.type,
-    items: items // Đã chuẩn hóa
+  openPicker({
+    source: meta.source || "unknown",
+    reason: meta.reason || "send_cart"
   });
 
-  // Hiện lớp phủ "Đang gửi..."
-  setState({ ack: { state: "show", status: "sending" } });
+  return false;
 }
 
+export function submitItems(items, orderType = "cart") {
+  const ctx = getContext();
+  if (!ctx?.active) return false;
+  if (!items?.length) return false;
+  if (UI.ack.state !== "hidden") return false;
+
+  setState({ ack: { state: "show", status: "sending" } });
+
+  enqueue({
+    type: orderType,
+    place: ctx.active.id,
+    mode: ctx.active.type,
+    items
+  });
+
+  return true;
+}
+
+export function onOrderSuccess(orderType = "cart") {
+  if (orderType === "cart") {
+    clearCart();
+  }
+
+  setState({ ack: { state: "show", status: "success" } });
+
+  setTimeout(() => {
+    setState({ ack: { state: "hidden", status: null } });
+  }, 2500);
+}
 
 /* ---------- ORCHESTRATION ---------- */
 
@@ -117,16 +169,12 @@ export function attachOrchestrator() {
       }));
       return;
     }
-    
-  });
-}
-export function dispatchAction(product) {
-  if (ensureActive()) {
 
-    if (product.type="cart" ) addToCart(product);
-    if (product.type= "instant" ) sendCart(product);
-  } else {
-    openPicker();
-    return;
-  }
+    if (pendingIntent.type === "send_instant" && reason === "send_instant") {
+      const items = pendingIntent.items;
+      const orderType = pendingIntent.orderType;
+      pendingIntent = null;
+      submitItems(items, orderType);
+    }
+  });
 }
