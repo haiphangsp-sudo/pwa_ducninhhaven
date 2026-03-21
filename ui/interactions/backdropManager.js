@@ -13,13 +13,13 @@ export function showOverlay(id) {
     if (currentOverlay) {
         closeOverlay(currentOverlay);
     }
-    const el = document.getElementById(id);
-    if (!el) {
+    newOverlay = document.getElementById(id);
+    if (!newOverlay) {
         console.warn(`Overlay với ID "${id}" không tồn tại.`);
         return;
     }
 
-    currentOverlay = id;
+    currentOverlay = newOverlay;
     
     // Hiển thị backdrop
     if (backdrop) {
@@ -28,14 +28,14 @@ export function showOverlay(id) {
     }
 
     // Hiển thị Overlay với hiệu ứng mượt
-    el.classList.remove("hidden");
-    el.style.opacity = "0";
+    newOverlay.classList.remove("hidden");
+    newOverlay.style.opacity = "0";
     
     // Force reflow để trình duyệt nhận diện trạng thái opacity = 0 trước khi transition
-    el.offsetHeight; 
+    newOverlay.offsetHeight; 
     
     setTimeout(() => {
-        el.style.opacity = "1";
+        newOverlay.style.opacity = "1";
     }, 10);
 }
 
