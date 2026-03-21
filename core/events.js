@@ -123,8 +123,8 @@ export function attachOrchestrator() {
 export function dispatchAction(product) {
   if (ensureActive()) {
 
-    if ({ type: "cart" }) addToCart(product);
-    if ({ type: "instant" }) sendCart(product);
+    if (product.type="cart" ) addToCart(product);
+    if (product.type= "instant" ) sendCart(product);
   } else {
     openPicker();
     return;
