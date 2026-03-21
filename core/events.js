@@ -4,6 +4,7 @@ import { UI, setState } from "./state.js";
 import { enqueue } from "./queue.js";
 import { getContext } from "./context.js";
 import { openPicker } from "../ui/components/placePicker.js";
+import { resetCartSnapshot } from "../ui/render/renderDrawer.js";
 
 const CART_KEY = "haven_cart";
 
@@ -82,6 +83,7 @@ export function addToCart(item) {
 export function clearCart() {
   setState({ cart: { items: [] } });
   localStorage.removeItem(CART_KEY);
+  resetCartSnapshot(); // Reset mốc so sánh về rỗng
 }
 
 export function loadCart() {
@@ -146,7 +148,11 @@ export function sendCart() {
   });
 
   setState({ ack: { state: "show" } });
+  if (success) {
+    clearCart();
+  }
 }
+
 
 /* ---------- ORCHESTRATION ---------- */
 

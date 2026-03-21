@@ -12,10 +12,9 @@ import { MENU } from "../../core/menuStore.js";
 import { getCartTotals, textItemItems } from "../utils/cartCalculators.js";
 import { updateCartBarTotal } from "./renderCart.js";
 
-let initialCartSnapshot = "";
+let initialCartSnapshot = localStorage.getItem("haven_cart") || "[]";
 
 export function openCartDrawer() {
-  initialCartSnapshot = JSON.stringify(UI.cart.items || []);
   renderDrawer();
   showOverlay("cartDrawer");
 }
@@ -88,7 +87,9 @@ export function renderDrawer() {
     sendBtn.dataset.modified = String(hasChanged);
   }
 }
-
+export function resetCartSnapshot() {
+    initialCartSnapshot = JSON.stringify(UI.cart.items || []);
+}
 export function attachDrawerEvents() {
   const itemsRoot = document.getElementById("drawerItems");
   const sendBtn = document.getElementById("drawerSend");
