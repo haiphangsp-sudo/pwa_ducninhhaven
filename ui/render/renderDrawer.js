@@ -116,17 +116,15 @@ export function attachDrawerEvents() {
       const totals = getCartTotals(UI.cart.items || []);
 
       if (isModified) {
-        if (totals.isEmpty) {
-          clearCart();
-          closeOverlay();
-          return;
-        }
-
         initialCartSnapshot = JSON.stringify(UI.cart.items || []);
         updateCartBarTotal();
         renderDrawer();
 
         if (navigator.vibrate) navigator.vibrate(30);
+        return;
+      }
+      if (totals.isEmpty) {
+        closeOverlay();
         return;
       }
       dispatchAction({ type: "send_cart" });      
