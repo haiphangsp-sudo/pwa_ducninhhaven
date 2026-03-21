@@ -9,8 +9,10 @@ const backdrop = document.getElementById("overlayBackdrop");
  */
 export function showOverlay(id) {
     // Nếu đang có một cái mở rồi thì
-    if (currentOverlay) closeOverlay();
-
+    if (currentOverlay) {
+        closeOverlay();
+        return;
+    }
     const el = document.getElementById(id);
     if (!el) {
         console.warn(`Overlay với ID "${id}" không tồn tại.`);
