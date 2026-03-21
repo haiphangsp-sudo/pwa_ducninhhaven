@@ -132,6 +132,20 @@ function sendInstant(action) {
   });
 }
 
+// 1. Hàm này sẽ được gọi nhận được status "success" từ GS
+export function onOrderSuccess() {
+  clearCart();             // Xóa giỏ trong State & LocalStorage
+  resetCartSnapshot();     // Reset mốc so sánh để nút Drawer về màu xanh
+  
+  // Hiển thị thông báo thành công cho khách (Ack)
+  setState({ ack: { state: "show", status: "success" } });
+  
+  // Tự động ẩn thông báo sau 2.5 giây
+  setTimeout(() => {
+    setState({ ack: { state: "hidden" } });
+  }, 2500);
+}
+
 export function sendCart() {
   const ctx = getContext();
   if (!ctx?.active) return;
@@ -140,17 +154,16 @@ export function sendCart() {
   const items = UI.cart.items || [];
   if (!items.length) return;
 
+  // Đẩy vào hàng đợi với key đã chuẩn hóa là 'items'
   enqueue({
     type: "cart",
     place: ctx.active.id,
     mode: ctx.active.type,
-    items
+    items: items // Đã chuẩn hóa
   });
 
-  setState({ ack: { state: "show" } });
-  if (success) {
-    clearCart();
-  }
+  // Hiện lớp phủ "Đang gửi..."
+  setState({ ack: { state: "show", status: "sending" } });
 }
 
 

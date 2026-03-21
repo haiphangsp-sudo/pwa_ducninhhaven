@@ -55,8 +55,9 @@ export async function sendRequest(payload) {
   }
 
   // 5. Xử lý các trạng thái phản hồi đặc biệt từ Google Script
-  if (data.status === "unauthorized") return { fatal: true, message: "Sai mã bí mật" };
-  if (data.status === "invalid") return { fatal: true, message: "Dữ liệu không hợp lệ" };
+  if (data.status === "unauthorized") return { success: false, fatal: true, message: "Sai mã bí mật" };
+  if (data.status === "invalid") return { success: false, fatal: true, message: "Dữ liệu không hợp lệ" };
+  
   
   // Nếu server báo bận hoặc yêu cầu thử lại
   if (data.status === "retry") {
@@ -68,6 +69,6 @@ export async function sendRequest(payload) {
     markSuccess();
     return { success: true };
   }
-
+  // Trả về toàn bộ dữ liệu (bao gồm status: "success" từ GS)
   return data;
 }

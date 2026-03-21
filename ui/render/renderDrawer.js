@@ -88,7 +88,8 @@ export function renderDrawer() {
   }
 }
 export function resetCartSnapshot() {
-    initialCartSnapshot = JSON.stringify(UI.cart.items || []);
+  initialCartSnapshot = [];
+    //initialCartSnapshot = JSON.stringify(UI.cart.items || []);
 }
 export function attachDrawerEvents() {
   const itemsRoot = document.getElementById("drawerItems");
@@ -127,6 +128,7 @@ export function attachDrawerEvents() {
         return;
       }
       dispatchAction({ type: "send_cart" });
+      closeOverlay();
       
     });
   }

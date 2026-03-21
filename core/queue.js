@@ -1,11 +1,12 @@
 // core/queue.js
 
 import { sendRequest } from "../services/api.js";
-import { setState, UI } from "./state.js"; // Sử dụng UI trực tiếp từ state
 import { getRetryDelay } from "../services/retryPolicy.js";
 import { clearCart } from "./events.js";
 import { setDeliveryState } from "../ui/render/renderDelivery.js";
 import { setRecoveryState } from "../ui/render/renderRecovery.js";
+import { onOrderSuccess } from "./events.js";
+
 
 const STORAGE_KEY = "haven_queue";
 const MAX_QUEUE = 50;
@@ -66,39 +67,43 @@ export async function processQueue() {
     try {
       // Nguyên tắc 1: Báo trạng thái "Đang gửi"
       setDeliveryState("sending");
-
       const body = {
         id: req.id,
         device: navigator.userAgent,
         time: Date.now(),
         ...job // Giữ nguyên các trường: mode, items, category...
       };
-
-      await sendRequest(body);
-
       // Nguyên tắc 2: Gửi thành công
       if (job.type === "cart") {
         clearCart(); // Xóa giỏ hàng ngay khi đơn đầu tiên trong queue thành công
       }
-
-      queue.shift();
-      saveQueue(queue);
-
-      // Nếu đã gửi hết sạch hàng đợi
-      if (queue.length === 0) {
-        // Nguyên tắc 3: Báo thành công (Hiện tích xanh)
-        setDeliveryState("sent");
+      const result = await sendRequest(body);
+      if (result && result.status === "success") {
+        // Nếu đơn hàng là loại "cart", kích hoạt chuỗi sự kiện thành công
+        if (req.payload.type === "cart") {
+          onOrderSuccess();
+        }
+          
+        queue.shift(); // Xóa khỏi hàng đợi gửi
+        saveQueue(queue);
+      } else {
+        throw new Error(result.message || "server_logic_error");
+      
+        // Nếu đã gửi hết sạch hàng đợi
+        if (queue.length === 0) {
+          // Nguyên tắc 3: Báo thành công (Hiện tích xanh)
+          setDeliveryState("sent");
         
-        // Phản hồi xúc giác (Rung nhẹ nếu mobile hỗ trợ)
-        if (navigator.vibrate) navigator.vibrate(50);
+          // Phản hồi xúc giác (Rung nhẹ nếu mobile hỗ trợ)
+          if (navigator.vibrate) navigator.vibrate(50);
 
-        // Tự động dọn dẹp Banner sau 2.5 giây (Nguyên tắc Auto-dismiss)
-        setTimeout(() => {
-          setDeliveryState("idle");
-          setRecoveryState("idle"); // Dọn luôn recovery nếu có
-        }, 2500);
+          // Tự động dọn dẹp Banner sau 2.5 giây (Nguyên tắc Auto-dismiss)
+          setTimeout(() => {
+            setDeliveryState("idle");
+            setRecoveryState("idle"); // Dọn luôn recovery nếu có
+          }, 2500);
+        }
       }
-
     } catch (e) {
       // Nguyên tắc 4: Xử lý lỗi (Không tự ẩn để khách xử lý)
       console.error("Queue Error:", e);
@@ -122,9 +127,9 @@ export async function processQueue() {
         await new Promise(res => setTimeout(res, delay));
         // Tiếp tục vòng lặp while
       }
+      break;
     }
   }
-
   processing = false;
 }
 
