@@ -8,6 +8,7 @@ import { onOrderSuccess } from "./events.js";
 
 const STORAGE_KEY = "haven_queue";
 const MAX_QUEUE = 50;
+const MAX_RETRIES = 3;
 let processing = false;
 
 /* ---------- STORAGE ---------- */
@@ -103,7 +104,7 @@ export async function processQueue() {
 
       req.retries += 1;
 
-      if (req.retries > 3) {
+      if (req.retries > MAX_RETRIES) {
         queue.shift();
         saveQueue(queue);
         setDeliveryState("failed");
@@ -113,11 +114,9 @@ export async function processQueue() {
         const delay = getRetryDelay(req.retries);
         await new Promise(res => setTimeout(res, delay));
       }
-
       break;
     }
   }
-
   processing = false;
 }
 
