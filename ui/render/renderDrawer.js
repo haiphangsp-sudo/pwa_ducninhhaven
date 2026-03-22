@@ -84,6 +84,7 @@ export function renderDrawer() {
     if (isEmpty) {
       sendBtn.textContent = translate("cart_bar.close");
       sendBtn.className = "drawer-send state-close";
+      sendBtn.dataset.action = "close";
     } else {
       const currentSnapshot = JSON.stringify(items);
       const hasChanged = currentSnapshot !== initialCartSnapshot;
@@ -93,6 +94,7 @@ export function renderDrawer() {
 
       sendBtn.className = `drawer-send ${hasChanged ? "state-confirm" : "state-send"}`;
       sendBtn.dataset.modified = String(hasChanged);
+      sendBtn.dataset.action = isModified ? "confirm" : "send";
     }
   }
 }
@@ -122,7 +124,7 @@ export function attachDrawerEvents() {
       const isModified = sendBtn.dataset.modified === "true";
       const action = sendBtn.dataset.action;
       if (action === "close") {
-        closeOverlay(); // Nếu là Đóng thì tắt luôn
+        sendBtn.onclick = closeOverlay;
         return;
       }
 
