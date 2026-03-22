@@ -135,13 +135,11 @@ function getGroupTitle(type, isAnchorRoom) {
 ========================= */
 
 export function attachPlacePickerEvents() {
-  document.addEventListener("click", handlePlacePickerClick);
-}
-
-function handlePlacePickerClick(e) {
-  const btn = e.target.closest(".picker-option");
-  if (!btn) return;
-  closeOverlay();
-  applyPlaceById(btn.dataset.id);
-  
+  document.addEventListener("click", () => {
+    const btn = e.target.closest(".picker-option");
+    if (shellReady|| btn) {
+      closeOverlay();
+      applyPlaceById(btn.dataset.id);
+    }
+  });
 }
