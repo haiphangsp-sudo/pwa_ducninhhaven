@@ -32,8 +32,19 @@ export function attachAppEvents() {
     ["touchstart", "pointerdown", "click"].forEach(evt => {
         document.addEventListener(evt, resetIdleTimer, { passive: true });
     });
+
     window.addEventListener("contextchange", syncContextToState);
+
+    window.addEventListener("intentresume", (e) => {
+
+        if (e.detail?.type === "send_cart") {
+            setTimeout(() => {
+                openCartDrawer();
+            }, 300);
+        }
+    });
+    
     window.addEventListener("keydown", e => {
-            if (e.key === "Escape") closeOverlay();
-        });
-    }
+        if (e.key === "Escape") closeOverlay();
+    });
+}
