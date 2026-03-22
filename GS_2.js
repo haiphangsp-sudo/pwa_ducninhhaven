@@ -54,6 +54,29 @@ function doPost(e) {
     return json({ status: "error", message: String(err) });
   }
 }
+function doGet(e) {
+  const action = e.parameter.action;
+  
+  if (action === "getStatuses") {
+    const ids = e.parameter.ids.split(",");
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("LIVE");
+    const data = sheet.getDataRange().getValues(); // Lấy toàn bộ data
+    
+    const results = {};
+    
+    // Duyệt qua danh sách ID khách gửi lên
+    ids.forEach(id => {
+      // Tìm dòng có ID tương ứng (Giả sử ID ở cột A, Trạng thái ở cột E)
+      const row = data.find(r => r[0] == id);
+      if (row) {
+        results[id] = row[4]; // Trả về trạng thái hiện tại trong Sheets
+      }
+    });
+    
+    return ContentService.createTextOutput(JSON.stringify(results))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
 
 
 /* ================= DATA PARSER ================= */

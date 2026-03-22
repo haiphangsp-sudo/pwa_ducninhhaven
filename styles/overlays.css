@@ -36,9 +36,6 @@
   left: 50%;
   transform: translate(-50%, -50%);
 }
-.overlay-drawer{
-  max-height: 70vh;
-}
 .overlay-picker{
   display:flex; 
   align-items:center; 
@@ -46,6 +43,10 @@
   max-width: 90vw;
   width: 480px;
 }
+.overlay-drawer{
+  max-height: 70vh;
+}
+
 /* =====================
    BANNERS (Delivery & Recovery)
 ===================== */
