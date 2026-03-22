@@ -1,4 +1,4 @@
-@layer tokens,base,layout,components,ui-system,contextBar,hubMenu,hubContent,cartBar,overlays,motion,responsive,icons;
+@layer tokens,base,layout,components,ui-system,contextBar,hubMenu,hubContent,cartBar,overlays,motion,responsive,icons,orderStatusBar;
 
 @import "tokens.css";
 @import "base.css";
@@ -13,3 +13,5 @@
 @import "motion.css";
 @import "responsive.css";
 @import "icons.css";
+@import "orderStatusBar.css";
+
