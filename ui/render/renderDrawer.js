@@ -2,15 +2,12 @@
 
 import { UI } from "../../core/state.js";
 import { translate } from "../utils/translate.js";
-import {
-  updateCartQuantity,
-  clearCart,
-  dispatchAction
-} from "../../core/events.js";
+import { updateCartQuantity, dispatchAction } from "../../core/events.js";
 import { closeOverlay, showOverlay } from "../interactions/backdropManager.js";
 import { MENU } from "../../core/menuStore.js";
 import { getCartStats } from "../../ui/utils/cartHelpers.js";
 import { getContext } from "../../core/context.js";
+import { openPicker } from "../components/placePicker.js";
 
 
 /* =========================
@@ -28,6 +25,7 @@ export function openCartDrawer() {
 
 export function renderDrawer() {
   const drawer = document.getElementById("cartDrawer");
+  const placeEl = document.getElementById("drawerPlaceDisplay");
   if (!drawer) return;
   const ctx = getContext();
   const activePlace = ctx?.active;

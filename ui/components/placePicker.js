@@ -7,18 +7,12 @@ import { translate } from "../utils/translate.js";
 import { getPlaceIcon } from "../../data/helpers.js";
 
 let shellReady = false;
-let pickerMeta = { source: "picker", reason: null };
 
 /* =========================
    PUBLIC
 ========================= */
 
-export function openPicker(meta = {}) {
-  pickerMeta = {
-    source: meta.source || "picker",
-    reason: meta.reason || null
-  };
-
+export function openPicker() {
   renderPlacePicker();
   showOverlay("placePicker");
 }
