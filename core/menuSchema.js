@@ -19,7 +19,7 @@ export function normalizeMenu(menu) {
         item.options = {};
       if (cat.ui === "cart") {
         if (item.recommend === undefined)
-        item.recommend = Object.keys(item.options)[0];
+          item.recommend = Object.keys(item.options).slice(0, 1);
       }
       if (cat.ui === "cart" || cat.ui === "instant") {
         
