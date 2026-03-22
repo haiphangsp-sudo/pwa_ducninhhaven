@@ -32,8 +32,16 @@ export const STRINGS = {
     place_prompt: { vi: "Chọn vị trí", en: "Select a place" },
     sending: { vi: "Đang gửi...", en: "Sending..." }
   },
+  order: {
+    confirm: { vi: "Xác nhận", en: "Confirm" },
+    cancel: { vi: "Hủy", en: "Cancel" },
+    status: { vi: "Trạng thái", en: "Status" },
+    order_id: { vi: "Mã đơn hàng", en: "Order ID" }
 
-  
+  },
+  menu: {
+
+  },
   place: {
     select: { vi: "Bạn muốn phục vụ ở đâu?", en: "Where would you like to serve?" },
     my_room: { vi: "Phòng tôi", en: "My room" },
