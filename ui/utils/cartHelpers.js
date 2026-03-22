@@ -3,11 +3,6 @@ import { UI } from "../../core/state.js";
 import { MENU } from "../../core/menuStore.js";
 import { translate } from "./translate.js";
 
-// ui/utils/cartHelpers.js
-import { UI } from "../../core/state.js";
-import { MENU } from "../../core/menuStore.js";
-import { translate } from "./translate.js";
-
 export function getCartStats() {
     const items = UI.cart.items || [];
     
