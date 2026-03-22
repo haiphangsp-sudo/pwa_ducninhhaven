@@ -7,7 +7,7 @@ import { translate } from "../utils/translate.js";
  * Tính toán tất cả các thông số của giỏ hàng cùng một lúc
  * @param {Array} itemsCart - UI.cart.items
  */
-export function getCartTotals(itemsCart) {
+export function getCartTotals(itemsCart=[]) {
     let totalQuantity = 0; // Tổng số lượng (vd: 2 trà + 3 cafe = 5)
     let totalPrice = 0;    // Tổng tiền (vd: 200.000đ)
     const totalUnique = Number(itemsCart.length); // Tổng số dòng món (vd: trà và cafe = 2 món)
