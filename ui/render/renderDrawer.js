@@ -176,7 +176,6 @@ export function attachDrawerEvents() {
     closeBtn.onclick = closeOverlay;
   }
   window.addEventListener("intentresume", (e) => {
-
         if (e.detail?.type === "send_cart") {
             setTimeout(() => {
                 openCartDrawer();

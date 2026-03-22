@@ -33,7 +33,7 @@ export function attachAppEvents() {
     });
 
     window.addEventListener("contextchange", syncContextToState);
-    window.addEventListener("intentresume", () => Orchestrator.resume());
+    //window.addEventListener("intentresume", () => Orchestrator.resume());
     
     window.addEventListener("keydown", e => {
         if (e.key === "Escape") closeOverlay();
