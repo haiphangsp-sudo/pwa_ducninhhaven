@@ -6,7 +6,7 @@ import { translate } from "./translate.js";
 export function getCartStats() {
     const itemsCart = UI.cart.items || [];
     
-    const totalQty = itemsCart.reduce((a, b) => a + (Number(b.qty || 0), 0));
+    const totalQty = itemsCart.reduce((a, b) => a + Number(b.qty || 0), 0);
     
     const countLine = itemsCart.length; // Số loại món (lines)
     
