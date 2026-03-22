@@ -141,3 +141,11 @@
   z-index: 900;
   pointer-events: auto;
 }
+
+.text-warning {
+    color: #f39c12; 
+}
+
+.color-brand {
+    color: var(--color-primary, #2c3e50); 
+}

@@ -10,6 +10,12 @@ import {
 import { closeOverlay, showOverlay } from "../interactions/backdropManager.js";
 import { MENU } from "../../core/menuStore.js";
 import { getCartStats } from "../../ui/utils/cartHelpers.js";
+import { getContext } from "../../core/context.js";
+
+
+/* =========================
+   PUBLIC
+========================= */
 
 
 let initialCartSnapshot = localStorage.getItem("haven_cart") || "[]";
@@ -23,7 +29,17 @@ export function openCartDrawer() {
 export function renderDrawer() {
   const drawer = document.getElementById("cartDrawer");
   if (!drawer) return;
-  
+  const ctx = getContext();
+  const activePlace = ctx?.active;
+  if (placeEl) {
+    if (activePlace) {
+      placeEl.textContent = activePlace.place; 
+      placeEl.classList.remove("text-warning");
+    } else {
+      placeEl.textContent = translate("cart_bar.place_prompt");
+      placeEl.classList.add("text-warning");
+    }
+  }
   const itemsContainer = document.getElementById("drawerItems");
   const sendBtn = document.getElementById("drawerSend");
   const headerSummary = drawer.querySelector(".drawer-summary");
@@ -149,6 +165,14 @@ export function attachDrawerEvents() {
         default:
           console.warn("Hành động không xác định:", action);
       }
+    });
+  }
+
+  const placeBtn = document.getElementById("drawerPlaceDisplay");
+
+  if (placeBtn) {
+    placeBtn.addEventListener("click", () => {
+      openPicker();
     });
   }
 
