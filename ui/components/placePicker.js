@@ -135,7 +135,7 @@ function getGroupTitle(type, isAnchorRoom) {
 ========================= */
 
 export function attachPlacePickerEvents() {
-  document.addEventListener("click", () => {
+  document.addEventListener("click", (e) => {
     const btn = e.target.closest(".picker-option");
     if (shellReady|| btn) {
       closeOverlay();
