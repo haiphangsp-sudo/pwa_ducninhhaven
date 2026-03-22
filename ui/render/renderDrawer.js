@@ -8,6 +8,7 @@ import { MENU } from "../../core/menuStore.js";
 import { getCartStats } from "../../ui/utils/cartHelpers.js";
 import { getContext } from "../../core/context.js";
 import { openPicker } from "../components/placePicker.js";
+import { getState } from "../../core/state.js";
 
 
 /* =========================
