@@ -15,6 +15,7 @@ import { updateCartBarTotal } from "./renderCart.js";
 let initialCartSnapshot = localStorage.getItem("haven_cart") || "[]";
 
 export function openCartDrawer() {
+  initialCartSnapshot = JSON.stringify(UI.cart.items || []);
   renderDrawer();
   showOverlay("cartDrawer");
 }
@@ -34,22 +35,20 @@ export function renderDrawer() {
   drawer.querySelector(".drawer__header-count").textContent = textItemItems();
   drawer.querySelector(".drawer__header-unique").textContent =
     totalUnique + " " + translate("cart_bar.unique");
-
+  
   const currentSnapshot = JSON.stringify(items);
-  let hasChanged = false;
-  if (currentSnapshot !== initialCartSnapshot&&initialCartSnapshot!=="[]") {
-    hasChanged = true;
-  }
+  const hasChanged = currentSnapshot !== initialCartSnapshot;
   if (isEmpty) {
-    itemsContainer.innerHTML = `
-      <div class="p-m center text-muted">
-        ${translate("cart_bar.empty")}
-      </div>
-    `;
-    if (sendBtn) sendBtn.classList.add("hidden");
+      itemsContainer.innerHTML = `
+        <div class="p-m center text-muted">
+          ${translate("cart_bar.empty")}
+        </div>
+      `;
+        // Trường hợp giỏ rỗng (ví dụ khách xóa hết món khi đang mở drawer)
+        sendBtn.textContent = translate("cart_bar.close");
+        sendBtn.dataset.action = "close";
+        sendBtn.className = "drawer-send state-close";
   } else {
-    if (sendBtn) sendBtn.classList.remove("hidden");
-
     itemsContainer.innerHTML = items.map((item, index) => {
       const menuItem = MENU?.[item.category]?.items?.[item.item];
       const option = menuItem?.options?.[item.option];
@@ -78,23 +77,17 @@ export function renderDrawer() {
         </div>
       `;
     }).join("");
-  }
 
-  if (sendBtn) {
-    if (isEmpty) {
-      sendBtn.textContent = translate("cart_bar.close");
-      sendBtn.className = "drawer-send state-close";
-      sendBtn.dataset.action = "close";
+    if (hasChanged) {
+        // Trường hợp CÓ CHỈNH SỬA số lượng so với lúc mới vào Drawer
+        sendBtn.textContent = translate("cart_bar.confirm_changes");
+        sendBtn.dataset.action = "confirm";
+        sendBtn.className = "drawer-send state-confirm"; // Màu vàng
     } else {
-      const currentSnapshot = JSON.stringify(items);
-      const hasChanged = currentSnapshot !== initialCartSnapshot;
-      sendBtn.textContent = hasChanged
-        ? translate("cart_bar.confirm_changes")
-        : translate("cart_bar.send_order");
-
-      sendBtn.className = `drawer-send ${hasChanged ? "state-confirm" : "state-send"}`;
-      sendBtn.dataset.modified = String(hasChanged);
-      sendBtn.dataset.action = hasChanged ? "confirm" : "send";
+        // Trường hợp giữ nguyên ý định ban đầu
+        sendBtn.textContent = translate("cart_bar.send_order");
+        sendBtn.dataset.action = "send";
+        sendBtn.className = "drawer-send state-send"; // Màu xanh
     }
   }
 }
@@ -122,13 +115,14 @@ export function attachDrawerEvents() {
 
   if (sendBtn) {
     sendBtn.addEventListener("click", () => {
-      const isModified = sendBtn.dataset.modified === "true";
+      
       const action = sendBtn.dataset.action;
       if (action === "close") {
         closeOverlay;
         return;
       }
 
+      const isModified = sendBtn.dataset.modified === "true";
       if (isModified) {
         initialCartSnapshot = JSON.stringify(UI.cart.items || []);
         updateCartBarTotal();
