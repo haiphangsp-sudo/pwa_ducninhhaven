@@ -94,7 +94,7 @@ export function renderDrawer() {
 
       sendBtn.className = `drawer-send ${hasChanged ? "state-confirm" : "state-send"}`;
       sendBtn.dataset.modified = String(hasChanged);
-      sendBtn.dataset.action = isModified ? "confirm" : "send";
+      sendBtn.dataset.action = hasChanged ? "confirm" : "send";
     }
   }
 }
