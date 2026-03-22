@@ -1,7 +1,7 @@
 // core/orders.js
 import { getState, setState } from './state.js';
-import { renderStatusBar } from '../ui/components/statusBar.js';
-import { renderStepper } from '../ui/components/statusBar.js';
+import { renderStatusBar } from '../ui/render/renderStatusBar.js';
+import { renderStepper } from '../ui/render/renderStepper.js';
 import { translate } from '../ui/utils/translate.js';
 import { openOrderTracker } from '../ui/components/orderTracker.js';
 import { CONFIG } from '../config.js';
