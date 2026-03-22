@@ -25,14 +25,23 @@ export const UI = {
 
   /* ---------------- CART ---------------- */
 
-  cart:{
-    items:[]
+  cart: {
+    items: [],    // 'idle' (mặc định), 'modified' (đã sửa), 'sending' (đang gửi), 
+    status: 'idle' // 'success' (thành công - thay cho ack), 'error' (lỗi)
   },
 
   /* ---------------- ACK (tap feedback) ---------------- */
 
   ack:{
     state:"hidden"   // hidden | show
+  },
+
+  /* ---------------- ORDERS ---------------- */
+
+
+  orders: {
+    active: [], // Lưu danh sách đơn hàng: [{id, status, items, time}, ...]
+    isBarExpanded: true // Trạng thái thu nhỏ/mở rộng của thanh Mini
   },
 
   /* ---------------- DELIVERY STATE MACHINE ---------------- */

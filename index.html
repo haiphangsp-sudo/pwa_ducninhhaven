@@ -60,7 +60,23 @@
         <!-- Overlay layer -->
     <div id="overlayBackdrop" class="overlay-backdrop hidden"></div>
     <div class="overlay">
-        <div id="optionSheet" class="overlay-panel option-sheet hidden"></div>
+        <div id="orderTrackerPage" class="overlay__panel overlay__panel--center order-tracker hidden">
+            <div class="bar-content">
+
+                <div class="bar-mini">
+                    <span class="icon">🔔</span>
+                    <span class="count">2</span>
+                </div>
+            
+                <div class="bar-expanded">
+                    <span class="status-text">Đang chuẩn bị 2 đơn hàng...</span>
+                    <button id="btnCheckOrders" class="btn-check">Kiểm tra ❯</button>
+                </div>
+            </div>
+    
+            <button id="btnToggleBar" class="btn-toggle">❯</button>
+        </div>
+        <div id="optionSheet" class="overlay__panel option-sheet hidden"></div>
         <div id="cartDrawer" class="overlay__panel overlay__panel--bottom overlay-drawer hidden">
             <div class="drawer-panel">
                 <div class="drawer__header stack gap-m drawer-header">

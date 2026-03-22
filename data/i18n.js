@@ -29,7 +29,8 @@ export const STRINGS = {
     confirm_changes: { vi: "XÁC NHẬN THAY ĐỔI", en: "CONFIRM CHANGES" },
     send_order: { vi: "GỬI YÊU CẦU NGAY", en: "SEND ORDER NOW" },
     close: { vi: "Đóng", en: "Close" },
-    place_prompt: { vi: "Chọn vị trí", en: "Select a place"}
+    place_prompt: { vi: "Chọn vị trí", en: "Select a place" },
+    sending: { vi: "Đang gửi...", en: "Sending..." }
   },
 
   

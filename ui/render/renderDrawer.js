@@ -52,7 +52,7 @@ export function renderDrawer() {
   const cartItems = UI.cart.items;
   const currentSnapshot = JSON.stringify(cartItems);
   const hasChanged = currentSnapshot !== initialCartSnapshot;
-  
+  const { items, status } = getState().cart;
   if (isEmpty) {
     initialCartSnapshot = "[]";
     itemsContainer.innerHTML = `
@@ -149,6 +149,9 @@ export function attachDrawerEvents() {
           break;
 
         case "send":
+          initialCartSnapshot = "[]";
+          sendBtn.disabled = true; // Chống bấm nhiều lần
+          sendBtn.textContent = translate("cart_bar.sending"); 
           dispatchAction({ type: "send_cart" });
           break;
 
