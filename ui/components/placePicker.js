@@ -13,6 +13,7 @@ let shellReady = false;
 ========================= */
 
 export function openPicker() {
+  
   renderPlacePicker();
   showOverlay("placePicker");
 }

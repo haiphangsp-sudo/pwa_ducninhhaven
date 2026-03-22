@@ -34,15 +34,7 @@ export function attachAppEvents() {
     });
 
     window.addEventListener("contextchange", syncContextToState);
-
-    window.addEventListener("intentresume", (e) => {
-
-        if (e.detail?.type === "send_cart") {
-            setTimeout(() => {
-                openCartDrawer();
-            }, 300);
-        }
-    });
+    window.addEventListener("intentresume", () => Orchestrator.resume());
     
     window.addEventListener("keydown", e => {
         if (e.key === "Escape") closeOverlay();

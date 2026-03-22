@@ -7,46 +7,87 @@ import { openPicker } from "./placePicker.js";
 import { getState, setState } from "../../core/state.js";
 import { getPlaceIcon } from "../../data/helpers.js";
 
-
 /* =========================
-   CACHE
+   CACHE & STATE
 ========================= */
 
-let identityIconEl = null;
-let identityLabelEl = null;
-let locLabelEl = null;
+const refs = {
+  identityIcon: null,
+  identityLabel: null,
+  locLabel: null,
+  langButtons: null
+};
 
-let navEventsAttached = false;
-let languageEventsAttached = false;
+let eventsAttached = { nav: false, lang: false };
 
 /* =========================
-   RENDER
+   PUBLIC METHODS
 ========================= */
 
 export function renderNavBar() {
-  cacheNavElements();
+  cacheElements();
   updateNavBar();
   updateLanguageActive();
 }
 
-/* =========================
-   UPDATE
-========================= */
-
 export function updateNavBar() {
   const ctx = getContext();
   const anchor = ctx?.anchor;
-  if (identityIconEl) identityIconEl.textContent = getPlaceIcon(anchor?.type);
-  if (identityLabelEl) identityLabelEl.textContent = getIdentityLabel(anchor);
-  if(locLabelEl) locLabelEl.textContent = getLocationLabel(ctx);
 
+  if (refs.identityIcon) refs.identityIcon.textContent = getPlaceIcon(anchor?.type);
+  if (refs.identityLabel) refs.identityLabel.textContent = getIdentityLabel(anchor);
+  if (refs.locLabel) refs.locLabel.textContent = getLocationLabel(ctx);
+}
+
+/* =========================
+   PRIVATE HELPERS
+========================= */
+
+function cacheElements() {
+  refs.identityIcon = document.querySelector(".identity-icon");
+  refs.identityLabel = document.querySelector(".identity-label");
+  refs.locLabel = document.querySelector(".loc-label");
+  refs.langButtons = document.querySelectorAll("#langSwitch button");
+}
+
+/**
+ * Lấy nhãn định danh (Dòng trên cùng)
+ */
+function getIdentityLabel(anchor) {
+  if (!anchor) return translate("haven");
+
+  const labels = {
+    room: () => translate(PLACES.room?.[anchor.id]?.label || anchor.id),
+    table: () => translate("mode.table_guest"),
+    area: () => translate("mode.area_guest")
+  };
+
+  return labels[anchor.type]?.() || translate("haven");
+}
+
+/**
+ * Lấy nhãn vị trí đang chọn (Dòng dưới)
+ */
+function getLocationLabel(ctx) {
+  if (!ctx?.active) return translate("place.select");
+
+  const { type, id } = ctx.active;
+  const anchor = ctx.anchor;
+  const placeData = PLACES[type]?.[id];
+  const placeName = translate(placeData?.label || id);
+
+  // Logic đặc biệt: Nếu là phòng của mình (Anchor) thì hiện "Phòng của tôi"
+  if (type === "room" && anchor?.id === id) {
+    return `${translate("my_room")} (${placeName})`;
+  }
+
+  return placeName;
 }
 
 function updateLanguageActive() {
   const currentLang = getState().lang.current;
-
-  document.querySelectorAll("#langSwitch button").forEach((el) => {
-    el.classList.toggle("is-active", el.dataset.lang === currentLang);
+  refs.langButtons?.forEach(btn => {
+    btn.classList.toggle("is-active", btn.dataset.lang === currentLang);
   });
 }
 
@@ -55,97 +96,28 @@ function updateLanguageActive() {
 ========================= */
 
 export function attachNavBarEvents() {
-  if (navEventsAttached) return;
-  navEventsAttached = true;
+  if (eventsAttached.nav) return;
+  
+  // Sự kiện chọn vị trí
+  refs.locLabel?.addEventListener("click", () => {
+    openPicker();
+  });
 
-  document.addEventListener("click", handleNavClick);
-  window.addEventListener("contextchange", updateNavBar);
-}
+  // Sự kiện chuyển ngôn ngữ (Ủy quyền sự kiện)
+  const langSwitch = document.getElementById("langSwitch");
+  langSwitch?.addEventListener("click", handleLanguageClick);
 
-export function attachLanguageEvents() {
-  if (languageEventsAttached) return;
-  languageEventsAttached = true;
-
-  document.addEventListener("click", handleLanguageClick);
-}
-
-/* =========================
-   HANDLERS
-========================= */
-
-function handleNavClick(e) {
-  const btn = e.target.closest(".nav-center button");
-  if (!btn) return;
-
-  openPicker();
+  eventsAttached.nav = true;
 }
 
 function handleLanguageClick(e) {
-  const btn = e.target.closest("#langSwitch button");
+  const btn = e.target.closest("button");
   if (!btn || btn.classList.contains("is-active")) return;
 
-  const lang = normalizeLanguage(btn.dataset.lang);
-  const current = getState().lang.current;
-
-  if (lang === current) return;
-
-  localStorage.setItem("haven_lang", lang);
-  setState({
-    lang: {
-      current: lang
-    }
-  });
-
+  const newLang = btn.dataset.lang === "en" ? "en" : "vi";
+  
+  localStorage.setItem("haven_lang", newLang);
+  setState({ lang: { current: newLang } });
+  
   updateLanguageActive();
-}
-
-/* =========================
-   HELPERS
-========================= */
-
-function cacheNavElements() {
-  identityIconEl = document.querySelector(".identity-icon");
-  identityLabelEl = document.querySelector(".identity-label");
-  locLabelEl = document.querySelector(".loc-label");
-}
-
-function normalizeLanguage(lang) {
-  return lang === "en" ? "en" : "vi";
-}
-
-function getIdentityLabel(anchor) {
-  if (!anchor) return translate("haven");
-
-  if (anchor.type === "room") {
-    const place = PLACES.room?.[anchor.id];
-    return translate(place?.label || anchor.id);
-  }
-
-  if (anchor.type === "table") {
-    return translate("mode.table_guest");
-  }
-
-  if (anchor.type === "area") {
-    return translate("mode.area_guest");
-  }
-}
-
-function getLocationLabel(ctx) {
-  if (!ctx?.active) {
-    return translate("place.select");
-  }
-
-  const { type, id } = ctx.active;
-  const place = PLACES[type]?.[id];
-
-  if (
-    ctx.active.type === "room" &&
-    ctx.anchor?.type === "room" &&
-    ctx.active.id === ctx.anchor.id
-  ) {
-    return translate("mode.in_room");
-  }
-
-  if (!place) return id;
-  return translate(place.label);
 }

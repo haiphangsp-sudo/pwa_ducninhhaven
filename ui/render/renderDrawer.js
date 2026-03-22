@@ -175,4 +175,12 @@ export function attachDrawerEvents() {
   if (closeBtn) {
     closeBtn.onclick = closeOverlay;
   }
+  window.addEventListener("intentresume", (e) => {
+
+        if (e.detail?.type === "send_cart") {
+            setTimeout(() => {
+                openCartDrawer();
+            }, 300);
+        }
+    });
 }
