@@ -27,7 +27,8 @@ export const STRINGS = {
     send_request: { vi: "Gửi yêu cầu", en: "Send request" },
     empty: { vi: "Giỏ hàng đang trống", en: "Your cart is empty" },
     confirm_changes: { vi: "XÁC NHẬN THAY ĐỔI", en: "CONFIRM CHANGES" },
-    send_order: { vi: "GỬI YÊU CẦU NGAY", en: "SEND ORDER NOW" }
+    send_order: { vi: "GỬI YÊU CẦU NGAY", en: "SEND ORDER NOW" },
+    close: { vi: "Đóng", en: "Close" },
   },
 
   

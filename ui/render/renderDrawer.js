@@ -81,12 +81,19 @@ export function renderDrawer() {
   }
 
   if (sendBtn) {
-    sendBtn.textContent = hasChanged
-      ? translate("cart_bar.confirm_changes")
-      : translate("cart_bar.send_order");
+    if (isEmpty) {
+      sendBtn.textContent = translate("cart_bar.close");
+      sendBtn.className = "drawer-send state-close";
+    } else {
+      const currentSnapshot = JSON.stringify(items);
+      const hasChanged = currentSnapshot !== initialCartSnapshot;
+      sendBtn.textContent = hasChanged
+        ? translate("cart_bar.confirm_changes")
+        : translate("cart_bar.send_order");
 
-    sendBtn.className = `drawer-send ${hasChanged ? "state-confirm" : "state-send"}`;
-    sendBtn.dataset.modified = String(hasChanged);
+      sendBtn.className = `drawer-send ${hasChanged ? "state-confirm" : "state-send"}`;
+      sendBtn.dataset.modified = String(hasChanged);
+    }
   }
 }
 export function resetCartSnapshot() {
@@ -113,7 +120,11 @@ export function attachDrawerEvents() {
   if (sendBtn) {
     sendBtn.addEventListener("click", () => {
       const isModified = sendBtn.dataset.modified === "true";
-      const totals = getCartTotals(UI.cart.items || []);
+      const action = sendBtn.dataset.action;
+      if (action === "close") {
+        closeOverlay(); // Nếu là Đóng thì tắt luôn
+        return;
+      }
 
       if (isModified) {
         initialCartSnapshot = JSON.stringify(UI.cart.items || []);
@@ -123,11 +134,18 @@ export function attachDrawerEvents() {
         if (navigator.vibrate) navigator.vibrate(30);
         return;
       }
-      if (totals.isEmpty) {
-        closeOverlay();
+
+      if (action === "confirm") {
+        // Logic xác nhận: Chụp lại snapshot mới
+        initialCartSnapshot = JSON.stringify(UI.cart.items);
+        renderDrawer(); // Render lại để nút chuyển sang màu xanh (Send)
+        if (navigator.vibrate) navigator.vibrate(30);
         return;
       }
-      dispatchAction({ type: "send_cart" });      
+
+      if (action === "send") {
+        dispatchAction({ type: "send_cart" });
+      }
     });
   }
 

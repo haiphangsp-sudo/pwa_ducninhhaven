@@ -287,6 +287,12 @@
     font-size: 24px;
     opacity: 0.2;
 }
+/* Màu trung tính cho nút Đóng */
+.drawer-send.state-close {
+    background-color: var(--bg-soft, #f0f0f0);
+    color: var(--text-main, #333);
+    border: 1px solid var(--border-soft);
+}
 /* =========================
    CART BAR
 ========================= */
