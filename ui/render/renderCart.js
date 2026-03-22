@@ -1,10 +1,9 @@
 // ui/renderCart.js
 // Thanh giỏ dưới cùng (state-driven)
 
-import { getCartTotals, textItemItems } from "../utils/cartCalculators.js";
 import { translate } from "../utils/translate.js";
 import { openCartDrawer } from "./renderDrawer.js";
-import { UI } from "../../core/state.js"
+import { getCartStats } from "../../ui/utils/cartHelpers.js"
 
 
 
@@ -15,31 +14,19 @@ import { UI } from "../../core/state.js"
 export function renderCartBar() {
   const bar = document.getElementById("cartBar");
   const btn = document.getElementById("cartOpen");
-
-  if (!bar || !btn) return;
-  const cartItems = UI.cart.items;
-  if (getCartTotals(cartItems).isEmpty) {
+  const countEl = document.getElementById("cartCount");
+  if (!bar || !btn || !countEl) return;
+  
+  const {isEmpty, textFull } = getCartStats();
+  
+  if (isEmpty) {
     bar.classList.add("hidden");
     return;
   }
-
   bar.classList.remove("hidden");
-
   btn.textContent = translate("cart_bar.cart_title");
-
-  updateCartBarTotal();
+  countEl.textContent = textFull;
 }
-
-/* =========================
-   UPDATE
-========================= */
-
-export function updateCartBarTotal() {
-  const countEl = document.getElementById("cartCount");
-  if (!countEl) return;
-  countEl.textContent = textItemItems();
-}
-
 /* =========================
    EVENTS
 ========================= */

@@ -9,8 +9,8 @@ import {
 } from "../../core/events.js";
 import { closeOverlay, showOverlay } from "../interactions/backdropManager.js";
 import { MENU } from "../../core/menuStore.js";
-import { getCartTotals, textItemItems } from "../utils/cartCalculators.js";
-import { updateCartBarTotal } from "./renderCart.js";
+import { getCartStats } from "../../ui/utils/cartHelpers.js";
+
 
 let initialCartSnapshot = localStorage.getItem("haven_cart") || "[]";
 
@@ -27,15 +27,15 @@ export function renderDrawer() {
   const itemsContainer = document.getElementById("drawerItems");
   const sendBtn = document.getElementById("drawerSend");
 
-  const cartItems = UI.cart.items || [];
-  const { totalPrice, totalUnique, isEmpty } = getCartTotals(cartItems);
+  const { totalPriceFormat, counLines, isEmpty, textFull } = getCartStats();
+
   drawer.querySelector(".drawer__header-title").textContent = translate("cart_bar.cart_title");
-  drawer.querySelector(".drawer__header-price").textContent =
-    totalPrice > 0 ? totalPrice.toLocaleString("vi-VN") + "đ" : "";
-  drawer.querySelector(".drawer__header-count").textContent = textItemItems();
+  drawer.querySelector(".drawer__header-price").textContent = totalPriceFormat;
+  drawer.querySelector(".drawer__header-count").textContent = textFull;
   drawer.querySelector(".drawer__header-unique").textContent =
-    totalUnique + " " + translate("cart_bar.unique");
+    counLines + " " + translate("cart_bar.unique");
   
+  const cartItems = UI.cart.items;
   const currentSnapshot = JSON.stringify(cartItems);
   const hasChanged = currentSnapshot !== initialCartSnapshot;
   
@@ -45,7 +45,6 @@ export function renderDrawer() {
           ${translate("cart_bar.empty")}
         </div>
       `;
-        // Trường hợp giỏ rỗng (ví dụ khách xóa hết món khi đang mở drawer)
         sendBtn.textContent = translate("cart_bar.close");
         sendBtn.dataset.action = "close";
         sendBtn.className = "drawer-send state-close";
