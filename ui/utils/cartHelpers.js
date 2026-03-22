@@ -9,6 +9,8 @@ export function getCartStats() {
     const totalQty = itemsCart.reduce((a, b) => a + Number(b.qty || 0), 0);
     
     const countLine = itemsCart.length; // Số loại món (lines)
+
+    const textLine = countLine + " " + translate("cart_bar.unique");
     
     let totalPrice = 0;
 
@@ -29,6 +31,6 @@ export function getCartStats() {
     
     const isEmpty = countLine === 0;
     
-    return { totalQty, totalPrice, totalPriceFormat, countLine, text, textFull ,isEmpty};
+    return { totalQty, totalPrice, totalPriceFormat, countLine, textLine, text, textFull ,isEmpty};
 
 }
