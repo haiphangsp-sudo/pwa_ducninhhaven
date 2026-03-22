@@ -113,13 +113,6 @@ export function renderDrawer() {
  * Reset mốc so sánh giỏ hàng
  * @param {boolean} toEmpty - Nếu true sẽ reset về rỗng, nếu false sẽ reset về trạng thái hiện tại
  */
-export function resetCartSnapshot(toEmpty = false) {
-    if (toEmpty) {
-        initialCartSnapshot = "[]";
-    } else {
-        initialCartSnapshot = JSON.stringify(UI.cart.items || []);
-    }
-}
 
 export function attachDrawerEvents() {
   const itemsRoot = document.getElementById("drawerItems");

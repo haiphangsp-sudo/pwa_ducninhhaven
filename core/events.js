@@ -4,7 +4,6 @@ import { UI, setState } from "./state.js";
 import { enqueue } from "./queue.js";
 import { getContext } from "./context.js";
 import { openPicker } from "../ui/components/placePicker.js";
-import { resetCartSnapshot } from "../ui/render/renderDrawer.js";
 
 const CART_KEY = "haven_cart";
 
@@ -67,7 +66,6 @@ export function addToCart(line) {
 export function clearCart() {
   setState({ cart: { items: [] } });
   localStorage.removeItem(CART_KEY);
-  resetCartSnapshot();
 }
 
 export function loadCart() {
