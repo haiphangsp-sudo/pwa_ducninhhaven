@@ -54,6 +54,7 @@ export function renderDrawer() {
   const hasChanged = currentSnapshot !== initialCartSnapshot;
   
   if (isEmpty) {
+    initialCartSnapshot = "[]";
     itemsContainer.innerHTML = `
       <div class="p-m center text-muted">
         ${translate("cart_bar.empty")}
