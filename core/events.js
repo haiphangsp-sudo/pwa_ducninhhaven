@@ -131,9 +131,9 @@ export function submitItems(items, orderType = "cart") {
 
   enqueue({
     type: orderType,
-    place: ctx.active.place,
+    place: ctx.active.id,
     mode: ctx.active.type,
-    products: items
+    items
   });
 
   return true;
