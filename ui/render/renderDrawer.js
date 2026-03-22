@@ -27,13 +27,13 @@ export function renderDrawer() {
   const itemsContainer = document.getElementById("drawerItems");
   const sendBtn = document.getElementById("drawerSend");
 
-  const { totalPriceFormat, counLines, isEmpty, textFull } = getCartStats();
+  const { totalPriceFormat, countLines, isEmpty, textFull } = getCartStats();
 
   drawer.querySelector(".drawer__header-title").textContent = translate("cart_bar.cart_title");
   drawer.querySelector(".drawer__header-price").textContent = totalPriceFormat;
   drawer.querySelector(".drawer__header-count").textContent = textFull;
   drawer.querySelector(".drawer__header-unique").textContent =
-    counLines + " " + translate("cart_bar.unique");
+    countLines + " " + translate("cart_bar.unique");
   
   const cartItems = UI.cart.items;
   const currentSnapshot = JSON.stringify(cartItems);
