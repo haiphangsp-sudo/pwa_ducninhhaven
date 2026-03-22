@@ -117,7 +117,7 @@ export function attachDrawerEvents() {
       
       const action = sendBtn.dataset.action;
       if (action === "close") {
-        closeOverlay;
+        closeOverlay();
         return;
       }
 
