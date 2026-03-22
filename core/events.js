@@ -132,7 +132,6 @@ export function submitItems(items, orderType = "cart") {
   enqueue({
     type: orderType,
     place: ctx.active.place,
-    id: Date.now().toString(),
     mode: ctx.active.type,
     products: items
   });
