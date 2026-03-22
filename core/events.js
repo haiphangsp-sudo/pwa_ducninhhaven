@@ -19,15 +19,11 @@ export function dispatchAction(payload) {
 
     case "instant":
       return requestSubmit([toLineItem(payload)], {
-        reason: "send_instant",
-        source: "menu",
         orderType: "instant"
       });
 
     case "send_cart":
       return requestSubmit(UI.cart.items || [], {
-        reason: "send_cart",
-        source: "drawer",
         orderType: "cart"
       });
 
@@ -108,19 +104,13 @@ export function requestSubmit(items, meta = {}) {
   }
 
   pendingIntent = {
-    type: meta.reason || "send_cart",
-    items,
-    orderType: meta.orderType || "cart"
+    type: meta.orderType || "cart",
+    items
   };
 
-  openPicker({
-    source: meta.source || "unknown",
-    reason: meta.reason || "send_cart"
-  });
-
+  openPicker(); 
   return false;
 }
-
 export function submitItems(items, orderType = "cart") {
   const ctx = getContext();
   if (!ctx?.active) return false;
@@ -155,26 +145,27 @@ export function onOrderSuccess(orderType = "cart") {
 
 export function attachOrchestrator() {
   window.addEventListener("contextchange", (e) => {
-    const detail = e.detail || {};
-    const reason = detail.reason;
-    const next = detail.next;
-
     if (!pendingIntent) return;
-    if (!next?.active) return;
 
-    if (pendingIntent.type === "send_cart" && reason === "send_cart") {
+    const ctx = e.detail?.next;
+    if (!ctx?.active) return;
+
+    /* ===== CART ===== */
+    if (pendingIntent.type === "cart") {
       pendingIntent = null;
+
       window.dispatchEvent(new CustomEvent("intentresume", {
         detail: { type: "send_cart" }
       }));
       return;
     }
 
-    if (pendingIntent.type === "send_instant" && reason === "send_instant") {
+    /* ===== INSTANT ===== */
+    if (pendingIntent.type === "instant") {
       const items = pendingIntent.items;
-      const orderType = pendingIntent.orderType;
       pendingIntent = null;
-      submitItems(items, orderType);
+
+      submitItems(items, "instant");
     }
   });
 }

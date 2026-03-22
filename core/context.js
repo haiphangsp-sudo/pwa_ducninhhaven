@@ -23,24 +23,17 @@ function loadContext() {
   }
 }
 
-function saveContext(meta = {}) {
+function saveContext() {
   const prev = structuredClone(context);
 
   context.updatedAt = Date.now();
   localStorage.setItem(STORAGE_KEY, JSON.stringify(context));
 
-  dispatchContextChange(prev, context, meta);
+  dispatchContextChange(prev, context);
 }
 
-export function dispatchContextChange(prev, next, meta = {}) {
-  window.dispatchEvent(new CustomEvent("contextchange", {
-    detail: {
-      source: meta.source || "unknown",
-      reason: meta.reason || null,
-      prev,
-      next
-    }
-  }));
+export function dispatchContextChange(prev, next) {
+  window.dispatchEvent(new CustomEvent("contextchange", {detail: {prev,next}}));
 }
 
 function createEmptyContext() {
@@ -87,25 +80,25 @@ export function canSelectPlace(anchorType, targetType) {
 /* ---------- ENTRY ---------- */
 // dùng cho QR / URL / deep link
 
-export function applyEntryPlace(resolved, meta = {}) {
+export function applyEntryPlace(resolved) {
   if (!resolved) return false;
 
   context.anchor = resolved;
   context.active = resolved;
-  saveContext({ source: meta.source || "entry", reason: meta.reason || null });
+  saveContext();
   return true;
 }
 
-export function applyEntryPlaceById(placeId, meta = {}) {
+export function applyEntryPlaceById(placeId) {
   if (!placeId) return false;
 
   const resolved = resolvePlace(placeId);
   if (!resolved) return false;
 
-  return applyEntryPlace(resolved, meta);
+  return applyEntryPlace(resolved);
 }
 
-export function applyResolvedPlace(resolved, meta = {}) {
+export function applyResolvedPlace(resolved) {
   if (!resolved) return false;
 
   const anchorType = context?.anchor?.type;
@@ -114,7 +107,7 @@ export function applyResolvedPlace(resolved, meta = {}) {
   if (!anchorType) {
     context.anchor = resolved;
     context.active = resolved;
-    saveContext({ source: meta.source || "picker", reason: meta.reason });
+    saveContext();
     return true;
   }
 
@@ -123,17 +116,17 @@ export function applyResolvedPlace(resolved, meta = {}) {
   }
 
   context.active = resolved;
-  saveContext({ source: meta.source || "picker", reason: meta.reason });
+  saveContext();
   return true;
 }
 
-export function applyPlaceById(placeId, meta = {}) {
+export function applyPlaceById(placeId) {
   if (!placeId) return false;
 
   const resolved = resolvePlace(placeId);
   if (!resolved) return false;
 
-  return applyResolvedPlace(resolved, meta);
+  return applyResolvedPlace(resolved);
 }
 /* ---------- RETURN ---------- */
 
