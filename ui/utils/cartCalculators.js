@@ -5,18 +5,17 @@ import { translate } from "../utils/translate.js";
 
 /**
  * Tính toán tất cả các thông số của giỏ hàng cùng một lúc
- * @param {Array} items - UI.cart.items
+ * @param {Array} itemsCart - UI.cart.items
  */
-export function getCartTotals() {
-    const items = UI.cart.items;
+export function getCartTotals(itemsCart) {
     let totalQuantity = 0; // Tổng số lượng (vd: 2 trà + 3 cafe = 5)
     let totalPrice = 0;    // Tổng tiền (vd: 200.000đ)
-    const totalUnique = Number(items.length); // Tổng số dòng món (vd: trà và cafe = 2 món)
+    const totalUnique = Number(itemsCart.length); // Tổng số dòng món (vd: trà và cafe = 2 món)
     
-    items.forEach(it => {
+    itemsCart.forEach(it => {
         // Lấy giá từ MENU store
-        const price = MENU?.[it.category]?.items?.[it.item]?.options?.[it.option]?.price;
-        
+        //const price = MENU?.[it.category]?.items?.[it.item]?.options?.[it.option]?.price;
+        const price = it.price;
         totalQuantity += Number(it.qty || 0);
         totalPrice += (price * Number(it.qty || 0));
     });

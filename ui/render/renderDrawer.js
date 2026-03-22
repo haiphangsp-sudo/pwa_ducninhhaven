@@ -24,8 +24,8 @@ export function renderDrawer() {
   const drawer = document.getElementById("cartDrawer");
   if (!drawer) return;
 
-  const items = UI.cart.items || [];
-  const { totalPrice, totalUnique, isEmpty } = getCartTotals(items);
+  
+  
   const itemsContainer = document.getElementById("drawerItems");
   const sendBtn = document.getElementById("drawerSend");
 
@@ -36,8 +36,10 @@ export function renderDrawer() {
   drawer.querySelector(".drawer__header-unique").textContent =
     totalUnique + " " + translate("cart_bar.unique");
   
-  const currentSnapshot = JSON.stringify(items);
+  const cartItems = UI.cart.items || [];
+  const currentSnapshot = JSON.stringify(cartItems);
   const hasChanged = currentSnapshot !== initialCartSnapshot;
+  const { totalPrice, totalUnique, isEmpty } = getCartTotals(cartItems);
   if (isEmpty) {
       itemsContainer.innerHTML = `
         <div class="p-m center text-muted">
@@ -49,7 +51,7 @@ export function renderDrawer() {
         sendBtn.dataset.action = "close";
         sendBtn.className = "drawer-send state-close";
   } else {
-    itemsContainer.innerHTML = items.map((item, index) => {
+    itemsContainer.innerHTML = cartItems.map((item, index) => {
       const menuItem = MENU?.[item.category]?.items?.[item.item];
       const option = menuItem?.options?.[item.option];
       const price = option?.price;
