@@ -4,6 +4,8 @@
 import { getCartTotals, textItemItems } from "../utils/cartCalculators.js";
 import { translate } from "../utils/translate.js";
 import { openCartDrawer } from "./renderDrawer.js";
+import { UI } from "../../core/state.js"
+
 
 
 /* =========================
@@ -15,8 +17,8 @@ export function renderCartBar() {
   const btn = document.getElementById("cartOpen");
 
   if (!bar || !btn) return;
-  // hide nếu không có item
-  if (getCartTotals().isEmpty) {
+  const cartItems = UI.cart.items;
+  if (getCartTotals(cartItems).isEmpty) {
     bar.classList.add("hidden");
     return;
   }
