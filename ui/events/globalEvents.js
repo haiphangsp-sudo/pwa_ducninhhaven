@@ -8,7 +8,7 @@ import { setDeliveryState } from "../render/renderDelivery.js";
 import { setRecoveryState } from "../render/renderRecovery.js";
 import { attachPlacePickerEvents } from "../components/placePicker.js";
 import { attachHubEvents } from "../render/renderHub.js";
-import { attachLanguageEvents, attachNavBarEvents } from "../components/navBar.js";
+import { attachNavBarEvents } from "../components/navBar.js";
 import { attachDrawerEvents } from "../render/renderDrawer.js";
 import { syncContextToState } from "../../core/state.js";
 import { attachOrchestrator } from "../../core/events.js";
@@ -21,7 +21,6 @@ export function attachAppEvents() {
     attachCartBarEvents();
     attachPlacePickerEvents();
     attachHubEvents();
-    attachLanguageEvents();
     networkBackEvent();
     attachDrawerEvents();
     attachOrchestrator();
