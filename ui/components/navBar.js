@@ -34,14 +34,12 @@ export function renderNavBar() {
 ========================= */
 
 export function updateNavBar() {
-  if (!identityIconEl || !identityLabelEl || !locLabelEl) return;
-
   const ctx = getContext();
   const anchor = ctx?.anchor;
+  if (identityIconEl) identityIconEl.textContent = getPlaceIcon(anchor?.type);
+  if (identityLabelEl) identityLabelEl.textContent = getIdentityLabel(anchor);
+  if(locLabelEl) locLabelEl.textContent = getLocationLabel(ctx);
 
-  identityIconEl.textContent = getPlaceIcon(anchor?.type);
-  identityLabelEl.textContent = getIdentityLabel(anchor);
-  locLabelEl.textContent = getLocationLabel(ctx);
 }
 
 function updateLanguageActive() {
