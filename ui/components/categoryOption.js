@@ -50,9 +50,12 @@ export function attachMenuEvents(){
     dispatchAction({
       type: btn.dataset.ui,
       category: btn.dataset.category,
-      products: btn.dataset.item,
+      item: btn.dataset.item,
       option: btn.dataset.option,
       qty: 1
     });
+      
+    btn.classList.add("is-loading");
+    setTimeout(() => btn.classList.remove("is-loading"), 500);
   });
 }
