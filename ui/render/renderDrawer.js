@@ -27,12 +27,12 @@ export function renderDrawer() {
   const itemsContainer = document.getElementById("drawerItems");
   const sendBtn = document.getElementById("drawerSend");
 
-  const { totalPriceFormat, textLines, isEmpty, textFull } = getCartStats();
+  const { totalPriceFormat, textLine, isEmpty, textFull } = getCartStats();
 
   drawer.querySelector(".drawer__header-title").textContent = translate("cart_bar.cart_title");
   drawer.querySelector(".drawer__header-price").textContent = totalPriceFormat;
   drawer.querySelector(".drawer__header-count").textContent = textFull;
-  drawer.querySelector(".drawer__header-unique").textContent = textLines;
+  drawer.querySelector(".drawer__header-unique").textContent = textLine;
   
   const cartItems = UI.cart.items;
   const currentSnapshot = JSON.stringify(cartItems);
