@@ -148,9 +148,7 @@ export function attachDrawerEvents() {
           break;
 
         case "confirm":
-          // Chốt dữ liệu mới và render lại nút
           initialCartSnapshot = JSON.stringify(UI.cart.items || []);
-          if (typeof updateCartBarTotal === "function") updateCartBarTotal();
           renderDrawer();
           
           if (navigator.vibrate) navigator.vibrate(30);
