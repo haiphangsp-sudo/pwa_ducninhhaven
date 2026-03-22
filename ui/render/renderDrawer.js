@@ -102,6 +102,7 @@ export function resetCartSnapshot() {
   initialCartSnapshot = "[]";
   //initialCartSnapshot = JSON.stringify(UI.cart.items || []);
 }
+
 export function attachDrawerEvents() {
   const itemsRoot = document.getElementById("drawerItems");
   const sendBtn = document.getElementById("drawerSend");
@@ -124,7 +125,7 @@ export function attachDrawerEvents() {
       const isModified = sendBtn.dataset.modified === "true";
       const action = sendBtn.dataset.action;
       if (action === "close") {
-        sendBtn.onclick = closeOverlay;
+        closeOverlay;
         return;
       }
 
