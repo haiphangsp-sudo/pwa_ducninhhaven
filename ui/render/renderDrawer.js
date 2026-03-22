@@ -23,12 +23,12 @@ export function openCartDrawer() {
 export function renderDrawer() {
   const drawer = document.getElementById("cartDrawer");
   if (!drawer) return;
-
-  
   
   const itemsContainer = document.getElementById("drawerItems");
   const sendBtn = document.getElementById("drawerSend");
 
+  const cartItems = UI.cart.items || [];
+  const { totalPrice, totalUnique, isEmpty } = getCartTotals(cartItems);
   drawer.querySelector(".drawer__header-title").textContent = translate("cart_bar.cart_title");
   drawer.querySelector(".drawer__header-price").textContent =
     totalPrice > 0 ? totalPrice.toLocaleString("vi-VN") + "đ" : "";
@@ -36,10 +36,9 @@ export function renderDrawer() {
   drawer.querySelector(".drawer__header-unique").textContent =
     totalUnique + " " + translate("cart_bar.unique");
   
-  const cartItems = UI.cart.items || [];
   const currentSnapshot = JSON.stringify(cartItems);
   const hasChanged = currentSnapshot !== initialCartSnapshot;
-  const { totalPrice, totalUnique, isEmpty } = getCartTotals(cartItems);
+  
   if (isEmpty) {
       itemsContainer.innerHTML = `
         <div class="p-m center text-muted">
