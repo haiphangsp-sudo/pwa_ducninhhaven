@@ -50,7 +50,7 @@ export function attachMenuEvents(){
     dispatchAction({
       type: btn.dataset.ui,
       category: btn.dataset.category,
-      item: btn.dataset.item,
+      products: btn.dataset.item,
       option: btn.dataset.option,
       qty: 1
     });
