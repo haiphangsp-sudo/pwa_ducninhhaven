@@ -26,6 +26,7 @@ export function renderDrawer() {
   
   const itemsContainer = document.getElementById("drawerItems");
   const sendBtn = document.getElementById("drawerSend");
+  const headerSummary = drawer.querySelector(".drawer-summary");
 
   const { totalPriceFormat, textLine, isEmpty, textFull } = getCartStats();
 
@@ -39,15 +40,18 @@ export function renderDrawer() {
   const hasChanged = currentSnapshot !== initialCartSnapshot;
   
   if (isEmpty) {
-      itemsContainer.innerHTML = `
-        <div class="p-m center text-muted">
-          ${translate("cart_bar.empty")}
-        </div>
-      `;
-        sendBtn.textContent = translate("cart_bar.close");
-        sendBtn.dataset.action = "close";
-        sendBtn.className = "drawer-send state-close";
+    itemsContainer.innerHTML = `
+      <div class="p-m center text-muted">
+        ${translate("cart_bar.empty")}
+      </div>
+    `;
+    headerSummary.classList.add("hidden");
+    sendBtn.textContent = translate("cart_bar.close");
+    sendBtn.dataset.action = "close";
+    sendBtn.className = "drawer-send state-close";
   } else {
+    headerSummary.classList.remove("hidden");
+
     itemsContainer.innerHTML = cartItems.map((item, index) => {
       const menuItem = MENU?.[item.category]?.items?.[item.item];
       const option = menuItem?.options?.[item.option];
@@ -90,9 +94,17 @@ export function renderDrawer() {
     }
   }
 }
-export function resetCartSnapshot() {
-  initialCartSnapshot = "[]";
-  //initialCartSnapshot = JSON.stringify(UI.cart.items || []);
+
+/**
+ * Reset mốc so sánh giỏ hàng
+ * @param {boolean} toEmpty - Nếu true sẽ reset về rỗng, nếu false sẽ reset về trạng thái hiện tại
+ */
+export function resetCartSnapshot(toEmpty = false) {
+    if (toEmpty) {
+        initialCartSnapshot = "[]";
+    } else {
+        initialCartSnapshot = JSON.stringify(UI.cart.items || []);
+    }
 }
 
 export function attachDrawerEvents() {
@@ -114,33 +126,28 @@ export function attachDrawerEvents() {
 
   if (sendBtn) {
     sendBtn.addEventListener("click", () => {
-      
       const action = sendBtn.dataset.action;
-      if (action === "close") {
-        closeOverlay();
-        return;
-      }
 
-      const isModified = sendBtn.dataset.modified === "true";
-      if (isModified) {
-        initialCartSnapshot = JSON.stringify(UI.cart.items || []);
-        updateCartBarTotal();
-        renderDrawer();
+      switch (action) {
+        case "close":
+          closeOverlay(); 
+          break;
 
-        if (navigator.vibrate) navigator.vibrate(30);
-        return;
-      }
+        case "confirm":
+          // Chốt dữ liệu mới và render lại nút
+          initialCartSnapshot = JSON.stringify(UI.cart.items || []);
+          if (typeof updateCartBarTotal === "function") updateCartBarTotal();
+          renderDrawer();
+          
+          if (navigator.vibrate) navigator.vibrate(30);
+          break;
 
-      if (action === "confirm") {
-        // Logic xác nhận: Chụp lại snapshot mới
-        initialCartSnapshot = JSON.stringify(UI.cart.items);
-        renderDrawer(); // Render lại để nút chuyển sang màu xanh (Send)
-        if (navigator.vibrate) navigator.vibrate(30);
-        return;
-      }
+        case "send":
+          dispatchAction({ type: "send_cart" });
+          break;
 
-      if (action === "send") {
-        dispatchAction({ type: "send_cart" });
+        default:
+          console.warn("Hành động không xác định:", action);
       }
     });
   }
