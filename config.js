@@ -4,5 +4,5 @@ export const CONFIG = {
 
   API_ENDPOINT: "https://script.google.com/macros/s/AKfycbzWlIDLcPwwV9k8xHQEEPNkWOi1P06D52OwA9I9jB6BiSfejeYWsz7R_ilCMgTbOK8X/exec",
   API_SECRET: "HNV-2026",
-  VERSION: "2.0.1" // Cập nhật version để SW nhận biết và refresh cache
+  VERSION: "2.2.1" // Cập nhật version để SW nhận biết và refresh cache
 };

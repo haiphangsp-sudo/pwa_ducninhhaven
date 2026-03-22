@@ -146,9 +146,7 @@ export function attachPlacePickerEvents() {
 function handlePlacePickerClick(e) {
   const btn = e.target.closest(".picker-option");
   if (!btn) return;
-
+  pickerMeta = { source: "picker", reason: null };
   applyPlaceById(btn.dataset.id, pickerMeta);
   closeOverlay();
-
-  pickerMeta = { source: "picker", reason: null };
 }
