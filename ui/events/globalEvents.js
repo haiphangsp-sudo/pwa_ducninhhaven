@@ -15,9 +15,6 @@ import { attachOrchestrator } from "../../core/events.js";
 import { closeOverlay } from "../interactions/backdropManager.js";
 import { getState } from "../../core/state.js";
 import { syncOrdersWithServer } from "../../core/orders.js";
-import { attachStatusBarEvents } from "../render/renderStatusBar.js";
-
-
 
 export function attachAppEvents() {
 

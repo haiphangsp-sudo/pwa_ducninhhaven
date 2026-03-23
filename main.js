@@ -11,6 +11,7 @@ import { loadCart } from "./core/events.js";
 import { detectRecovery } from "./core/queue.js";
 import { loadPlaces } from "./core/placesStore.js";
 import { attachAppEvents } from "./ui/events/globalEvents.js"; 
+import { initUISync } from "./ui/events/sync.js";
    
 
 boot();
@@ -110,4 +111,6 @@ async function boot() {
   attachAppEvents();
   watchMenu();
   subscribe(renderApp);
+  initUISync();
+
 }
