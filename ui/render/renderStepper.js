@@ -1,4 +1,9 @@
 // ui/render/renderStepper.js
+import { translate } from "../ui/utils/translate.js";
+
+/* =========================
+   PUBLIC
+========================= */
 
 
 
