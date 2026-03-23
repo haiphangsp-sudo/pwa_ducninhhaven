@@ -1,9 +1,5 @@
 // core/orders.js
 import { getState, setState } from './state.js';
-import { renderStatusBar } from '../ui/render/renderStatusBar.js';
-import { renderStepper } from '../ui/render/renderStepper.js';
-import { translate } from '../ui/utils/translate.js';
-import { openOrderTracker } from '../ui/components/orderTracker.js';
 import { CONFIG } from '../config.js';
 
 
@@ -56,9 +52,6 @@ export async function syncOrdersWithServer() {
         // 4. Lọc bỏ các đơn đã 'done' quá lâu (ví dụ sau 10 phút)
         // Hoặc đơn giản là cập nhật lại toàn bộ
         setState({ orders: { active: updatedOrders } });
-        
-        // Cập nhật lại thanh trạng thái
-        renderStatusBar();
 
     } catch (error) {
         console.error("Không thể đồng bộ đơn hàng:", error);
