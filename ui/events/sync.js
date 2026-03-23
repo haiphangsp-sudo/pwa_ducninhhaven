@@ -10,6 +10,7 @@ import { renderPanel } from '../../ui/render/renderPanel.js';
 import { renderHub } from '../../ui/render/renderHub.js';
 
 
+
 // KHỞI TẠO BỘ NHỚ ĐỆM (Nằm ngoài hàm để không bị reset)
 let lastState = {
     view: { panel: null, overlay: null },
@@ -53,6 +54,9 @@ function syncUI(state) {
                 const isActive = btn.dataset.value === lang;
                 btn.classList.toggle("is-active", isActive);
                 localStorage.setItem("haven_lang", lang);
+                renderNavBar();
+                renderCartBar();
+                renderStatusBar();
                 renderHub();
                 renderPanel(panel);
             });
