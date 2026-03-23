@@ -3,7 +3,6 @@
 import { UI, setState } from "./state.js";
 import { enqueue } from "./queue.js";
 import { getContext } from "./context.js";
-import { openPicker } from "../ui/components/placePicker.js";
 import { renderStatusBar } from "../ui/render/renderStatusBar.js";
 import { getState } from "./state.js";
 
@@ -113,7 +112,6 @@ export function requestSubmit(items, meta = {}) {
     items
   };
 
-  openPicker(); 
   return false;
 }
 export function submitItems(items, orderType = "cart") {
