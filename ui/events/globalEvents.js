@@ -96,7 +96,5 @@ export function initGlobalEvents() {
 export function changLang() {
     
     renderHub();
-    const panel = state.view.panel;
-    renderPanel(panel);
     
 }

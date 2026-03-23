@@ -74,9 +74,9 @@ function syncUI(state) {
                 item.classList.remove("is-active");
             });
             navMenu.querySelector(`[data-value="${panel}"]`)?.classList.add("is-active");
-            
+            renderPanel(panel);
         }
-        renderPanel(panel);
+        
     }
 
     // QUAN TRỌNG: Cập nhật lại bộ nhớ đệm sau khi đã so sánh xong
