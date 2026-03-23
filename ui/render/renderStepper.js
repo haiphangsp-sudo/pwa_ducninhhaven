@@ -5,10 +5,10 @@
 export function renderStepper(currentStatus) {
     // Định nghĩa các bước tiến trình cho Haven
     const steps = [
-        { key: 'pending', label: 'Tiếp nhận' },
-        { key: 'cooking', label: 'Chuẩn bị' },
-        { key: 'delivering', label: 'Đang giao' },
-        { key: 'done', label: 'Hoàn tất' }
+        { key: 'NEW', label: translate('status.NEW') },
+        { key: 'COOKING', label: translate('status.COOKING') },
+        { key: 'DELIVERING', label: translate('status.DELIVERING') },
+        { key: 'DONE', label: translate('status.DONE') }
     ];
 
     // Tìm chỉ số của trạng thái hiện tại

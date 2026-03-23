@@ -39,12 +39,6 @@ export function renderStatusBar() {
     }
 }
 
-// Helper để tạo thông báo tinh tế cho Đức Ninh Haven
-function getStatusMessage(status, total) {
-    const text = translate(`status.msg_${status}`) || translate(`status.${status}`);
-    return total > 1 ? `${text} (+${total - 1} ${translate("order.other")}` : text;
-}
-
 /* =========================
    EVENTS
 ========================= */
@@ -61,4 +55,19 @@ export function attachStatusBarEvents() {
     document.getElementById("btnCheckOrders")?.addEventListener("click", () => {
         openOrderTracker(); // Mở trang chi tiết (Tracker Page)
     });
+}
+
+/* =========================
+   PRIVATE
+========================= */
+
+function getStatusMessage(status, total) {
+    // 1. Tìm tin nhắn dài (msg_NEW, msg_COOKING...)
+    // 2. Nếu không có, dùng nhãn ngắn (NEW, COOKING...)
+    // 3. Nếu vẫn không có, dùng mặc định "Đang xử lý"
+    const text = translate(`status.msg_${status}`) || 
+                 translate(`status.${status}`) || 
+                 "Đang xử lý...";
+
+    return total > 1 ? `${text} (+${total - 1})` : text;
 }
