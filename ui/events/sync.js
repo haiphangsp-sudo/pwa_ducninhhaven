@@ -49,10 +49,9 @@ function syncUI(state) {
     if (state.view.panel !== lastState.view.panel) {
         const panel = state.view.panel;
         renderPanel(panel);
-
-        const navMenu = document.querySelector(".hub-btn");
+        const navMenu = document.getElementById('hubMenu');
         if (navMenu) { 
-            navMenu.classList.remove("is-active");
+            navMenu.querySelectorAll(`[data-value]`).classList.remove("is-active");
             navMenu.querySelector(`[data-value="${panel}"]`)?.classList.add("is-active");
         }
         console.log(`UI: Chuyển màn hình sa˝ng ${state.view.panel}`);
