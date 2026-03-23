@@ -4,6 +4,11 @@ import { UI, setState } from "./state.js";
 import { enqueue } from "./queue.js";
 import { getContext } from "./context.js";
 import { openPicker } from "../ui/components/placePicker.js";
+import { renderStatusBar } from "../render/renderStatusBar.js";
+import { getState } from "./state.js";
+
+
+/* ---------- CONSTANTS ---------- */
 
 const CART_KEY = "haven_cart";
 
@@ -30,6 +35,8 @@ export function dispatchAction(payload) {
       return;
   }
 }
+
+/* ---------- CONTEXT ---------- */
 
 export function ensureActive() {
   const ctx = getContext();
@@ -156,6 +163,9 @@ export function attachOrchestrator() {
     }
   });
 }
+
+/* ---------- EVENTS ---------- */
+
 export function onOrderSuccess(orderId, items) { // Nhận thêm orderId từ server
   clearCart();
 
