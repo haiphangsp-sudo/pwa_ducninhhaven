@@ -51,7 +51,9 @@ function syncUI(state) {
         renderPanel(panel);
         const navMenu = document.getElementById('hubMenu');
         if (navMenu) { 
-            navMenu.querySelectorAll(`[data-value]`).classList.remove("is-active");
+            navMenu.querySelectorAll(`[data-value]`).forEach((item) => {
+                item.classList.remove("is-active");
+            });
             navMenu.querySelector(`[data-value="${panel}"]`)?.classList.add("is-active");
         }
         console.log(`UI: Chuyển màn hình sa˝ng ${state.view.panel}`);
