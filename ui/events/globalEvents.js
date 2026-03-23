@@ -1,4 +1,5 @@
 // ui/events/globalEvents.js
+
 import { setState, getState } from "../../core/state.js";
 import { attachCartBarEvents } from "../render/renderCart.js";
 import { networkBackEvent } from "../../services/network.js";
@@ -13,13 +14,13 @@ import { closeOverlay } from "../interactions/backdropManager.js";
 import { syncOrdersWithServer } from "../../core/orders.js";
 import { attachStatusBarEvents } from "../render/renderStatusBar.js";
 import { selectPlace } from "../components/placePicker.js";
-import { renderStatusBar } from '../../ui/render/renderStatusBar.js';
-import { renderDrawer } from '../../ui/render/renderDrawer.js';
-import { renderCartBar } from '../../ui/render/renderCart.js';
-import { renderNavBar } from '../../ui/components/navBar.js';
 import { renderHub } from '../../ui/render/renderHub.js';
-import { renderPlacePicker } from '../../ui/render/renderPlacePicker.js';
+import { sendInstantOrder } from "../../services/orderService.js";
 
+
+/* =========================
+   PUBLIC
+========================= */
 
 export function initGlobalEvents() {
     // 1. Gắn các sự kiện cũ (nếu bạn chưa chuyển hết sang data-action)
@@ -47,6 +48,26 @@ export function initGlobalEvents() {
 
             case 'select-place': // Chọn phòng/bàn cụ thể
                 if (value) selectPlace(value);
+                break;
+            
+            case "cart":
+            case "instant":
+                if (btn) {
+                    const payload = {
+                        type: action,
+                        category: target.dataset.category,
+                        item: target.dataset.item,
+                        option: value,
+                        qty: 1
+                    };  
+                    handleAction(payload)
+                }
+                break;
+            
+            case "send_cart":
+                window.dispatchEvent(new CustomEvent("intentresume", {
+                    detail: { type: action }
+                }));
                 break;
 
             case 'change-lang':
@@ -91,3 +112,49 @@ export function initGlobalEvents() {
     setRecoveryState("idle");
 
 }
+
+/* =========================
+   PRIVATE
+========================= */
+
+
+export function handleAction(payload) {
+    const { type, item, category, option, qty } = payload;
+
+    switch (type) {
+        /* CASE 1: THÊM VÀO GIỎ (Thêm vào State để lưu lại) */
+        case 'cart':
+            const currentCart = getState().cart.items || [];
+            
+            // Logic: Kiểm tra nếu món đã có thì tăng số lượng, chưa có thì push mới
+            const updatedItems = [...currentCart, { item, category, option, qty }];
+            
+            setState({ cart: { items: updatedItems } });
+            console.log("Haven: Đã thêm vào giỏ hàng");
+            break;
+
+        /* CASE 2: ĐẶT NGAY (Bỏ qua giỏ hàng, gửi thẳng lên Server) */
+        case 'instant':
+            // 1. Hiển thị trạng thái "Đang gửi..." trên UI
+            setState({ view: { overlay: 'loading' } });
+
+            // 2. Thực hiện gửi
+            sendInstantOrder(payload).then(result => {
+                if (result.success) {
+                    // 3. Nếu thành công: Mở màn hình thông báo "Cảm ơn"
+                    setState({ view: { overlay: 'order-success' } });
+                    
+                    // Tự động đóng thông báo sau 3 giây
+                    setTimeout(() => setState({ view: { overlay: null } }), 3000);
+                } else {
+                    // Nếu lỗi: Hiện thông báo lỗi
+                    alert("Rất tiếc, không thể gửi đơn hàng. Vui lòng thử lại!");
+                    setState({ view: { overlay: null } });
+                }
+            });
+        break;
+    }
+}
+
+
+

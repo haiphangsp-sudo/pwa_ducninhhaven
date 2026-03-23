@@ -29,10 +29,10 @@ export function categoryOpt(opt, itemKey, categoryKey, type) {
                     }
                 </div>
                 <button class="btn btn-primary"
-                    data-ui="${type}"
+                    data-action="${type}"
                     data-category="${categoryKey}"
                     data-item="${itemKey}"
-                    data-option="${opt.key}">
+                    data-value="${opt.key}">
                     ${type==="cart" ? "+ " + translate("cart_bar.add_to_order") : "⚡ " + translate("cart_bar.send_request")}
                 </button>
             </div>
@@ -48,10 +48,10 @@ export function attachMenuEvents(){
     if(!btn) return;
 
     dispatchAction({
-      type: btn.dataset.ui,
+      type: btn.dataset.action,
       category: btn.dataset.category,
       item: btn.dataset.item,
-      option: btn.dataset.option,
+      option: btn.dataset.value,
       qty: 1
     });
       
