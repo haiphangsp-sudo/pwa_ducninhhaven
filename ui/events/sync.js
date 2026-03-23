@@ -38,8 +38,6 @@ function syncUI(state) {
         if (overlay === 'placePicker') {
             renderPlacePicker(state, lastState);
 
-            // 2. Sau đó mới cập nhật "ký ức"
-            lastState.overlay = state.view.overlay;
         } else if(overlay === 'new'){
 
         }

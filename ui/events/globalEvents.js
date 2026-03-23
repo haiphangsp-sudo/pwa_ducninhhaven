@@ -49,7 +49,6 @@ export function initGlobalEvents() {
 
             case 'select-place':
                 if (value) {
-                    // Thay thế hàm selectPlace(value) cũ bằng lệnh trực tiếp
                     setState({ 
                         context: { active: { id: value } },
                         view: { overlay: null } 
