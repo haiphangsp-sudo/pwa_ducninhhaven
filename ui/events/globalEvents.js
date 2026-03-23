@@ -14,6 +14,13 @@ import { closeOverlay } from "../interactions/backdropManager.js";
 import { syncOrdersWithServer } from "../../core/orders.js";
 import { attachStatusBarEvents } from "../render/renderStatusBar.js";
 import { selectPlace } from "../components/placePicker.js";
+import { renderStatusBar } from '../../ui/render/renderStatusBar.js';
+import { renderDrawer } from '../../ui/render/renderDrawer.js';
+import { renderCartBar } from '../../ui/render/renderCart.js';
+import { renderNavBar } from '../../ui/components/navBar.js';
+import { renderHub } from '../../ui/render/renderHub.js';
+import { showOverlay } from '../../ui/interactions/backdropManager.js';
+import { renderPlacePicker } from '../../ui/render/renderPlacePicker.js';
 
 
 export function initGlobalEvents() {
@@ -76,7 +83,7 @@ export function initGlobalEvents() {
         }
     }, 45000);
 
-
+    renderHub();
     attachNavBarEvents();
     attachMenuEvents();
     attachCartBarEvents();
