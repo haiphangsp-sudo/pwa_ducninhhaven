@@ -8,6 +8,7 @@ import { renderPlacePicker } from '../../ui/render/renderPlacePicker.js';
 import { subscribe, getState } from '../../core/state.js';
 import { renderPanel } from '../../ui/render/renderPanel.js';
 import { renderHub } from '../../ui/render/renderHub.js';
+import { openPicker } from '../../ui/render/renderPlacePicker.js';
 
 
 
@@ -41,8 +42,7 @@ function syncUI(state) {
 
         }
         // Điều khiển Backdrop toàn cục
-            showOverlay(overlay);
-        
+        openPicker();      
     }
     const lang = state.lang.current;
      const panel = state.view.panel;
