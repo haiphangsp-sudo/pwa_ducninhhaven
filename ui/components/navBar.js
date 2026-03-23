@@ -119,5 +119,4 @@ function handleLanguageClick(e) {
   localStorage.setItem("haven_lang", newLang);
   setState({ lang: { current: newLang } });
   
-  updateLanguageActive();
 }
