@@ -49,9 +49,9 @@ function syncUI(state) {
     if (state.view.panel !== lastState.view.panel) {
         const panel = state.view.panel;
         const menuEl = document.getElementById("hubMenu");
-        menuEl.querySelectorAll("[data-action='nav-menu']").forEach(el => {
-            el.classList.toggle("is-active");
-        });
+        menuEl.querySelectorl(`[data-action="nav-menu"]`).classList.remove("is-active");
+        menuEl.querySelectorl(`[data-value="${panel}"]`).classList.add("is-active");
+
         // Logic ẩn hiện các ngăn panel-intro, panel-food...
         renderPanel(panel);
 
