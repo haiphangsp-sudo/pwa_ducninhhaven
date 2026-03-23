@@ -6,7 +6,6 @@ import { resetIdleTimer } from "../../core/idle.js";
 import { attachMenuEvents } from "../components/categoryOption.js";
 import { setDeliveryState } from "../render/renderDelivery.js";
 import { setRecoveryState } from "../render/renderRecovery.js";
-import { attachHubEvents } from "../render/renderHub.js";
 import { attachNavBarEvents } from "../components/navBar.js";
 import { attachDrawerEvents } from "../render/renderDrawer.js";
 import { syncContextToState } from "../../core/state.js";
@@ -23,7 +22,6 @@ export function attachAppEvents() {
     attachNavBarEvents();
     attachMenuEvents();
     attachCartBarEvents();
-    attachHubEvents();
     networkBackEvent();
     attachDrawerEvents();
     attachOrchestrator();
