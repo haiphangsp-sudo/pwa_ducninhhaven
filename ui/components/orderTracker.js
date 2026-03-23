@@ -8,7 +8,6 @@ export function openOrderTracker() {
     const state = getState();
     const active = state.orders?.active || []; // Chặn lỗi nếu state.orders chưa init
     
-    const trackerPage = document.getElementById("orderTrackerPage");
     const listContainer = document.getElementById("orderTrackerList");
 
     // 1. Hiển thị Overlay (Phải gọi ID của Panel/Page)
