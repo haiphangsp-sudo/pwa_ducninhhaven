@@ -19,4 +19,5 @@ export function renderHub() {
       </span>
     </button>
   `).join("");
+  renderPanel(key);
 }

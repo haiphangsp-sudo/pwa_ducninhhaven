@@ -19,7 +19,6 @@ import { renderCartBar } from '../../ui/render/renderCart.js';
 import { renderNavBar } from '../../ui/components/navBar.js';
 import { renderHub } from '../../ui/render/renderHub.js';
 import { renderPlacePicker } from '../../ui/render/renderPlacePicker.js';
-import { renderPanel } from '../../ui/render/renderPanel.js';
 
 
 export function initGlobalEvents() {
@@ -82,7 +81,7 @@ export function initGlobalEvents() {
     }, 45000);
 
     renderHub();
-    renderPanel();
+    
     attachMenuEvents();
     attachCartBarEvents();
     networkBackEvent(); 
