@@ -15,7 +15,8 @@ const refs = {
   identityIcon: null,
   identityLabel: null,
   locLabel: null,
-  langButtons: null
+  langButtons: null,
+  pickerButton: null
 };
 
 let eventsAttached = { nav: false, lang: false };
@@ -31,6 +32,7 @@ export function renderNavBar() {
   refs.langButtons?.forEach(btn => {
     btn.classList.toggle("is-active", btn.dataset.lang === currentLang);
   });
+  refs.pickerButton?.dataset
 
 }
 
@@ -52,6 +54,7 @@ function cacheElements() {
   refs.identityLabel = document.querySelector(".identity-label");
   refs.locLabel = document.querySelector(".loc-label");
   refs.langButtons = document.querySelectorAll("#langSwitch button");
+  refs.pickerButton = document.getElementById("pickerNav");
 }
 
 /**
@@ -94,11 +97,6 @@ function getLocationLabel(ctx) {
 
 export function attachNavBarEvents() {
   if (eventsAttached.nav) return;
-  
-  // Sự kiện chọn vị trí
-  refs.locLabel?.addEventListener("click", () => {
-    openPicker();
-  });
 
   // Sự kiện chuyển ngôn ngữ (Ủy quyền sự kiện)
   

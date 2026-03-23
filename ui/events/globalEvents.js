@@ -12,9 +12,11 @@ import { attachDrawerEvents } from "../render/renderDrawer.js";
 import { syncContextToState } from "../../core/state.js";
 import { attachOrchestrator } from "../../core/events.js";
 import { closeOverlay } from "../interactions/backdropManager.js";
-import { getState } from "../../core/state.js";
 import { syncOrdersWithServer } from "../../core/orders.js";
 import { attachStatusBarEvents } from "../render/renderStatusBar.js";
+import { setState, getState } from "../../core/state.js";
+import { selectPlace } from "../components/placePicker.js";
+
 
 export function attachAppEvents() {
 
@@ -51,3 +53,56 @@ export function attachAppEvents() {
         }
     }, 45000);
 }   
+
+// ui/events/globalEvents.js
+
+export function attachGlobalEvents() {
+    document.addEventListener('click', (e) => {
+        // Tìm phần tử gần nhất có thuộc tính data-action
+        const target = e.target.closest('[data-action]');
+        if (!target) return;
+
+        const action = target.dataset.action;
+        const value = target.dataset.value; // Dùng cho các trường hợp cần ID như PlaceID
+
+        console.log(`Haven Global Event: [${action}]`);
+
+        switch (action) {
+            /* --- Chuyển Panel chính --- */
+            case 'nav-menu':
+                setState({ view: { panel: value } });
+                updateActive(value);
+                break;
+
+            /* --- Quản lý Overlay (Picker, Tracker, Cart) --- */
+            case 'open-overlay':
+                setState({ view: { overlay: value } });
+                break;
+
+            case 'open-tracker':
+                setState({ view: { overlay: 'tracker' } });
+                break;
+
+            case 'close-overlay':
+                setState({ view: { overlay: null } });
+                break;
+
+            /* --- Hành động cụ thể --- */
+            case 'select-place':
+                if (value) selectPlace(value);
+                break;
+
+            case 'toggle-status-bar':
+                const { isBarExpanded } = getState().orders;
+                setState({ orders: { isBarExpanded: !isBarExpanded } });
+                break;
+
+            case 'refresh-orders':
+                syncOrdersWithServer();
+                break;
+
+            default:
+                console.warn(`Hành động chưa được định nghĩa: ${action}`);
+        }
+    });
+}
