@@ -27,6 +27,11 @@ let eventsAttached = { nav: false, lang: false };
 export function renderNavBar() {
   cacheElements();
   updateNavBar();
+  const currentLang = getState().lang.current;
+  refs.langButtons?.forEach(btn => {
+    btn.classList.toggle("is-active", btn.dataset.lang === currentLang);
+  });
+
 }
 
 export function updateNavBar() {
@@ -107,11 +112,7 @@ function handleLanguageClick(e) {
   const btn = e.target.closest("button");
   if (!btn || btn.classList.contains("is-active")) return;
 
-  const currentLang = getState().lang.current;
-  refs.langButtons?.forEach(btn => {
-    btn.classList.toggle("is-active", btn.dataset.lang === currentLang);
-  });
-
+  
   const newLang = btn.dataset.lang;
   
   localStorage.setItem("haven_lang", newLang);
