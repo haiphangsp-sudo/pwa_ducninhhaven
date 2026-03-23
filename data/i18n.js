@@ -23,7 +23,7 @@ export const STRINGS = {
     order: { vi: "Gửi", en: "Order" },
     free: { vi: "Miễn phí", en: "Free" },
     instant: { vi: "Dịch vụ tức thời", en: "Instant service" },
-    add_to_order: { vi: "Thêm vào yêu cầu", en: "Add to order" },
+    add_to_order: { vi: "Thêm yêu cầu", en: "Add to order" },
     send_request: { vi: "Gửi yêu cầu", en: "Send request" },
     empty: { vi: "Giỏ hàng đang trống", en: "Your cart is empty" },
     confirm_changes: { vi: "XÁC NHẬN THAY ĐỔI", en: "CONFIRM CHANGES" },
