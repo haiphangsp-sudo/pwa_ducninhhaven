@@ -13,7 +13,6 @@ import { attachOrchestrator } from "../../core/events.js";
 import { closeOverlay } from "../interactions/backdropManager.js";
 import { syncOrdersWithServer } from "../../core/orders.js";
 import { attachStatusBarEvents } from "../render/renderStatusBar.js";
-import { selectPlace } from "../components/placePicker.js";
 import { renderHub } from '../../ui/render/renderHub.js';
 import { sendInstantOrder } from "../../services/orderService.js";
 import { renderCartBar } from "../../ui/render/renderCart.js";
