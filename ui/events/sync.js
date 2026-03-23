@@ -46,8 +46,11 @@ function syncUI(state) {
 
     // --- KIỂM TRA PANEL (Chuyển trang) ---
     if (state.view.panel !== lastState.view.panel) {
+        const panel = state.view.panel;
         // Logic ẩn hiện các ngăn panel-intro, panel-food...
-        console.log(`UI: Chuyển màn hình sang ${state.view.panel}`);
+        renderPanel(panel);
+
+        console.log(`UI: Chuyển màn hình sa˝ng ${state.view.panel}`);
     }
 
     // QUAN TRỌNG: Cập nhật lại bộ nhớ đệm sau khi đã so sánh xong
