@@ -151,8 +151,8 @@ export function attachDrawerEvents() {
 
         case "send":
           initialCartSnapshot = "[]";
-          sendBtn.disabled = true; // Chống bấm nhiều lần
-          sendBtn.textContent = translate("cart_bar.sending"); 
+          //sendBtn.disabled = true; // Chống bấm nhiều lần
+          //sendBtn.textContent = translate("cart_bar.sending"); 
           dispatchAction({ type: "send_cart" });
           break;
 

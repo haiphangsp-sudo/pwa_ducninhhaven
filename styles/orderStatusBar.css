@@ -157,3 +157,23 @@
 }
 
 .is-collapsed .bar-expanded { display: none; }
+.btn-clear-all {
+    background: transparent;
+    color: #a88a64; /* Màu thương hiệu Haven */
+    border: 1px solid #a88a64;
+    padding: 10px;
+    border-radius: 25px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-clear-all:active {
+    background: rgba(168, 138, 100, 0.1);
+    transform: scale(0.98);
+}
+
+.border-t {
+    border-top: 1px solid rgba(0,0,0,0.05);
+}

@@ -74,11 +74,16 @@
     <div id="overlayBackdrop" class="overlay-backdrop hidden"></div>
     <div class="overlay">
         <div id="orderTrackerPage" class="overlay__panel overlay__panel--center order-tracker-page hidden">
-        <div class="order-tracker-header">
-            <h3>Trạng thái đơn hàng</h3>
-            <button class="btn-close-tracker">✕</button>
-        </div>
-        <div id="orderTrackerList" class="stack gap-m"></div>
+            <div class="order-tracker-header">
+                <h3>Trạng thái đơn hàng</h3>
+                <button class="btn-close-tracker">✕</button>
+            </div>
+            <div id="orderTrackerList" class="stack gap-m"></div>
+            <div id="trackerFooter" class="p-m border-t hidden">
+                <button id="btnClearDoneOrders" class="btn-clear-all w-100">
+                    Dọn dẹp đơn đã hoàn tất
+                </button>
+            </div>
         </div>
         <div id="optionSheet" class="overlay__panel option-sheet hidden"></div>
         <div id="cartDrawer" class="overlay__panel overlay__panel--bottom overlay-drawer hidden">

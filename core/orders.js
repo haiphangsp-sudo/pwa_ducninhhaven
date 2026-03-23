@@ -1,10 +1,16 @@
 // core/orders.js
 import { getState, setState } from './state.js';
 import { CONFIG } from '../config.js';
+import { renderStatusBar } from '../ui/render/renderStatusBar.js';
+import { openOrderTracker } from '../ui/components/orderTracker.js';
 
 
+
+/* ---------- CONSTANTS ---------- */
 
 const SCRIPT_URL = CONFIG.API_ENDPOINT;
+
+/* ---------- PUBLIC ---------- */
 
 
 export function startPollingOrders() {
@@ -26,6 +32,7 @@ export function startPollingOrders() {
         }
     }, 30000); // 30 giây 
 }
+
 
 
 export async function syncOrdersWithServer() {
@@ -56,4 +63,23 @@ export async function syncOrdersWithServer() {
     } catch (error) {
         console.error("Không thể đồng bộ đơn hàng:", error);
     }
+}
+
+
+export function clearCompletedOrders() {
+    const { active } = getState().orders;
+    
+    // 1. Lọc: Chỉ giữ lại những đơn CHƯA HOÀN TẤT
+    const stillActive = active.filter(order => order.status !== 'DONE');
+    
+    // 2. Cập nhật State
+    setState({ orders: { active: stillActive } });
+    
+    // 3. Cập nhật localStorage để đồng bộ ID
+    const activeIds = stillActive.map(o => o.id);
+    localStorage.setItem("haven_active_order_ids", JSON.stringify(activeIds));
+    
+    // 4. Vẽ lại giao diện
+    renderStatusBar();
+    openOrderTracker(); // Để cập nhật lại danh sách đang xem
 }
