@@ -48,6 +48,10 @@ function syncUI(state) {
     // --- KIỂM TRA PANEL (Chuyển trang) ---
     if (state.view.panel !== lastState.view.panel) {
         const panel = state.view.panel;
+        const menuEl = document.getElementById("hubMenu");
+        menuEl.querySelectorAll("[data-action='nav-menu']").forEach(el => {
+            el.classList.toggle("is-active");
+        });
         // Logic ẩn hiện các ngăn panel-intro, panel-food...
         renderPanel(panel);
 

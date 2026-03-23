@@ -8,11 +8,7 @@ import { getCategories } from "../../core/menuQuery.js";
 
 
 export function renderHub() {
-  const menuEl = document.getElementById("hubMenu");
-  if (!menuEl) return;
-
   const panels = getCategories();
-
   menuEl.innerHTML = panels.map(cat => `
     <button class="hub-btn btn center"
       data-action="nav-menu"
@@ -27,12 +23,4 @@ export function renderHub() {
   `).join("");
 
   const panel = UI.view.panel;
-  updateActive(panel);
-}
-
-function updateActive(activeId) {
-  const menuEl = document.getElementById("hubMenu");
-  menuEl.querySelectorAll("[data-action]").forEach(el => {
-    el.classList.toggle("is-active", el.dataset.value === activeId);
-  });
 }
