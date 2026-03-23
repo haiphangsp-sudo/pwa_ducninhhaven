@@ -52,6 +52,7 @@ export function initGlobalEvents() {
 
             case 'change-lang':
                 setState({ lang: { current: value } });
+                localStorage.setItem("haven_lang", value);
                 break;
 
             default:
@@ -81,6 +82,7 @@ export function initGlobalEvents() {
     }, 45000);
 
     renderHub();
+    renderPanel();
     attachMenuEvents();
     attachCartBarEvents();
     networkBackEvent(); 
@@ -90,4 +92,8 @@ export function initGlobalEvents() {
     setDeliveryState("idle");
     setRecoveryState("idle");
 
+}
+export function changLang() {
+    renderHub();
+    renderPanel();
 }

@@ -7,6 +7,8 @@ import { showOverlay } from '../../ui/interactions/backdropManager.js';
 import { renderPlacePicker } from '../../ui/render/renderPlacePicker.js';
 import { subscribe, getState } from '../../core/state.js';
 import { renderPanel } from '../../ui/render/renderPanel.js';
+import { changLang } from '../../ui/events/globalEvents.js';
+
 
 // KHỞI TẠO BỘ NHỚ ĐỆM (Nằm ngoài hàm để không bị reset)
 let lastState = {
@@ -47,13 +49,13 @@ function syncUI(state) {
     if (lang !== lastState.lang.current){
         const langSwitch = document.getElementById("langSwitch");
         if(langSwitch){
-
             langSwitch.querySelectorAll("button").forEach(btn => {
-            // "Join" class: Nếu data-value khớp với State thì thêm, không thì xóa
-            const isActive = btn.dataset.value === lang;
-            btn.classList.toggle("is-active", isActive);
-            localStorage.setItem("haven_lang", lang);
-        });
+                // "Join" class: Nếu data-value khớp với State thì thêm, không thì xóa
+                const isActive = btn.dataset.value === lang;
+                btn.classList.toggle("is-active", isActive);
+                localStorage.setItem("haven_lang", lang);
+            });
+            changLang();
         }
     }
     // --- KIỂM TRA VỊ TRÍ (Identity) ---
