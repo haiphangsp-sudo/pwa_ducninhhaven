@@ -38,7 +38,16 @@ function syncUI(state) {
             backdrop.classList.toggle('hidden', !state.view.overlay);
         }
     }
+    
+    if (state.lang.current !== lastState.lang.current){
+        const langSwitch = document.getElementById("langSwitch");
+        if(langSwitch){
+            langSwitch.querySelector(`[data-lang="${state.lang.current}"]`).classList.add("is-active");
+            langSwitch.querySelector(`[data-lang="${lastState.lang.current}"]`).classList.remove("is-active");
+            localStorage.setItem("haven_lang", newLang);
+        }
 
+    }
     // --- KIỂM TRA VỊ TRÍ (Identity) ---
     // Nếu khách chọn phòng mới (Olive -> Juniper), cập nhật NavBar
     if (state.context.active?.id !== lastState.context.active?.id) {
@@ -56,7 +65,6 @@ function syncUI(state) {
             });
             navMenu.querySelector(`[data-value="${panel}"]`)?.classList.add("is-active");
         }
-        console.log(`UI: Chuyển màn hình sa˝ng ${state.view.panel}`);
     }
 
     // QUAN TRỌNG: Cập nhật lại bộ nhớ đệm sau khi đã so sánh xong
