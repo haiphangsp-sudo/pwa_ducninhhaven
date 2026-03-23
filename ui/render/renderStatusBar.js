@@ -1,6 +1,8 @@
 // ui/render/renderStatusBar.js
 import { getState, setState } from '../../core/state.js';
 import { openOrderTracker } from '../components/orderTracker.js';
+import { translate } from '../utils/translate.js';
+
 
 
 /* =========================
@@ -39,15 +41,8 @@ export function renderStatusBar() {
 
 // Helper để tạo thông báo tinh tế cho Đức Ninh Haven
 function getStatusMessage(status, total) {
-    const messages = {
-        'pending': 'Đang tiếp nhận đơn hàng...',
-        'cooking': 'Bếp đang chuẩn bị món...',
-        'delivering': 'Đang mang tới phòng của bạn...',
-        'recovering': 'Đang phục hồi sự tĩnh lặng...'
-    };
-    
-    const text = messages[status] || 'Đang xử lý...';
-    return total > 1 ? `${text} (+${total - 1} đơn khác)` : text;
+    const text = translate(`status.msg_${status}`) || translate(`status.${status}`);
+    return total > 1 ? `${text} (+${total - 1} ${translate("order.other")}` : text;
 }
 
 /* =========================

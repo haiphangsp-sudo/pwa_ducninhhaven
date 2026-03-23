@@ -32,15 +32,30 @@ export const STRINGS = {
     place_prompt: { vi: "Chọn vị trí", en: "Select a place" },
     sending: { vi: "Đang gửi...", en: "Sending..." }
   },
+
   order: {
+    other: { vi: "Đơn hàng khác", en: "Other orders"},
     confirm: { vi: "Xác nhận", en: "Confirm" },
     cancel: { vi: "Hủy", en: "Cancel" },
     status: { vi: "Trạng thái", en: "Status" },
-    order_id: { vi: "Mã đơn hàng", en: "Order ID" }
-
+    order_id: { vi: "Mã đơn hàng", en: "Order ID" },
+    current_status: { vi: "Tiến độ dịch vụ", en: "Service Progress" },
+    success_title: { vi: "Đặt đơn thành công", en: "Order Placed" },
+    success_msg: { vi: "Yêu cầu của bạn đã được chuyển tới bộ phận liên quan.", en: "Your request has been sent to the relevant department." },
+    check_detail: { vi: "Kiểm tra ❯", en: "Check ❯" },
+    no_active_order: { vi: "Bạn không có đơn hàng nào đang xử lý.", en: "No active orders at the moment." }
   },
-  menu: {
-
+  status: {
+    NEW: { vi: "Đang tiếp nhận", en: "Received" },
+    COOKING: { vi: "Đang chuẩn bị", en: "Preparing" },
+    DELIVERING: { vi: "Đang mang tới", en: "Delivering" },
+    DONE: { vi: "Hoàn tất", en: "Completed" },
+    RECOVERING: { vi: "Đang dọn dẹp", en: "Recovering" },
+    // Tin nhắn thông báo nhanh trên Status Bar
+    msg_NEW: { vi: "Đang tiếp nhận yêu cầu...", en: "Receiving your request..." },
+    msg_COOKING: { vi: "Bếp đang chuẩn bị món...", en: "Kitchen is preparing..." },
+    msg_DELIVERING: { vi: "Đang mang tới phòng của bạn...", en: "On the way to your room..." },
+    msg_RECOVERING: { vi: "Đang phục hồi sự tĩnh lặng...", en: "Restoring the serenity..." }
   },
   place: {
     select: { vi: "Bạn muốn phục vụ ở đâu?", en: "Where would you like to serve?" },
