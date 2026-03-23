@@ -52,16 +52,14 @@ export function initGlobalEvents() {
             
             case "cart":
             case "instant":
-                if (btn) {
-                    const payload = {
-                        type: action,
-                        category: target.dataset.category,
-                        item: target.dataset.item,
-                        option: value,
-                        qty: 1
-                    };  
-                    handleAction(payload)
-                }
+                const payload = {
+                    type: action,
+                    category: target.dataset.category,
+                    item: target.dataset.item,
+                    option: value,
+                    qty: 1
+                };  
+                handleAction(payload)
                 break;
             
             case "send_cart":
