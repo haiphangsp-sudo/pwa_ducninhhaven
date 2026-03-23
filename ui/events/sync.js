@@ -48,13 +48,14 @@ function syncUI(state) {
     // --- KIỂM TRA PANEL (Chuyển trang) ---
     if (state.view.panel !== lastState.view.panel) {
         const panel = state.view.panel;
+        renderPanel(panel);
         const navMenu = document.Selectorl(`[data-action="nav-menu"]`);
 
         navMenu.classList.remove("is-active");
         navMenu.querySelectorl(`[data-value="${panel}"]`).classList.add("is-active");
 
         // Logic ẩn hiện các ngăn panel-intro, panel-food...
-        renderPanel(panel);
+        
 
         console.log(`UI: Chuyển màn hình sa˝ng ${state.view.panel}`);
     }
