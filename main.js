@@ -110,7 +110,7 @@ async function boot() {
   renderApp();
   attachAppEvents();
   watchMenu();
-  subscribe(renderApp);
+  //subscribe(renderApp);
   initUISync();
 
 }
