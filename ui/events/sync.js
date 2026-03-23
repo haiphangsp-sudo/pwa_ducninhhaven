@@ -38,13 +38,14 @@ function syncUI(state) {
             backdrop.classList.toggle('hidden', !state.view.overlay);
         }
     }
-    
-    if (state.lang.current !== lastState.lang.current){
+    const lang = state.lang.current;
+
+    if (lang !== lastState.lang.current){
         const langSwitch = document.getElementById("langSwitch");
         if(langSwitch){
-            langSwitch.querySelector(`[data-lang="${state.lang.current}"]`)?.classList.add("is-active");
-            langSwitch.querySelector(`[data-lang="${lastState.lang.current}"]`)?.classList.remove("is-active");
-            localStorage.setItem("haven_lang", newLang);
+            langSwitch.querySelector(`[data-lang="${lang}"]`)?.classList.add("is-active");
+            langSwitch.querySelector(`[data-lang="${lang}"]`)?.classList.remove("is-active");
+            localStorage.setItem("haven_lang", lang);
         }
 
     }
