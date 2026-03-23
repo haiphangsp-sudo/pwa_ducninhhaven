@@ -20,7 +20,6 @@ import { renderNavBar } from '../../ui/components/navBar.js';
 import { renderHub } from '../../ui/render/renderHub.js';
 import { renderPlacePicker } from '../../ui/render/renderPlacePicker.js';
 import { renderPanel } from '../../ui/render/renderPanel.js';
-import { renderMenu } from "../../ui/render/renderCategory.js";
 
 
 export function initGlobalEvents() {
@@ -95,7 +94,9 @@ export function initGlobalEvents() {
 
 }
 export function changLang() {
+    
     renderHub();
-    renderPanel();
-    renderMenu()
+    const panel = state.view.panel;
+    renderPanel(panel);
+    
 }

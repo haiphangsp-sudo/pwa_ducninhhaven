@@ -67,7 +67,7 @@ function syncUI(state) {
     // --- KIỂM TRA PANEL (Chuyển trang) ---
     if (state.view.panel !== lastState.view.panel) {
         const panel = state.view.panel;
-        renderPanel(panel);
+        
         const navMenu = document.getElementById('hubMenu');
         if (navMenu) { 
             navMenu.querySelectorAll(`[data-value]`).forEach((item) => {
@@ -76,6 +76,7 @@ function syncUI(state) {
             navMenu.querySelector(`[data-value="${panel}"]`)?.classList.add("is-active");
             
         }
+        renderPanel(panel);
     }
 
     // QUAN TRỌNG: Cập nhật lại bộ nhớ đệm sau khi đã so sánh xong
