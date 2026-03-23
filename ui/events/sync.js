@@ -8,7 +8,7 @@ import { renderPlacePicker } from '../../ui/render/renderPlacePicker.js';
 import { subscribe, getState } from '../../core/state.js';
 import { renderPanel } from '../../ui/render/renderPanel.js';
 import { renderHub } from '../../ui/render/renderHub.js';
-import { openPicker } from '../../ui/render/renderPlacePicker.js';
+import { renderPlacePicker } from '../../ui/render/renderPlacePicker.js';
 
 
 
