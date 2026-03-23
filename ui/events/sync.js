@@ -7,9 +7,11 @@ import { renderNavBar } from '../../ui/components/navBar.js';
 import { renderPanel } from '../../ui/render/renderPanel.js';
 import { renderHub } from '../../ui/render/renderHub.js';
 import { showOverlay } from '../../ui/interactions/backdropManager.js';
+import { renderPlacePicker } from '../../ui/render/renderPlacePicker.js';
 
 
 export function initUISync() {
+    renderNavBar();
     renderHub();
     subscribe(renderApp);
   // Lắng nghe mọi sự thay đổi của State
