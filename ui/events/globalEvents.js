@@ -81,7 +81,6 @@ export function initGlobalEvents() {
     }, 45000);
 
     renderHub();
-    
     attachMenuEvents();
     attachCartBarEvents();
     networkBackEvent(); 
@@ -91,9 +90,4 @@ export function initGlobalEvents() {
     setDeliveryState("idle");
     setRecoveryState("idle");
 
-}
-export function changLang() {
-    
-    renderHub();
-    
 }
