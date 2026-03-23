@@ -42,8 +42,8 @@ function syncUI(state) {
     if (state.lang.current !== lastState.lang.current){
         const langSwitch = document.getElementById("langSwitch");
         if(langSwitch){
-            langSwitch.querySelector(`[data-lang="${state.lang.current}"]`).classList.add("is-active");
-            langSwitch.querySelector(`[data-lang="${lastState.lang.current}"]`).classList.remove("is-active");
+            langSwitch.querySelector(`[data-lang="${state.lang.current}"]`)?.classList.add("is-active");
+            langSwitch.querySelector(`[data-lang="${lastState.lang.current}"]`)?.classList.remove("is-active");
             localStorage.setItem("haven_lang", newLang);
         }
 
