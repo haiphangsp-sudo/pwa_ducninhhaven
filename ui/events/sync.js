@@ -47,11 +47,14 @@ function syncUI(state) {
     if (lang !== lastState.lang.current){
         const langSwitch = document.getElementById("langSwitch");
         if(langSwitch){
-            langSwitch.querySelector(`[data-lang="${lang}"]`)?.classList.add("is-active");
-            langSwitch.querySelector(`[data-lang="${lang}"]`)?.classList.remove("is-active");
-            localStorage.setItem("haven_lang", lang);
-        }
 
+            langSwitch.querySelectorAll("button").forEach(btn => {
+            // "Join" class: Nếu data-value khớp với State thì thêm, không thì xóa
+            const isActive = btn.dataset.value === lang;
+            btn.classList.toggle("is-active", isActive);
+            localStorage.setItem("haven_lang", lang);
+        });
+        }
     }
     // --- KIỂM TRA VỊ TRÍ (Identity) ---
     // Nếu khách chọn phòng mới (Olive -> Juniper), cập nhật NavBar
@@ -69,6 +72,7 @@ function syncUI(state) {
                 item.classList.remove("is-active");
             });
             navMenu.querySelector(`[data-value="${panel}"]`)?.classList.add("is-active");
+            
         }
     }
 
