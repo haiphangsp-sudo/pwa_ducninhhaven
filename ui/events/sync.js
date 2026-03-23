@@ -7,7 +7,6 @@ import { showOverlay } from '../../ui/interactions/backdropManager.js';
 import { renderPlacePicker } from '../../ui/render/renderPlacePicker.js';
 import { subscribe, getState } from '../../core/state.js';
 import { renderPanel } from '../../ui/render/renderPanel.js';
-import { changLang } from '../../ui/events/globalEvents.js';
 
 
 // KHỞI TẠO BỘ NHỚ ĐỆM (Nằm ngoài hàm để không bị reset)
@@ -45,7 +44,7 @@ function syncUI(state) {
         
     }
     const lang = state.lang.current;
-
+     const panel = state.view.panel;
     if (lang !== lastState.lang.current){
         const langSwitch = document.getElementById("langSwitch");
         if(langSwitch){
@@ -54,8 +53,10 @@ function syncUI(state) {
                 const isActive = btn.dataset.value === lang;
                 btn.classList.toggle("is-active", isActive);
                 localStorage.setItem("haven_lang", lang);
+                renderHub();
+                renderPanel(panel);
             });
-            changLang();
+            
         }
     }
     // --- KIỂM TRA VỊ TRÍ (Identity) ---
@@ -66,7 +67,7 @@ function syncUI(state) {
 
     // --- KIỂM TRA PANEL (Chuyển trang) ---
     if (state.view.panel !== lastState.view.panel) {
-        const panel = state.view.panel;
+       
         
         const navMenu = document.getElementById('hubMenu');
         if (navMenu) { 
