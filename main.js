@@ -2,7 +2,6 @@
 // Ứng dụng chính, khởi tạo và kết nối các phần với nhau
 // entry point
 
-import { renderApp } from "./ui/render/renderApp.js";
 import { CONFIG } from "./config.js";
 import { loadMenu, MENU } from "./core/menuStore.js";
 import { applyEntryPlaceById, normalizeContext } from "./core/context.js";
