@@ -41,14 +41,22 @@ export function initGlobalEvents() {
 
             case 'open-overlay': // Mở PlacePicker, Tracker...
                 setState({ view: { overlay: value } });
+
                 break;
 
             case 'close-overlay':
                 setState({ view: { overlay: null } });
                 break;
 
-            case 'select-place': // Chọn phòng/bàn cụ thể
-                if (value) selectPlace(value);
+            case 'select-place':
+                if (value) {
+                    // Thay thế hàm selectPlace(value) cũ bằng lệnh trực tiếp
+                    setState({ 
+                        context: { active: { id: value } },
+                        view: { overlay: null } 
+                    });
+                    console.log(`Haven System: Đã chuyển bối cảnh sang ${value}`);
+                }
                 break;
             
             case "cart":
@@ -110,7 +118,7 @@ export function initGlobalEvents() {
     attachStatusBarEvents();
     setDeliveryState("idle");
     setRecoveryState("idle");
-
+    
 }
 
 /* =========================

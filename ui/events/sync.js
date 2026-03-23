@@ -37,7 +37,7 @@ function syncUI(state) {
         
         if (overlay === 'placePicker') {
             renderPlacePicker(state, lastState);
-        } else {
+        } else if(overlay === 'new'){
 
         }
         // Điều khiển Backdrop toàn cục
