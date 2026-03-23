@@ -40,7 +40,6 @@ function syncUI(state) {
 
         }
         // Điều khiển Backdrop toàn cục
-        const backdrop = document.getElementById('overlayBackdrop');
             showOverlay(overlay);
         
     }

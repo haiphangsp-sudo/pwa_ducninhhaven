@@ -30,6 +30,11 @@ export const UI = {
     items: [],    // 'idle' (mặc định), 'modified' (đã sửa), 'sending' (đang gửi), 
     status: 'idle' // 'success' (thành công - thay cho ack), 'error' (lỗi)
   },
+  instant: {
+    items: [],
+    status: 'idle'
+  },
+  
 
   /* ---------------- ACK (tap feedback) ---------------- */
 
