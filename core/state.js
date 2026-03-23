@@ -20,7 +20,8 @@ export const UI = {
   /* ---------------- NAVIGATION ---------------- */
 
   view:{
-    panel:"intro"
+    panel: "intro",
+    overlay: null // placePicker || cartDrawer
   },
 
   /* ---------------- CART ---------------- */
@@ -71,7 +72,6 @@ export const UI = {
   }
 
 };
-
 /* ======================================================= */
 
 let listeners=[];

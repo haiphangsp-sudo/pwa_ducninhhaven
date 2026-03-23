@@ -6,6 +6,7 @@ import { renderCartBar } from '../../ui/render/renderCart.js';
 import { renderNavBar } from '../../ui/components/navBar.js';
 import { renderPanel } from '../../ui/render/renderPanel.js';
 import { renderHub } from '../../ui/render/renderHub.js';
+import { showOverlay } from '../../ui/interactions/backdropManager.js';
 
 
 export function initUISync() {
@@ -33,14 +34,15 @@ export function initUISync() {
 }
 
 function renderApp(state) {
-    // main.js
 
 // Lưu trữ các giá trị của lần render cuối cùng
+// Bộ nhớ đệm để so sánh sự thay đổi (Diffing)
 let lastState = {
     panel: null,
     lang: null,
     placeId: null,
-    errorActive: null
+    errorActive: null,
+    overlay: null
 };
 
 
@@ -69,6 +71,14 @@ let lastState = {
         console.log(`UI Diff: Identity updated to ${currentPlaceId}`);
         renderNavBar();
     }
+
+    if (lastState.overlay !== state.view.overlay) {
+        lastState.overlay = state.view.overlay;
+        syncPlacePickerUI(state, lastState);
+        console.log(`UI Diff: Overlay updated to ${state.view.overlay}`);
+        showOverlay(lastState.overlay);
+    }
+
 
     // 4. Diffing Lỗi hệ thống: Chỉ can thiệp vào DOM khi trạng thái lỗi thay đổi
     if (state.error.active !== lastState.errorActive) {
