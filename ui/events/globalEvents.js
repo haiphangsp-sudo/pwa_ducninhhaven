@@ -1,5 +1,5 @@
-
-
+// ui/events/globalEvents.js
+import { setState, getState } from "../../core/state.js";
 import { attachCartBarEvents } from "../render/renderCart.js";
 import { networkBackEvent } from "../../services/network.js";
 import { resetIdleTimer } from "../../core/idle.js";
@@ -13,22 +13,47 @@ import { attachOrchestrator } from "../../core/events.js";
 import { closeOverlay } from "../interactions/backdropManager.js";
 import { syncOrdersWithServer } from "../../core/orders.js";
 import { attachStatusBarEvents } from "../render/renderStatusBar.js";
-import { setState, getState } from "../../core/state.js";
 import { selectPlace } from "../components/placePicker.js";
 
 
-export function attachAppEvents() {
+export function initGlobalEvents() {
+    // 1. Gắn các sự kiện cũ (nếu bạn chưa chuyển hết sang data-action)
+    // attachNavBarEvents(); 
+    // attachMenuEvents();
 
-    attachNavBarEvents();
-    attachMenuEvents();
-    attachCartBarEvents();
-    networkBackEvent();
-    attachDrawerEvents();
-    attachOrchestrator();
-    attachStatusBarEvents();
+    // 2. Bộ lắng nghe TOÀN CỤC (Event Delegation)
+    document.addEventListener('click', (e) => {
+        const target = e.target.closest('[data-action]');
+        if (!target) return;
 
-    setDeliveryState("idle");
-    setRecoveryState("idle");
+        const { action, value } = target.dataset;
+        console.log(`[Event] Action: ${action}, Value: ${value}`);
+
+        switch (action) {
+            case 'nav': // Chuyển panel chính (intro, food...)
+                setState({ view: { panel: value } });
+                break;
+
+            case 'open-overlay': // Mở PlacePicker, Tracker...
+                setState({ view: { overlay: value } });
+                break;
+
+            case 'close-overlay':
+                setState({ view: { overlay: null } });
+                break;
+
+            case 'select-place': // Chọn phòng/bàn cụ thể
+                if (value) selectPlace(value);
+                break;
+
+            case 'set-lang':
+                setState({ lang: { current: value } });
+                break;
+
+            default:
+                console.warn("Hành động chưa được định nghĩa:", action);
+        }
+    });
 
     ["touchstart", "pointerdown", "click"].forEach(evt => {
         document.addEventListener(evt, resetIdleTimer, { passive: true });
@@ -50,57 +75,16 @@ export function attachAppEvents() {
             syncOrdersWithServer();
         }
     }, 45000);
-}   
 
-// ui/events/globalEvents.js
 
-export function attachGlobalEvents() {
-    document.addEventListener('click', (e) => {
-        // Tìm phần tử gần nhất có thuộc tính data-action
-        const target = e.target.closest('[data-action]');
-        if (!target) return;
+    attachNavBarEvents();
+    attachMenuEvents();
+    attachCartBarEvents();
+    networkBackEvent(); 
+    attachDrawerEvents();
+    attachOrchestrator();
+    attachStatusBarEvents();
+    setDeliveryState("idle");
+    setRecoveryState("idle");
 
-        const action = target.dataset.action;
-        const value = target.dataset.value; // Dùng cho các trường hợp cần ID như PlaceID
-
-        console.log(`Haven Global Event: [${action}]`);
-
-        switch (action) {
-            /* --- Chuyển Panel chính --- */
-            case 'nav-menu':
-                setState({ view: { panel: value } });
-                updateActive(value);
-                break;
-
-            /* --- Quản lý Overlay (Picker, Tracker, Cart) --- */
-            case 'open-overlay':
-                setState({ view: { overlay: value } });
-                break;
-
-            case 'open-tracker':
-                setState({ view: { overlay: 'tracker' } });
-                break;
-
-            case 'close-overlay':
-                setState({ view: { overlay: null } });
-                break;
-
-            /* --- Hành động cụ thể --- */
-            case 'select-place':
-                if (value) selectPlace(value);
-                break;
-
-            case 'toggle-status-bar':
-                const { isBarExpanded } = getState().orders;
-                setState({ orders: { isBarExpanded: !isBarExpanded } });
-                break;
-
-            case 'refresh-orders':
-                syncOrdersWithServer();
-                break;
-
-            default:
-                console.warn(`Hành động chưa được định nghĩa: ${action}`);
-        }
-    });
 }

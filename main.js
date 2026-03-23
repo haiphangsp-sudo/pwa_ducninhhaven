@@ -8,7 +8,7 @@ import { applyEntryPlaceById, normalizeContext } from "./core/context.js";
 import { loadCart } from "./core/events.js";
 import { detectRecovery } from "./core/queue.js";
 import { loadPlaces } from "./core/placesStore.js";
-import { attachAppEvents } from "./ui/events/globalEvents.js"; 
+import { initGlobalEvents } from "./ui/events/globalEvents.js"; 
 import { initUISync } from "./ui/events/sync.js";
    
 
@@ -104,8 +104,7 @@ async function boot() {
   
   loadCart();
   detectRecovery();
-  attachAppEvents();
   watchMenu();
   initUISync();
-
+  initGlobalEvents();
 }
