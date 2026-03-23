@@ -9,6 +9,7 @@ import { getCategories } from "../../core/menuQuery.js";
 
 export function renderHub() {
   const panels = getCategories();
+  const menuEl = document.getElementById("hubMenu");
   menuEl.innerHTML = panels.map(cat => `
     <button class="hub-btn btn center"
       data-action="nav-menu"
