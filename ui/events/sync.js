@@ -3,7 +3,6 @@ import { renderStatusBar } from '../../ui/render/renderStatusBar.js';
 import { renderDrawer } from '../../ui/render/renderDrawer.js';
 import { renderCartBar } from '../../ui/render/renderCart.js';
 import { renderNavBar } from '../../ui/components/navBar.js';
-import { renderHub } from '../../ui/render/renderHub.js';
 import { showOverlay } from '../../ui/interactions/backdropManager.js';
 import { renderPlacePicker } from '../../ui/render/renderPlacePicker.js';
 import { subscribe, getState } from '../../core/state.js';
@@ -29,14 +28,19 @@ export function initUISync() {
 function syncUI(state) {
     // --- KIỂM TRA OVERLAY (PlacePicker) ---
     // Chỉ vẽ lại nếu trạng thái overlay thay đổi (null <-> placePicker)
-    if (state.view.overlay !== lastState.view.overlay) {
-        renderPlacePicker(state, lastState);
+    const pickerNav = document.getElementById('pickerNav');
+    const overlay = state.view.overlay;
+    if (overlay !== lastState.view.overlay) {
         
+        if (overlay === 'placePicker') {
+            renderPlacePicker(state, lastState);
+        } else {
+
+        }
         // Điều khiển Backdrop toàn cục
         const backdrop = document.getElementById('overlayBackdrop');
-        if (backdrop) {
-            backdrop.classList.toggle('hidden', !state.view.overlay);
-        }
+            showOverlay(overlay);
+        
     }
     const lang = state.lang.current;
 
