@@ -15,8 +15,7 @@ const refs = {
   identityIcon: null,
   identityLabel: null,
   locLabel: null,
-  langButtons: null,
-  pickerButton: null
+  langButtons: null
 };
 
 let eventsAttached = { nav: false, lang: false };
@@ -32,7 +31,6 @@ export function renderNavBar() {
   refs.langButtons?.forEach(btn => {
     btn.classList.toggle("is-active", btn.dataset.lang === currentLang);
   });
-  refs.pickerButton?.dataset
 
 }
 
