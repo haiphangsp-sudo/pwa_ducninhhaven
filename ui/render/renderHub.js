@@ -26,9 +26,8 @@ export function renderHub() {
     </button>
   `).join("");
 
-  const panel = UI.view?.panel || panels[0]?.key;
+  const panel = UI.view.panel;
   updateActive(panel);
-  renderPanel(panel);
 }
 
 function updateActive(activeId) {
