@@ -34,7 +34,6 @@ export function initGlobalEvents() {
         if (!target) return;
 
         const { action, value } = target.dataset;
-        console.log(`[Event] Action: ${action}, Value: ${value}`);
 
         switch (action) {
             case 'nav-menu': // Chuyển panel chính (intro, food...)
@@ -53,7 +52,7 @@ export function initGlobalEvents() {
                 if (value) selectPlace(value);
                 break;
 
-            case 'set-lang':
+            case 'change-lang':
                 setState({ lang: { current: value } });
                 break;
 

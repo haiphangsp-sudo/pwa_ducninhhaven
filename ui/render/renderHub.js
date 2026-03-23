@@ -1,11 +1,8 @@
 
 // ui/render/renderHub.js
 
-import { UI, setState } from "../../core/state.js";
 import { translate } from "../utils/translate.js";
-import { renderPanel } from "./renderPanel.js";
 import { getCategories } from "../../core/menuQuery.js";
-
 
 export function renderHub() {
   const panels = getCategories();
@@ -22,6 +19,4 @@ export function renderHub() {
       </span>
     </button>
   `).join("");
-
-  const panel = UI.view.panel;
 }

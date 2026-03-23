@@ -14,11 +14,8 @@ import { getPlaceIcon } from "../../data/helpers.js";
 const refs = {
   identityIcon: null,
   identityLabel: null,
-  locLabel: null,
-  langButtons: null
+  locLabel: null
 };
-
-let eventsAttached = { nav: false, lang: false };
 
 /* =========================
    PUBLIC METHODS
@@ -87,31 +84,4 @@ function getLocationLabel(ctx) {
   }
 
   return placeName;
-}
-
-/* =========================
-   EVENTS
-========================= */
-
-export function attachNavBarEvents() {
-  if (eventsAttached.nav) return;
-
-  // Sự kiện chuyển ngôn ngữ (Ủy quyền sự kiện)
-  
-  const langSwitch = document.getElementById("langSwitch");
-  langSwitch?.addEventListener("click", handleLanguageClick);
-
-  eventsAttached.nav = true;
-}
-
-function handleLanguageClick(e) {
-  const btn = e.target.closest("button");
-  if (!btn || btn.classList.contains("is-active")) return;
-
-  
-  const newLang = btn.dataset.lang;
-  
-  localStorage.setItem("haven_lang", newLang);
-  setState({ lang: { current: newLang } });
-  
 }
