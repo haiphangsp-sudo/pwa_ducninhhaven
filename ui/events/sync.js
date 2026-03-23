@@ -3,6 +3,10 @@ import { subscribe } from '../../core/state.js';
 import { renderStatusBar } from '../../ui/render/renderStatusBar.js';
 import { renderDrawer } from '../../ui/render/renderDrawer.js';
 import { renderCartBar } from '../../ui/render/renderCart.js';
+import { renderNavBar } from '../../ui/components/navBar.js';
+import { renderPanel } from '../../ui/render/renderPanel.js';
+import { renderHub } from '../../ui/render/renderHub.js';
+
 
 export function initUISync() {
     renderHub();
