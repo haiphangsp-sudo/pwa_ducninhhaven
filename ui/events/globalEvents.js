@@ -16,6 +16,7 @@ import { attachStatusBarEvents } from "../render/renderStatusBar.js";
 import { selectPlace } from "../components/placePicker.js";
 import { renderHub } from '../../ui/render/renderHub.js';
 import { sendInstantOrder } from "../../services/orderService.js";
+import { renderCartBar } from "../../ui/render/renderCart.js";
 
 
 /* =========================
@@ -100,6 +101,7 @@ export function initGlobalEvents() {
     }, 45000);
 
     renderHub();
+    renderCartBar();
     attachMenuEvents();
     attachCartBarEvents();
     networkBackEvent(); 
