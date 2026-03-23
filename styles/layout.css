@@ -149,3 +149,31 @@
 .color-brand {
     color: var(--color-primary, #2c3e50); 
 }
+/* Layout & Spacing */
+.stack { display: flex; flex-direction: column; }
+.row { display: flex; flex-direction: row; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.center { display: flex; justify-content: center; align-items: center; }
+.gap-s { gap: 4px; }
+.gap-m { gap: 12px; }
+.p-m { padding: 12px; }
+.p-xl { padding: 32px; }
+.mb-s { margin-bottom: 4px; }
+.mb-m { margin-bottom: 12px; }
+
+/* Decor */
+.radius-m { border-radius: 12px; }
+.bg-white { background: #ffffff; }
+.shadow-sm { box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+.border { border: 1px solid rgba(0,0,0,0.08); }
+.opacity-70 { opacity: 0.7; }
+.hidden { display: none !important; }
+
+/* Typography */
+.text-s { font-size: 0.85rem; }
+.text-m { font-size: 1rem; }
+.text-xs { font-size: 0.75rem; }
+.text-bold { font-weight: 600; }
+.color-brand { color: #2f5d46; } /* Màu xanh Haven */
+.text-muted { color: #888; }
