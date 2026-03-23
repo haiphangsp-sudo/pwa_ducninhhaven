@@ -30,7 +30,7 @@ export function initGlobalEvents() {
         console.log(`[Event] Action: ${action}, Value: ${value}`);
 
         switch (action) {
-            case 'nav': // Chuyển panel chính (intro, food...)
+            case 'nav-menu': // Chuyển panel chính (intro, food...)
                 setState({ view: { panel: value } });
                 break;
 
