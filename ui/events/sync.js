@@ -37,7 +37,10 @@ function syncUI(state) {
     if (overlay !== lastState.view.overlay) {
         
         if (overlay === 'placePicker') {
-            openPicker(); 
+            renderPlacePicker(state, lastState);
+
+            // 2. Sau đó mới cập nhật "ký ức"
+            lastState.overlay = state.view.overlay;
         } else if(overlay === 'new'){
 
         }
