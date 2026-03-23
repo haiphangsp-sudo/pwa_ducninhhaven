@@ -74,6 +74,7 @@ function syncUI(state) {
                 item.classList.remove("is-active");
             });
             navMenu.querySelector(`[data-value="${panel}"]`)?.classList.add("is-active");
+            renderPanel(panel);
         }
         
     }

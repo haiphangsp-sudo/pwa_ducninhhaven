@@ -4,6 +4,7 @@
 import { getCategory } from "../../core/menuQuery.js";
 import { renderArticle } from "./renderArticle.js";
 import { renderMenu } from "./renderCategory.js";
+
 export function renderPanel(key){
   const container = document.querySelector(".category-panel");
   if(!container) return;
