@@ -48,9 +48,8 @@ function syncUI(state) {
     // --- KIỂM TRA PANEL (Chuyển trang) ---
     if (state.view.panel !== lastState.view.panel) {
         const panel = state.view.panel;
-        const menuEl = document.getElementById("hubMenu");
-        menuEl.querySelectorl(`[data-action="nav-menu"]`).classList.remove("is-active");
-        menuEl.querySelectorl(`[data-value="${panel}"]`).classList.add("is-active");
+        document.querySelectorl(`[data-action="nav-menu"]`).classList.remove("is-active");
+        document.querySelectorl(`[data-action="nav-menu" [data-value="${panel}"]`).classList.add("is-active");
 
         // Logic ẩn hiện các ngăn panel-intro, panel-food...
         renderPanel(panel);
