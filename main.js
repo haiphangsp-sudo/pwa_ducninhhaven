@@ -2,7 +2,6 @@
 // Ứng dụng chính, khởi tạo và kết nối các phần với nhau
 // entry point
 
-import { subscribe } from "./core/state.js";
 import { renderApp } from "./ui/render/renderApp.js";
 import { CONFIG } from "./config.js";
 import { loadMenu, MENU } from "./core/menuStore.js";
@@ -99,7 +98,6 @@ async function boot() {
 
   checkVersion();
   registerSW();
-
   await loadMenu();
   await loadPlaces();
   applyURLContext();   // ← phải chạy trước render
@@ -107,10 +105,8 @@ async function boot() {
   
   loadCart();
   detectRecovery();
-  renderApp();
   attachAppEvents();
   watchMenu();
-  //subscribe(renderApp);
   initUISync();
 
 }
