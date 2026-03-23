@@ -1,8 +1,8 @@
 // ui/sync.js hoặc main.js
-import { subscribe } from '../core/state.js';
-import { renderStatusBar } from './render/renderStatusBar.js';
-import { renderDrawer } from './render/renderDrawer.js';
-import { renderCartBar } from './render/renderCart.js';
+import { subscribe } from '../../core/state.js';
+import { renderStatusBar } from '../../ui/render/renderStatusBar.js';
+import { renderDrawer } from '../../ui/render/renderDrawer.js';
+import { renderCartBar } from '../../ui/render/renderCart.js';
 
 export function initUISync() {
   // Lắng nghe mọi sự thay đổi của State
