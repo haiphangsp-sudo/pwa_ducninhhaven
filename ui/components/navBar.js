@@ -27,7 +27,6 @@ let eventsAttached = { nav: false, lang: false };
 export function renderNavBar() {
   cacheElements();
   updateNavBar();
-  updateLanguageActive();
 }
 
 export function updateNavBar() {
@@ -84,13 +83,6 @@ function getLocationLabel(ctx) {
   return placeName;
 }
 
-function updateLanguageActive() {
-  const currentLang = getState().lang.current;
-  refs.langButtons?.forEach(btn => {
-    btn.classList.toggle("is-active", btn.dataset.lang === currentLang);
-  });
-}
-
 /* =========================
    EVENTS
 ========================= */
@@ -104,6 +96,10 @@ export function attachNavBarEvents() {
   });
 
   // Sự kiện chuyển ngôn ngữ (Ủy quyền sự kiện)
+  const currentLang = getState().lang.current;
+  refs.langButtons?.forEach(btn => {
+    btn.classList.toggle("is-active", btn.dataset.lang === currentLang);
+  });
   const langSwitch = document.getElementById("langSwitch");
   langSwitch?.addEventListener("click", handleLanguageClick);
 
