@@ -96,10 +96,7 @@ export function attachNavBarEvents() {
   });
 
   // Sự kiện chuyển ngôn ngữ (Ủy quyền sự kiện)
-  const currentLang = getState().lang.current;
-  refs.langButtons?.forEach(btn => {
-    btn.classList.toggle("is-active", btn.dataset.lang === currentLang);
-  });
+  
   const langSwitch = document.getElementById("langSwitch");
   langSwitch?.addEventListener("click", handleLanguageClick);
 
@@ -110,7 +107,12 @@ function handleLanguageClick(e) {
   const btn = e.target.closest("button");
   if (!btn || btn.classList.contains("is-active")) return;
 
-  const newLang = btn.dataset.lang === "en" ? "en" : "vi";
+  const currentLang = getState().lang.current;
+  refs.langButtons?.forEach(btn => {
+    btn.classList.toggle("is-active", btn.dataset.lang === currentLang);
+  });
+
+  const newLang = btn.dataset.lang;
   
   localStorage.setItem("haven_lang", newLang);
   setState({ lang: { current: newLang } });
