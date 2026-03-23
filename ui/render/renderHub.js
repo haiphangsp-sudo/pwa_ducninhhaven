@@ -3,6 +3,7 @@
 
 import { translate } from "../utils/translate.js";
 import { getCategories } from "../../core/menuQuery.js";
+import { renderPanel } from "./renderPanel.js";
 
 export function renderHub() {
   const panels = getCategories();
