@@ -6,7 +6,6 @@ import { resetIdleTimer } from "../../core/idle.js";
 import { attachMenuEvents } from "../components/categoryOption.js";
 import { setDeliveryState } from "../render/renderDelivery.js";
 import { setRecoveryState } from "../render/renderRecovery.js";
-import { attachNavBarEvents } from "../components/navBar.js";
 import { attachDrawerEvents } from "../render/renderDrawer.js";
 import { syncContextToState } from "../../core/state.js";
 import { attachOrchestrator } from "../../core/events.js";
@@ -25,7 +24,6 @@ import { renderPlacePicker } from '../../ui/render/renderPlacePicker.js';
 
 export function initGlobalEvents() {
     // 1. Gắn các sự kiện cũ (nếu bạn chưa chuyển hết sang data-action)
-    // attachNavBarEvents(); 
     // attachMenuEvents();
 
     // 2. Bộ lắng nghe TOÀN CỤC (Event Delegation)
@@ -83,7 +81,6 @@ export function initGlobalEvents() {
     }, 45000);
 
     renderHub();
-    attachNavBarEvents();
     attachMenuEvents();
     attachCartBarEvents();
     networkBackEvent(); 
