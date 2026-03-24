@@ -20,7 +20,16 @@ export function attachAppEvents() {
     attachOrchestrator();
 
     document.addEventListener("click", handleGlobalClick);
+    
     window.addEventListener("intentresume", (e) => {
+        if (e.detail?.type === "send_cart") {
+            setTimeout(() => {
+                openCartDrawer();
+            }, 300);
+        }
+    });
+
+    window.addEventListener("contextchange", (e) => {
         dispatchAction({ mode: e.detail.mode });
     });
 

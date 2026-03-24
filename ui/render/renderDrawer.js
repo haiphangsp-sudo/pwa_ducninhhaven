@@ -114,10 +114,7 @@ export function renderDrawer() {
  */
 
 export function attachDrawerEvents() {
-  const itemsRoot = document.getElementById("drawerItems");
-
-  if (itemsRoot) {
-    itemsRoot.addEventListener("click", (e) => {
+    document.getElementById("drawerItems").addEventListener("click", (e) => {
       const btn = e.target.closest(".qty-btn");
       if (!btn) return;
 
@@ -125,14 +122,5 @@ export function attachDrawerEvents() {
         parseInt(btn.dataset.index, 10),
         btn.classList.contains("plus") ? 1 : -1
       );
-    });
-  }
-  
-  window.addEventListener("intentresume", (e) => {
-        if (e.detail?.type === "send_cart") {
-            setTimeout(() => {
-                openCartDrawer();
-            }, 300);
-        }
     });
 }
