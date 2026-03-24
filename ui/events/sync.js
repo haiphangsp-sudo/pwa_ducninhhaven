@@ -64,7 +64,6 @@ function syncUI(state) {
         if (state.cart.items.length === 0) {
             document.getElementById("cartBar").classList.add("hidden");
         } else {
-            renderCartBar();
             document.getElementById("cartBar").classList.add("hidden");
         }
     
