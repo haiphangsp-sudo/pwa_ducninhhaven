@@ -83,23 +83,11 @@ function handleGlobalClick(e) {
 
 
     case "cart":
-        addToCart({
-            mode: action,
-            category: target.dataset.category,
-            item: target.dataset.item,
-            option: value,
-            qty: 1
-        });
-        break;
+        attachOptionEvents(target,"cart", value);
+    break;
 
     case "instant":
-      requestSubmit([{
-            mode: action,
-            category: target.dataset.category,
-            item: target.dataset.item,
-            option: value,
-            qty: 1
-        }], "instant");
+      requestSubmit([lineItem("instant", value)]);
       break;
 
     case "send_cart":
@@ -116,3 +104,24 @@ function handleGlobalClick(e) {
       break;
   }
 }    
+
+/* =========================
+   PRIVATE
+========================= */
+
+
+
+function attachOptionEvents(btn,type,value){
+    btn.classList.add("is-loading");
+    setTimeout(() => btn.classList.remove("is-loading"), 500);
+    addToCart(lineItem(type,value));
+}
+function lineItem(type, value){
+    return {
+        mode: type,
+        category: target.dataset.category,
+        item: target.dataset.item,
+        option: value,
+        qty: 1
+    }
+}
