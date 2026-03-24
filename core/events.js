@@ -80,6 +80,7 @@ function toLineItem(payload) {
     category: payload.category,
     item: payload.item,
     option: payload.option,
+    price: payload.price,
     qty: payload.qty || 1
   };
 }
@@ -90,7 +91,8 @@ export function addToCart(line) {
   const index = current.findIndex(i =>
     i.category === line.category &&
     i.item === line.item &&
-    i.option === line.option
+    i.option === line.option &&
+    i.price === line.price
   );
 
   let items;
