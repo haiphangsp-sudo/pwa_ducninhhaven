@@ -58,15 +58,11 @@ function handleGlobalClick(e) {
       break;
 
     case "open-overlay":
-      setState({ 
-        view: { overlay: null },
-        drawer: { item: null, qty: 1 } // Đóng là reset để lần sau mở ra luôn là 1
-        });
+      setState({ view: { overlay: null }});
       break;
 
     case "close-overlay":
         setState({ view: { overlay: null } });
-        setState({ drawer: { item: null, qty: 1 }});//Đóng là reset để lần sau mở ra luôn là 1
       break;
 
     /* ---------- PLACE ---------- */
@@ -88,10 +84,7 @@ function handleGlobalClick(e) {
         break;
 
       case "cart":
-          setState({ 
-        cart: { items },
-        view: { overlay: null, tempQty: 1 } // Reset lại số lượng về 1 cho lần sau
-        });
+          setState({ cart: { items }});
           break;
       
     case "instant":

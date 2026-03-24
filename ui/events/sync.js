@@ -12,8 +12,6 @@ import { closeOverlay } from "../interactions/backdropManager.js";
 import { renderDrawer } from "../render/renderDrawer.js";
 
 
-
-
 let lastState = {};
 
 /* =========================
