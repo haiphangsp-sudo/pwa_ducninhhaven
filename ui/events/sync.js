@@ -2,7 +2,7 @@
 import { renderStatusBar } from '../../ui/render/renderStatusBar.js';
 import { renderDrawer } from '../../ui/render/renderDrawer.js';
 import { renderCartBar } from '../../ui/render/renderCart.js';
-import { renderNavBar } from '../../ui/components/navBar.js';
+import { updateNavBar, renderNavBar } from '../../ui/components/navBar.js';
 import { showOverlay } from '../../ui/interactions/backdropManager.js';
 import { renderPlacePicker } from '../../ui/render/renderPlacePicker.js';
 import { subscribe, getState } from '../../core/state.js';
@@ -67,7 +67,7 @@ function syncUI(state) {
     // --- KIỂM TRA VỊ TRÍ (Identity) ---
     // Nếu khách chọn phòng mới (Olive -> Juniper), cập nhật NavBar
     if (state.context.active?.id !== lastState.context.active?.id) {
-        renderNavBar(); // Cập nhật tên phòng trên thanh điều hướng
+        updateNavBar(); // Cập nhật tên phòng trên thanh điều hướng
     }
 
     // --- KIỂM TRA PANEL (Chuyển trang) ---
