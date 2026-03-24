@@ -17,7 +17,7 @@ let initialCartSnapshot = localStorage.getItem("haven_cart") || "[]";
 
 export function openCartDrawer(state) {
   initialCartSnapshot = JSON.stringify(state.cart.items || []);
-  renderDrawer();
+  renderDrawer(state);
   showOverlay("cartDrawer");
 }
 

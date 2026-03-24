@@ -88,6 +88,6 @@ function syncLanguage(state) {
   renderNavBar(state);
   renderCartBar(state);
   renderStatusBar();
-  renderHub(state);
+  renderHub();
   renderPanel(state);
 }
