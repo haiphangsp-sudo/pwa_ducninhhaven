@@ -3,11 +3,15 @@
 import { setState } from "../../core/state.js";
 import { applyPlaceById } from "../../core/context.js";
 import { dispatchAction } from "../../core/events.js";
-
-import { attachMenuEvents } from "./menuEvents.js";
-import { attachDrawerEvents } from "./drawerEvents.js";
-import { attachPlacePickerEvents } from "./placePicker.js";
+import { attachDrawerEvents } from "../render/renderDrawer.js";
+import { attachMenuEvents } from "../components/categoryOption.js";
+import { attachPlacePickerEvents } from "../render/renderPlacePicker.js";
 import { attachOrchestrator } from "../../core/events.js";
+
+
+/* =========================
+   MAIN EVENTS
+========================= */
 
 export function attachAppEvents() {
   attachMenuEvents();

@@ -3,7 +3,7 @@
 
 import { translate } from "../utils/translate.js";
 import { openCartDrawer } from "./renderDrawer.js";
-import { getCartStats } from "../../ui/utils/cartHelpers.js"
+import { getCartStats } from "../utils/cartHelpers.js"
 
 
 

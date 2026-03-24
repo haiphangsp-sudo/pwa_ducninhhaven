@@ -1,11 +1,13 @@
 // ui/sync.js
 
-import { subscribe, getState } from "../core/state.js";
+import { subscribe, getState } from "../../core/state.js";
 import { renderNavBar } from "../render/renderNavBar.js";
 import { renderCartBar } from "../render/renderCartBar.js";
 import { renderStatusBar } from "../render/renderStatusBar.js";
 import { renderHub } from "../render/renderHub.js";
 import { renderPanel } from "../render/renderPanel.js";
+import { showOverlay } from "../interactions/backdropManager.js";
+
 
 
 
@@ -25,7 +27,7 @@ function syncUI(state) {
   /* ---------- OVERLAY ---------- */
 
   if (state.view.overlay !== lastState.view?.overlay) {
-    renderOverlay(state.view.overlay);
+    showOverlay(state.view.overlay);
   }
 
   /* ---------- NAV ---------- */
