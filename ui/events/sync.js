@@ -67,11 +67,10 @@ function syncUI(state) {
             renderCartBar();
             document.getElementById("cartBar").classList.add("hidden");
         }
-    }
-  if (state.cart.status !== lastState.cart?.status) {
-    renderCartBar();
-      renderStatusBar();
-      renderDrawer();
+    
+        renderCartBar();
+        renderStatusBar();
+        renderDrawer();
   }
 
   /* ---------- LANGUAGE ---------- */
