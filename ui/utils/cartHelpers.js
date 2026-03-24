@@ -24,10 +24,9 @@ export function getCartStats(items=[]) {
         totalQty: stats.totalQty,
         totalPrice: stats.totalPrice,
         totalPriceFormat: stats.totalPrice.toLocaleString("vi-VN") + " đ",
-        countLine,
         textLine: `${countLine} ${translate("cart_bar.unique")}`,
         text: itemLabel,
         textFull: `${stats.totalQty} ${itemLabel}`,
-        isEmpty
+        isEmpty: stats.totalQty === 0
     };
 }
