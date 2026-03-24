@@ -8,6 +8,8 @@ import { renderHub } from "../render/renderHub.js";
 import { renderPanel } from "../render/renderPanel.js";
 import { openPicker } from "../render/renderPlacePicker.js";
 import { openCartDrawer } from "../render/renderDrawer.js";
+import { closeOverlay } from "../interactions/backdropManager.js";
+
 
 
 let lastState = {};
@@ -25,19 +27,22 @@ function syncUI(state) {
 
   /* ---------- OVERLAY ---------- */
 
-  if (state.view.overlay !== lastState.view?.overlay) {
-      switch (state.view.overlay) {
-        case "cartDrawer":
-            openCartDrawer();
-            break;
+    if (state.view.overlay !== lastState.view?.overlay) {
+        switch (state.view.overlay) {
+            case "cartDrawer":
+                openCartDrawer();
+                break;
           
-        case "placePicker":
-            openPicker();
-            break;
-        default:
-          break;
+            case "placePicker":
+                openPicker();
+                break;
+            default:
+                break;
+        }
+    } 
+    if (state.view.overlay === null) {
+        closeOverlay();
     }
-  }
 
   /* ---------- NAV ---------- */
 
@@ -63,6 +68,7 @@ function syncUI(state) {
   if (state.lang?.current !== lastState.lang?.current) {
     syncLanguage(state.lang.current);
   }
+    
 
   lastState = structuredClone(state);
 }
