@@ -74,7 +74,7 @@ function syncUI(state) {
     syncLanguage(state);
   }
 
-  lastState = structuredClone(state);
+  lastState = state;
 }
 
 /* =========================
