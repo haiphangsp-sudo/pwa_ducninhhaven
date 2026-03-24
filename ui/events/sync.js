@@ -1,6 +1,6 @@
 // ui/sync.js
 
-import { subscribe, getState } from "../../core/state.js";
+import { subscribe } from "../../core/state.js";
 import { renderNavBar } from "../render/renderNavBar.js";
 import { renderCartBar } from "../render/renderCartBar.js";
 import { renderStatusBar } from "../render/renderStatusBar.js";
@@ -68,7 +68,7 @@ function syncUI(state) {
   /* ---------- LANGUAGE ---------- */
 
   if (state.lang?.current !== lastState.lang?.current) {
-    syncLanguage(state.lang.current);
+    syncLanguage(state);
   }
     
 
@@ -79,7 +79,7 @@ function syncUI(state) {
    LANGUAGE
 ========================= */
 
-function syncLanguage(lang) {
+function syncLanguage(state) {
   
 
   // re-render toàn bộ UI phụ thuộc ngôn ngữ
@@ -87,5 +87,5 @@ function syncLanguage(lang) {
   renderCartBar();
   renderStatusBar();
   renderHub();
-  renderPanel(getState().view.panel);
+  renderPanel(state.view.panel);
 }

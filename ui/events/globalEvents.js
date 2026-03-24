@@ -1,6 +1,6 @@
 // ui/events/globalEvents.js
 
-import { setState, getState } from "../../core/state.js";
+import { setState } from "../../core/state.js";
 import { applyPlaceById } from "../../core/context.js";
 import { dispatchAction } from "../../core/events.js";
 import { attachDrawerEvents } from "../render/renderDrawer.js";
@@ -58,7 +58,7 @@ function handleGlobalClick(e) {
       break;
 
     case "open-overlay":
-      setState({ view: { overlay: null }});
+      setState({ view: { overlay: value }});
       break;
 
     case "close-overlay":
