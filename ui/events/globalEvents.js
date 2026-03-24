@@ -4,7 +4,6 @@ import { setState } from "../../core/state.js";
 import { applyPlaceById } from "../../core/context.js";
 import { addToCart, requestSubmit } from "../../core/events.js";
 import { attachDrawerEvents } from "../render/renderDrawer.js";
-import { attachMenuEvents } from "../components/categoryOption.js";
 import { attachPlacePickerEvents } from "../render/renderPlacePicker.js";
 import { attachOrchestrator } from "../../core/events.js";
 import { UI } from "../../core/state.js";
@@ -17,7 +16,6 @@ import { openCartDrawer } from "../render/renderDrawer.js";
 ========================= */
 
 export function attachAppEvents() {
-    attachMenuEvents();
     attachDrawerEvents();
     attachPlacePickerEvents();
     attachOrchestrator();
@@ -108,8 +106,6 @@ function handleGlobalClick(e) {
 /* =========================
    PRIVATE
 ========================= */
-
-
 
 function attachOptionEvents(btn,type,value){
     btn.classList.add("is-loading");
