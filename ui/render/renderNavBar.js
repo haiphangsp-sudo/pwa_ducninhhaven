@@ -18,7 +18,7 @@ export function renderNavBar() {
 
   const currentLang = getState().lang.current;
   refs.langButtons?.forEach(btn => {
-    btn.classList.toggle("is-active", btn.dataset.lang === currentLang);
+    btn.classList.toggle("is-active", btn.dataset.value === currentLang);
   });
 }
 

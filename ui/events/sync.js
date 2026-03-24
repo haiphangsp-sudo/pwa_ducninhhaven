@@ -72,14 +72,3 @@ function syncLanguage(lang) {
   renderHub();
   renderPanel(getState().view.panel);
 }
-function dfg (){
-    const langSwitch = document.getElementById("langSwitch");
-  if (!langSwitch) return;
-
-  langSwitch.querySelectorAll("button").forEach(btn => {
-    const isActive = btn.dataset.value === lang;
-    btn.classList.toggle("is-active", isActive);
-  });
-
-  localStorage.setItem("haven_lang", lang);
-}
