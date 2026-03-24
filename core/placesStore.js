@@ -1,9 +1,10 @@
 // core/placesStore.js
 
-import RAW_PLACES from "../data/places.json" assert { type: "json" };
 
-export const PLACE_GROUPS = normalizePlaceGroups(RAW_PLACES);
-export const PLACE_INDEX = buildPlaceIndex(PLACE_GROUPS);
+const base = await fetch("/data/menu.json", { cache: "no-store" }).then(r => r.json());
+
+export const PLACE_GROUPS = normalizePlaceGroups(base);
+export const PLACE_INDEX = buildPlaceIndex(base);
 
 export const PLACES = Object.fromEntries(
   Object.entries(PLACE_GROUPS).map(([type, group]) => [
