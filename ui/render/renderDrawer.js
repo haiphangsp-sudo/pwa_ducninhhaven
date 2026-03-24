@@ -52,8 +52,7 @@ export function renderDrawer(state) {
   drawer.querySelector(".drawer__header-unique").textContent = textLine;
   
   
-  const currentSnapshot = structuredClone(cartItems);
-  const hasChanged = currentSnapshot !== initialCartSnapshot;
+  const hasChanged = JSON.stringify(cartItems) !== initialCartSnapshot;
   if (isEmpty) {
     initialCartSnapshot = "[]";
     itemsContainer.innerHTML = `
