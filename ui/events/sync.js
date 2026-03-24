@@ -59,11 +59,13 @@ function syncUI(state) {
   }
 
     /* ---------- CART ---------- */
-    if (state.cart.items.length !== lastState.cart?.items?.length) {
+    if (state.cart.items !== lastState.cart?.items) {
     
         renderCartBar();
         renderStatusBar();
-        renderDrawer();
+        if (state.cart.items.length !== 0) {
+            renderDrawer();
+        }
     }
 
   /* ---------- LANGUAGE ---------- */
