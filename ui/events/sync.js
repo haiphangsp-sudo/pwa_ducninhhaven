@@ -58,7 +58,10 @@ function syncUI(state) {
     renderPanel(state.view.panel);
   }
 
-  /* ---------- CART ---------- */
+    /* ---------- CART ---------- */
+    if (state.cart.items.length === 0) {
+        document.getElementById("cartBar").classList.add("hidden");
+    }
 
   if (state.cart.status !== lastState.cart?.status) {
     renderCartBar();
