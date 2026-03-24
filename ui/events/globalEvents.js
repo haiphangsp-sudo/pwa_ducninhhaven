@@ -84,6 +84,7 @@ function handleGlobalClick(e) {
         break;
 
       case "cart":
+          setState({ cart: { items }});
           dispatchAction({
             mode: action,
             category: target.dataset.category,
@@ -91,7 +92,7 @@ function handleGlobalClick(e) {
             option: value,
             qty: 1
             });
-          setState({ cart: { items }});
+          
           break;
       
     case "instant":
