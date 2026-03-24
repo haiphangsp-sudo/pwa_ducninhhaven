@@ -1,12 +1,12 @@
 // ui/utils/cartHelpers.js
-import { MENU } from "../../core/menuStore.js";
+
 import { translate } from "./translate.js";
 
 export function getCartStats(items=[]) {
     
     // Gom tất cả tính toán vào 1 vòng lặp duy nhất để tối ưu hiệu suất
     const stats = items.reduce((acc, it) => {
-        const itemPrice = MENU?.[it.category]?.items?.[it.item]?.options?.[it.option]?.price || 0;
+        const itemPrice = Number(it.price || 0);
         const qty = Number(it.qty || 0);
 
         acc.totalQty += qty;
