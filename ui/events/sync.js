@@ -61,10 +61,10 @@ function syncUI(state) {
     /* ---------- CART ---------- */
     if (state.cart.items !== lastState.cart?.items) {
     
-        renderCartBar();
+        renderCartBar(state);
         renderStatusBar();
         if (state.cart.items.length !== 0) {
-            renderDrawer();
+            renderDrawer(state);
         }
     }
 
