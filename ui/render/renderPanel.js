@@ -5,10 +5,10 @@ import { getCategory } from "../../core/menuQuery.js";
 import { renderArticle } from "./renderArticle.js";
 import { renderMenu } from "./renderCategory.js";
 
-export function renderPanel(key){
+export function renderPanel(state){
   const container = document.querySelector(".category-panel");
   if(!container) return;
-  const category = getCategory(key);
+  const category = getCategory(state.view.panel);
   if(!category){
     container.innerHTML="";
     return;

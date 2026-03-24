@@ -30,7 +30,7 @@ function syncUI(state) {
     if (state.view.overlay !== lastState.view?.overlay) {
         switch (state.view.overlay) {
             case "cartDrawer":
-                openCartDrawer();
+                openCartDrawer(state);
                 break;
           
             case "placePicker":
@@ -61,10 +61,10 @@ function syncUI(state) {
     /* ---------- CART ---------- */
     if (state.cart.items !== lastState.cart?.items) {
     
-        renderCartBar(state.cart.items);
+        renderCartBar(state);
         renderStatusBar();
         if (state.cart.items.length !== 0) {
-            renderDrawer(state.cart.items);
+            renderDrawer(state);
         }
     }
 
@@ -89,5 +89,5 @@ function syncLanguage(state) {
   renderCartBar();
   renderStatusBar();
   renderHub();
-  renderPanel(state.view.panel);
+  renderPanel(state);
 }

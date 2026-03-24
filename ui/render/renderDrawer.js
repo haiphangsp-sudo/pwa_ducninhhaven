@@ -1,6 +1,5 @@
 // ui/render/renderDrawer.js
 
-import { UI } from "../../core/state.js";
 import { translate } from "../utils/translate.js";
 import { updateCartQuantity } from "../../core/events.js";
 import { showOverlay } from "../interactions/backdropManager.js";
@@ -16,8 +15,8 @@ import { getContext } from "../../core/context.js";
 
 let initialCartSnapshot = localStorage.getItem("haven_cart") || "[]";
 
-export function openCartDrawer() {
-  initialCartSnapshot = JSON.stringify(UI.cart.items || []);
+export function openCartDrawer(state) {
+  initialCartSnapshot = JSON.stringify(state.cart.items || []);
   renderDrawer();
   showOverlay("cartDrawer");
 }
@@ -45,7 +44,7 @@ export function renderDrawer(state) {
   const sendBtn = document.getElementById("drawerSend");
   const headerSummary = drawer.querySelector(".drawer-summary");
   const cartItems = state.cart.items;
-  const { totalPriceFormat, textLine, isEmpty, textFull } = getCartStats(cartItems);
+  const { totalPriceFormat, textLine, isEmpty, textFull } = getCartStats(state.cart.items);
 
   drawer.querySelector(".drawer__header-title").textContent = translate("cart_bar.cart_title");
   drawer.querySelector(".drawer__header-price").textContent = totalPriceFormat;
