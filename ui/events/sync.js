@@ -1,6 +1,6 @@
 // ui/sync.js
 
-import { subscribe } from "../../core/state.js";
+import { subscribe, getState } from "../../core/state.js";
 import { renderNavBar } from "../render/renderNavBar.js";
 import { renderCartBar } from "../render/renderCartBar.js";
 import { renderStatusBar } from "../render/renderStatusBar.js";
