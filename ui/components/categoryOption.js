@@ -33,7 +33,7 @@ export function categoryOpt(opt, itemKey, categoryKey, type) {
                     data-item="${itemKey}"
                     data-value="${opt.key}"
                     data-price="${price}
-                    data-currency="VND">
+                    data-currency="vnd">
                     ${type==="cart" ? `+ ` + translate("cart_bar.add_to_order") : `⚡ ` + translate("cart_bar.send_request")}
                 </button>
             </div>
