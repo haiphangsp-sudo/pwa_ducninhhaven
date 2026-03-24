@@ -160,15 +160,7 @@ export function attachDrawerEvents() {
       }
     });
   }
-
-  const placeBtn = document.getElementById("drawerPlaceDisplay");
-
-  if (placeBtn) {
-    placeBtn.addEventListener("click", () => {
-      //openPicker();
-    });
-  }
-
+  
   if (closeBtn) {
     closeBtn.onclick = closeOverlay;
   }
