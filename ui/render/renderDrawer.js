@@ -62,6 +62,7 @@ export function renderDrawer() {
     headerSummary.classList.add("hidden");
     sendBtn.textContent = translate("cart_bar.close");
     sendBtn.dataset.action = "close";
+    sendBtn.dataset.value = "cartDrawer";
     sendBtn.className = "drawer-send state-close";
   } else {
     headerSummary.classList.remove("hidden");
