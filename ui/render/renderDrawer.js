@@ -104,7 +104,7 @@ export function renderDrawer() {
     } else {
         // Trường hợp giữ nguyên ý định ban đầu
         sendBtn.textContent = translate("cart_bar.send_order");
-        sendBtn.dataset.action = "send";
+        sendBtn.dataset.action = "send_cart";
         sendBtn.className = "drawer-send state-send"; // Màu xanh
     }
   }
@@ -117,8 +117,6 @@ export function renderDrawer() {
 
 export function attachDrawerEvents() {
   const itemsRoot = document.getElementById("drawerItems");
-  const sendBtn = document.getElementById("drawerSend");
-  const closeBtn = document.getElementById("drawerClose");
 
   if (itemsRoot) {
     itemsRoot.addEventListener("click", (e) => {
@@ -131,39 +129,7 @@ export function attachDrawerEvents() {
       );
     });
   }
-
-  if (sendBtn) {
-    sendBtn.addEventListener("click", () => {
-      const action = sendBtn.dataset.action;
-
-      switch (action) {
-        case "close":
-          closeOverlay(); 
-          break;
-
-        case "confirm":
-          initialCartSnapshot = JSON.stringify(UI.cart.items || []);
-          renderDrawer();
-          
-          if (navigator.vibrate) navigator.vibrate(30);
-          break;
-
-        case "send":
-          initialCartSnapshot = "[]";
-          //sendBtn.disabled = true; // Chống bấm nhiều lần
-          //sendBtn.textContent = translate("cart_bar.sending"); 
-          dispatchAction({ type: "send_cart" });
-          break;
-
-        default:
-          console.warn("Hành động không xác định:", action);
-      }
-    });
-  }
   
-  if (closeBtn) {
-    closeBtn.onclick = closeOverlay;
-  }
   window.addEventListener("intentresume", (e) => {
         if (e.detail?.type === "send_cart") {
             setTimeout(() => {

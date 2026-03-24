@@ -6,7 +6,6 @@ const backdrop = document.getElementById("overlayBackdrop");
 export function showOverlay(id) {
     // 1. Nếu đang có cái khác mở, đóng nó trước
     if (currentOverlay) {
-        // Không truyền tham số vì hàm closeOverlay() của bạn không nhận tham số
         closeOverlay(); 
     }
 
