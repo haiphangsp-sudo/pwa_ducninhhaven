@@ -85,16 +85,25 @@ function toLineItem(payload) {
 }
 
 export function addToCart(line) {
-  const items = [...(UI.cart?.items || [])];
+  const current = UI.cart?.items || [];
 
-  const existing = items.find(i =>
+  const index = current.findIndex(i =>
     i.category === line.category &&
     i.item === line.item &&
     i.option === line.option
   );
 
-  if (existing) existing.qty += line.qty || 1;
-  else items.push({ ...line, qty: line.qty || 1 });
+  let items;
+
+  if (index >= 0) {
+    items = current.map((it, idx) =>
+      idx === index
+        ? { ...it, qty: (it.qty || 0) + (line.qty || 1) }
+        : it
+    );
+  } else {
+    items = [...current, { ...line, qty: line.qty || 1 }];
+  }
 
   localStorage.setItem(CART_KEY, JSON.stringify(items));
   setState({ cart: { items } });
