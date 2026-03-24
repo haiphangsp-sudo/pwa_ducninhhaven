@@ -6,7 +6,7 @@ import { renderCartBar } from "../render/renderCartBar.js";
 import { renderStatusBar } from "../render/renderStatusBar.js";
 import { renderHub } from "../render/renderHub.js";
 import { renderPanel } from "../render/renderPanel.js";
-import { showOverlay } from "../interactions/backdropManager.js";
+import { openPicker } from "../render/renderPlacePicker.js";
 
 
 
@@ -27,7 +27,9 @@ function syncUI(state) {
   /* ---------- OVERLAY ---------- */
 
   if (state.view.overlay !== lastState.view?.overlay) {
-    showOverlay(state.view.overlay);
+    if (state.view.overlay === "placePicker") {
+        openPicker();
+    }
   }
 
   /* ---------- NAV ---------- */
