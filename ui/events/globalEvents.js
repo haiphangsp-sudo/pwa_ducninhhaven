@@ -81,7 +81,12 @@ function handleGlobalClick(e) {
 
 
     case "cart":
-        attachOptionEvents(target,"cart", value);
+          attachOptionEvents(target, "cart", value);
+          
+          document.getElementById("cartBar").classList.add("cart-bounce");
+          setTimeout(() => {
+            document.getElementById("cartBar").classList.remove("hide cart-bounce");
+          }, 400);
     break;
 
     case "instant":
