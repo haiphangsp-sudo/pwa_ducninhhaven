@@ -112,12 +112,14 @@ function attachOptionEvents(btn,type,value){
     setTimeout(() => btn.classList.remove("is-loading"), 500);
     addToCart(lineItem(type,value));
 }
-function lineItem(target,type, value){
-    return {
-        mode: type,
-        category: target.dataset.category,
-        item: target.dataset.item,
-        option: value,
-        qty: 1
+function lineItem(target, type, value) {
+    if (target) {
+        return {
+            mode: type,
+            category: target.dataset.category,
+            item: target.dataset.item,
+            option: value,
+            qty: 1
+        }
     }
 }
