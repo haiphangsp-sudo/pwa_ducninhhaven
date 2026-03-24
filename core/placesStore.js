@@ -1,34 +1,69 @@
+// core/placesStore.js
 
-export let PLACES = {};
-export let PLACE_UI = {};
+import RAW_PLACES from "../data/places.json" assert { type: "json" };
 
-export async function loadPlaces() {
-    const data = await fetch("/data/places.json", { cache: "no-store" }).then(res => res.json());
-    PLACES = data.places || {};
-    PLACE_UI = data.ui || {};
-};
+export const PLACE_GROUPS = normalizePlaceGroups(RAW_PLACES);
+export const PLACE_INDEX = buildPlaceIndex(PLACE_GROUPS);
 
-export function getAllowedPlaceTypes(mode = "table") {
-  return PLACE_UI[mode] || ["table"];
-}
-
-export function getPlaceTypeById(placeId) {
-  if (!placeId) return null;
-
-  if (PLACES.room?.[placeId]) return "room";
-  if (PLACES.area?.[placeId]) return "area";
-  if (PLACES.table?.[placeId]) return "table";
-
-  return null;
-}
-
-export function resolvePlaceFromData(placeId) {
-  const type = getPlaceTypeById(placeId);
-  if (!type) return null;
-
-  return {
-    id: placeId,
+export const PLACES = Object.fromEntries(
+  Object.entries(PLACE_GROUPS).map(([type, group]) => [
     type,
-    ...PLACES[type][placeId]
-  };
+    Object.fromEntries(group.items.map(item => [item.id, item]))
+  ])
+);
+
+function normalizePlaceGroups(raw) {
+  const out = {};
+
+  for (const [type, group] of Object.entries(raw || {})) {
+    const meta = group?.meta || {};
+    const items = Array.isArray(group?.items) ? group.items : [];
+
+    out[type] = {
+      meta: {
+        type,
+        label: meta.label || { vi: type, en: type },
+        icon: meta.icon || "",
+        allow: Array.isArray(meta.allow) ? meta.allow : [type]
+      },
+      items: items.map(item => ({
+        id: item.id,
+        type,
+        label: item.label || { vi: item.id, en: item.id }
+      }))
+    };
+  }
+
+  return out;
+}
+
+function buildPlaceIndex(groups) {
+  const index = {};
+
+  for (const [type, group] of Object.entries(groups)) {
+    for (const item of group.items) {
+      index[item.id] = {
+        ...item,
+        type
+      };
+    }
+  }
+
+  return index;
+}
+
+export function resolvePlace(placeId) {
+  return PLACE_INDEX[placeId] || null;
+}
+
+export function getAllowedPlaceTypes(anchorType) {
+  return PLACE_GROUPS?.[anchorType]?.meta?.allow || [anchorType];
+}
+
+export function getPlaceGroup(type) {
+  return PLACE_GROUPS[type] || null;
+}
+
+export function getPlaceItems(type) {
+  return PLACE_GROUPS?.[type]?.items || [];
 }

@@ -1,63 +1,127 @@
+// ui/components/placePicker.js
+
+import { showOverlay, closeOverlay } from "../interactions/backdropManager.js";
+import { getAllowedPlaceTypes, getPlaceGroup, getPlaceItems } from "../../core/placesStore.js";
+import { getContext, applyPlaceById } from "../../core/context.js";
 import { translate } from "../utils/translate.js";
-import { PLACES, getAllowedPlaceTypes } from "../../core/placesStore.js"; 
 
-export function renderPlacePicker(state, lastState) {
-    const el = document.getElementById("placePicker");
-    if (!el) return;
+let shellReady = false;
 
-    // Chỉ thực hiện render nếu overlay đang mở
-    if (state.view.overlay !== 'placePicker') {
-        el.classList.add("hidden");
-        return;
+export function openPicker() {
+  renderPlacePicker();
+  showOverlay("placePicker");
+}
+
+export function renderPlacePicker() {
+  renderPlacePickerShell();
+  renderPlacePickerContent();
+}
+
+function renderPlacePickerShell() {
+  if (shellReady) return;
+
+  const el = document.getElementById("placePicker");
+  if (!el) return;
+
+  el.innerHTML = `
+    <div class="picker-panel">
+      <h3 class="picker-panel_title"></h3>
+      <div class="picker-group grid" data-group="room"></div>
+      <div class="picker-group grid" data-group="area"></div>
+      <div class="picker-group grid" data-group="table"></div>
+    </div>
+  `;
+
+  shellReady = true;
+}
+
+function renderPlacePickerContent() {
+  const ctx = getContext();
+  const anchor = ctx?.anchor;
+  const mode = anchor?.type || "table";
+  const allowedTypes = getAllowedPlaceTypes(mode);
+
+  updatePickerTitle();
+
+  ["room", "area", "table"].forEach(type => {
+    if (!allowedTypes.includes(type)) {
+      clearGroup(type);
+      return;
     }
 
-    const anchor = state.context.anchor;
-    const allowedGroups = getAllowedPlaceTypes(anchor?.type); // Lấy quyền hiển thị từ places.json
+    if (type === "room" && anchor?.type === "room") {
+      renderGroup("room", [anchor], true);
+      return;
+    }
 
-    const groupMeta = {
-        room: { icon: '🛏️', label: 'My room' },
-        area: { icon: '🌿', label: 'My area' },
-        table: { icon: '☕', label: 'My table' }
-    };
+    renderGroup(type, getPlaceItems(type));
+  });
+}
 
-    el.innerHTML = `
-        <div class="picker-panel p-m radius-xl bg-white shadow-lg animate-fade-in">
-            <div class="picker-header mb-m row justify-between items-center">
-                <h3 class="text-bold">Where would you like to serve?</h3>
-                <button data-action="close-overlay" class="btn-close">✕</button>
-            </div>
-            
-            <div class="picker-content stack gap-l">
-                ${allowedGroups.map(groupType => {
-                    const items = PLACES[groupType] || {};
-                    const meta = groupMeta[groupType];
+function updatePickerTitle() {
+  const titleEl = document.querySelector(".picker-panel_title");
+  if (!titleEl) return;
 
-                    // Logic lọc: Nếu là room, chỉ hiện phòng đang ở (anchor.id)
-                    const filteredEntries = Object.entries(items).filter(([id]) => 
-                        groupType === 'room' ? id === anchor?.id : true
-                    );
+  titleEl.textContent = translate("place.select");
+}
 
-                    if (filteredEntries.length === 0) return '';
+function renderGroup(type, items, isAnchorRoom = false) {
+  const group = document.querySelector(`[data-group="${type}"]`);
+  if (!group) return;
 
-                    return `
-                        <div class="place-group">
-                            <div class="group-header row items-center gap-s mb-s">
-                                <span class="text-bold text-s">${meta.label}</span>
-                            </div>
-                            <div class="group-grid row wrap gap-s">
-                                ${filteredEntries.map(([id, data]) => `
-                                    <button class="btn-place p-m radius-m bg-green-dark text-white text-bold" 
-                                            data-action="select-place" 
-                                            data-value="${id}">
-                                        ${data.label?.[state.lang.current] || id}
-                                    </button>
-                                `).join('')}
-                            </div>
-                        </div>
-                    `;
-                }).join('')}
-            </div>
-        </div>
-    `;
-    el.classList.remove("hidden");
+  if (!items?.length) {
+    group.innerHTML = "";
+    return;
+  }
+
+  const title = getGroupTitle(type, isAnchorRoom);
+  const icon = getPlaceGroup(type)?.meta?.icon || "";
+
+  group.innerHTML = `
+    <div class="flex gap-s">
+      <span class="${type}-icon">${icon}</span>
+      <span class="picker-title">${title}</span>
+    </div>
+
+    <div class="picker-list">
+      ${items.map((p) => `
+        <button
+          data-action="select-place"
+          data-value="${p.id}"
+          class="picker-option btn center"
+          type="button"
+          data-id="${p.id}">
+          ${translate(p.label)}
+        </button>
+      `).join("")}
+    </div>
+  `;
+}
+
+function clearGroup(type) {
+  const group = document.querySelector(`[data-group="${type}"]`);
+  if (group) group.innerHTML = "";
+}
+
+function getGroupTitle(type, isAnchorRoom) {
+  const group = getPlaceGroup(type);
+  if (!group) return type;
+
+  if (type === "room" && isAnchorRoom) {
+    return translate(group.meta.label);
+  }
+
+  return translate(group.meta.label);
+}
+
+export function attachPlacePickerEvents() {
+  document.addEventListener("click", handlePlacePickerClick);
+}
+
+function handlePlacePickerClick(e) {
+  const btn = e.target.closest(".picker-option");
+  if (!btn) return;
+
+  closeOverlay();
+  applyPlaceById(btn.dataset.id);
 }
