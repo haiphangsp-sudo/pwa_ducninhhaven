@@ -2,8 +2,7 @@
 import { MENU } from "../../core/menuStore.js";
 import { translate } from "./translate.js";
 
-export function getCartStats(state) {
-    const items = state.cart.items || [];
+export function getCartStats(items) {
     
     // Gom tất cả tính toán vào 1 vòng lặp duy nhất để tối ưu hiệu suất
     const stats = items.reduce((acc, it) => {
