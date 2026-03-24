@@ -59,10 +59,15 @@ function syncUI(state) {
   }
 
     /* ---------- CART ---------- */
-    if (state.cart.items.length === 0) {
-        document.getElementById("cartBar").classList.add("hidden");
-    }
+    if (state.cart.items.length !== lastState.cart?.items?.length) {
 
+        if (state.cart.items.length === 0) {
+            document.getElementById("cartBar").classList.add("hidden");
+        } else {
+            renderCartBar();
+            document.getElementById("cartBar").classList.add("hidden");
+        }
+    }
   if (state.cart.status !== lastState.cart?.status) {
     renderCartBar();
       renderStatusBar();
