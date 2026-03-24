@@ -85,7 +85,7 @@ function handleGlobalClick(e) {
     break;
 
     case "instant":
-      requestSubmit([lineItem("instant", value)]);
+      requestSubmit([lineItem(target,"instant", value)]);
       break;
 
     case "send_cart":
@@ -112,7 +112,7 @@ function attachOptionEvents(btn,type,value){
     setTimeout(() => btn.classList.remove("is-loading"), 500);
     addToCart(lineItem(type,value));
 }
-function lineItem(type, value){
+function lineItem(target,type, value){
     return {
         mode: type,
         category: target.dataset.category,
