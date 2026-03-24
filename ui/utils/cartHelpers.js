@@ -27,6 +27,6 @@ export function getCartStats(items=[]) {
         textLine: `${countLine} ${translate("cart_bar.unique")}`,
         text: itemLabel,
         textFull: `${stats.totalQty} ${itemLabel}`,
-        isEmpty: stats.totalQty === 0
+        isEmpty
     };
 }
