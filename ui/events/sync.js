@@ -60,7 +60,7 @@ function syncUI(state) {
 
   /* ---------- CART ---------- */
 
-  if (state.cart.status !== lastState.cart.status) {
+  if (state.cart.status !== lastState.cart?.status) {
     renderCartBar();
       renderStatusBar();
       renderDrawer();
