@@ -49,7 +49,7 @@ function syncUI(state) {
   /* ---------- NAV ---------- */
 
   if (state.context !== lastState.context) {
-    renderNavBar();
+    renderNavBar(state);
   }
 
   /* ---------- PANEL ---------- */
@@ -85,9 +85,9 @@ function syncLanguage(state) {
   
 
   // re-render toàn bộ UI phụ thuộc ngôn ngữ
-  renderNavBar();
-  renderCartBar();
+  renderNavBar(state);
+  renderCartBar(state);
   renderStatusBar();
-  renderHub();
+  renderHub(state);
   renderPanel(state);
 }
