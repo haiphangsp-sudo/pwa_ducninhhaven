@@ -84,6 +84,13 @@ function handleGlobalClick(e) {
         break;
 
       case "cart":
+          dispatchAction({
+            mode: action,
+            category: target.dataset.category,
+            item: target.dataset.item,
+            option: value,
+            qty: 1
+            });
           setState({ cart: { items }});
           break;
       
@@ -95,7 +102,6 @@ function handleGlobalClick(e) {
         option: value,
         qty: 1
       });
-      setState({ cart: { items } });
       break;
 
     case "send_cart":
