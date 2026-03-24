@@ -8,6 +8,7 @@ import { renderPlacePicker } from '../../ui/render/renderPlacePicker.js';
 import { subscribe, getState } from '../../core/state.js';
 import { renderPanel } from '../../ui/render/renderPanel.js';
 import { renderHub } from '../../ui/render/renderHub.js';
+import { applyPlaceById } from '../../core/context.js';
 
 
 // KHỞI TẠO BỘ NHỚ ĐỆM (Nằm ngoài hàm để không bị reset)
