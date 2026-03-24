@@ -67,6 +67,7 @@ function syncUI(state) {
     // --- KIỂM TRA VỊ TRÍ (Identity) ---
     // Nếu khách chọn phòng mới (Olive -> Juniper), cập nhật NavBar
     if (state.context.active?.id !== lastState.context.active?.id) {
+        applyPlaceById(state.context.active?.id);
         updateNavBar(); // Cập nhật tên phòng trên thanh điều hướng
     }
 
