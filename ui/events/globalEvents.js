@@ -80,13 +80,16 @@ function handleGlobalClick(e) {
       /* ---------- CART / ORDER ---------- */
 
 
-    case "cart":
-          attachOptionEvents(target, "cart", value);
+      case "cart":
           
+          attachOptionEvents(target, "cart", value);
+            document.getElementById("cartBar").classList.remove("hidden");
           document.getElementById("cartBar").classList.add("cart-bounce");
+
           setTimeout(() => {
-            document.getElementById("cartBar").classList.remove("hide cart-bounce");
+            document.getElementById("cartBar").classList.remove("cart-bounce");
           }, 400);
+          
     break;
 
     case "instant":
