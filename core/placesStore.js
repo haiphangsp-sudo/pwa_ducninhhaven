@@ -1,10 +1,9 @@
 // core/placesStore.js
 
 
-const base = await fetch("/data/menu.json", { cache: "no-store" }).then(r => r.json());
-
+const base = await fetch("/data/places.json", { cache: "no-store" }).then(r => r.json());
 export const PLACE_GROUPS = normalizePlaceGroups(base);
-export const PLACE_INDEX = buildPlaceIndex(base);
+export const PLACE_INDEX = buildPlaceIndex(PLACE_GROUPS);
 
 export const PLACES = Object.fromEntries(
   Object.entries(PLACE_GROUPS).map(([type, group]) => [

@@ -7,7 +7,7 @@ import { translate } from "../utils/translate.js";
 
 let shellReady = false;
 
-export function openPicker() {
+ function openPicker() {
   renderPlacePicker();
   showOverlay("placePicker");
 }
@@ -90,7 +90,6 @@ function renderGroup(type, items, isAnchorRoom = false) {
           data-value="${p.id}"
           class="picker-option btn center"
           type="button"
-          data-id="${p.id}">
           ${translate(p.label)}
         </button>
       `).join("")}

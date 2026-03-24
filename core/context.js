@@ -1,4 +1,4 @@
-import { resolvePlaceFromData, getAllowedPlaceTypes } from "../core/placesStore.js";
+import { resolvePlace, getAllowedPlaceTypes } from "./placesStore.js";
 
 /* ---------- CONTEXT STATE ---------- */
 
@@ -60,14 +60,8 @@ export function getContext() {
 export function normalizeContext() {
   if (isExpired(context)) {
     context = createEmptyContext();
+    saveContext();
   }
-  saveContext();
-}
-
-/* ---------- RESOLVE ---------- */
-
-export function resolvePlace(placeId) {
-  return resolvePlaceFromData(placeId);
 }
 
 /* ---------- RULE ---------- */
