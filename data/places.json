@@ -21,8 +21,9 @@
       },
       "items": [
         {"id":"lounge", "label": { "vi": "Phòng chờ", "en": "Lounge" } },
+        {"id":"living", "label": { "vi": "Phòng khách", "en": "Living room" } },
         {"id":"dining", "label": { "vi": "Phòng ăn", "en": "Dining room" } },
-        {"id":"courtyard", "label": { "vi": "Well yard", "en": "Courtyard" }},
+        {"id":"courtyard", "label": { "vi": "Sân giếng", "en": "Well yard" }},
         {"id":"garden", "label": { "vi": "Vườn", "en": "Garden" } },
         {"id":"pergola", "label": { "vi": "Giàn Pergola", "en": "Pergola" } }
       ]
