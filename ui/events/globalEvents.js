@@ -2,7 +2,7 @@
 
 import { setState } from "../../core/state.js";
 import { applyPlaceById } from "../../core/context.js";
-import { dispatchAction } from "../../core/events.js";
+import { dispatchAction, addToCart, requestSubmit } from "../../core/events.js";
 import { attachDrawerEvents } from "../render/renderDrawer.js";
 import { attachMenuEvents } from "../components/categoryOption.js";
 import { attachPlacePickerEvents } from "../render/renderPlacePicker.js";
@@ -80,14 +80,10 @@ function handleGlobalClick(e) {
     break;
 
       /* ---------- CART / ORDER ---------- */
-    case 'qty-plus':
-        break;
 
-    case 'qty-minus':
-        break;
 
     case "cart":
-        addCartItem({
+        addToCart({
             mode: action,
             category: target.dataset.category,
             item: target.dataset.item,
@@ -97,7 +93,7 @@ function handleGlobalClick(e) {
         break;
 
     case "instant":
-      requestSend([{
+      requestSubmit([{
             mode: action,
             category: target.dataset.category,
             item: target.dataset.item,
@@ -107,7 +103,7 @@ function handleGlobalClick(e) {
       break;
 
     case "send_cart":
-      requestSend(UI.cart.items || [], "cart");
+      requestSubmit(UI.cart.items || [], "cart");
       break;
 
     /* ---------- LANGUAGE ---------- */

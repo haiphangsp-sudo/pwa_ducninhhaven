@@ -66,26 +66,6 @@ export function onOrderSuccess(orderId, items) { // Nhận thêm orderId từ se
 }
 
 
-/* ---------- PUBLIC ---------- */
-
-export function dispatchAction(payload) {
-  const line = toLineItem(payload);
-
-  switch (payload.mode) {
-    case "cart":
-      return addToCart(line);
-
-    case "instant":
-      return requestSubmit([line], "instant");
-
-    case "send_cart":
-      return requestSubmit(UI.cart.items || [], "cart");
-
-    default:
-      return;
-  }
-}
-
 /* ---------- CONTEXT ---------- */
 
 function ensureActive() {
@@ -104,7 +84,7 @@ function toLineItem(payload) {
   };
 }
 
-function addToCart(line) {
+export function addToCart(line) {
   const items = [...(UI.cart?.items || [])];
 
   const existing = items.find(i =>
