@@ -14,12 +14,19 @@ import { attachOrchestrator } from "../../core/events.js";
 ========================= */
 
 export function attachAppEvents() {
-  attachMenuEvents();
-  attachDrawerEvents();
-  attachPlacePickerEvents();
-  attachOrchestrator();
+    attachMenuEvents();
+    attachDrawerEvents();
+    attachPlacePickerEvents();
+    attachOrchestrator();
 
-  document.addEventListener("click", handleGlobalClick);
+    document.addEventListener("click", handleGlobalClick);
+    window.addEventListener("intentresume", (e) => {
+        dispatchAction({ mode: e.detail.mode });
+    });
+
+    window.addEventListener("needplace", () => {
+        setState({ view: { overlay: "placePicker" } });
+    });
 }
 
 /* =========================
@@ -62,16 +69,17 @@ function handleGlobalClick(e) {
     case "cart":
     case "instant":
       dispatchAction({
-        type: action,
+        mode: action,
         category: target.dataset.category,
         item: target.dataset.item,
         option: value,
         qty: 1
       });
+      setState({ cart: { items } });
       break;
 
     case "send_cart":
-      dispatchAction({ type: "send_cart" });
+      dispatchAction({ mode: "send_cart" });
       break;
 
     /* ---------- LANGUAGE ---------- */
@@ -83,4 +91,4 @@ function handleGlobalClick(e) {
     default:
       break;
   }
-}
+}    
