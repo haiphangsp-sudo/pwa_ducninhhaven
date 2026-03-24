@@ -7,8 +7,7 @@ import { renderStatusBar } from "../render/renderStatusBar.js";
 import { renderHub } from "../render/renderHub.js";
 import { renderPanel } from "../render/renderPanel.js";
 import { openPicker } from "../render/renderPlacePicker.js";
-
-
+import { openCartDrawer } from "../render/renderDrawer.js";
 
 
 let lastState = {};
@@ -27,8 +26,16 @@ function syncUI(state) {
   /* ---------- OVERLAY ---------- */
 
   if (state.view.overlay !== lastState.view?.overlay) {
-    if (state.view.overlay === "placePicker") {
-        openPicker();
+      switch (state.view.overlay) {
+        case "cartDrawer":
+            openCartDrawer();
+            break;
+          
+        case "placePicker":
+            openPicker();
+            break;
+        default:
+          break;
     }
   }
 
