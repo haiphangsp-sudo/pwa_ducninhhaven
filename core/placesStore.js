@@ -1,16 +1,22 @@
 // core/placesStore.js
 
+export let PLACE_GROUPS = {};
+export let PLACE_INDEX = {};
+export let PLACES = {};
 
-const base = await fetch("/data/places.json", { cache: "no-store" }).then(r => r.json());
-export const PLACE_GROUPS = normalizePlaceGroups(base);
-export const PLACE_INDEX = buildPlaceIndex(PLACE_GROUPS);
+export async function loadPlaces() {
+  const base = await fetch("/data/places.json", { cache: "no-store" }).then(r => r.json());
 
-export const PLACES = Object.fromEntries(
-  Object.entries(PLACE_GROUPS).map(([type, group]) => [
-    type,
-    Object.fromEntries(group.items.map(item => [item.id, item]))
-  ])
-);
+  PLACE_GROUPS = normalizePlaceGroups(base);
+  PLACE_INDEX = buildPlaceIndex(PLACE_GROUPS);
+
+  PLACES = Object.fromEntries(
+    Object.entries(PLACE_GROUPS).map(([type, group]) => [
+      type,
+      Object.fromEntries(group.items.map(item => [item.id, item]))
+    ])
+  );
+}
 
 function normalizePlaceGroups(raw) {
   const out = {};
