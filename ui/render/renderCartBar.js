@@ -15,7 +15,7 @@ export function renderCartBar(state) {
   const countEl = document.getElementById("cartCount");
   if (!bar || !btn || !countEl) return;
   
-  const {isEmpty, textFull } = getCartStats(state.cart.items);
+  const {isEmpty, textFull } = getCartStats(state);
   
   if (isEmpty) {
     bar.classList.add("hidden");
