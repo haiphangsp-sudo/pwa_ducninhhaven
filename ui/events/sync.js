@@ -36,6 +36,7 @@ function syncUI(state) {
             case "placePicker":
                 openPicker();
                 break;
+            
             default:
                 break;
         }
@@ -59,7 +60,7 @@ function syncUI(state) {
 
   /* ---------- CART ---------- */
 
-  if (state.cart !== lastState.cart) {
+  if (state.cart.status !== lastState.cart.status) {
     renderCartBar();
       renderStatusBar();
       renderDrawer();

@@ -106,7 +106,12 @@ function handleGlobalClick(e) {
 
     case "send_cart":
       dispatchAction({ mode: "send_cart" });
-      break;
+          break;
+      
+      case "confirm":
+          setState({ cart: { status: confirm } });
+          
+         break;
 
     /* ---------- LANGUAGE ---------- */
 

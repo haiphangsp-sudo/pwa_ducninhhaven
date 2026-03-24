@@ -1,6 +1,6 @@
 // ui/render/renderDrawer.js
 
-import { UI, getState } from "../../core/state.js";
+import { UI } from "../../core/state.js";
 import { translate } from "../utils/translate.js";
 import { updateCartQuantity } from "../../core/events.js";
 import { showOverlay } from "../interactions/backdropManager.js";
@@ -23,11 +23,14 @@ export function openCartDrawer() {
 }
 
 export function renderDrawer() {
+
   const drawer = document.getElementById("cartDrawer");
   const placeEl = document.getElementById("drawerPlaceDisplay");
+
   if (!drawer) return;
   const ctx = getContext();
   const activePlace = ctx?.active;
+
   if (placeEl) {
     if (activePlace) {
       placeEl.textContent = activePlace.place; 
@@ -37,6 +40,7 @@ export function renderDrawer() {
       placeEl.classList.add("text-warning");
     }
   }
+
   const itemsContainer = document.getElementById("drawerItems");
   const sendBtn = document.getElementById("drawerSend");
   const headerSummary = drawer.querySelector(".drawer-summary");
@@ -51,7 +55,6 @@ export function renderDrawer() {
   const cartItems = UI.cart.items;
   const currentSnapshot = JSON.stringify(cartItems);
   const hasChanged = currentSnapshot !== initialCartSnapshot;
-  const { items, status } = getState().cart;
   if (isEmpty) {
     initialCartSnapshot = "[]";
     itemsContainer.innerHTML = `
@@ -61,7 +64,7 @@ export function renderDrawer() {
     `;
     headerSummary.classList.add("hidden");
     sendBtn.textContent = translate("cart_bar.close");
-    sendBtn.dataset.action = "close";
+    sendBtn.dataset.action = "close-overlay";
     sendBtn.dataset.value = "cartDrawer";
     sendBtn.className = "drawer-send state-close";
   } else {
