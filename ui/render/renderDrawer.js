@@ -1,13 +1,12 @@
 // ui/render/renderDrawer.js
 
-import { UI } from "../../core/state.js";
+import { UI, getState } from "../../core/state.js";
 import { translate } from "../utils/translate.js";
-import { updateCartQuantity, dispatchAction } from "../../core/events.js";
-import { closeOverlay, showOverlay } from "../interactions/backdropManager.js";
+import { updateCartQuantity } from "../../core/events.js";
+import { showOverlay } from "../interactions/backdropManager.js";
 import { MENU } from "../../core/menuStore.js";
 import { getCartStats } from "../../ui/utils/cartHelpers.js";
 import { getContext } from "../../core/context.js";
-import { getState } from "../../core/state.js";
 
 
 /* =========================
@@ -86,10 +85,9 @@ export function renderDrawer() {
               }
             </span>
           </div>
-
           <div class="drawer-qty row items-center gap-s">
             <button class="qty-btn min" data-index="${index}">-</button>
-            <span class="qty-val weight-600">${item.qty}</span>
+              <span class="qty-val weight-600">${item.qty}</span>
             <button class="qty-btn plus" data-index="${index}">+</button>
           </div>
         </div>

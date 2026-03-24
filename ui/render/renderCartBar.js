@@ -27,15 +27,6 @@ export function renderCartBar() {
   btn.textContent = translate("cart_bar.cart_title");
   countEl.textContent = textFull;
 }
-/* =========================
-   EVENTS
-========================= */
-
-export function attachCartBarEvents() {
-  const btn = document.getElementById("cartOpen");
-  if (!btn) return;
-  btn.onclick = openCartDrawer;
-}
 
 /* =========================
    EFFECT
