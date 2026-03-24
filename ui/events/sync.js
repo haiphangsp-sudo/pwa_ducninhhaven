@@ -60,24 +60,17 @@ function syncUI(state) {
 
     /* ---------- CART ---------- */
     if (state.cart.items.length !== lastState.cart?.items?.length) {
-
-        if (state.cart.items.length === 0) {
-            document.getElementById("cartBar").classList.add("hidden");
-        } else {
-            document.getElementById("cartBar").classList.add("hidden");
-        }
     
         renderCartBar();
         renderStatusBar();
         renderDrawer();
-  }
+    }
 
   /* ---------- LANGUAGE ---------- */
 
   if (state.lang?.current !== lastState.lang?.current) {
     syncLanguage(state);
   }
-    
 
   lastState = structuredClone(state);
 }

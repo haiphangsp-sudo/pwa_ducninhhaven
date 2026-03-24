@@ -8,6 +8,7 @@ import { attachPlacePickerEvents } from "../render/renderPlacePicker.js";
 import { attachOrchestrator } from "../../core/events.js";
 import { UI } from "../../core/state.js";
 import { openCartDrawer } from "../render/renderDrawer.js";
+import { bounceCartBar } from "../render/renderCartBar.js";
 
 
 
@@ -79,17 +80,9 @@ function handleGlobalClick(e) {
 
       /* ---------- CART / ORDER ---------- */
 
-
-      case "cart":
-          
+      case "cart":          
           attachOptionEvents(target, "cart", value);
-            document.getElementById("cartBar").classList.remove("hidden");
-          document.getElementById("cartBar").classList.add("cart-bounce");
-
-          setTimeout(() => {
-            document.getElementById("cartBar").classList.remove("cart-bounce");
-          }, 400);
-          
+          bounceCartBar();
     break;
 
     case "instant":
