@@ -62,7 +62,7 @@ function syncUI(state) {
     if (state.cart.items !== lastState.cart?.items) {
     
         renderCartBar(state);
-        renderStatusBar();
+        renderStatusBar(state);
         renderDrawer(state);
     }
 
@@ -85,7 +85,7 @@ function syncLanguage(state) {
   // re-render toàn bộ UI phụ thuộc ngôn ngữ
   renderNavBar(state);
   renderCartBar(state);
-  renderStatusBar();
+  renderStatusBar(state);
   renderHub();
   renderPanel(state);
 }

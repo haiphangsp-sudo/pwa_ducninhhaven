@@ -15,7 +15,7 @@ export function getCartStats(items=[]) {
     }, { totalQty: 0, totalPrice: 0 });
 
     const countLine = items.length;
-    const isEmpty = countLine === 0;
+    const isEmpty = totalQty === 0;
 
     const itemLabelKey = stats.totalQty > 1 ? "cart_bar.items" : "cart_bar.item";
     const itemLabel = translate(itemLabelKey);

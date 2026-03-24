@@ -16,7 +16,7 @@ import { getContext } from "../../core/context.js";
 let initialCartSnapshot = localStorage.getItem("haven_cart") || "[]";
 
 export function openCartDrawer(state) {
-  initialCartSnapshot = structuredClone(state);
+  initialCartSnapshot = JSON.stringify(state.cart.items || []);
   renderDrawer(state);
   showOverlay("cartDrawer");
 }
