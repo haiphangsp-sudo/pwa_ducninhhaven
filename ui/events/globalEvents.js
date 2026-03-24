@@ -110,10 +110,9 @@ function handleGlobalClick(e) {
 function attachOptionEvents(btn,type,value){
     btn.classList.add("is-loading");
     setTimeout(() => btn.classList.remove("is-loading"), 500);
-    addToCart(lineItem(type,value));
+    addToCart(lineItem(btn,type,value));
 }
 function lineItem(target, type, value) {
-    if (target) {
         return {
             mode: type,
             category: target.dataset.category,
@@ -121,5 +120,4 @@ function lineItem(target, type, value) {
             option: value,
             qty: 1
         }
-    }
 }
