@@ -117,7 +117,6 @@ export function attachDrawerEvents() {
     document.getElementById("drawerItems").addEventListener("click", (e) => {
       const btn = e.target.closest(".qty-btn");
       if (!btn) return;
-      renderDrawer();
       updateCartQuantity(
         parseInt(btn.dataset.index, 10),
         btn.classList.contains("plus") ? 1 : -1

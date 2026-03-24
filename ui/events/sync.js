@@ -42,6 +42,7 @@ function syncUI(state) {
     } 
     if (state.view.overlay === null) {
         closeOverlay();
+    
     }
 
   /* ---------- NAV ---------- */
@@ -60,7 +61,8 @@ function syncUI(state) {
 
   if (state.cart !== lastState.cart) {
     renderCartBar();
-    renderStatusBar();
+      renderStatusBar();
+      renderDrawer();
   }
 
   /* ---------- LANGUAGE ---------- */
