@@ -9,7 +9,7 @@ export const UI = {
     current: localStorage.getItem("haven_lang") || "vi"
   },
   meta: {
-    version:1
+    version: 2.0
   },
   /* ---------------- SERVICE CONTEXT ---------------- */
 
@@ -34,7 +34,11 @@ export const UI = {
     items: [],
     status: 'idle'
   },
-  
+  drawer: {
+    items: null,
+    tempQty: 1
+  },
+
 
   /* ---------------- ACK (tap feedback) ---------------- */
 

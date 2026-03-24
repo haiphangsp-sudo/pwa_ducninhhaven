@@ -1,6 +1,6 @@
 // ui/events/globalEvents.js
 
-import { setState } from "../../core/state.js";
+import { setState, getState } from "../../core/state.js";
 import { applyPlaceById } from "../../core/context.js";
 import { dispatchAction } from "../../core/events.js";
 import { attachDrawerEvents } from "../render/renderDrawer.js";
@@ -20,7 +20,7 @@ export function attachAppEvents() {
     attachOrchestrator();
 
     document.addEventListener("click", handleGlobalClick);
-    
+
     window.addEventListener("intentresume", (e) => {
         if (e.detail?.type === "send_cart") {
             setTimeout(() => {
@@ -58,24 +58,42 @@ function handleGlobalClick(e) {
       break;
 
     case "open-overlay":
-      setState({ view: { overlay: value } });
+      setState({ 
+        view: { overlay: null },
+        drawer: { item: null, qty: 1 } // Đóng là reset để lần sau mở ra luôn là 1
+        });
       break;
 
     case "close-overlay":
-      setState({ view: { overlay: null } });
+        setState({ view: { overlay: null } });
+        setState({ drawer: { item: null, qty: 1 }});//Đóng là reset để lần sau mở ra luôn là 1
       break;
 
     /* ---------- PLACE ---------- */
 
     case "select-place":
       if (!value) return;
-      setState({ view: { overlay: null } });
+      setState({ 
+                context: { active: { id: value } },
+                view: { overlay: null } 
+            });
       applyPlaceById(value);
-      break;
+    break;
 
-    /* ---------- CART / ORDER ---------- */
+      /* ---------- CART / ORDER ---------- */
+    case 'qty-plus':
+        break;
 
-    case "cart":
+    case 'qty-minus':
+        break;
+
+      case "cart":
+          setState({ 
+        cart: { items },
+        view: { overlay: null, tempQty: 1 } // Reset lại số lượng về 1 cho lần sau
+        });
+          break;
+      
     case "instant":
       dispatchAction({
         mode: action,
