@@ -16,7 +16,7 @@ import { getContext } from "../../core/context.js";
 let initialCartSnapshot = localStorage.getItem("haven_cart") || "[]";
 
 export function openCartDrawer(state) {
-  initialCartSnapshot = JSON.stringify(state.cart.items || []);
+  initialCartSnapshot = structuredClone(state);
   renderDrawer(state);
   showOverlay("cartDrawer");
 }
@@ -44,7 +44,7 @@ export function renderDrawer(state) {
   const sendBtn = document.getElementById("drawerSend");
   const headerSummary = drawer.querySelector(".drawer-summary");
   const cartItems = state.cart.items;
-  const { totalPriceFormat, textLine, isEmpty, textFull } = getCartStats(state.cart.items);
+  const { totalPriceFormat, textLine, isEmpty, textFull } = getCartStats(cartItems);
 
   drawer.querySelector(".drawer__header-title").textContent = translate("cart_bar.cart_title");
   drawer.querySelector(".drawer__header-price").textContent = totalPriceFormat;
@@ -52,7 +52,7 @@ export function renderDrawer(state) {
   drawer.querySelector(".drawer__header-unique").textContent = textLine;
   
   
-  const currentSnapshot = JSON.stringify(cartItems);
+  const currentSnapshot = structuredClone(cartItems);
   const hasChanged = currentSnapshot !== initialCartSnapshot;
   if (isEmpty) {
     initialCartSnapshot = "[]";

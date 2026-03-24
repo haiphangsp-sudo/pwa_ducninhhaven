@@ -63,9 +63,7 @@ function syncUI(state) {
     
         renderCartBar(state);
         renderStatusBar();
-        if (state.cart.items.length !== 0) {
-            renderDrawer(state);
-        }
+        renderDrawer(state);
     }
 
   /* ---------- LANGUAGE ---------- */
