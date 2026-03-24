@@ -1,13 +1,13 @@
 // ui/sync.js
 
 import { subscribe, getState } from "../core/state.js";
+import { renderNavBar } from "../render/renderNavBar.js";
+import { renderCartBar } from "../render/renderCartBar.js";
+import { renderStatusBar } from "../render/renderStatusBar.js";
+import { renderHub } from "../render/renderHub.js";
+import { renderPanel } from "../render/renderPanel.js";
 
-import { renderNavBar } from "./render/renderNavBar.js";
-import { renderCartBar } from "./render/renderCartBar.js";
-import { renderStatusBar } from "./render/renderStatusBar.js";
-import { renderHub } from "./render/renderHub.js";
-import { renderPanel } from "./render/renderPanel.js";
-import { renderOverlay } from "./render/renderOverlay.js";
+
 
 let lastState = {};
 
