@@ -7,6 +7,9 @@ import { attachDrawerEvents } from "../render/renderDrawer.js";
 import { attachMenuEvents } from "../components/categoryOption.js";
 import { attachPlacePickerEvents } from "../render/renderPlacePicker.js";
 import { attachOrchestrator } from "../../core/events.js";
+import { UI } from "../../core/state.js";
+import { openCartDrawer } from "../render/renderDrawer.js";
+
 
 
 /* =========================
@@ -83,36 +86,29 @@ function handleGlobalClick(e) {
     case 'qty-minus':
         break;
 
-      case "cart":
-          setState({ cart: { items }});
-          dispatchAction({
+    case "cart":
+        addCartItem({
             mode: action,
             category: target.dataset.category,
             item: target.dataset.item,
             option: value,
             qty: 1
-            });
-          
-          break;
-      
+        });
+        break;
+
     case "instant":
-      dispatchAction({
-        mode: action,
-        category: target.dataset.category,
-        item: target.dataset.item,
-        option: value,
-        qty: 1
-      });
+      requestSend([{
+            mode: action,
+            category: target.dataset.category,
+            item: target.dataset.item,
+            option: value,
+            qty: 1
+        }], "instant");
       break;
 
     case "send_cart":
-      dispatchAction({ mode: "send_cart" });
-          break;
-      
-      case "confirm":
-          setState({ cart: { status: confirm } });
-          
-         break;
+      requestSend(UI.cart.items || [], "cart");
+      break;
 
     /* ---------- LANGUAGE ---------- */
 
