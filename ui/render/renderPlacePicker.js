@@ -89,7 +89,7 @@ function renderGroup(type, items, isAnchorRoom = false) {
           data-action="select-place"
           data-value="${p.id}"
           class="picker-option btn center"
-          type="button"
+          type="button">
           ${translate(p.label)}
         </button>
       `).join("")}
@@ -122,5 +122,5 @@ function handlePlacePickerClick(e) {
   if (!btn) return;
 
   closeOverlay();
-  applyPlaceById(btn.dataset.id);
+  applyPlaceById(btn.dataset.value);
 }
