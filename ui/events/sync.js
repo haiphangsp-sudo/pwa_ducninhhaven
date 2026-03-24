@@ -9,6 +9,8 @@ import { renderPanel } from "../render/renderPanel.js";
 import { openPicker } from "../render/renderPlacePicker.js";
 import { openCartDrawer } from "../render/renderDrawer.js";
 import { closeOverlay } from "../interactions/backdropManager.js";
+import { renderDrawer } from "../render/renderDrawer.js";
+
 
 
 
