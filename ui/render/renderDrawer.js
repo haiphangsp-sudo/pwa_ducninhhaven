@@ -44,6 +44,7 @@ export function renderDrawer(state) {
   const itemsContainer = document.getElementById("drawerItems");
   const sendBtn = document.getElementById("drawerSend");
   const headerSummary = drawer.querySelector(".drawer-summary");
+
   const cartItems = state.cart.items;
   const { totalPriceFormat, textLine, isEmpty, textFull } = getCartStats(cartItems);
 
@@ -54,7 +55,9 @@ export function renderDrawer(state) {
   
   
   const hasChanged = JSON.stringify(cartItems) !== initialCartSnapshot;
+
   if (isEmpty) {
+    
     initialCartSnapshot = "[]";
     itemsContainer.innerHTML = `
       <div class="p-m center text-muted">
@@ -66,26 +69,25 @@ export function renderDrawer(state) {
     sendBtn.dataset.action = "close-overlay";
     sendBtn.dataset.value = "cartDrawer";
     sendBtn.className = "drawer-send state-close";
+
   } else {
+
     headerSummary.classList.remove("hidden");
 
     itemsContainer.innerHTML = cartItems.map((item, index) => {
-      const price = getFullCartItems(state).option.price;
 
-      
-      const labelItem = translate(item.label);
-      const labelOption = getFullCartItems(state).option.label;
+      const option = getFullCartItems(cartItems);  
 
       return `
         <div class="drawer__item drawer-item">
           <div class="drawer__info">
           
-            <strong>${labelItem}</strong>
-            <span class="drawer__variant">${translate(labelOption)}</span>
+            <strong>${translate(option.label)}</strong>
+            <span class="drawer__variant">${translate(option.label)}</span>
             <span class="text-s text-muted">
-              ${price > 0
-                ? price.toLocaleString("vi-VN") + " đ"
-                : price === 0
+              ${option.price > 0
+                ? option.price.toLocaleString("vi-VN") + " đ"
+                : option.price === 0
                   ? translate("cart_bar.free")
                   : translate("cart_bar.instant")
               }
