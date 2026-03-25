@@ -7,36 +7,30 @@ import { MENU } from "../../core/menuStore.js";
    PUBLIC
 ========================= */
 
-export function getCartStats(items=[]) {
-    
-    // Gom tất cả tính toán vào 1 vòng lặp duy nhất để tối ưu hiệu suất
-    const stats = items.reduce((acc, it) => {  
-            
-        const itemPrice = Number(it.price || 0);
-        const qty = Number(it.qty || 0);
+export function getCartStats(items = []) {
+  const stats = items.reduce((acc, it) => {
+    const itemPrice = Number(it.price || 0);
+    const qty = Number(it.qty || 0);
 
-        acc.totalQty += qty;
-        acc.totalPrice += (itemPrice * qty);
-        return acc;
-    }, { totalQty: 0, totalPrice: 0 });
+    acc.totalQty += qty;
+    acc.totalPrice += itemPrice * qty;
+    return acc;
+  }, { totalQty: 0, totalPrice: 0 });
 
-    const countLine = items.length;
-    const isEmpty = stats.totalQty === 0;
+  const countLine = items.length;
+  const isEmpty = stats.totalQty === 0;
+  const itemLabelKey = stats.totalQty > 1 ? "cart_bar.items" : "cart_bar.item";
+  const itemLabel = translate(itemLabelKey);
 
-    const itemLabelKey = stats.totalQty > 1 ? "cart_bar.items" : "cart_bar.item";
-    const itemLabel = translate(itemLabelKey);
-
-    return {
-        totalQty: stats.totalQty,
-        totalPrice: stats.totalPrice,
-        totalPriceFormat: stats.totalPrice.toLocaleString("vi-VN") + " đ",
-        textLine: `${countLine} ${translate("cart_bar.unique")}`,
-        text: itemLabel,
-        textFull: `${stats.totalQty} ${itemLabel}`,
-        isEmpty
-    };
+  return {
+    totalQty: stats.totalQty,
+    totalPrice: stats.totalPrice,
+    totalPriceFormat: stats.totalPrice.toLocaleString("vi-VN") + " đ",
+    textLine: `${countLine} ${translate("cart_bar.unique")}`,
+    textFull: `${stats.totalQty} ${itemLabel}`,
+    isEmpty
+  };
 }
-
 
 export function calculateCartUpdate(currentItems, newItem) {
     // Tìm xem món này đã có trong giỏ chưa (trùng category, item và option)
