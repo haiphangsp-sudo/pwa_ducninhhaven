@@ -105,7 +105,7 @@
 ========================= */
 
 .hub-btn.is-active {
-  background: var(--brand);
+  background: beige;
   color: var(--text-invert);
   transform: translateY(-2px);
   box-shadow: var(--shadow);
