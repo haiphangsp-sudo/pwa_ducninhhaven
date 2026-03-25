@@ -4,9 +4,11 @@
 import { translate } from "../utils/translate.js";
 import { getCategories } from "../../core/menuQuery.js";
 
-export function renderHub() {
+export function renderHub(state) {
   const panels = getCategories();
   const menuEl = document.getElementById("hubMenu");
+  if (!menuEl) return;
+  const currentPanel = state.view.panel;
   menuEl.innerHTML = panels.map(cat => {
     const isActive = cat.key === currentPanel ? "is-active" : "";
     return `
