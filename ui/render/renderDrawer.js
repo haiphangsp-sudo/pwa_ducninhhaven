@@ -103,7 +103,7 @@ export function renderDrawer() {
   sendBtn.className = `drawer-send ${hasChanged ? "state-confirm" : "state-send"}`;
 }
 
-export function ß() {
+export function attachDrawerEvents() {
   if (drawerBound) return;
   drawerBound = true;
 
