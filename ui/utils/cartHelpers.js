@@ -38,39 +38,6 @@ export function getCartStats(items=[]) {
 }
 
 
-/**
- * Hàm làm đầy dữ liệu giỏ hàng (Hydration)
- */
-export function getFullCartItems(items = []) {
-  return items.map(it => {
-    // 1. Truy xuất dữ liệu danh mục và món ăn từ MENU
-    const categoryData = MENU?.[it.category];
-    const itemData = categoryData?.items?.[it.item];
-    
-    // 2. Truy xuất dữ liệu option cụ thể (để lấy giá và tên option)
-    const optionData = itemData?.options?.[it.option];
-
-    // 3. Kết hợp dữ liệu bằng Spread Operator
-    return {
-      ...it, // Giữ nguyên: category, item, option, qty (và các thuộc tính cũ khác)
-      
-      // Bổ sung dữ liệu hiển thị từ MENU
-      name: itemData?.name || "Unknown Item",
-      image: itemData?.image || "",
-      
-      // Lấy giá từ option, nếu không có thì mặc định là 0
-      price: optionData?.price || 0,
-      
-      // Bổ sung tên option (ví dụ: "Size L", "Nóng"...) nếu cần hiển thị
-      optionLabel: optionData?.label || "",
-      
-      // Tính tổng tiền cho riêng món này (Subtotal)
-      subtotal: (optionData?.price || 0) * (it.qty || 0)
-    };
-  });
-}
-
-
 export function calculateCartUpdate(currentItems, newItem) {
     // Tìm xem món này đã có trong giỏ chưa (trùng category, item và option)
     const foundIndex = currentItems.findIndex(it => 
