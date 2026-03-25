@@ -12,6 +12,7 @@
   min-height:0;
   padding:16px;
   background:var(--bg-main);
+  overflow-x: hidden;
 }
 .page-container{
   max-width: var(--content-max);
