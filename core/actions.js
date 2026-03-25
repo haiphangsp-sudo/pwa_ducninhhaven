@@ -2,6 +2,9 @@
 import { sendRequest } from "../services/api.js"; 
 import { isOnline } from "../services/network.js"; 
 import { getState, setState } from "./state.js";
+import { showToast } from "../ui/utils/uiHelpers.js";
+import { getFullCartItems, getCartStats } from "../ui/utils/cartHelpers.js";
+
 
 export async function changeCartQtynew({ category, item, option }, delta) {
     const { cart } = getState();
@@ -92,7 +95,7 @@ export function changeCartQtycu({ category, item, option }, delta) {
 
 
 
-export async function requestOrder(line = null) {
+export async function requestOrderThamKhao(line = null) {
   const state = getState();
 
   // 1. Kiểm tra điều kiện tiên quyết (Guards)
@@ -143,9 +146,6 @@ export async function requestOrder(line = null) {
   }
 }
 
-
-import { sendRequest } from "../services/api.js";
-import { notifyResponse } from "../ui/notifications.js";
 
 export async function processOrder(payload) {
   try {
