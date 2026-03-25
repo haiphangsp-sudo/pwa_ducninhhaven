@@ -104,7 +104,7 @@ async function handleGlobalClick(e) {
 
 function singleItemArray(target) {
   return {
-    mode: target.dataset.mode,
+    mode: target.dataset.action,
     category: target.dataset.category,
     item: target.dataset.item,
     option: target.dataset.option,
