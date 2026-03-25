@@ -46,17 +46,18 @@ export function renderDrawer(state) {
   const headerSummary = drawer.querySelector(".drawer-summary");
 
   const cartItems = state.cart.items;
-  const { totalPriceFormat, textLine, isEmpty, textFull } = getCartStats(cartItems);
+  
+  const stats = getCartStats(cartItems); // Lấy thông tin tổng quan
 
   drawer.querySelector(".drawer__header-title").textContent = translate("cart_bar.cart_title");
-  drawer.querySelector(".drawer__header-price").textContent = totalPriceFormat;
-  drawer.querySelector(".drawer__header-count").textContent = textFull;
-  drawer.querySelector(".drawer__header-unique").textContent = textLine;
+  drawer.querySelector(".drawer__header-price").textContent = stats.totalPriceFormat;
+  drawer.querySelector(".drawer__header-count").textContent = stats.textFull;
+  drawer.querySelector(".drawer__header-unique").textContent = stats.textLine;
   
   
   const hasChanged = JSON.stringify(cartItems) !== initialCartSnapshot;
 
-  if (isEmpty) {
+  if (stats.isEmpty) {
 
     initialCartSnapshot = "[]";
     itemsContainer.innerHTML = `
@@ -73,22 +74,21 @@ export function renderDrawer(state) {
   } else {
 
     headerSummary.classList.remove("hidden");
-    const keys = getFullItemInfo(cartItems);
 
-    itemsContainer.innerHTML = cartItems.map((item, index) => {
+    const displayItems = getFullCartItems(state.cart.items);
 
-      const option = getFullCartItems(item);  
+    itemsContainer.innerHTML = displayItems.map((item, index) => {
       
       return `
         <div class="drawer__item drawer-item">
           <div class="drawer__info">
           
-            <strong>${translate(keys.name)}</strong>
-            <span class="drawer__variant">${translate(option.label)}</span>
+            <strong>${translate(item.name)}</strong>
+            <span class="drawer__variant">${translate(item.optionLabel)}</span>
             <span class="text-s text-muted">
-              ${option.price > 0
-                ? option.price.toLocaleString("vi-VN") + " đ"
-                : option.price === 0
+              ${item.price > 0
+                ? item.price.toLocaleString("vi-VN") + " đ"
+                : item.price === 0
                   ? translate("cart_bar.free")
                   : translate("cart_bar.instant")
               }

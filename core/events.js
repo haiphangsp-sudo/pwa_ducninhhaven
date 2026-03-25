@@ -91,51 +91,48 @@ export function addToCart(line) {
 /* ---------- ORDERING ACTIONS ---------- */
 
 export async function sendInstant(line) {
-  // 1. Dùng Helper để lấy đầy đủ Label/Price từ MENU
-  const fullItem = getFullItemInfo(line);
+  // BƯỚC 1: Lấy thông tin nhãn và giá từ MENU
+  const fullItem = getFullItemInfo(line); 
   
-  // 2. Đóng gói đơn hàng 1 món
+  // BƯỚC 2: Đóng gói đơn hàng 1 món
   const payload = buildPayload([fullItem], "INSTANT");
-  if (!payload) return; // Dừng nếu chưa chọn phòng
+  if (!payload) return; 
 
   return await enqueue(payload);
 }
 
+// --- GỬI GIỎ HÀNG (CART) ---
 export async function sendCart() {
   const state = getState();
-  // 1. Làm đầy dữ liệu cho toàn bộ giỏ hàng
+  // BƯỚC 1: Biến danh sách ID thành danh sách đầy đủ tên/giá
   const fullItems = getFullCartItems(state.cart.items);
   
   if (fullItems.length === 0) return;
 
-  // 2. Đóng gói đơn hàng từ giỏ
+  // BƯỚC 2: Đóng gói
   const payload = buildPayload(fullItems, "CART");
   if (!payload) return;
 
   return await enqueue(payload);
 }
 
-/* ---------- HELPER: BUILD PAYLOAD ---------- */
-
-function buildPayload(items, type = "CART") {
+// --- HÀM CHUẨN HÓA CHUNG ---
+function buildPayload(items, type) {
   const state = getState();
-  const active = state.context?.active;
+  const active = state.context?.active; // Sửa lỗi scope: lấy trực tiếp từ state
 
-  // SỬA LỖI: Kiểm tra tập trung thông tin vị trí
   if (!active || !active.place) {
     setState({ view: { ...state.view, overlay: "placePicker" } });
     return null;
   }
 
   return {
-    type: type,
+    type: type, // "INSTANT" hoặc "CART"
     timestamp: new Date().toISOString(),
-    // Thông tin khách hàng & vị trí
-    place: active.place,
+    location: active.place,
     customer: active.name || "Guest",
-    // Dữ liệu món ăn (Đã có đủ name, optionLabel, price nhờ Helper)
-    items: items, 
-    total: items.reduce((sum, i) => sum + (i.price * i.qty), 0),
+    items: items, // Mảng các món đã có Name, OptionLabel, Price
+    total: items.reduce((sum, i) => sum + i.subtotal, 0),
     note: state.cart.note || ""
   };
 }

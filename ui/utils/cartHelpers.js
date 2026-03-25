@@ -61,23 +61,26 @@ export function calculateCartUpdate(currentItems, newItem) {
  * Tra cứu thông tin chi tiết của 1 món từ MENU
  */
 export function getFullItemInfo(it) {
-  const categoryData = MENU?.[it.category];
+  if (!it) return null;
+
+  // 1. Tìm Category (vd: "food" hoặc "help")
+  const categoryData = MENU[it.category];
+  // 2. Tìm Item bên trong Category (vd: "breakfast" hoặc "assistance")
   const itemData = categoryData?.items?.[it.item];
+  // 3. Tìm Option bên trong Item (vd: "bread" hoặc "reception")
   const optionData = itemData?.options?.[it.option];
 
   return {
     ...it,
-    name: translate(itemData?.label || "Unknown Item"), 
+    // Dùng hàm translate để lấy đúng tiếng Vi/En từ object {vi: "...", en: "..."}
+    name: translate(itemData?.label), 
+    optionLabel: translate(optionData?.label),
     price: optionData?.price || 0,
-    optionLabel: translate(optionData?.label || ""),
-    qty: it.qty || 1,
+    // Tính tiền riêng cho dòng này
     subtotal: (optionData?.price || 0) * (it.qty || 1)
   };
 }
 
-/**
- * Làm đầy toàn bộ danh sách món (Hydration)
- */
 export function getFullCartItems(items = []) {
   return items.map(it => getFullItemInfo(it));
 }
