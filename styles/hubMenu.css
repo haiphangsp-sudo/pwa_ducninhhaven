@@ -120,7 +120,6 @@
   box-shadow:0 -1px 0 rgba(0,0,0,0.02), 0 8px 20px rgba(0,0,0,0.04);
 }
 
-.hub-btn.is-active,
 .hub-btn.is-active::after{
   content:"";
   position:absolute;
@@ -153,6 +152,16 @@
   opacity:.9;
 }
 
+/* =========================
+   HUB CONTENT
+========================= */
+
+.hub-content{
+  flex:1;
+  min-height:0;
+  padding:16px;
+  background:var(--bg-main);
+}
 
 /* =========================
    FOCUS ACCESSIBILITY

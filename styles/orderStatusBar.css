@@ -139,7 +139,7 @@
 .step.is-active .step-label { color: #a88a64; font-weight: bold; }
 .order-status-bar {
     position: fixed;
-    bottom: 85px; /* Nằm trên Cart Bar một chút */
+    top: 155px;
     left: 50%;
     transform: translateX(-50%);
     z-index: 100;
