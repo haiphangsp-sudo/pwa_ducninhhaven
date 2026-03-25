@@ -14,8 +14,8 @@ export const UI = {
   /* ---------------- SERVICE CONTEXT ---------------- */
 
   context: {
-    anchor: null,   // {mode:"room|table|area", id:string, ts: number}
-    active: null, // {place:"T1|T2|T3...", id:string}
+    anchor: null,   // {place:"room|table|area", id:string, ts: number}
+    active: null, // {id:string}
   },
   /* ---------------- NAVIGATION ---------------- */
 
@@ -34,6 +34,8 @@ export const UI = {
     items: [],
     status: 'idle'
   },
+  /* ---------------- DRAWER ---------------- */
+
   drawer: {
     items: null,
     tempQty: 1

@@ -43,9 +43,8 @@ function syncUI(state) {
                 break;
         }
     } 
-    if (state.view.overlay === null) {
+    if (state.view.overlay === null && lastState.view?.overlay !== null) {
         closeOverlay();
-    
     }
 
     /* ---------- NAV ---------- */
@@ -70,7 +69,6 @@ function syncUI(state) {
         renderDrawer(state);
         localStorage.setItem(CONFIG.CART_KEY, JSON.stringify(state.cart.items));
         
-        // Bạn có thể thêm một chút hiệu ứng "rung" nhẹ ở CartBar 
         // để báo hiệu cho khách là giỏ hàng đã cập nhật
         document.getElementById("cartBar")?.classList.add("cart-bounce");
         setTimeout(() => {
@@ -83,8 +81,9 @@ function syncUI(state) {
 
   /* ---------- LANGUAGE ---------- */
 
-  if (state.lang?.current !== lastState.lang?.current) {
-    syncLanguage(state);
+    if (state.lang?.current !== lastState.lang?.current) {
+        localStorage.setItem(CONFIG.LANG_KEY, state.lang.current);
+        syncLanguage(state);
   }
     
 

@@ -66,10 +66,12 @@ async function handleGlobalClick(e) {
     case "select-place":
       if (!value) return;
       applyPlaceById(value);
-      setState({ 
-                context: { active: { id: value } },
-                view: { overlay: null } 
-            });
+      setState({
+        context: {
+          active: { id: value },
+          anchor: null
+        }
+      });
     break;
 
       /* ---------- CART / ORDER ---------- */
