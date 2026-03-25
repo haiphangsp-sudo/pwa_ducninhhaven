@@ -5,8 +5,8 @@ import { changeCartQtynew } from "../../core/actions.js";
 import { showOverlay } from "../interactions/backdropManager.js";
 import { getCartStats } from "../../ui/utils/cartHelpers.js";
 import { getContext } from "../../core/context.js";
-import { renderDrawer } from "../render/renderDrawer.js";
-import {getFullCartItems} from "../../ui/utils/cartHelpers.js";
+import { getFullCartItems } from "../../ui/utils/cartHelpers.js";
+
 
 
 /* =========================
