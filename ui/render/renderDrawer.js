@@ -3,7 +3,6 @@
 import { translate } from "../utils/translate.js";
 import { updateCartQuantity } from "../../core/events.js";
 import { showOverlay } from "../interactions/backdropManager.js";
-import { MENU } from "../../core/menuStore.js";
 import { getCartStats } from "../../ui/utils/cartHelpers.js";
 import { getContext } from "../../core/context.js";
 
@@ -32,7 +31,7 @@ export function renderDrawer(state) {
 
   if (placeEl) {
     if (activePlace) {
-      placeEl.textContent = activePlace.place; 
+      placeEl.textContent = activePlace.id; 
       placeEl.classList.remove("text-warning");
     } else {
       placeEl.textContent = translate("cart_bar.place_prompt");
@@ -69,15 +68,13 @@ export function renderDrawer(state) {
     headerSummary.classList.remove("hidden");
 
     itemsContainer.innerHTML = cartItems.map((item, index) => {
-      const menuItem = MENU?.[item.category]?.items?.[item.item];
-      const option = menuItem?.options?.[item.option];
-      const price = option?.price;
+      const price = Number(item.price||0);
 
       return `
         <div class="drawer__item drawer-item">
           <div class="drawer__info">
-            <strong>${translate(menuItem?.label || item.item)}</strong>
-            <span class="drawer__variant">${option?.label ? translate(option.label) : ""}</span>
+            <strong>${translate(item.label || item.item)}</strong>
+            <span class="drawer__variant">${item.option?.label ? translate(item.option.label) : ""}</span>
             <span class="text-s text-muted">
               ${price > 0
                 ? price.toLocaleString("vi-VN") + " đ"
