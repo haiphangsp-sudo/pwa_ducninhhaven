@@ -39,7 +39,7 @@ export function categoryOpt(opt, itemKey, categoryKey, type) {
 
 }
 function attachOptionEvents(target){
-    target.classList.add("is-loading");
+   document.getElementById("cartBar").classList.add("is-loading");
     setTimeout(() => target.classList.remove("is-loading"), 500);
 }
 
