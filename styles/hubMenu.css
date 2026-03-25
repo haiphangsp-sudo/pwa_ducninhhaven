@@ -44,6 +44,8 @@
 .hub-btn{
   position:relative;
   flex:0 0 98px;
+  min-height:108px;
+
   display:flex;
   flex-direction:column;
   align-items:center;
@@ -57,6 +59,11 @@
   background:transparent;
   color:var(--text-soft);
 
+  scroll-snap-align:start;
+  transition:
+    background-color .18s ease,
+    color .18s ease,
+    transform .18s ease;
 }
 
 .hub-btn:active{
@@ -111,18 +118,9 @@
   background:var(--bg-main);
   color:var(--text-main);
   box-shadow:0 -1px 0 rgba(0,0,0,0.02), 0 8px 20px rgba(0,0,0,0.04);
-  background: var(--primary-color); /* Hoặc màu thương hiệu của Đức Ninh Haven */
-  color: #fff;
-  border-color: transparent;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
-.hub-btn:not(.is-active){
-  background:transparent;
-  color:var(--text-soft);
-  opacity: .82;
-}
+.hub-btn.is-active
 .hub-btn.is-active::after{
   content:"";
   position:absolute;
