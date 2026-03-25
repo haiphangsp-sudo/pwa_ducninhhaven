@@ -28,10 +28,7 @@ export function attachAppEvents() {
         }
     });
 
-    window.addEventListener("contextchange", (e) => {
-        dispatchAction({ mode: e.detail.mode });
-    });
-
+  
     window.addEventListener("needplace", () => {
         setState({ view: { overlay: "placePicker" } });
     });
