@@ -1,7 +1,7 @@
 // ui/render/renderDrawer.js
 
 import { translate } from "../utils/translate.js";
-import { changeCartQtycu } from "../../core/actions.js";
+import { updateCartQuantity } from "../../core/events.js";
 import { showOverlay } from "../interactions/backdropManager.js";
 import { getCartStats, getFullCartItems } from "../../ui/utils/cartHelpers.js";
 import { getContext } from "../../core/context.js";
@@ -105,7 +105,7 @@ export function attachDrawerEvents() {
     const btn = e.target.closest(".qty-btn");
     if (!btn) return;
 
-    changeCartQtycu(
+    updateCartQuantity(
       parseInt(btn.dataset.index, 10),
       btn.classList.contains("plus") ? 1 : -1
     );

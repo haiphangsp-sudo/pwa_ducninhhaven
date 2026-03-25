@@ -108,14 +108,14 @@ function buildPayload(items, type = "CART") {
 
   // Chốt chặn: Nếu chưa chọn phòng/bàn thì bắt chọn
   if (!active || !active.id) {
-    showOverlay("placePicker");
+    openPicker();
     return null;
   }
 
   return {
     mode: type, 
     timestamp: new Date().toISOString(),
-    place: active.place,
+    place: active.id,
     items: items, 
     total: items.reduce((sum, i) => sum + i.subtotal, 0),
     note: state.cart.note || ""
