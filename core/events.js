@@ -11,9 +11,6 @@ import { renderStatusBar } from "../ui/render/renderStatusBar.js";
 
 /* ---------- CONSTANTS ---------- */
 
-
-let pendingIntent = null;
-
 export function loadCart() {
   try {
     const items = JSON.parse(localStorage.getItem(CART_KEY) || "[]");
