@@ -5,7 +5,6 @@ import { applyPlaceById } from "../../core/context.js";
 import { addToCart, sendCart } from "../../core/events.js";
 import { attachDrawerEvents } from "../render/renderDrawer.js";
 import { attachPlacePickerEvents } from "../render/renderPlacePicker.js";
-import { attachOrchestrator } from "../../core/events.js";
 import { openCartDrawer } from "../render/renderDrawer.js";
 import { bounceCartBar } from "../render/renderCartBar.js";
 
@@ -18,7 +17,6 @@ import { bounceCartBar } from "../render/renderCartBar.js";
 export function attachAppEvents() {
     attachDrawerEvents();
     attachPlacePickerEvents();
-    attachOrchestrator();
 
     document.addEventListener("click", handleGlobalClick);
 
