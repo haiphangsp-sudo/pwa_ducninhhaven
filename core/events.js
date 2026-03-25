@@ -107,7 +107,7 @@ function buildPayload(items, type) {
   const state = getState();
   const active = state.context?.active; // Sửa lỗi scope: lấy trực tiếp từ state
 
-  if (!active || !active.place) {
+  if (!active || !active.id) {
     setState({ view: { ...state.view, overlay: "placePicker" } });
     return null;
   }
