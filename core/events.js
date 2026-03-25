@@ -7,8 +7,6 @@ import { CART_KEY } from "../config.js";
 import { getFullCartItems } from "../ui/utils/cartHelpers.js";
 import { renderStatusBar } from "../ui/render/renderStatusBar.js";
 
-import { calculateCartUpdate, getCartStats, getFullCartItems} from "../ui/utils/cartHelpers.js";
-
 
 
 /* ---------- CONSTANTS ---------- */
