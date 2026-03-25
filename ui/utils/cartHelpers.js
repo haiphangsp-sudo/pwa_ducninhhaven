@@ -69,3 +69,23 @@ export function getFullCartItems(items = []) {
     };
   });
 }
+
+
+export function calculateCartUpdate(currentItems, newItem) {
+    // Tìm xem món này đã có trong giỏ chưa (trùng category, item và option)
+    const foundIndex = currentItems.findIndex(it => 
+        it.category === newItem.category && 
+        it.item === newItem.item && 
+        it.option === newItem.option
+    );
+
+    if (foundIndex > -1) {
+        // Nếu ĐÃ CÓ: Trả về mảng mới với món đó được tăng qty (dùng spread ...it)
+        return currentItems.map((it, idx) => 
+            idx === foundIndex ? { ...it, qty: it.qty + 1 } : it
+        );
+    } else {
+        // Nếu CHƯA CÓ: Trả về mảng mới có thêm món mới vào cuối
+        return [...currentItems, { ...newItem, qty: 1 }];
+    }
+}

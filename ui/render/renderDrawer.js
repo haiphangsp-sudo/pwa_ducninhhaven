@@ -1,10 +1,12 @@
 // ui/render/renderDrawer.js
 
 import { translate } from "../utils/translate.js";
-import { updateCartQuantity } from "../../core/events.js";
+import { changeCartQtynew } from "../../core/actions.js";
 import { showOverlay } from "../interactions/backdropManager.js";
 import { getCartStats } from "../../ui/utils/cartHelpers.js";
 import { getContext } from "../../core/context.js";
+import { renderDrawer } from "../render/renderDrawer.js";
+import {getFullCartItems} from "../../ui/utils/cartHelpers.js";
 
 
 /* =========================
@@ -68,7 +70,12 @@ export function renderDrawer(state) {
     headerSummary.classList.remove("hidden");
 
     itemsContainer.innerHTML = cartItems.map((item, index) => {
-      const price = Number(item.price||0);
+      const price = Number(item.price || 0);
+      
+      const labelItem = translate(item.label);
+      const labelOption = translate(
+        getFullCartItems(state)
+      );
 
       return `
         <div class="drawer__item drawer-item">
@@ -117,7 +124,7 @@ export function attachDrawerEvents() {
     document.getElementById("drawerItems").addEventListener("click", (e) => {
       const btn = e.target.closest(".qty-btn");
       if (!btn) return;
-      updateCartQuantity(
+      changeCartQtynew(
         parseInt(btn.dataset.index, 10),
         btn.classList.contains("plus") ? 1 : -1
       );

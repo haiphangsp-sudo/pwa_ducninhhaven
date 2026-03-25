@@ -31,13 +31,15 @@ export function categoryOpt(opt, itemKey, categoryKey, type) {
                     data-action="${type}"
                     data-category="${categoryKey}"
                     data-item="${itemKey}"
-                    data-value="${opt.key}"
-                    data-price="${price}"
-                    data-currency="vnd">
+                    data-option="${opt.key}"
                     ${type==="cart" ? `+ ` + translate("cart_bar.add_to_order") : `⚡ ` + translate("cart_bar.send_request")}
                 </button>
             </div>
         </div>`;
 
+}
+function attachOptionEvents(target){
+    target.classList.add("is-loading");
+    setTimeout(() => target.classList.remove("is-loading"), 500);
 }
 

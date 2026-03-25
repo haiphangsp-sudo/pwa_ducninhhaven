@@ -1,16 +1,17 @@
 // core/events.js
 
-import { UI, setState } from "./state.js";
+import { UI, setState, getState } from "./state.js";
 import { enqueue } from "./queue.js";
-import { getContext } from "./context.js";
+import { openPicker } from "../ui/render/renderPlacePicker.js";
+import { CART_KEY } from "../config.js";
+import { getFullItemInfo } from "../ui/utils/menuHelpers.js";
 import { renderStatusBar } from "../ui/render/renderStatusBar.js";
-import { getState } from "./state.js";
+import { calculateCartUpdate, getCartStats, getFullCartItems} from "../ui/utils/cartHelpers.js";
 
 
 
 /* ---------- CONSTANTS ---------- */
 
-const CART_KEY = "haven_cart";
 
 let pendingIntent = null;
 
@@ -21,6 +22,10 @@ export function loadCart() {
   } catch {
     clearCart();
   }
+}
+export function clearCart() {
+  setState({ cart: { items: [] } });
+  localStorage.removeItem(CART_KEY);
 }
 
 export function updateCartQuantity(index, delta) {
@@ -33,9 +38,7 @@ export function updateCartQuantity(index, delta) {
   if (item.qty <= 0) {
     newItems.splice(index, 1);
   }
-
   setState({ cart: { items: newItems } });
-  localStorage.setItem(CART_KEY, JSON.stringify(newItems));
 }
 
 
@@ -65,111 +68,88 @@ export function onOrderSuccess(orderId, items) { // Nhận thêm orderId từ se
   renderStatusBar(); 
 }
 
-
-/* ---------- CONTEXT ---------- */
-
-function ensureActive() {
-  const ctx = getContext();
-  return !!ctx?.active;
-}
-
 /* ---------- CART ---------- */
 
-function toLineItem(payload) {
-  return {
-    category: payload.category,
-    item: payload.item,
-    option: payload.option,
-    price: payload.price,
-    qty: payload.qty || 1
-  };
-}
 
 export function addToCart(line) {
-  const current = UI.cart?.items || [];
+  // 1. Lấy state hiện tại từ nguồn chuẩn
+  const state = getState();
+  const current = state.cart?.items || [];
 
+  // 2. Tìm vị trí món
   const index = current.findIndex(i =>
     i.category === line.category &&
     i.item === line.item &&
-    i.option === line.option &&
-    i.price === line.price
+    i.option === line.option
   );
 
-  let items;
+  let nextItems;
 
   if (index >= 0) {
-    items = current.map((it, idx) =>
+    // Cập nhật số lượng món đã có
+    nextItems = current.map((it, idx) =>
       idx === index
         ? { ...it, qty: (it.qty || 0) + (line.qty || 1) }
         : it
     );
   } else {
-    items = [...current, { ...line, qty: line.qty || 1 }];
+    // Thêm món mới
+    nextItems = [...current, { ...line, qty: line.qty || 1 }];
   }
 
-  localStorage.setItem(CART_KEY, JSON.stringify(items));
-  setState({ cart: { items } });
+  // 3. Cập nhật State (Giữ lại các thuộc tính khác của cart như note, context...)
+  setState({ 
+    cart: { 
+      ...state.cart, 
+      items: nextItems 
+    } 
+  });
+
 }
 
-export function clearCart() {
-  setState({ cart: { items: [] } });
-  localStorage.removeItem(CART_KEY);
+
+export async function sendInstant(line) {
+  // Lấy thông tin chi tiết món này từ MENU dựa trên lineItem
+  const item = getFullItemInfo(line); 
+  
+  // Đóng gói thành mảng có 1 phần tử
+  const payload = buildPayload([item], "INSTANT");
+  return await enqueue(payload);
 }
 
-/* ---------- SUBMIT ---------- */
 
-export function requestSubmit(items, orderType = "cart") {
-  if (!items?.length) return false;
+export async function sendCart() {
+  const state = getState();
+  const items = getFullCartItems(state.cart.items); // Lấy thông tin chi tiết từ MENU
+  
+  if (items.length === 0) return;
 
-  if (ensureActive()) {
-    return submitItems(items, orderType);
+  const payload = buildPayload(items, "CART");
+  return await enqueue(payload);
+  
+}
+
+function buildPayload(items, type = "CART") {
+  const state = getState();
+  
+  if (!state.context.active) {
+    openPicker(); // Ép khách chọn vị trí trước
+    return;
+  } else {
+    const { active } = state.context; // Thông tin phòng/bàn và khách hàng
   }
+  return {
+    // 1. Thông tin định danh (Metadata)
+    type: type, 
+    timestamp: new Date().toISOString(),
+    
+    // 2. Thông tin khách & vị trí (Context)
+    place: active?.place || "Unknown",
+    customer: active?.name || "Khách vãng lai",
+    note: state.cart.note || "", // Ghi chú chung của đơn hàng
 
-  pendingIntent = {
-    type: orderType,
-    items
+    // 3. Nội dung đơn hàng (Content)
+    items: items, // Danh sách món đã qua xử lý getFullCartItems
+    total: items.reduce((sum, i) => sum + (i.price * i.qty), 0)
   };
-
-  window.dispatchEvent(new CustomEvent("needplace"));
-  return false;
-}
-
-function submitItems(items, orderType) {
-  const ctx = getContext();
-  if (!ctx?.active) return false;
-
-  enqueue({
-    type: orderType,
-    place: ctx.active.id,
-    mode: ctx.active.type,
-    items
-  });
-
-  setState({ ack: { state: "show", status: "sending" } });
-  return true;
-}
-
-/* ---------- ORCHESTRATOR ---------- */
-
-export function attachOrchestrator() {
-  window.addEventListener("contextchange", (e) => {
-    if (!pendingIntent) return;
-
-    const ctx = e.detail?.next;
-    if (!ctx?.active) return;
-
-    if (pendingIntent.type === "cart") {
-      pendingIntent = null;
-      window.dispatchEvent(new CustomEvent("intentresume", {
-        detail: { mode: "send_cart" }
-      }));
-      return;
-    }
-
-    if (pendingIntent.type === "instant") {
-      const items = pendingIntent.items;
-      pendingIntent = null;
-      submitItems(items, "instant");
-    }
-  });
 }

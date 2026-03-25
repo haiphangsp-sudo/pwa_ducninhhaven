@@ -2,11 +2,10 @@
 
 import { setState } from "../../core/state.js";
 import { applyPlaceById } from "../../core/context.js";
-import { addToCart, requestSubmit } from "../../core/events.js";
+import { addToCart, sendCart } from "../../core/events.js";
 import { attachDrawerEvents } from "../render/renderDrawer.js";
 import { attachPlacePickerEvents } from "../render/renderPlacePicker.js";
 import { attachOrchestrator } from "../../core/events.js";
-import { UI } from "../../core/state.js";
 import { openCartDrawer } from "../render/renderDrawer.js";
 import { bounceCartBar } from "../render/renderCartBar.js";
 
@@ -44,7 +43,7 @@ export function attachAppEvents() {
    GLOBAL CLICK
 ========================= */
 
-function handleGlobalClick(e) {
+async function handleGlobalClick(e) {
   const target = e.target.closest("[data-action]");
   if (!target) return;
 
@@ -80,17 +79,17 @@ function handleGlobalClick(e) {
 
       /* ---------- CART / ORDER ---------- */
 
-      case "cart":          
-          attachOptionEvents(target, "cart", value);
-          bounceCartBar();
+    case "cart":          
+      bounceCartBar();
+      addToCart([singleItemArray(target)]);
     break;
 
     case "instant":
-      requestSubmit([lineItem(target,"instant", value)]);
+      sendInstant([singleItemArray(target)]);
       break;
 
     case "send_cart":
-      requestSubmit(UI.cart.items || [], "cart");
+      await sendCart();
       break;
 
     /* ---------- LANGUAGE ---------- */
@@ -108,20 +107,12 @@ function handleGlobalClick(e) {
    PRIVATE
 ========================= */
 
-function attachOptionEvents(btn,type,value){
-    btn.classList.add("is-loading");
-    setTimeout(() => btn.classList.remove("is-loading"), 500);
-
-    addToCart(lineItem(btn,type,value));
-}
-function lineItem(target, type, value) {
-        return {
-            mode: type,
-            category: target.dataset.category,
-            item: target.dataset.item,
-            option: value,
-            price: target.dataset.price,
-            currency: target.dataset.currency,
-            qty: 1
-        }
+function singleItemArray(target) {
+  return {
+    mode: target.dataset.mode,
+    category: target.dataset.category,
+    item: target.dataset.item,
+    option: target.dataset.option,
+    qty: 1
+  }
 }
