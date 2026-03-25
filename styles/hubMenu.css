@@ -14,13 +14,7 @@
    HUB MENU
 ========================= */
 
-.hub-menu{
-  align-items:stretch;
-  gap:12px;
-  padding:12px 16px 0;
-  overflow-y:hidden;
-  scroll-snap-type:x proximity;
-  -webkit-overflow-scrolling:touch;
+.hub-menu {
   position: sticky;
   top: var(--nav-h); /* Dính NGAY DƯỚI Nav */
   z-index: 90;       /* Thấp hơn Nav một chút */
@@ -110,9 +104,8 @@
    ACTIVE STATE
 ========================= */
 
-.hub-btn.is-active{
-  border-color: transparent;
-  background: var(--brand); /* Đồng nhất 1 màu nền */
+.hub-btn.is-active {
+  background: var(--brand);
   color: var(--text-invert);
   transform: translateY(-2px);
   box-shadow: var(--shadow);

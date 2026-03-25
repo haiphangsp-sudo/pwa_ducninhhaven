@@ -1,23 +1,17 @@
 /* styles/layout.css */
 /* Bố cục màn hình*/
 
-
-#app{
-  margin:auto;
-  min-height:100vh;
-  flex-direction:column;
-  padding-bottom: calc(80px+env(safe-area-inset-bottom));
-   display: flex;
+/* styles/layout.css */
+#app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Dùng min-height thay vì height */
 }
 
-#hub{
-  display: flex;
-  flex-direction:column;
-  touch-action:manipulation;
-  min-height: 0;
+#hub {
   flex: 1;
-  padding-bottom:96px;
-  padding-bottom:calc(96px + env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
 }
 
 /* ===== Delivery Banner ===== */
