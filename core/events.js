@@ -105,7 +105,7 @@ export async function sendCart() {
 // --- HÀM CHUẨN HÓA CHUNG ---
 function buildPayload(items, type) {
   const state = getState();
-  const active = state.context?.active; // Sửa lỗi scope: lấy trực tiếp từ state
+  const active = state.context?.active; 
 
   if (!active || !active.id) {
     setState({ view: { ...state.view, overlay: "placePicker" } });
@@ -113,10 +113,9 @@ function buildPayload(items, type) {
   }
 
   return {
-    type: type, // "INSTANT" hoặc "CART"
+    mode: type,
     timestamp: new Date().toISOString(),
-    location: active.place,
-    customer: active.name || "Guest",
+    location: active.id,
     items: items, // Mảng các món đã có Name, OptionLabel, Price
     total: items.reduce((sum, i) => sum + i.subtotal, 0),
     note: state.cart.note || ""
