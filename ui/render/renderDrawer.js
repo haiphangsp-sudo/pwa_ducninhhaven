@@ -1,35 +1,28 @@
 // ui/render/renderDrawer.js
 
 import { translate } from "../utils/translate.js";
-import { changeCartQtynew } from "../../core/actions.js";
+import { updateCartQuantity } from "../../core/events.js";
 import { showOverlay } from "../interactions/backdropManager.js";
 import { getCartStats, getFullCartItems } from "../../ui/utils/cartHelpers.js";
 import { getContext } from "../../core/context.js";
+import { getState } from "../../core/state.js";
 
 let initialCartSnapshot = localStorage.getItem("haven_cart") || "[]";
-let drawerEventsBound = false;
+let drawerBound = false;
 
-/* =========================
-   PUBLIC
-========================= */
-
-export function openCartDrawer(state) {
-  initialCartSnapshot = JSON.stringify(state?.cart?.items || []);
-  renderDrawer(state);
+export function openCartDrawer() {
+  const state = getState();
+  initialCartSnapshot = JSON.stringify(state.cart.items || []);
+  renderDrawer();
   attachDrawerEvents();
   showOverlay("cartDrawer");
 }
 
-export function renderDrawer(state) {
+export function renderDrawer() {
+  const state = getState();
   const drawer = document.getElementById("cartDrawer");
-  if (!drawer) return;
-
   const placeEl = document.getElementById("drawerPlaceDisplay");
-  const itemsContainer = document.getElementById("drawerItems");
-  const sendBtn = document.getElementById("drawerSend");
-  const headerSummary = drawer.querySelector(".drawer-summary");
-
-  if (!itemsContainer || !sendBtn || !headerSummary) return;
+  if (!drawer) return;
 
   const ctx = getContext();
   const activePlace = ctx?.active;
@@ -44,18 +37,19 @@ export function renderDrawer(state) {
     }
   }
 
-  const cartItems = state?.cart?.items || [];
-  const stats = getCartStats(cartItems);
+  const itemsContainer = document.getElementById("drawerItems");
+  const sendBtn = document.getElementById("drawerSend");
+  const headerSummary = drawer.querySelector(".drawer-summary");
+  if (!itemsContainer || !sendBtn || !headerSummary) return;
 
-  const titleEl = drawer.querySelector(".drawer__header-title");
-  const priceEl = drawer.querySelector(".drawer__header-price");
-  const countEl = drawer.querySelector(".drawer__header-count");
-  const uniqueEl = drawer.querySelector(".drawer__header-unique");
+  const cartItems = state.cart.items || [];
+  const displayItems = getFullCartItems(cartItems);
+  const stats = getCartStats(displayItems);
 
-  if (titleEl) titleEl.textContent = translate("cart_bar.cart_title");
-  if (priceEl) priceEl.textContent = stats.totalPriceFormat;
-  if (countEl) countEl.textContent = stats.textFull;
-  if (uniqueEl) uniqueEl.textContent = stats.textLine;
+  drawer.querySelector(".drawer__header-title").textContent = translate("cart_bar.cart_title");
+  drawer.querySelector(".drawer__header-price").textContent = stats.totalPriceFormat;
+  drawer.querySelector(".drawer__header-count").textContent = stats.textFull;
+  drawer.querySelector(".drawer__header-unique").textContent = stats.textLine;
 
   const hasChanged = JSON.stringify(cartItems) !== initialCartSnapshot;
 
@@ -69,7 +63,6 @@ export function renderDrawer(state) {
     `;
 
     headerSummary.classList.add("hidden");
-
     sendBtn.textContent = translate("cart_bar.close");
     sendBtn.dataset.action = "close-overlay";
     sendBtn.dataset.value = "cartDrawer";
@@ -79,13 +72,11 @@ export function renderDrawer(state) {
 
   headerSummary.classList.remove("hidden");
 
-  const displayItems = getFullCartItems(cartItems);
-
   itemsContainer.innerHTML = displayItems.map((item, index) => `
     <div class="drawer__item drawer-item">
       <div class="drawer__info">
-        <strong>${translate(item.name)}</strong>
-        <span class="drawer__variant">${translate(item.optionLabel)}</span>
+        <strong>${item.name || item.item}</strong>
+        <span class="drawer__variant">${item.optionLabel || ""}</span>
         <span class="text-s text-muted">
           ${item.price > 0
             ? item.price.toLocaleString("vi-VN") + " đ"
@@ -104,32 +95,23 @@ export function renderDrawer(state) {
     </div>
   `).join("");
 
-  if (hasChanged) {
-    sendBtn.textContent = translate("cart_bar.confirm_changes");
-    sendBtn.dataset.action = "confirm";
-    delete sendBtn.dataset.value;
-    sendBtn.className = "drawer-send state-confirm";
-  } else {
-    sendBtn.textContent = translate("cart_bar.send_order");
-    sendBtn.dataset.action = "send_cart";
-    delete sendBtn.dataset.value;
-    sendBtn.className = "drawer-send state-send";
-  }
+  sendBtn.textContent = hasChanged
+    ? translate("cart_bar.confirm_changes")
+    : translate("cart_bar.send_order");
+
+  sendBtn.dataset.action = hasChanged ? "confirm" : "send_cart";
+  sendBtn.className = `drawer-send ${hasChanged ? "state-confirm" : "state-send"}`;
 }
 
-/* =========================
-   EVENTS
-========================= */
-
-export function attachDrawerEvents() {
-  if (drawerEventsBound) return;
-  drawerEventsBound = true;
+export function ß() {
+  if (drawerBound) return;
+  drawerBound = true;
 
   document.addEventListener("click", (e) => {
     const btn = e.target.closest(".qty-btn");
     if (!btn) return;
 
-    changeCartQtynew(
+    updateCartQuantity(
       parseInt(btn.dataset.index, 10),
       btn.classList.contains("plus") ? 1 : -1
     );
