@@ -3,7 +3,7 @@
 import { UI, setState, getState } from "./state.js";
 import { enqueue } from "./queue.js";
 import { openPicker } from "../ui/render/renderPlacePicker.js";
-import { CART_KEY } from "../config.js";
+import { CONFIG } from "../config.js";
 import { getFullCartItems } from "../ui/utils/cartHelpers.js";
 import { renderStatusBar } from "../ui/render/renderStatusBar.js";
 
@@ -13,7 +13,7 @@ import { renderStatusBar } from "../ui/render/renderStatusBar.js";
 
 export function loadCart() {
   try {
-    const items = JSON.parse(localStorage.getItem(CART_KEY) || "[]");
+    const items = JSON.parse(localStorage.getItem(CONFIG.CART_KEY) || "[]");
     setState({ cart: { items } });
   } catch {
     clearCart();
@@ -21,7 +21,7 @@ export function loadCart() {
 }
 export function clearCart() {
   setState({ cart: { items: [] } });
-  localStorage.removeItem(CART_KEY);
+  localStorage.removeItem(CONFIG.CART_KEY);
 }
 
 export function updateCartQuantity(index, delta) {
