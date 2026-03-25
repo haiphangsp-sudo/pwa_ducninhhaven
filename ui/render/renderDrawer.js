@@ -73,8 +73,9 @@ export function renderDrawer(state) {
       return `
         <div class="drawer__item drawer-item">
           <div class="drawer__info">
-            <strong>${translate(item.label || item.item)}</strong>
-            <span class="drawer__variant">${item.option?.label ? translate(item.option.label) : ""}</span>
+          
+            <strong>${translate(item.item.label)}</strong>
+            <span class="drawer__variant">${translate(item.item.option.label)}</span>
             <span class="text-s text-muted">
               ${price > 0
                 ? price.toLocaleString("vi-VN") + " đ"
