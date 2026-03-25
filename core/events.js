@@ -6,7 +6,6 @@ import { openPicker } from "../ui/render/renderPlacePicker.js";
 import { CONFIG } from "../config.js";
 import { getFullCartItems } from "../ui/utils/cartHelpers.js";
 import { renderStatusBar } from "../ui/render/renderStatusBar.js";
-import { renderStatusBar } from "../ui/render/renderStatusBar.js";
 import { getFullCartItems, getFullItemInfo } from "../ui/utils/cartHelpers.js";
 
 
