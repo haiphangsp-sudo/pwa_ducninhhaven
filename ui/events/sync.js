@@ -68,7 +68,7 @@ function syncUI(state) {
         renderCartBar(state);
         renderStatusBar(state);
         renderDrawer(state);
-        localStorage.setItem(CART_KEY, JSON.stringify(state.cart.items));
+        localStorage.setItem(CONFIG.CART_KEY, JSON.stringify(state.cart.items));
         
         // Bạn có thể thêm một chút hiệu ứng "rung" nhẹ ở CartBar 
         // để báo hiệu cho khách là giỏ hàng đã cập nhật
