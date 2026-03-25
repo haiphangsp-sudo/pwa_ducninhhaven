@@ -68,6 +68,14 @@ function syncUI(state) {
         renderCartBar(state);
         renderStatusBar(state);
         renderDrawer(state);
+        localStorage.setItem(CART_KEY, JSON.stringify(state.cart.items));
+        
+        // Bạn có thể thêm một chút hiệu ứng "rung" nhẹ ở CartBar 
+        // để báo hiệu cho khách là giỏ hàng đã cập nhật
+        document.getElementById("cartBar")?.classList.add("cart-bounce");
+        setTimeout(() => {
+            document.getElementById("cartBar")?.classList.remove("cart-bounce");
+        }, 400);
     }
     if (state.ack !== lastState.ack) {
         renderAckOverlay(state.ack);
@@ -78,16 +86,6 @@ function syncUI(state) {
   if (state.lang?.current !== lastState.lang?.current) {
     syncLanguage(state);
   }
-    if (state.cart.items !== lastState.cart.items) {
-        localStorage.setItem(CART_KEY, JSON.stringify(state.cart.items));
-        
-        // Bạn có thể thêm một chút hiệu ứng "rung" nhẹ ở CartBar 
-        // để báo hiệu cho khách là giỏ hàng đã cập nhật
-        document.getElementById("cartBar")?.classList.add("cart-bounce");
-        setTimeout(() => {
-            document.getElementById("cartBar")?.classList.remove("cart-bounce");
-        }, 400);
-    }
     
 
   lastState = structuredClone(state);
