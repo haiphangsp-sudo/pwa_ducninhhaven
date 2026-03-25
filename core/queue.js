@@ -23,7 +23,7 @@ function saveQueue(q) {
 
 /* ---------- ENQUEUE ---------- */
 
-export function enqueue(payload) {
+export async function enqueue(payload) {
   const queue = loadQueue();
 
   if (queue.length >= MAX_QUEUE) {

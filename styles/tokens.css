@@ -87,6 +87,13 @@
    LAYOUT
 ===================== */
 
+
+--header-height: 56px;
+--hub-height: 60px;
+  /* Tổng khoảng cách để vùng nội dung không bị che khuất */
+--content-top: calc(var(--header-height) + var(--hub-height));
+
+
 --container-max: 980px;
 --content-max: 720px;
 

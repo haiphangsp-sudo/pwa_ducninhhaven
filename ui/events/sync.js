@@ -1,5 +1,5 @@
 // ui/sync.js
-
+import { renderAckOverlay } from "../render/renderOverlay.js";
 import { subscribe, getState } from "../../core/state.js";
 import { renderNavBar } from "../render/renderNavBar.js";
 import { renderCartBar } from "../render/renderCartBar.js";
@@ -10,6 +10,8 @@ import { openPicker } from "../render/renderPlacePicker.js";
 import { openCartDrawer } from "../render/renderDrawer.js";
 import { closeOverlay } from "../interactions/backdropManager.js";
 import { renderDrawer } from "../render/renderDrawer.js";
+import { CONFIG } from "../../config.js";
+
 
 
 let lastState = {};
@@ -67,12 +69,26 @@ function syncUI(state) {
         renderStatusBar(state);
         renderDrawer(state);
     }
+    if (state.ack !== lastState.ack) {
+        renderAckOverlay(state.ack);
+    }
 
   /* ---------- LANGUAGE ---------- */
 
   if (state.lang?.current !== lastState.lang?.current) {
     syncLanguage(state);
   }
+    if (state.cart.items !== lastState.cart.items) {
+        localStorage.setItem(CART_KEY, JSON.stringify(state.cart.items));
+        
+        // Bạn có thể thêm một chút hiệu ứng "rung" nhẹ ở CartBar 
+        // để báo hiệu cho khách là giỏ hàng đã cập nhật
+        document.getElementById("cartBar")?.classList.add("cart-bounce");
+        setTimeout(() => {
+            document.getElementById("cartBar")?.classList.remove("cart-bounce");
+        }, 400);
+    }
+    
 
   lastState = structuredClone(state);
 }
