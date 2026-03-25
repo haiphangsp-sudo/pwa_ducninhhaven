@@ -1,7 +1,7 @@
 // ui/utils/cartHelpers.js
 
 import { translate } from "./translate.js";
-import { MENU } from "../../data/menu.js";
+import { MENU } from "../../core/menuStore.js";
 
 /* =========================
    PUBLIC
