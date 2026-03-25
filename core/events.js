@@ -4,8 +4,9 @@ import { UI, setState, getState } from "./state.js";
 import { enqueue } from "./queue.js";
 import { openPicker } from "../ui/render/renderPlacePicker.js";
 import { CART_KEY } from "../config.js";
-import { getFullItemInfo } from "../ui/utils/menuHelpers.js";
+import { getFullCartItems } from "../ui/utils/cartHelpers.js";
 import { renderStatusBar } from "../ui/render/renderStatusBar.js";
+
 import { calculateCartUpdate, getCartStats, getFullCartItems} from "../ui/utils/cartHelpers.js";
 
 
@@ -110,7 +111,7 @@ export function addToCart(line) {
 
 export async function sendInstant(line) {
   // Lấy thông tin chi tiết món này từ MENU dựa trên lineItem
-  const item = getFullItemInfo(line); 
+  const item = getFullCartItems(line); 
   
   // Đóng gói thành mảng có 1 phần tử
   const payload = buildPayload([item], "INSTANT");
