@@ -3,37 +3,40 @@
 import { translate } from "../utils/translate.js";
 import { changeCartQtynew } from "../../core/actions.js";
 import { showOverlay } from "../interactions/backdropManager.js";
-import { getCartStats } from "../../ui/utils/cartHelpers.js";
+import { getCartStats, getFullCartItems } from "../../ui/utils/cartHelpers.js";
 import { getContext } from "../../core/context.js";
-import { getFullCartItems, getFullItemInfo } from "../../ui/utils/cartHelpers.js";
 
-
+let initialCartSnapshot = localStorage.getItem("haven_cart") || "[]";
+let drawerEventsBound = false;
 
 /* =========================
    PUBLIC
 ========================= */
 
-
-let initialCartSnapshot = localStorage.getItem("haven_cart") || "[]";
-
 export function openCartDrawer(state) {
-  initialCartSnapshot = JSON.stringify(state.cart.items || []);
+  initialCartSnapshot = JSON.stringify(state?.cart?.items || []);
   renderDrawer(state);
+  attachDrawerEvents();
   showOverlay("cartDrawer");
 }
 
 export function renderDrawer(state) {
-
   const drawer = document.getElementById("cartDrawer");
-  const placeEl = document.getElementById("drawerPlaceDisplay");
-
   if (!drawer) return;
+
+  const placeEl = document.getElementById("drawerPlaceDisplay");
+  const itemsContainer = document.getElementById("drawerItems");
+  const sendBtn = document.getElementById("drawerSend");
+  const headerSummary = drawer.querySelector(".drawer-summary");
+
+  if (!itemsContainer || !sendBtn || !headerSummary) return;
+
   const ctx = getContext();
   const activePlace = ctx?.active;
 
   if (placeEl) {
     if (activePlace) {
-      placeEl.textContent = activePlace.id; 
+      placeEl.textContent = activePlace.id;
       placeEl.classList.remove("text-warning");
     } else {
       placeEl.textContent = translate("cart_bar.place_prompt");
@@ -41,94 +44,94 @@ export function renderDrawer(state) {
     }
   }
 
-  const itemsContainer = document.getElementById("drawerItems");
-  const sendBtn = document.getElementById("drawerSend");
-  const headerSummary = drawer.querySelector(".drawer-summary");
+  const cartItems = state?.cart?.items || [];
+  const stats = getCartStats(cartItems);
 
-  const cartItems = state.cart.items;
-  
-  const stats = getCartStats(cartItems); // Lấy thông tin tổng quan
+  const titleEl = drawer.querySelector(".drawer__header-title");
+  const priceEl = drawer.querySelector(".drawer__header-price");
+  const countEl = drawer.querySelector(".drawer__header-count");
+  const uniqueEl = drawer.querySelector(".drawer__header-unique");
 
-  drawer.querySelector(".drawer__header-title").textContent = translate("cart_bar.cart_title");
-  drawer.querySelector(".drawer__header-price").textContent = stats.totalPriceFormat;
-  drawer.querySelector(".drawer__header-count").textContent = stats.textFull;
-  drawer.querySelector(".drawer__header-unique").textContent = stats.textLine;
-  
-  
+  if (titleEl) titleEl.textContent = translate("cart_bar.cart_title");
+  if (priceEl) priceEl.textContent = stats.totalPriceFormat;
+  if (countEl) countEl.textContent = stats.textFull;
+  if (uniqueEl) uniqueEl.textContent = stats.textLine;
+
   const hasChanged = JSON.stringify(cartItems) !== initialCartSnapshot;
 
   if (stats.isEmpty) {
-
     initialCartSnapshot = "[]";
+
     itemsContainer.innerHTML = `
       <div class="p-m center text-muted">
         ${translate("cart_bar.empty")}
       </div>
     `;
+
     headerSummary.classList.add("hidden");
+
     sendBtn.textContent = translate("cart_bar.close");
     sendBtn.dataset.action = "close-overlay";
     sendBtn.dataset.value = "cartDrawer";
     sendBtn.className = "drawer-send state-close";
+    return;
+  }
 
+  headerSummary.classList.remove("hidden");
+
+  const displayItems = getFullCartItems(cartItems);
+
+  itemsContainer.innerHTML = displayItems.map((item, index) => `
+    <div class="drawer__item drawer-item">
+      <div class="drawer__info">
+        <strong>${translate(item.name)}</strong>
+        <span class="drawer__variant">${translate(item.optionLabel)}</span>
+        <span class="text-s text-muted">
+          ${item.price > 0
+            ? item.price.toLocaleString("vi-VN") + " đ"
+            : item.price === 0
+              ? translate("cart_bar.free")
+              : translate("cart_bar.instant")
+          }
+        </span>
+      </div>
+
+      <div class="drawer-qty row items-center gap-s">
+        <button class="qty-btn min" data-index="${index}" type="button">-</button>
+        <span class="qty-val weight-600">${item.qty}</span>
+        <button class="qty-btn plus" data-index="${index}" type="button">+</button>
+      </div>
+    </div>
+  `).join("");
+
+  if (hasChanged) {
+    sendBtn.textContent = translate("cart_bar.confirm_changes");
+    sendBtn.dataset.action = "confirm";
+    delete sendBtn.dataset.value;
+    sendBtn.className = "drawer-send state-confirm";
   } else {
-
-    headerSummary.classList.remove("hidden");
-
-    const displayItems = getFullCartItems(state.cart.items);
-
-    itemsContainer.innerHTML = displayItems.map((item, index) => {
-      
-      return `
-        <div class="drawer__item drawer-item">
-          <div class="drawer__info">
-          
-            <strong>${translate(item.name)}</strong>
-            <span class="drawer__variant">${translate(item.optionLabel)}</span>
-            <span class="text-s text-muted">
-              ${item.price > 0
-                ? item.price.toLocaleString("vi-VN") + " đ"
-                : item.price === 0
-                  ? translate("cart_bar.free")
-                  : translate("cart_bar.instant")
-              }
-            </span>
-          </div>
-          <div class="drawer-qty row items-center gap-s">
-            <button class="qty-btn min" data-index="${index}">-</button>
-              <span class="qty-val weight-600">${item.qty}</span>
-            <button class="qty-btn plus" data-index="${index}">+</button>
-          </div>
-        </div>
-      `;
-    }).join("");
-
-    if (hasChanged) {
-        // Trường hợp CÓ CHỈNH SỬA số lượng so với lúc mới vào Drawer
-        sendBtn.textContent = translate("cart_bar.confirm_changes");
-        sendBtn.dataset.action = "confirm";
-        sendBtn.className = "drawer-send state-confirm"; // Màu vàng
-    } else {
-        // Trường hợp giữ nguyên ý định ban đầu
-        sendBtn.textContent = translate("cart_bar.send_order");
-        sendBtn.dataset.action = "send_cart";
-        sendBtn.className = "drawer-send state-send"; // Màu xanh
-    }
+    sendBtn.textContent = translate("cart_bar.send_order");
+    sendBtn.dataset.action = "send_cart";
+    delete sendBtn.dataset.value;
+    sendBtn.className = "drawer-send state-send";
   }
 }
 
-/**
- * Reset mốc so sánh giỏ hàng
- * @param {boolean} toEmpty - Nếu true sẽ reset về rỗng, nếu false sẽ reset về trạng thái hiện tại
- */
+/* =========================
+   EVENTS
+========================= */
 
 export function attachDrawerEvents() {
-    document.getElementById("drawerItems").addEventListener("click", (e) => {
-      const btn = e.target.closest(".qty-btn");
-      if (!btn) return;
-      changeCartQtynew(
-        parseInt(btn.dataset.index, 10),
-        btn.classList.contains("plus") ? 1 : -1
-      );
-    });
+  if (drawerEventsBound) return;
+  drawerEventsBound = true;
+
+  document.addEventListener("click", (e) => {
+    const btn = e.target.closest(".qty-btn");
+    if (!btn) return;
+
+    changeCartQtynew(
+      parseInt(btn.dataset.index, 10),
+      btn.classList.contains("plus") ? 1 : -1
+    );
+  });
 }
