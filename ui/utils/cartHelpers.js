@@ -82,5 +82,5 @@ export function getFullItemInfo(it) {
 }
 
 export function getFullCartItems(items = []) {
-  return items.map(it => getFullItemInfo(it));
+  return items?.map(it => getFullItemInfo(it));
 }
