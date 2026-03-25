@@ -90,33 +90,33 @@ export async function sendInstant(line) {
 // --- GỬI GIỎ HÀNG (CART) ---
 export async function sendCart() {
   const state = getState();
-  // BƯỚC 1: Biến danh sách ID thành danh sách đầy đủ tên/giá
+  // Hydrate dữ liệu trước khi đóng gói
   const fullItems = getFullCartItems(state.cart.items);
   
   if (fullItems.length === 0) return;
 
-  // BƯỚC 2: Đóng gói
   const payload = buildPayload(fullItems, "CART");
-  if (!payload) return;
+  if (!payload) return; // Ngừng nếu buildPayload trả về null
 
   return await enqueue(payload);
 }
 
 // --- HÀM CHUẨN HÓA CHUNG ---
-function buildPayload(items, type) {
+function buildPayload(items, type = "CART") {
   const state = getState();
-  const active = state.context?.active; 
+  const active = state.context?.active; // Lấy trực tiếp từ state
 
+  // Chốt chặn: Nếu chưa chọn phòng/bàn thì bắt chọn
   if (!active || !active.id) {
-    setState({ view: { ...state.view, overlay: "placePicker" } });
+    showOverlay("placePicker");
     return null;
   }
 
   return {
-    mode: type,
+    mode: type, 
     timestamp: new Date().toISOString(),
-    location: active.id,
-    items: items, // Mảng các món đã có Name, OptionLabel, Price
+    place: active.place,
+    items: items, 
     total: items.reduce((sum, i) => sum + i.subtotal, 0),
     note: state.cart.note || ""
   };
