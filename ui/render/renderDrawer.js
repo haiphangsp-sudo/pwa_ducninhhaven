@@ -70,19 +70,18 @@ export function renderDrawer(state) {
     headerSummary.classList.remove("hidden");
 
     itemsContainer.innerHTML = cartItems.map((item, index) => {
-      const price = Number(item.price || 0);
+      const price = getFullCartItems(state).option.price;
+
       
       const labelItem = translate(item.label);
-      const labelOption = translate(
-        getFullCartItems(state)
-      );
+      const labelOption = getFullCartItems(state).option.label;
 
       return `
         <div class="drawer__item drawer-item">
           <div class="drawer__info">
           
-            <strong>${translate(item.item.label)}</strong>
-            <span class="drawer__variant">${translate(item.item.option.label)}</span>
+            <strong>${labelItem}</strong>
+            <span class="drawer__variant">${translate(labelOption)}</span>
             <span class="text-s text-muted">
               ${price > 0
                 ? price.toLocaleString("vi-VN") + " đ"
