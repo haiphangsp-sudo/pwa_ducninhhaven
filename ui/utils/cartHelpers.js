@@ -89,3 +89,29 @@ export function calculateCartUpdate(currentItems, newItem) {
         return [...currentItems, { ...newItem, qty: 1 }];
     }
 }
+
+/**
+ * Tra cứu thông tin chi tiết của 1 món từ MENU
+ */
+export function getFullItemInfo(it) {
+  const categoryData = MENU?.[it.category];
+  const itemData = categoryData?.items?.[it.item];
+  const optionData = itemData?.options?.[it.option];
+
+  return {
+    ...it,
+    // Lấy label đã qua dịch để hiển thị
+    name: translate(itemData?.label || "Unknown Item"), 
+    price: optionData?.price || 0,
+    optionLabel: translate(optionData?.label || ""),
+    qty: it.qty || 1,
+    subtotal: (optionData?.price || 0) * (it.qty || 1)
+  };
+}
+
+/**
+ * Làm đầy toàn bộ danh sách món (Hydration)
+ */
+export function getFullCartItems(items = []) {
+  return items.map(it => getFullItemInfo(it));
+}

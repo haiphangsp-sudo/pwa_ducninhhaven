@@ -6,7 +6,8 @@ import { openPicker } from "../ui/render/renderPlacePicker.js";
 import { CONFIG } from "../config.js";
 import { getFullCartItems } from "../ui/utils/cartHelpers.js";
 import { renderStatusBar } from "../ui/render/renderStatusBar.js";
-
+import { renderStatusBar } from "../ui/render/renderStatusBar.js";
+import { getFullCartItems, getFullItemInfo } from "../ui/utils/cartHelpers.js";
 
 
 /* ---------- CONSTANTS ---------- */
@@ -18,10 +19,6 @@ export function loadCart() {
   } catch {
     clearCart();
   }
-}
-export function clearCart() {
-  setState({ cart: { items: [] } });
-  localStorage.removeItem(CONFIG.CART_KEY);
 }
 
 export function updateCartQuantity(index, delta) {
@@ -64,15 +61,17 @@ export function onOrderSuccess(orderId, items) { // Nhận thêm orderId từ se
   renderStatusBar(); 
 }
 
-/* ---------- CART ---------- */
+/* ---------- CART MANAGEMENT ---------- */
 
+export function clearCart() {
+  setState({ cart: { items: [] } });
+  localStorage.removeItem(CONFIG.CART_KEY);
+}
 
 export function addToCart(line) {
-  // 1. Lấy state hiện tại từ nguồn chuẩn
   const state = getState();
   const current = state.cart?.items || [];
 
-  // 2. Tìm vị trí món
   const index = current.findIndex(i =>
     i.category === line.category &&
     i.item === line.item &&
@@ -80,72 +79,84 @@ export function addToCart(line) {
   );
 
   let nextItems;
-
   if (index >= 0) {
-    // Cập nhật số lượng món đã có
     nextItems = current.map((it, idx) =>
-      idx === index
-        ? { ...it, qty: (it.qty || 0) + (line.qty || 1) }
-        : it
+      idx === index ? { ...it, qty: (it.qty || 0) + (line.qty || 1) } : it
     );
   } else {
-    // Thêm món mới
     nextItems = [...current, { ...line, qty: line.qty || 1 }];
   }
 
-  // 3. Cập nhật State (Giữ lại các thuộc tính khác của cart như note, context...)
-  setState({ 
-    cart: { 
-      ...state.cart, 
-      items: nextItems 
-    } 
-  });
-
+  setState({ cart: { ...state.cart, items: nextItems } });
 }
 
+/* ---------- ORDERING ACTIONS ---------- */
 
 export async function sendInstant(line) {
-  // Lấy thông tin chi tiết món này từ MENU dựa trên lineItem
-  const item = getFullCartItems(line); 
+  // 1. Dùng Helper để lấy đầy đủ Label/Price từ MENU
+  const fullItem = getFullItemInfo(line);
   
-  // Đóng gói thành mảng có 1 phần tử
-  const payload = buildPayload([item], "INSTANT");
+  // 2. Đóng gói đơn hàng 1 món
+  const payload = buildPayload([fullItem], "INSTANT");
+  if (!payload) return; // Dừng nếu chưa chọn phòng
+
   return await enqueue(payload);
 }
-
 
 export async function sendCart() {
   const state = getState();
-  const items = getFullCartItems(state.cart.items); // Lấy thông tin chi tiết từ MENU
+  // 1. Làm đầy dữ liệu cho toàn bộ giỏ hàng
+  const fullItems = getFullCartItems(state.cart.items);
   
-  if (items.length === 0) return;
+  if (fullItems.length === 0) return;
 
-  const payload = buildPayload(items, "CART");
+  // 2. Đóng gói đơn hàng từ giỏ
+  const payload = buildPayload(fullItems, "CART");
+  if (!payload) return;
+
   return await enqueue(payload);
-  
 }
+
+/* ---------- HELPER: BUILD PAYLOAD ---------- */
 
 function buildPayload(items, type = "CART") {
   const state = getState();
-  
-  if (!state.context.active) {
-    openPicker(); // Ép khách chọn vị trí trước
-    return;
-  } else {
-    const { active } = state.context; // Thông tin phòng/bàn và khách hàng
-  }
-  return {
-    // 1. Thông tin định danh (Metadata)
-    type: type, 
-    timestamp: new Date().toISOString(),
-    
-    // 2. Thông tin khách & vị trí (Context)
-    place: active?.place || "Unknown",
-    customer: active?.name || "Khách vãng lai",
-    note: state.cart.note || "", // Ghi chú chung của đơn hàng
+  const active = state.context?.active;
 
-    // 3. Nội dung đơn hàng (Content)
-    items: items, // Danh sách món đã qua xử lý getFullCartItems
-    total: items.reduce((sum, i) => sum + (i.price * i.qty), 0)
+  // SỬA LỖI: Kiểm tra tập trung thông tin vị trí
+  if (!active || !active.place) {
+    setState({ view: { ...state.view, overlay: "placePicker" } });
+    return null;
+  }
+
+  return {
+    type: type,
+    timestamp: new Date().toISOString(),
+    // Thông tin khách hàng & vị trí
+    place: active.place,
+    customer: active.name || "Guest",
+    // Dữ liệu món ăn (Đã có đủ name, optionLabel, price nhờ Helper)
+    items: items, 
+    total: items.reduce((sum, i) => sum + (i.price * i.qty), 0),
+    note: state.cart.note || ""
   };
+}
+
+/* ---------- SUCCESS CALLBACK ---------- */
+
+export function onOrderSuccess(orderId, items) {
+  // Chỉ xóa giỏ hàng nếu đó là đơn hàng gửi từ giỏ (CART)
+  // Bạn có thể thêm logic check type ở đây nếu cần
+  clearCart();
+  
+  // Cập nhật StatusBar
+  const newOrder = {
+    id: orderId,
+    status: 'pending',
+    items: items,
+    time: new Date().toISOString()
+  };
+  
+  const currentOrders = getState().orders?.active || [];
+  setState({ orders: { active: [newOrder, ...currentOrders] } });
 }
