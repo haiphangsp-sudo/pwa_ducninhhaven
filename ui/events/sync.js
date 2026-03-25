@@ -46,17 +46,18 @@ function syncUI(state) {
     
     }
 
-  /* ---------- NAV ---------- */
+    /* ---------- NAV ---------- */
 
-  if (state.context !== lastState.context) {
-    renderNavBar(state);
-  }
+    if (state.context !== lastState.context) {
+        renderNavBar(state);
+    }
 
-  /* ---------- PANEL ---------- */
+    /* ---------- PANEL ---------- */
 
-  if (state.view.panel !== lastState.view?.panel) {
-    renderPanel(state);
-  }
+    if (state.view.panel !== lastState.view?.panel) {
+        renderHub(state);
+        renderPanel(state);
+    }
 
     /* ---------- CART ---------- */
     if (state.cart.items !== lastState.cart?.items) {
@@ -86,6 +87,6 @@ function syncLanguage(state) {
   renderNavBar(state);
   renderCartBar(state);
   renderStatusBar(state);
-  renderHub();
+  renderHub(state);
   renderPanel(state);
 }
