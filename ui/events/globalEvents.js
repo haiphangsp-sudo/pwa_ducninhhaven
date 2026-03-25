@@ -66,17 +66,21 @@ async function handleGlobalClick(e) {
     case "select-place":
       if (!value) return;
       applyPlaceById(value);
+      setState({ 
+                context: { active: { id: value } },
+                view: { overlay: null } 
+            });
     break;
 
       /* ---------- CART / ORDER ---------- */
 
     case "cart":          
       bounceCartBar();
-      addToCart(singleItemArray(target));
+      addToCart([singleItemArray(target)]);
     break;
 
     case "instant":
-      sendInstant(singleItemArray(target));
+      sendInstant([singleItemArray(target)]);
       break;
 
     case "send_cart":
