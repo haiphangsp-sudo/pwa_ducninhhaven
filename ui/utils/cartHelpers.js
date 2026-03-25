@@ -67,7 +67,6 @@ export function getFullItemInfo(it) {
 
   return {
     ...it,
-    // Lấy label đã qua dịch để hiển thị
     name: translate(itemData?.label || "Unknown Item"), 
     price: optionData?.price || 0,
     optionLabel: translate(optionData?.label || ""),
