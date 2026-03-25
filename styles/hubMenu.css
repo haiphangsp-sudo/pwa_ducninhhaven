@@ -57,11 +57,6 @@
   background:transparent;
   color:var(--text-soft);
 
-  scroll-snap-align:start;
-  transition:
-    background-color .18s ease,
-    color .18s ease,
-    transform .18s ease;
 }
 
 .hub-btn:active{
