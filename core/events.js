@@ -139,22 +139,3 @@ function buildPayload(items, type = "CART") {
     note: state.cart.note || ""
   };
 }
-
-/* ---------- SUCCESS CALLBACK ---------- */
-
-export function onOrderSuccess(orderId, items) {
-  // Chỉ xóa giỏ hàng nếu đó là đơn hàng gửi từ giỏ (CART)
-  // Bạn có thể thêm logic check type ở đây nếu cần
-  clearCart();
-  
-  // Cập nhật StatusBar
-  const newOrder = {
-    id: orderId,
-    status: 'pending',
-    items: items,
-    time: new Date().toISOString()
-  };
-  
-  const currentOrders = getState().orders?.active || [];
-  setState({ orders: { active: [newOrder, ...currentOrders] } });
-}
