@@ -116,6 +116,11 @@
   background:var(--bg-main);
   color:var(--text-main);
   box-shadow:0 -1px 0 rgba(0,0,0,0.02), 0 8px 20px rgba(0,0,0,0.04);
+  background: var(--primary-color); /* Hoặc màu thương hiệu của Đức Ninh Haven */
+  color: #fff;
+  border-color: transparent;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
 .hub-btn:not(.is-active){

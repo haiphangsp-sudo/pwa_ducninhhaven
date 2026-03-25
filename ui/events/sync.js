@@ -55,8 +55,17 @@ function syncUI(state) {
     /* ---------- PANEL ---------- */
 
     if (state.view.panel !== lastState.view?.panel) {
-        renderHub(state);
         renderPanel(state);
+        renderHub(state);
+        if (panelEl && state.view.panel !== null) {
+            // Đợi một chút để trình duyệt render xong DOM rồi mới cuộn
+            setTimeout(() => {
+                panelEl.scrollIntoView({ 
+                behavior: "smooth", // Cuộn mượt mà
+                block: "start"      // Đưa mép trên của panel lên đầu màn hình
+                });
+            }, 100); 
+        }
     }
 
     /* ---------- CART ---------- */
