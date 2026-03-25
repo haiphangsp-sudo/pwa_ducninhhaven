@@ -2,7 +2,7 @@
 
 import { setState } from "../../core/state.js";
 import { applyPlaceById } from "../../core/context.js";
-import { addToCart, sendCart } from "../../core/events.js";
+import { addToCart, sendCart, sendInstant } from "../../core/events.js";
 import { attachDrawerEvents } from "../render/renderDrawer.js";
 import { attachPlacePickerEvents } from "../render/renderPlacePicker.js";
 import { openCartDrawer } from "../render/renderDrawer.js";

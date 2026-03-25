@@ -5,7 +5,7 @@ import { enqueue } from "./queue.js";
 import { openPicker } from "../ui/render/renderPlacePicker.js";
 import { CONFIG } from "../config.js";
 import { renderStatusBar } from "../ui/render/renderStatusBar.js";
-import { getFullCartItems, getFullItemInfo } from "../ui/utils/cartHelpers.js";
+import { getFullCartItems, getFullItemInfo, calculateCartUpdate } from "../ui/utils/cartHelpers.js";
 
 
 /* ---------- CONSTANTS ---------- */
@@ -66,26 +66,12 @@ export function clearCart() {
   localStorage.removeItem(CONFIG.CART_KEY);
 }
 
+
 export function addToCart(line) {
-  const state = getState();
-  const current = state.cart?.items || [];
+  const current = UI.cart?.items || [];
+  const items = calculateCartUpdate(current, line);
 
-  const index = current.findIndex(i =>
-    i.category === line.category &&
-    i.item === line.item &&
-    i.option === line.option
-  );
-
-  let nextItems;
-  if (index >= 0) {
-    nextItems = current.map((it, idx) =>
-      idx === index ? { ...it, qty: (it.qty || 0) + (line.qty || 1) } : it
-    );
-  } else {
-    nextItems = [...current, { ...line, qty: line.qty || 1 }];
-  }
-
-  setState({ cart: { ...state.cart, items: nextItems } });
+  setState({ cart: { items } });
 }
 
 /* ---------- ORDERING ACTIONS ---------- */
