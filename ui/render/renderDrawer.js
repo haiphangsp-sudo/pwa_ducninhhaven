@@ -1,25 +1,21 @@
 // ui/render/renderDrawer.js
 
 import { translate } from "../utils/translate.js";
-import { updateCartQuantity } from "../../core/events.js";
+import { changeCartQtynew } from "../../core/actions.js";
 import { showOverlay } from "../interactions/backdropManager.js";
 import { getCartStats, getFullCartItems } from "../../ui/utils/cartHelpers.js";
 import { getContext } from "../../core/context.js";
-import { getState } from "../../core/state.js";
 
 let initialCartSnapshot = localStorage.getItem("haven_cart") || "[]";
 let drawerBound = false;
 
-export function openCartDrawer() {
-  const state = getState();
+export function openCartDrawer(state) {
   initialCartSnapshot = JSON.stringify(state.cart.items || []);
-  renderDrawer();
-  attachDrawerEvents();
+  renderDrawer(state);
   showOverlay("cartDrawer");
 }
 
-export function renderDrawer() {
-  const state = getState();
+export function renderDrawer(state) {
   const drawer = document.getElementById("cartDrawer");
   const placeEl = document.getElementById("drawerPlaceDisplay");
   if (!drawer) return;
@@ -43,7 +39,7 @@ export function renderDrawer() {
   if (!itemsContainer || !sendBtn || !headerSummary) return;
 
   const cartItems = state.cart.items || [];
-  const displayItems = getFullCartItems(cartItems);
+  const displayItems = getFullCartItems(cartItems).filter(Boolean);
   const stats = getCartStats(displayItems);
 
   drawer.querySelector(".drawer__header-title").textContent = translate("cart_bar.cart_title");
@@ -55,13 +51,11 @@ export function renderDrawer() {
 
   if (stats.isEmpty) {
     initialCartSnapshot = "[]";
-
     itemsContainer.innerHTML = `
       <div class="p-m center text-muted">
         ${translate("cart_bar.empty")}
       </div>
     `;
-
     headerSummary.classList.add("hidden");
     sendBtn.textContent = translate("cart_bar.close");
     sendBtn.dataset.action = "close-overlay";
@@ -100,7 +94,7 @@ export function renderDrawer() {
     : translate("cart_bar.send_order");
 
   sendBtn.dataset.action = hasChanged ? "confirm" : "send_cart";
-  sendBtn.className = `drawer-send ${hasChanged ? "state-confirm" : "state-send"}`;
+  sendBtn.className = hasChanged ? "drawer-send state-confirm" : "drawer-send state-send";
 }
 
 export function attachDrawerEvents() {
@@ -111,7 +105,7 @@ export function attachDrawerEvents() {
     const btn = e.target.closest(".qty-btn");
     if (!btn) return;
 
-    updateCartQuantity(
+    changeCartQtynew(
       parseInt(btn.dataset.index, 10),
       btn.classList.contains("plus") ? 1 : -1
     );
