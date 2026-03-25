@@ -5,7 +5,7 @@ import { changeCartQtynew } from "../../core/actions.js";
 import { showOverlay } from "../interactions/backdropManager.js";
 import { getCartStats } from "../../ui/utils/cartHelpers.js";
 import { getContext } from "../../core/context.js";
-import { getFullCartItems } from "../../ui/utils/cartHelpers.js";
+import { getFullCartItems, getFullItemInfo } from "../../ui/utils/cartHelpers.js";
 
 
 
@@ -57,7 +57,7 @@ export function renderDrawer(state) {
   const hasChanged = JSON.stringify(cartItems) !== initialCartSnapshot;
 
   if (isEmpty) {
-    
+
     initialCartSnapshot = "[]";
     itemsContainer.innerHTML = `
       <div class="p-m center text-muted">
@@ -73,16 +73,17 @@ export function renderDrawer(state) {
   } else {
 
     headerSummary.classList.remove("hidden");
+    const keys = getFullItemInfo(cartItems);
 
     itemsContainer.innerHTML = cartItems.map((item, index) => {
 
-      const option = getFullCartItems(cartItems);  
-
+      const option = getFullCartItems(item);  
+      
       return `
         <div class="drawer__item drawer-item">
           <div class="drawer__info">
           
-            <strong>${translate(option.label)}</strong>
+            <strong>${translate(keys.name)}</strong>
             <span class="drawer__variant">${translate(option.label)}</span>
             <span class="text-s text-muted">
               ${option.price > 0
