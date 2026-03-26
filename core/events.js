@@ -2,7 +2,6 @@
 
 import { UI, setState, getState } from "./state.js";
 import { enqueue } from "./queue.js";
-import { openPicker } from "../ui/render/renderPlacePicker.js";
 import { CONFIG } from "../config.js";
 import { renderStatusBar } from "../ui/render/renderStatusBar.js";
 import { getFullCartItems, getFullItemInfo, calculateCartUpdate } from "../ui/utils/cartHelpers.js";
