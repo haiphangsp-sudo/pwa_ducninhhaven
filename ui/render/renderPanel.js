@@ -14,11 +14,10 @@ export function renderPanel(state) {
   if (!container) return;
 
   const menu = document.getElementById(nextPanel);
-  if (!menu) {
-    container.insertAdjacentHTML("beforeend", `<div id="${nextPanel}" class="category-panel"></div>`);
-  }else{
     
-    if (menu.children) {
+    if (!menu && menu.innerHTML.trim()) {
+        container.insertAdjacentHTML("beforeend", `<div id="${nextPanel}" class="category-panel"></div>`);
+
       const category = getCategory(state.view.panel);
 
       if (nextPanel === "intro") {
@@ -27,7 +26,7 @@ export function renderPanel(state) {
         menu.innerHTML = renderMenu(category);
       }
     }
-  }
+  
   const panels = document.querySelectorAll(".category-panel");
   if (panels) {
     panels.forEach(panel => {
