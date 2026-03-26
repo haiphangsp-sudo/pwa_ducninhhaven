@@ -17,8 +17,8 @@ export function renderPanel(state) {
   if (!menu) {
     container.insertAdjacentHTML("beforeend", `<div id="${nextPanel}" class="category-panel"></div>`);
   }else{
-    menu.classList.add("animate-fade-in");
-    if (menu.children.length === 0) {
+    
+    if (menu.children) {
       const category = getCategory(state.view.panel);
 
       if (nextPanel === "intro") {
@@ -32,9 +32,15 @@ export function renderPanel(state) {
   if (panels) {
     panels.forEach(panel => {
       if (panel.id !== nextPanel)
-        panel.classList.add("hidden");
+        panel.classList
+          .add("animate-fade-in")
+          .remove("animate-fade-out")
+          .add("hidden");
       else
-        panel.classList.remove("hidden");
+        panel.classList
+          .add("animate-fade-out")
+          .remove("animate-fade-in")
+          .remove("hidden");
     });
   }
 }
