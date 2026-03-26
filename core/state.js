@@ -18,7 +18,7 @@ export const UI = {
   context: {
     anchor: null,   // {place:"room|table|area", id:string, ts: number}
     active: null, // {id:string}
-    updatedAt: ctx?updatedAt || Date.now() : null
+    updatedAt: null
   },
   /* ---------------- NAVIGATION ---------------- */
 
