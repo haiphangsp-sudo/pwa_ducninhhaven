@@ -47,15 +47,15 @@ function handleGlobalClick(e) {
     /* ---------- NAV ---------- */
 
     case "nav-menu":
-      setState({ panel: value });
+      setState({ panel: { view: value } });
       break;
 
     case "overlay":
-      setState({ overlay: value });
+      setState({ overlay: { view: value } });
       break;
 
     case "close-overlay":
-        setState({ overlay: null });
+      setState({ overlay: { view: null } });
       break;
 
       /* ---------- CART / ORDER ---------- */

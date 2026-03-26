@@ -20,10 +20,12 @@ export const UI = {
   },
   /* ---------------- NAVIGATION ---------------- */
 
-  panel: "intro", // food || drink ....
-  
-  overlay: null, // close || placePicker || cartDrawer ....
-  
+  panel: {
+    view: "intro" // food || drink ....
+  },
+  overlay: {
+    view: null  // close || placePicker || cartDrawer ....
+  },
   order: {
     type: "cart", // cart || instant || send_card
     line: null

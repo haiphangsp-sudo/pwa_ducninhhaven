@@ -9,7 +9,7 @@ import { renderMenu } from "./renderCategory.js";
    PUBLIC
 ========================= */
 export function renderPanel(state) {
-  const nextPanel = state.panel;
+  const nextPanel = state.panel.view;
   const container = document.querySelector(".page-container");
   if (!container|| !nextPanel) return;
 

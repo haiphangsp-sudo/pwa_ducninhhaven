@@ -28,8 +28,8 @@ async function syncUI(state) {
 
   /* ---------- OVERLAY ---------- */
 
-    if (state.overlay !== lastState.overlay) {
-        switch (state.overlay) {
+    if (state.overlay.view !== lastState.overlay.view) {
+        switch (state.overlay.view) {
 
             case "cartDrawer":
                 renderDrawer(state);
@@ -42,10 +42,10 @@ async function syncUI(state) {
             default:
                 break;
         }
-        showOverlay(state.overlay);
+        showOverlay(state.overlay).view;
     } 
 
-    if (state.overlay === null && lastState.overlay !== null) {
+    if (state.overlay.view === null && lastState.overlay.view !== null) {
         closeOverlay();
     }
 
@@ -57,7 +57,7 @@ async function syncUI(state) {
 
     /* ---------- PANEL ---------- */
 
-    if (state.panel && state.panel !== lastState.panel) {
+    if (state.panel.view && state.panel.view !== lastState.panel.view) {
         
         renderPanel(state);
         renderHub(state);
@@ -79,7 +79,7 @@ async function syncUI(state) {
         }, 400);
         
     }
-    if (state.order !== lastState.order) {
+    if (state.order.type !== lastState.order.type) {
 
         switch (state.order.type) {
 
