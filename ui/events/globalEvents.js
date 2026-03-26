@@ -70,10 +70,14 @@ function handleGlobalClick(e) {
       break;
     
     case "instant":
+      const { action: ui, ...rest } = target.dataset;
       setState({
         order: {
           type: "instant",
-          line: { ...target.dataset, qty: 1 }
+          line: { ui,
+            ...rest,
+            qty: 1
+          }
         }
       });
       break;
