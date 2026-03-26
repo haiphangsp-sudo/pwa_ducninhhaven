@@ -42,7 +42,7 @@ async function syncUI(state) {
             default:
                 break;
         }
-        showOverlay(state.overlay).view;
+        showOverlay(state.overlay.view);
     } 
 
     if (state.overlay.view === null && lastState.overlay.view !== null) {
