@@ -1,6 +1,5 @@
 // ui/components/placePicker.js
 
-import { showOverlay, closeOverlay } from "../interactions/backdropManager.js";
 import { getAllowedPlaceTypes, getPlaceGroup, getPlaceItems } from "../../core/placesStore.js";
 import { getContext, applyPlaceById } from "../../core/context.js";
 import { translate } from "../utils/translate.js";
