@@ -32,14 +32,11 @@ export function renderPanel(state) {
   if (panels) {
     panels.forEach(panel => {
       if (panel.id !== nextPanel)
-        panel.classList
-          .add("animate-fade-in")
-          .remove("animate-fade-out")
-          .add("hidden");
+        panel.classList.add("hidden");
       else
         panel.classList
-          .add("animate-fade-out")
-          .remove("animate-fade-in")
+          .remove("animate-fade-out")
+          .add("animate-fade-in")
           .remove("hidden");
     });
   }
