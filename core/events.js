@@ -19,18 +19,25 @@ export function loadCart() {
 }
 
 export function updateCartQuantity(index, delta) {
-  const newItems = JSON.parse(JSON.stringify(UI.cart.items || []));
+  const state = getState();
+  const newItems = state.cart.items;
   const item = newItems[index];
   if (!item) return;
+
+  // Nếu khách bấm giảm khi chỉ còn 1 món -> Hỏi nhẹ một câu
+  if (item.qty === 1 && delta === -1) {
+    const confirmDelete = confirm(`Bạn muốn bỏ món "${item.name || item.item}" khỏi giỏ hàng?`);
+    if (!confirmDelete) return; 
+  }
 
   item.qty += delta;
 
   if (item.qty <= 0) {
     newItems.splice(index, 1);
   }
+
   setState({ cart: { items: newItems } });
 }
-
 
 /* ---------- EVENTS ---------- */
 
@@ -67,10 +74,20 @@ export function clearCart() {
 
 
 export function addToCart(line) {
-  const current = UI.cart?.items || [];
-  const items = calculateCartUpdate(current, line);
+  // 1. Lấy bản sao an toàn (đã được clone)
+  const state = getState(); 
+  
+  // 2. Tính toán trên bản sao
+  const current = state.cart?.items || [];
+  const nextItems = calculateCartUpdate(current, line);
 
-  setState({ cart: { items } });
+  // 3. Đẩy bản sao đã chỉnh sửa về hệ thống để kích hoạt Render
+  setState({ 
+    cart: { 
+      ...state.cart, 
+      items: nextItems 
+    } 
+  });
 }
 
 /* ---------- ORDERING ACTIONS ---------- */
