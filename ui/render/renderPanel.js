@@ -8,9 +8,8 @@ import { renderMenu } from "./renderCategory.js";
 /* =========================
    PUBLIC
 ========================= */
-export function renderPanel(state,lastState) {
+export function renderPanel(state) {
   const nextPanel = state.view.panel;
-  const currentState = lastState.view?.panel;
   const container = document.querySelector(".page-container");
   if (!container) return;
 

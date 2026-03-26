@@ -56,7 +56,7 @@ function syncUI(state) {
     /* ---------- PANEL ---------- */
 
     if (state.view.panel !== lastState.view?.panel) {
-        renderPanel(state, lastState);
+        renderPanel(state);
         renderHub(state);
         
     }
@@ -94,7 +94,7 @@ function syncUI(state) {
    LANGUAGE
 ========================= */
 
-function syncLanguage(state, lastState) {
+function syncLanguage(state) {
   
 
   // re-render toàn bộ UI phụ thuộc ngôn ngữ
@@ -102,5 +102,5 @@ function syncLanguage(state, lastState) {
   renderCartBar(state);
   renderStatusBar(state);
   renderHub(state);
-  renderPanel(state, lastState);
+  renderPanel(state);
 }
