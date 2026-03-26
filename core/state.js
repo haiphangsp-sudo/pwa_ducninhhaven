@@ -9,7 +9,7 @@ export const UI = {
     current: localStorage.getItem("haven_lang") || "vi"
   },
   meta: {
-    version: 2.0
+    version: 2.2
   },
   /* ---------------- SERVICE CONTEXT ---------------- */
 
