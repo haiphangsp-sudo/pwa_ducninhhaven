@@ -87,7 +87,7 @@ function syncUI(state) {
         syncLanguage(state);
     }
     if(state.meta?.version !== lastState.meta?.version){
-        location.reload();
+        //checkVersion(state);
     }
     if (state.context?.active?.id !== lastState.context?.active?.id) {
         applyPlaceById(state.context?.active?.id);
