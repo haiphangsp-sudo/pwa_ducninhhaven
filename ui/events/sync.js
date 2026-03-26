@@ -79,7 +79,7 @@ async function syncUI(state) {
         }, 400);
         
     }
-    if (state.order.type !== lastState.order.type) {
+    if (state.order.type !== lastState.order?.type) {
 
         switch (state.order.type) {
 
