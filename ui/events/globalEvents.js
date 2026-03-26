@@ -50,7 +50,7 @@ function handleGlobalClick(e) {
       setState({ panel: { view: value } });
       break;
 
-    case "overlay":
+    case "open-overlay":
       setState({ overlay: { view: value } });
       break;
 
