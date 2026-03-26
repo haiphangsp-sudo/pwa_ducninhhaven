@@ -18,7 +18,7 @@ export function renderPanel(state) {
     <div id="${containerId}" class="category-panel"></div>
    `;
   const menu = document.getElementById(containerId);
-  if (menu.outerHTML === ""){
+  if (menu.innerHTML === ""){
     if (containerId === "intro") {
       document.getElementById(containerId).innerHTML = renderArticle(category);
     } else {
