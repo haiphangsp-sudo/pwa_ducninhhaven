@@ -28,7 +28,7 @@ async function syncUI(state) {
 
   /* ---------- OVERLAY ---------- */
 
-    if (state.overlay.view !== lastState.overlay.view) {
+    if (state.overlay.view !== lastState.overlay?.view) {
         switch (state.overlay.view) {
 
             case "cartDrawer":
