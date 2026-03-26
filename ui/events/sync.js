@@ -91,6 +91,8 @@ function syncUI(state) {
     }
     if (state.context?.active?.id !== lastState.context?.active?.id) {
         applyPlaceById(state.context?.active?.id);
+        closeOverlay();
+
     }
     
 
