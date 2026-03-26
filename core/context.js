@@ -1,5 +1,5 @@
 
-import { resolvePlaceFromData,getAllowedPlaceTypes } from "./placesStore.js";
+import { resolvePlaceFromData, getAllowedPlaceTypes } from "./placesStore.js";
 import { CONFIG } from "../config.js"
 
 
@@ -65,8 +65,8 @@ export function normalizeContext() {
   }
 }
 
-export function resolvePlaceFromData(placeId) {
-  return resolvePlace(placeId);
+export function resolvePlace(placeId) {
+  return resolvePlaceFromData(placeId);
 }
 
 export function canSelectPlace(anchorType, targetType) {
