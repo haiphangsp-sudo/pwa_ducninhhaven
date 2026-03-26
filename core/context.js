@@ -1,5 +1,5 @@
 
-import { resolvePlace, getAllowedPlaceTypes } from "./placesStore.js";
+import { resolvePlaceFromData,getAllowedPlaceTypes } from "./placesStore.js";
 import { CONFIG } from "../config.js"
 
 
@@ -65,7 +65,7 @@ export function normalizeContext() {
   }
 }
 
-export function resolvePlace(placeId) {
+export function resolvePlaceFromData(placeId) {
   return resolvePlace(placeId);
 }
 
