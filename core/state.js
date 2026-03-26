@@ -45,7 +45,8 @@ export const UI = {
   /* ---------------- ACK (tap feedback) ---------------- */
 
   ack:{
-    state:"hidden"   // hidden | show
+    state: "hidden",  // hidden | show
+    status: null
   },
 
   /* ---------------- ORDERS ---------------- */
@@ -59,27 +60,27 @@ export const UI = {
   /* ---------------- DELIVERY STATE MACHINE ---------------- */
 
   delivery:{
-    state:"idle",    // idle | pending | sending | sent | failed
-    retries:0
+    state: "idle",    // idle | pending | sending | sent | failed
+    retries: 0
   },
   /* ---------------- RECOVERY STATE MACHINE ---------------- */
 
   recovery:{
-    state:"idle"   // idle | found | sending
+    state: "idle"   // idle | found | sending
   },
 
   /* ---------------- ERROR ---------------- */
 
   error:{
-    active:false,
-    message:null
+    active: false,
+    message: null
   },
 
   /* ---------------- IDLE ---------------- */
 
   idle:{
-    timer:null,
-    timeoutMs:180000
+    timer: null,
+    timeoutMs: 180000
   }
 
 };

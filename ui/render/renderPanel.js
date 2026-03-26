@@ -11,33 +11,36 @@ import { renderMenu } from "./renderCategory.js";
 export function renderPanel(state) {
   const nextPanel = state.view.panel;
   const container = document.querySelector(".page-container");
-  if (!container) return;
+  if (!container|| !nextPanel) return;
 
-  const menu = document.getElementById(nextPanel);
+   let panel = document.getElementById(nextPanel);
     
-    if (!menu || menu.innerHTML.trim()=== "") {
-        container.insertAdjacentHTML("beforeend", `<div id="${nextPanel}" class="category-panel"></div>`);
+  if (!panel) {
+    container.insertAdjacentHTML(
+      "beforeend",
+      `<div id="${nextPanel}" class="category-panel"></div>
+        `);
+    panel = document.getElementById(nextPanel);
+  }
+  const category = getCategory(nextPanel);
+  if(!category||!panel) return;
 
-      const category = getCategory(state.view.panel);
 
       if (nextPanel === "intro") {
-        menu.innerHTML = renderArticle(category);
+        panel.innerHTML = renderArticle(category);
       } else {
-        menu.innerHTML = renderMenu(category);
+        panel.innerHTML = renderMenu(category);
       }
-    }
+    
   
-  const panels = document.querySelectorAll(".category-panel");
-  if (panels) {
-    panels.forEach(panel => {
-      if (panel.id !== nextPanel)
-        panel.classList.add("hidden");
-      else
-        panel.classList
-          .remove("animate-fade-out")
-          .add("animate-fade-in")
-          .remove("hidden");
-    });
-  }
+  document.querySelectorAll(".category-panel").forEach(el => {
+    if (el.id !== nextPanel) {
+      el.classList.add("hidden");
+      el.classList.remove("animate-fade-in");
+    } else{
+      el.classList.remove("hidden", "animate-fade-out");
+      el.classList.add("animate-fade-in");
+    }
+  });
 }
 
