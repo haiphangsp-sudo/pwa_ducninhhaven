@@ -1,11 +1,9 @@
 // ui/events/globalEvents.js
 
 import { setState } from "../../core/state.js";
-import { applyPlaceById } from "../../core/context.js";
 import { addToCart, sendCart, sendInstant } from "../../core/events.js";
 import { attachDrawerEvents } from "../render/renderDrawer.js";
 import { attachPlacePickerEvents } from "../render/renderPlacePicker.js";
-import { openCartDrawer } from "../render/renderDrawer.js";
 import { bounceCartBar } from "../render/renderCartBar.js";
 
 
@@ -60,17 +58,6 @@ async function handleGlobalClick(e) {
     case "close-overlay":
         setState({ view: { overlay: null } });
       break;
-
-    /* ---------- PLACE ---------- */
-
-    case "select-place":
-      setState({
-        ...state,                // 1. Giữ lại cart, view, orders...
-        context: {...state.context,      // 2. Giữ lại anchor, updatedAt... bên trong context
-        active: { id: value }  // 3. Chỉ đè duy nhất giá trị mới vào active
-      }
-    });
-    break;  
 
       /* ---------- CART / ORDER ---------- */
 

@@ -6,8 +6,8 @@ import { renderCartBar } from "../render/renderCartBar.js";
 import { renderStatusBar } from "../render/renderStatusBar.js";
 import { renderHub } from "../render/renderHub.js";
 import { renderPanel } from "../render/renderPanel.js";
-import { openPicker } from "../render/renderPlacePicker.js";
-import { openCartDrawer } from "../render/renderDrawer.js";
+import { renderPlacePicker } from "../render/renderPlacePicker.js";
+import { renderDrawer } from "../render/renderDrawer.js";
 import { closeOverlay } from "../interactions/backdropManager.js";
 import { renderDrawer } from "../render/renderDrawer.js";
 import { CONFIG } from "../../config.js";
@@ -32,11 +32,11 @@ function syncUI(state) {
     if (state.view.overlay !== lastState.view?.overlay) {
         switch (state.view.overlay) {
             case "cartDrawer":
-                openCartDrawer(state);
+                renderDrawer(state);
                 break;
           
             case "placePicker":
-                openPicker();
+                renderPlacePicker();
                 break;
             
             default:

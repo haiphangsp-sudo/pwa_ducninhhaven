@@ -7,12 +7,7 @@ import { translate } from "../utils/translate.js";
 
 let shellReady = false;
 
- export function openPicker() {
-  renderPlacePicker();
-  showOverlay("placePicker");
-}
-
-function renderPlacePicker() {
+export function renderPlacePicker() {
   renderPlacePickerShell();
   renderPlacePickerContent();
 }
