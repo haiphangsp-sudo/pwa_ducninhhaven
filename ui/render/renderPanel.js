@@ -28,7 +28,7 @@ export function renderPanel(state) {
       }
     }
   }
-  const panels = document.getSelection(".category-panel");
+  const panels = document.querySelector(".category-panel");
   if (panels) {
     panels.forEach(panel => {
       if (panel.id !== nextPanel)

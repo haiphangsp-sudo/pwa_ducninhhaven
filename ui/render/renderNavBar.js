@@ -8,26 +8,29 @@ import { getPlaceIcon } from "../../data/helpers.js";
 const refs = {
   identityIcon: null,
   identityLabel: null,
-  locLabel: null
+  locLabel: null,
+  langButtons: null
 };
 
 export function renderNavBar(state) {
   cacheElements();
-  updateNavBar();
-
-  const currentLang = state.lang.current;
-  refs.langButtons?.forEach(btn => {
-    btn.classList.toggle("is-active", btn.dataset.value === currentLang);
-  });
+  updateNavBar(state);
 }
 
-export function updateNavBar() {
+function updateNavBar(state) {
   const ctx = getContext();
   const anchor = ctx?.anchor;
+  const currentLang = state.lang.current;
+  
 
   if (refs.identityIcon) refs.identityIcon.textContent = getPlaceIcon(anchor?.type);
   if (refs.identityLabel) refs.identityLabel.textContent = getIdentityLabel(anchor);
   if (refs.locLabel) refs.locLabel.textContent = getLocationLabel(ctx);
+  if (refs.langButtons) { 
+  refs.langButtons.forEach(btn => {
+    btn.classList.toggle("is-active", btn.dataset.value === currentLang);
+  });
+  }
 }
 
 function cacheElements() {

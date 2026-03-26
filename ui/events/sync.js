@@ -96,8 +96,6 @@ function syncUI(state) {
 ========================= */
 
 function syncLanguage(state) {
-  
-
   // re-render toàn bộ UI phụ thuộc ngôn ngữ
   renderNavBar(state);
   renderCartBar(state);
