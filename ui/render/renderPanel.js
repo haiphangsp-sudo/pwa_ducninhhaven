@@ -15,16 +15,18 @@ export function renderPanel(state,lastState) {
   if (!container) return;
 
   const menu = document.getElementById(nextPanel);
-  if (!menu)
-    container.insertAdjacentHTML("beforeend", `<div id="${nextPanel}" class="category-panel animate-fade-in"></div>`);
+  if (!menu) {
+    container.insertAdjacentHTML("beforeend", `<div id="${nextPanel}" class="category-panel"></div>`);
+  }else{
+    menu.classList.add("animate-fade-in");
+    if (menu.children.length === 0) {
+      const category = getCategory(state.view.panel);
 
-  if (menu.children.length === 0) {
-    const category = getCategory(state.view.panel);
-
-    if (nextPanel === "intro") {
-      menu.innerHTML = renderArticle(category);
-    } else {
-      menu.innerHTML = renderMenu(category);
+      if (nextPanel === "intro") {
+        menu.innerHTML = renderArticle(category);
+      } else {
+        menu.innerHTML = renderMenu(category);
+      }
     }
   }
 }
