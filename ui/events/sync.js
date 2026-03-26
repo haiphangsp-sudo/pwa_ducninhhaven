@@ -2,7 +2,7 @@
 import { renderAckOverlay } from "../render/renderOverlay.js";
 import { subscribe, getState } from "../../core/state.js";
 import { renderNavBar } from "../render/renderNavBar.js";
-import { renderCartBar } from "../render/renderCartBar.js";
+import { renderCartBar, loadingCartBar, bounceCartBar } from "../render/renderCartBar.js";
 import { renderStatusBar } from "../render/renderStatusBar.js";
 import { renderHub } from "../render/renderHub.js";
 import { renderPanel } from "../render/renderPanel.js";
@@ -10,7 +10,6 @@ import { renderPlacePicker } from "../render/renderPlacePicker.js";
 import { renderDrawer } from "../render/renderDrawer.js";
 import { closeOverlay, showOverlay } from "../interactions/backdropManager.js";
 import { CONFIG } from "../../config.js";
-import { bounceCartBar } from "../render/renderCartBar.js";
 import { addToCart, sendCart, sendInstant } from "../../core/events.js";
 
 
@@ -86,14 +85,16 @@ async function syncUI(state) {
 
             case "cart": 
                 bounceCartBar();
-                await addToCart(singleItemArray(target));
+                addToCart(singleItemArray(target));
                 break;
             
             case "instant":
+                bounceCartBar();
                 await sendInstant(singleItemArray(target));
                 break;
             
             case "send_cart":
+                loadingCartBar();
                 await sendCart();
             break;
         }
@@ -115,10 +116,8 @@ async function syncUI(state) {
     if (state.context?.active?.id !== lastState.context?.active?.id) {
         applyPlaceById(state.context?.active?.id);
         closeOverlay();
-
     }
     
-
   lastState = structuredClone(state);
 }
 
@@ -134,6 +133,7 @@ function syncLanguage(state) {
   renderHub(state);
   renderPanel(state);
 }
+
 function singleItemArray(target) {
   return {
     type: target.dataset.action,

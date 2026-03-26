@@ -61,15 +61,9 @@ function handleGlobalClick(e) {
       /* ---------- CART / ORDER ---------- */
 
     case "cart":          
-        setState({ view: { cart: "cart" } });
-    break;
-
     case "instant":
-      setState({ view: { cart: "instant" } });
-      break;
-
     case "send_cart":
-      setState({ view: { cart: "send_cart" } });
+      setState({ view: { cart: action } });
       break;
 
     /* ---------- LANGUAGE ---------- */

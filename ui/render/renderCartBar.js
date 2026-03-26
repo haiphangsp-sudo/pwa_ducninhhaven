@@ -40,3 +40,9 @@ export function bounceCartBar() {
     bar.classList.remove("cart-bounce");
   }, 400);
 }
+
+export function loadingCartBar() {
+  const target = document.getElementById("cartBar");
+  target.classList.add("is-loading");
+  setTimeout(() => target.classList.remove("is-loading"), 500);
+}
