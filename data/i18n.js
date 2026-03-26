@@ -62,6 +62,7 @@ export const STRINGS = {
     my_room: { vi: "Phòng tôi", en: "My room" },
     my_table: { vi: "Bàn tôi", en: "My table" },
     my_area: { vi: "Khu vực tôi", en: "My area" },
+    served: { vi: "Phục vụ tại", en: "Served at" },
     hello: { vi: "Haven Xin chào!", en: "Haven Hello!" }
   },
   mode: {

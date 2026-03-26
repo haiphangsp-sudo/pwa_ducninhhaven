@@ -21,7 +21,7 @@ export function renderDrawer(state) {
     sendBtn.textContent = translate("cart_bar.send_order");
     sendBtn.classList.remove("text-warning");
     sendBtn.dataset.value = "";
-    document.getElementById("namePlace").textContent = getLocationLabel(ctx);
+    document.getElementById("namePlace").textContent = `${translate("place.served")}: ${getLocationLabel(ctx)}`;
   } else {
     sendBtn.classList.add("text-warning");
     sendBtn.dataset.action = "open-overlay";
