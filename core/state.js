@@ -6,10 +6,10 @@ import { getContext } from "./context.js";
 
 export const UI = {
   lang:{
-    current: localStorage.getItem("haven_lang") || "vi"
+    current: "vi"
   },
   meta: {
-    version: "2.2.1"
+    version: "0.0.0"
   },
   /* ---------------- SERVICE CONTEXT ---------------- */
 
