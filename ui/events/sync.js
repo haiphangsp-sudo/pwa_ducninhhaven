@@ -79,7 +79,7 @@ async function syncUI(state) {
         }, 400);
         
     }
-    if (state.view.cart !== lastState.view.cart) {
+    if (state.view.cart !== lastState.view?.cart) {
 
         switch (state.view.cart) {
 
