@@ -83,12 +83,6 @@ export function renderDrawer(state) {
     </div>
   `).join("");
 
-  sendBtn.textContent = hasChanged
-    ? translate("cart_bar.confirm_changes")
-    : translate("cart_bar.send_order");
-
-  sendBtn.dataset.action = hasChanged ? "confirm" : "send_cart";
-  sendBtn.className = hasChanged ? "drawer-send state-confirm" : "drawer-send state-send";
 }
 
 export function attachDrawerEvents() {
