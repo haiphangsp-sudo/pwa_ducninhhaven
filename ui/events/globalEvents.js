@@ -64,7 +64,12 @@ function handleGlobalClick(e) {
       setState({
         order: {
           type: "cart",
-          line: { ...target.dataset, qty: 1 }
+          line: {
+            category: target.dataset.item,
+            item: target.dataset.item,
+            option: target.dataset.option,
+            qty: 1
+          }
         }
       });
       break;
