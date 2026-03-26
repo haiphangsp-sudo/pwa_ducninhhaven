@@ -8,7 +8,7 @@ import { renderHub } from "../render/renderHub.js";
 import { renderPanel } from "../render/renderPanel.js";
 import { renderPlacePicker } from "../render/renderPlacePicker.js";
 import { renderDrawer } from "../render/renderDrawer.js";
-import { closeOverlay } from "../interactions/backdropManager.js";
+import { closeOverlay, showOverlay } from "../interactions/backdropManager.js";
 import { CONFIG } from "../../config.js";
 
 
@@ -41,6 +41,7 @@ function syncUI(state) {
             default:
                 break;
         }
+        showOverlay(state.view.overlay);
     } 
     if (state.view.overlay === null && lastState.view?.overlay !== null) {
         closeOverlay();
