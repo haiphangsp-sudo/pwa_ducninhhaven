@@ -6,16 +6,21 @@ import { renderArticle } from "./renderArticle.js";
 import { renderMenu } from "./renderCategory.js";
 
 export function renderPanel(state){
-  const container = document.querySelector(".category-panel");
+  const container = document.querySelector(".page-container");
   if(!container) return;
   const category = getCategory(state.view.panel);
   if(!category){
     container.innerHTML="";
     return;
   }
-  const type = category.ui;
-
-  if(type === "article") container.innerHTML = renderArticle(category);
-
-  if (type === "cart" || type === "instant") container.innerHTML = renderMenu(category);
+  const containerId = state.view.panel;
+    container.innerHTML = `
+    <div id="${containerId}" class="category-panel"></div>
+   `;
+  
+  if (containerId === "intro") {
+    document.getElementById(containerId).innerHTML = renderArticle(category);
+  } else {
+     document.getElementById(containerId).innerHTML =  renderMenu(category);
+  }
 }
