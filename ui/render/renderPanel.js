@@ -28,5 +28,13 @@ export function renderPanel(state) {
       }
     }
   }
+  const panels = document.getSelection(".category-panel")
+  panels.forEach(panel => {
+    if(panel.id !== nextPanel)
+        panel.classList.add("hidden");
+    else
+        panel.classList.remove("hidden");
+  
+  });
 }
 

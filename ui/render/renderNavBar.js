@@ -3,7 +3,6 @@
 import { translate } from "../utils/translate.js";
 import { getContext } from "../../core/context.js";
 import { resolvePlace } from "../../core/placesStore.js";
-import { getState } from "../../core/state.js";
 import { getPlaceIcon } from "../../data/helpers.js";
 
 const refs = {
@@ -12,11 +11,11 @@ const refs = {
   locLabel: null
 };
 
-export function renderNavBar() {
+export function renderNavBar(state) {
   cacheElements();
   updateNavBar();
 
-  const currentLang = getState().lang.current;
+  const currentLang = state.lang.current;
   refs.langButtons?.forEach(btn => {
     btn.classList.toggle("is-active", btn.dataset.value === currentLang);
   });
