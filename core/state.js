@@ -3,20 +3,22 @@
 // core/state.js
 // Single source of truth.
 import { getContext } from "./context.js";
+import { CONFIG } from "../config.js";
+
 
 export const UI = {
   lang:{
-    current: "vi"
+    current: localStorage.getItem(CONFIG.LANG_KEY) || "vi"
   },
   meta: {
-    version: "0.0.0"
+    version: "2.0.0"
   },
   /* ---------------- SERVICE CONTEXT ---------------- */
 
   context: {
     anchor: null,   // {place:"room|table|area", id:string, ts: number}
     active: null, // {id:string}
-    updatedAt: null
+    updatedAt: ctx?updatedAt || Date.now() : null
   },
   /* ---------------- NAVIGATION ---------------- */
 
