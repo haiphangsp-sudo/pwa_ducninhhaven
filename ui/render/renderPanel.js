@@ -15,9 +15,10 @@ export function renderPanel(state,lastState) {
   if (!container) return;
 
   const menu = document.getElementById(nextPanel);
-  
-  if (!menu&&menu.children.length === 0) {
+  if (!menu)
     container.insertAdjacentHTML("beforeend", `<div id="${nextPanel}" class="category-panel animate-fade-in"></div>`);
+
+  if (menu.children.length === 0) {
     const category = getCategory(state.view.panel);
 
     if (nextPanel === "intro") {
