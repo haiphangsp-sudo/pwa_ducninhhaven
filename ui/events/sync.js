@@ -85,7 +85,13 @@ function syncUI(state) {
     if (state.lang?.current !== lastState.lang?.current) {
         localStorage.setItem(CONFIG.LANG_KEY, state.lang.current);
         syncLanguage(state);
-  }
+    }
+    if(state.meta?.version !== lastState.meta?.version){
+        location.reload();
+    }
+    if (state.context?.active?.id !== lastState.context?.active?.id) {
+        applyPlaceById(state.context?.active?.id);
+    }
     
 
   lastState = structuredClone(state);

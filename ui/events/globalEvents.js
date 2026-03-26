@@ -64,8 +64,6 @@ async function handleGlobalClick(e) {
     /* ---------- PLACE ---------- */
 
     case "select-place":
-      if (!value) return;
-      applyPlaceById(value);
       setState({
         context: {
           active: { id: value },

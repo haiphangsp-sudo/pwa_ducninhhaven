@@ -120,7 +120,5 @@ export function attachPlacePickerEvents() {
 function handlePlacePickerClick(e) {
   const btn = e.target.closest(".picker-option");
   if (!btn) return;
-
-  closeOverlay();
   applyPlaceById(btn.dataset.value);
 }
