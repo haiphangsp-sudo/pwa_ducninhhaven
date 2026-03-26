@@ -47,25 +47,45 @@ function handleGlobalClick(e) {
     /* ---------- NAV ---------- */
 
     case "nav-menu":
-      setState({ view: { panel: value } });
+      setState({ panel: value });
       break;
 
-    case "open-overlay":
-      setState({ view: { overlay: value }});
+    case "overlay":
+      setState({ overlay: value });
       break;
 
     case "close-overlay":
-        setState({ view: { overlay: null } });
+        setState({ overlay: null });
       break;
 
       /* ---------- CART / ORDER ---------- */
 
-    case "cart":          
+    case "cart":
+      setState({
+        order: {
+          type: "cart",
+          line: { ...target.dataset, qty: 1 }
+        }
+      });
+      break;
+    
     case "instant":
-    case "send_cart":
-      setState({ view: { cart: action } });
+      setState({
+        order: {
+          type: "instant",
+          line: { ...target.dataset, qty: 1 }
+        }
+      });
       break;
 
+    case "send_cart":
+      setState({
+        order: {
+          type: "send_cart",
+          line: null
+        }
+      });
+      break;
     /* ---------- LANGUAGE ---------- */
 
     case "change-lang":

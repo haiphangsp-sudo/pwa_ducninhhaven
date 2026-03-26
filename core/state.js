@@ -20,30 +20,20 @@ export const UI = {
   },
   /* ---------------- NAVIGATION ---------------- */
 
-  view:{
-    panel: "intro",
-    overlay: null, // placePicker || cartDrawer
-    cart: null // cart || instant || send_card
+  panel: "intro", // food || drink ....
+  
+  overlay: null, // close || placePicker || cartDrawer ....
+  
+  order: {
+    type: "cart", // cart || instant || send_card
+    line: null
   },
-
   /* ---------------- CART ---------------- */
 
   cart: {
     items: [],    // 'idle' (mặc định), 'modified' (đã sửa), 'sending' (đang gửi), 
     status: 'idle' // 'success' (thành công - thay cho ack), 'error' (lỗi)
   },
-  instant: {
-    items: [],
-    status: 'idle'
-  },
-  /* ---------------- DRAWER ---------------- */
-
-  drawer: {
-    items: null,
-    tempQty: 1
-  },
-
-
   /* ---------------- ACK (tap feedback) ---------------- */
 
   ack:{

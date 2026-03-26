@@ -28,8 +28,8 @@ async function syncUI(state) {
 
   /* ---------- OVERLAY ---------- */
 
-    if (state.view.overlay !== lastState.view?.overlay) {
-        switch (state.view.overlay) {
+    if (state.overlay !== lastState.overlay) {
+        switch (state.overlay) {
 
             case "cartDrawer":
                 renderDrawer(state);
@@ -42,10 +42,10 @@ async function syncUI(state) {
             default:
                 break;
         }
-        showOverlay(state.view.overlay);
+        showOverlay(state.overlay);
     } 
 
-    if (state.view.overlay === null && lastState.view?.overlay !== null) {
+    if (state.overlay === null && lastState.overlay !== null) {
         closeOverlay();
     }
 
@@ -57,7 +57,7 @@ async function syncUI(state) {
 
     /* ---------- PANEL ---------- */
 
-    if (state.view.panel && state.view.panel !== lastState.view?.panel) {
+    if (state.panel && state.panel !== lastState.panel) {
         
         renderPanel(state);
         renderHub(state);
@@ -79,18 +79,18 @@ async function syncUI(state) {
         }, 400);
         
     }
-    if (state.view.cart !== lastState.view?.cart) {
+    if (state.order !== lastState.order) {
 
-        switch (state.view.cart) {
+        switch (state.order.type) {
 
             case "cart": 
                 bounceCartBar();
-                addToCart(singleItemArray(target));
+                addToCart(state.order.line);
                 break;
             
             case "instant":
                 bounceCartBar();
-                await sendInstant(singleItemArray(target));
+                await sendInstant(state.order.line);
                 break;
             
             case "send_cart":
@@ -134,12 +134,4 @@ function syncLanguage(state) {
   renderPanel(state);
 }
 
-function singleItemArray(target) {
-  return {
-    type: target.dataset.action,
-    category: target.dataset.category,
-    item: target.dataset.item,
-    option: target.dataset.option,
-    qty: 1
-  }
-}
+
