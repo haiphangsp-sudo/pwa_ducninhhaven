@@ -14,11 +14,12 @@ export function renderPanel(state,lastState) {
   const container = document.querySelector(".page-container");
   if (!container) return;
 
-  container.insertAdjacentHTML("beforeend", `<div id="${nextPanel}" class="category-panel animate-fade-in"></div>`);
   const menu = document.getElementById(nextPanel);
   
-  if (!menu) {
+  if (!menu&&menu.children.length === 0) {
+    container.insertAdjacentHTML("beforeend", `<div id="${nextPanel}" class="category-panel animate-fade-in"></div>`);
     const category = getCategory(state.view.panel);
+
     if (nextPanel === "intro") {
       menu.innerHTML = renderArticle(category);
     } else {
