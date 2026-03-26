@@ -5,28 +5,25 @@ import { getCategory } from "../../core/menuQuery.js";
 import { renderArticle } from "./renderArticle.js";
 import { renderMenu } from "./renderCategory.js";
 
-export function renderPanel(state) {
+/* =========================
+   PUBLIC
+========================= */
+export function renderPanel(state,lastState) {
+  const nextPanel = state.view.panel;
+  const currentState = lastState.view?.panel;
   const container = document.querySelector(".page-container");
   if (!container) return;
 
-  const containerId = state.view.panel;
-  const menu = document.getElementById(containerId);
+  container.insertAdjacentHTML("beforeend", `<div id="${nextPanel}" class="category-panel animate-fade-in"></div>`);
+  const menu = document.getElementById(nextPanel);
   
-
-  let contentHtml = "";
-  const category = getCategory(state.view.panel);
-  if (!category) return;
-
-  if (containerId === "intro") {
-    contentHtml = renderArticle(category);
-  } else {
-    contentHtml = renderMenu(category);
-  }
   if (!menu) {
-    container.innerHTML = `
-     <div id="${containerId}" class="category-panel animate-fade-in">
-      ${contentHtml}
-    </div>`
-   
+    const category = getCategory(state.view.panel);
+    if (nextPanel === "intro") {
+      menu.innerHTML = renderArticle(category);
+    } else {
+      menu.innerHTML = renderMenu(category);
+    }
   }
 }
+
