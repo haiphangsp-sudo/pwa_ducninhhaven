@@ -15,7 +15,7 @@ export function renderPanel(state) {
 
   const menu = document.getElementById(nextPanel);
     
-    if (!menu && menu.innerHTML.trim()=== "") {
+    if (!menu || menu.innerHTML.trim()=== "") {
         container.insertAdjacentHTML("beforeend", `<div id="${nextPanel}" class="category-panel"></div>`);
 
       const category = getCategory(state.view.panel);
