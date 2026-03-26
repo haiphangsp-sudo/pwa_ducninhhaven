@@ -11,7 +11,7 @@ export function renderDrawer(state) {
   const drawer = document.getElementById("cartDrawer");
   if (!drawer) return;
   const sendBtn = document.getElementById("drawerSend");
-  
+
   const ctx = getContext();
   const activePlace = ctx?.active;
   
@@ -43,8 +43,6 @@ export function renderDrawer(state) {
   drawer.querySelector(".drawer__header-price").textContent = stats.totalPriceFormat;
   drawer.querySelector(".drawer__header-count").textContent = stats.textFull;
   drawer.querySelector(".drawer__header-unique").textContent = stats.textLine;
-
-  const hasChanged = JSON.stringify(cartItems) !== initialCartSnapshot;
 
   if (stats.isEmpty) {
     itemsContainer.innerHTML = `
