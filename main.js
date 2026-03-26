@@ -5,7 +5,7 @@
 import { CONFIG } from "./config.js";
 import { loadMenu, MENU } from "./core/menuStore.js";
 import { applyEntryPlaceById, normalizeContext } from "./core/context.js";
-import { loadCart } from "./core/events.js";
+import { loadCart } from "./ui/events/eventsFunction.js";
 import { detectRecovery } from "./core/queue.js";
 import { attachAppEvents } from "./ui/events/globalEvents.js"; 
 import { attachUI } from "./ui/events/sync.js";

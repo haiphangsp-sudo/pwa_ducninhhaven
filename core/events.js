@@ -1,131 +1,156 @@
 // core/events.js
 
-import { UI, setState, getState } from "./state.js";
+import { getState, setState } from "./state.js";
 import { enqueue } from "./queue.js";
-import { CONFIG } from "../config.js";
-import { renderStatusBar } from "../ui/render/renderStatusBar.js";
-import { getFullCartItems, getFullItemInfo, calculateCartUpdate } from "../ui/utils/cartHelpers.js";
+import {
+  calculateCartUpdate,
+  getFullCartItems,
+  getFullItemInfo
+} from "../ui/utils/cartHelpers.js";
 
+/* =======================================================
+   LINE ITEM
+======================================================= */
 
-/* ---------- CONSTANTS ---------- */
+export function makeLineItem(raw = {}) {
+  return {
+    category: raw.category,
+    item: raw.item,
+    option: raw.option,
+    qty: Number(raw.qty || 1)
+  };
+}
 
-export function loadCart() {
-  try {
-    const items = JSON.parse(localStorage.getItem(CONFIG.CART_KEY) || "[]");
-    setState({ cart: { items } });
-  } catch {
-    clearCart();
-  }
+export function isValidLineItem(line) {
+  return !!(
+    line &&
+    line.category &&
+    line.item &&
+    line.option &&
+    Number(line.qty || 0) > 0
+  );
+}
+
+/* =======================================================
+   CART
+======================================================= */
+
+export function addToCart(raw) {
+  const state = getState();
+  const line = makeLineItem(raw);
+
+  if (!isValidLineItem(line)) return false;
+
+  const currentItems = state.cart.items || [];
+  const nextItems = calculateCartUpdate(currentItems, line);
+
+  setState({
+    cart: {
+      items: nextItems
+    }
+  });
+
+  return true;
 }
 
 export function updateCartQuantity(index, delta) {
   const state = getState();
-  const newItems = state.cart.items;
-  const item = newItems[index];
-  if (!item) return;
+  const currentItems = state.cart.items || [];
 
-  // Nếu khách bấm giảm khi chỉ còn 1 món -> Hỏi nhẹ một câu
-  if (item.qty === 1 && delta === -1) {
-    const confirmDelete = confirm(`Bạn muốn bỏ món "${item.name || item.item}" khỏi giỏ hàng?`);
-    if (!confirmDelete) return; 
+  if (!Array.isArray(currentItems)) return false;
+  if (index < 0 || index >= currentItems.length) return false;
+
+  const nextItems = currentItems.map(it => ({ ...it }));
+  const target = nextItems[index];
+  if (!target) return false;
+
+  target.qty = Number(target.qty || 0) + Number(delta || 0);
+
+  if (target.qty <= 0) {
+    nextItems.splice(index, 1);
   }
 
-  item.qty += delta;
+  setState({
+    cart: {
+      items: nextItems
+    }
+  });
 
-  if (item.qty <= 0) {
-    newItems.splice(index, 1);
-  }
-
-  setState({ cart: { items: newItems } });
+  return true;
 }
-
-/* ---------- EVENTS ---------- */
-
-export function onOrderSuccess(orderId, items) { // Nhận thêm orderId từ server
-  clearCart();
-
-  // Đẩy đơn hàng mới vào State để StatusBar và Tracker có dữ liệu hiển thị
-  const newOrder = {
-    id: orderId,
-    status: 'pending', // Trạng thái mặc định
-    items: items,
-    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-  };
-
-  const currentOrders = getState().orders.active || [];
-  setState({ orders: { active: [...currentOrders, newOrder] } });
-
-  // Lưu ID vào localStorage để F5 không mất
-  const savedIds = JSON.parse(localStorage.getItem("haven_active_order_ids") || "[]");
-  localStorage.setItem("haven_active_order_ids", JSON.stringify([...savedIds, orderId]));
-
-  setState({ ack: { state: "show", status: "success" } });
-  
-  // Cập nhật ngay thanh StatusBar
-  renderStatusBar(); 
-}
-
-/* ---------- CART MANAGEMENT ---------- */
 
 export function clearCart() {
-  setState({ cart: { items: [] } });
-  localStorage.removeItem(CONFIG.CART_KEY);
-}
-
-
-export function addToCart(line) {
-  // 1. Lấy bản sao an toàn (đã được clone)
-  const state = getState(); 
-  
-  // 2. Tính toán trên bản sao
-  const current = state.cart?.items || [];
-  const nextItems = calculateCartUpdate(current, line);
-
-  // 3. Đẩy bản sao đã chỉnh sửa về hệ thống để kích hoạt Render
-  setState({ 
-    cart: { 
-      ...state.cart, 
-      items: nextItems 
-    } 
+  setState({
+    cart: {
+      items: []
+    }
   });
 }
 
-/* ---------- ORDERING ACTIONS ---------- */
+/* =======================================================
+   ORDER BUILD
+======================================================= */
 
-export async function sendInstant(line) {
-  // BƯỚC 1: Lấy thông tin nhãn và giá từ MENU
-  const fullItem = getFullItemInfo(line); 
-  
-  // BƯỚC 2: Đóng gói đơn hàng 1 món
-  const payload = buildPayload([fullItem], state, "instant");
-  if (!payload) return; 
+export function buildPayload(orderItems, state, type = "cart") {
+  const active = state?.context?.active;
+
+  if (!active?.id || !active?.type) return null;
+  if (!Array.isArray(orderItems) || orderItems.length === 0) return null;
+
+  return {
+    type, // "cart" | "instant"
+    timestamp: new Date().toISOString(),
+    place: active.id,
+    mode: active.type,
+    items: orderItems,
+    total: orderItems.reduce((sum, item) => {
+      return sum + Number(item.subtotal || 0);
+    }, 0),
+    note: state.cart?.note || ""
+  };
+}
+
+/* =======================================================
+   SEND
+======================================================= */
+
+export async function sendOrder(orderItems, type = "cart") {
+  const state = getState();
+  const payload = buildPayload(orderItems, state, type);
+
+  if (!payload) return null;
+
+  setState({
+    ack: {
+      state: "show",
+      status: "sending"
+    }
+  });
 
   return await enqueue(payload);
 }
 
-// --- GỬI GIỎ HÀNG (CART) ---
+/**
+ * Gửi toàn bộ giỏ hàng
+ */
 export async function sendCart() {
   const state = getState();
-  // Hydrate dữ liệu trước khi đóng gói
-  const fullItems = getFullCartItems(state.cart.items);
-  
-  if (fullItems.length === 0) return;
+  const fullItems = getFullCartItems(state.cart.items || []);
 
-  const payload = buildPayload(fullItems, state);
-  if (!payload) return; // Ngừng nếu buildPayload trả về null
+  if (!fullItems.length) return null;
 
-  return await enqueue(payload);
+  return await sendOrder(fullItems, "cart");
 }
 
-// --- HÀM CHUẨN HÓA CHUNG ---
-function buildPayload(items, state) {
-  return {
-    type: items.action, 
-    timestamp: new Date().toISOString(),
-    mode: state.context?.mode,
-    place: state.context.active?.id,
-    items: items, 
-    total: items.reduce((sum, i) => sum + i.subtotal, 0),
-    note: state.cart.note || ""
-  };
+/**
+ * Mua ngay = gửi ngay 1 sản phẩm
+ */
+export async function buyNow(raw) {
+  const line = makeLineItem(raw);
+  if (!isValidLineItem(line)) return null;
+
+  const fullItem = getFullItemInfo(line);
+  if (!fullItem) return null;
+
+  return await sendOrder([fullItem], "instant");
 }

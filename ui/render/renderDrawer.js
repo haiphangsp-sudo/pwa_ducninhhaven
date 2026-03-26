@@ -20,7 +20,6 @@ export function renderDrawer(state) {
     sendBtn.dataset.action = "send_cart";
     sendBtn.textContent = translate("cart_bar.send_order");
     sendBtn.classList.remove("text-warning");
-    sendBtn.dataset.value = "";
     document.getElementById("namePlace").textContent = `${translate("place.served")}: ${getLocationLabel(ctx)}`;
   } else {
     sendBtn.classList.add("text-warning");
