@@ -45,7 +45,7 @@ async function syncUI(state) {
         showOverlay(state.overlay.view);
     } 
 
-    if (state.overlay.view === null && lastState.overlay.view !== null) {
+    if (state.overlay.view === null && lastState.overlay?.view !== null) {
         closeOverlay();
     }
 
