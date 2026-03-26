@@ -1,10 +1,9 @@
 // ui/events/globalEvents.js
 
 import { setState } from "../../core/state.js";
-import { addToCart, sendCart, sendInstant } from "../../core/events.js";
 import { attachDrawerEvents } from "../render/renderDrawer.js";
 import { attachPlacePickerEvents } from "../render/renderPlacePicker.js";
-import { bounceCartBar } from "../render/renderCartBar.js";
+
 
 
 
@@ -36,7 +35,7 @@ export function attachAppEvents() {
    GLOBAL CLICK
 ========================= */
 
-async function handleGlobalClick(e) {
+function handleGlobalClick(e) {
   const target = e.target.closest("[data-action]");
   if (!target) return;
 
@@ -62,16 +61,15 @@ async function handleGlobalClick(e) {
       /* ---------- CART / ORDER ---------- */
 
     case "cart":          
-      bounceCartBar();
-      addToCart(singleItemArray(target));
+        setState({ view: { cart: "cart" } });
     break;
 
     case "instant":
-      sendInstant(singleItemArray(target));
+      setState({ view: { cart: "instant" } });
       break;
 
     case "send_cart":
-      await sendCart();
+      setState({ view: { cart: "send_cart" } });
       break;
 
     /* ---------- LANGUAGE ---------- */
@@ -84,17 +82,3 @@ async function handleGlobalClick(e) {
       break;
   }
 }    
-
-/* =========================
-   PRIVATE
-========================= */
-
-function singleItemArray(target) {
-  return {
-    mode: target.dataset.action,
-    category: target.dataset.category,
-    item: target.dataset.item,
-    option: target.dataset.option,
-    qty: 1
-  }
-}

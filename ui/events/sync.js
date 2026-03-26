@@ -10,7 +10,8 @@ import { renderPlacePicker } from "../render/renderPlacePicker.js";
 import { renderDrawer } from "../render/renderDrawer.js";
 import { closeOverlay, showOverlay } from "../interactions/backdropManager.js";
 import { CONFIG } from "../../config.js";
-
+import { bounceCartBar } from "../render/renderCartBar.js";
+import { addToCart, sendCart, sendInstant } from "../../core/events.js";
 
 
 let lastState = {};
@@ -24,12 +25,13 @@ export function attachUI() {
   syncUI(getState());
 }
 
-function syncUI(state) {
+async function syncUI(state) {
 
   /* ---------- OVERLAY ---------- */
 
     if (state.view.overlay !== lastState.view?.overlay) {
         switch (state.view.overlay) {
+
             case "cartDrawer":
                 renderDrawer(state);
                 break;
@@ -43,6 +45,7 @@ function syncUI(state) {
         }
         showOverlay(state.view.overlay);
     } 
+
     if (state.view.overlay === null && lastState.view?.overlay !== null) {
         closeOverlay();
     }
@@ -75,7 +78,27 @@ function syncUI(state) {
         setTimeout(() => {
             document.getElementById("cartBar")?.classList.remove("cart-bounce");
         }, 400);
+        
     }
+    if (state.view.cart !== lastState.view.cart) {
+
+        switch (state.view.cart) {
+
+            case "cart": 
+                bounceCartBar();
+                await addToCart(singleItemArray(target));
+                break;
+            
+            case "instant":
+                await sendInstant(singleItemArray(target));
+                break;
+            
+            case "send_cart":
+                await sendCart();
+            break;
+        }
+    } 
+        
     if (state.ack !== lastState.ack) {
         renderAckOverlay(state.ack);
     }
@@ -110,4 +133,13 @@ function syncLanguage(state) {
   renderStatusBar(state);
   renderHub(state);
   renderPanel(state);
+}
+function singleItemArray(target) {
+  return {
+    type: target.dataset.action,
+    category: target.dataset.category,
+    item: target.dataset.item,
+    option: target.dataset.option,
+    qty: 1
+  }
 }

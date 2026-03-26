@@ -22,7 +22,8 @@ export const UI = {
 
   view:{
     panel: "intro",
-    overlay: null // placePicker || cartDrawer
+    overlay: null, // placePicker || cartDrawer
+    cart: "cart" // cart || instant || send_card
   },
 
   /* ---------------- CART ---------------- */
