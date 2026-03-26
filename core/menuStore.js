@@ -1,6 +1,3 @@
-// core/menuStore.js
-//   Tải menu chuẩn từ server, sau đó merge với state vận hành (nếu có) để có menu hoàn chỉnh cho app
-//   Menu được lưu trong biến toàn cục MENU, các component có thể import và sử dụng
 
 import { validateMenu, normalizeMenu } from "./menuSchema.js";
 
@@ -20,16 +17,21 @@ export async function loadMenu() {
   MENU = deepMerge(base, state);
 }
 
-function deepMerge(base,patch){
+function deepMerge(base, patch) {
   const out = structuredClone(base);
 
-  for(const k in patch){
-    if (typeof patch[k] === "object" && patch[k] !== null && !Array.isArray(patch[k])
-    && typeof out[k] === "object") {
-      out[k]=deepMerge(out[k]||{},patch[k]);
-    }else{
-      out[k]=patch[k];
+  for (const k in patch) {
+    if (
+      typeof patch[k] === "object" &&
+      patch[k] !== null &&
+      !Array.isArray(patch[k]) &&
+      typeof out[k] === "object"
+    ) {
+      out[k] = deepMerge(out[k] || {}, patch[k]);
+    } else {
+      out[k] = patch[k];
     }
   }
+
   return out;
 }
