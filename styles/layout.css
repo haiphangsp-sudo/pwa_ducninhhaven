@@ -2,7 +2,15 @@
 /* Bố cục màn hình*/
 
 /* styles/layout.css */
+html, body {
+  height: 100%;
+}
+body.app{
+  height:100%;
+  overflow:hidden;
+}
 #app {
+  height: 100%;
   display: flex;
   flex-direction: column;
   min-height: 100vh; /* Dùng min-height thay vì height */
@@ -13,6 +21,18 @@
   flex: 1;
   display: flex;
   flex-direction: column;
+  overflow: hidden
+}
+#hubContent{
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  overflow-y: auto;
+  contain: layout paint;
+  -webkit-overflow-scrolling: touch;
+
 }
 .main {
   flex: 1;
