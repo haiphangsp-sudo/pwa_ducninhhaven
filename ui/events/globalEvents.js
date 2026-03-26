@@ -65,7 +65,7 @@ function handleGlobalClick(e) {
         order: {
           type: "cart",
           line: {
-            category: target.dataset.item,
+            category: target.dataset.category,
             item: target.dataset.item,
             option: target.dataset.option,
             qty: 1
