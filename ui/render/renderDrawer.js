@@ -4,6 +4,7 @@ import { translate } from "../utils/translate.js";
 import { updateCartQuantity } from "../../core/events.js";
 import { getCartStats, getFullCartItems } from "../../ui/utils/cartHelpers.js";
 import { getContext } from "../../core/context.js";
+import { getLocationLabel } from "../../data/helpers.js"
 
 let drawerBound = false;
 
