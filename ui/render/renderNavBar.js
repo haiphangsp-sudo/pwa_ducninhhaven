@@ -3,7 +3,7 @@
 import { translate } from "../utils/translate.js";
 import { getContext } from "../../core/context.js";
 import { resolvePlace } from "../../core/placesStore.js";
-import { getPlaceIcon } from "../../data/helpers.js";
+import { getPlaceIcon, getLocationLabel } from "../../data/helpers.js";
 
 const refs = {
   identityIcon: null,
@@ -53,17 +53,3 @@ function getIdentityLabel(anchor) {
   return labels[anchor.type]?.() || translate("haven");
 }
 
-function getLocationLabel(ctx) {
-  if (!ctx?.active) return translate("place.select");
-
-  const { type, id } = ctx.active;
-  const anchor = ctx.anchor;
-  const placeData = resolvePlace(id);
-  const placeName = translate(placeData?.label || id);
-
-  if (type === "room" && anchor?.id === id) {
-    return `${translate("place.my_room")} (${placeName})`;
-  }
-
-  return placeName;
-}

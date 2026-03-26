@@ -45,6 +45,7 @@ function createEmptyContext() {
     active: null,
     updatedAt: Date.now()
   };
+  
 }
 
 function isExpired(ctx) {
@@ -146,4 +147,3 @@ export function setActive(place) {
   context.active = place;
   saveContext();
 }
-
