@@ -1,11 +1,16 @@
 
-import { resolvePlaceFromData, getAllowedPlaceTypes } from "./placesStore.js";
-import { CONFIG } from "../config.js"
 
+import { resolvePlace, getAllowedPlaceTypes } from "./placesStore.js";
+import { CONFIG } from "../config.js";
+
+
+/* ---------- CONTEXT STATE ---------- */
 
 const TTL = 1000 * 60 * 30;
 
 let context = loadContext();
+
+/* ---------- LOAD / SAVE ---------- */
 
 function loadContext() {
   try {
@@ -21,24 +26,17 @@ function loadContext() {
   }
 }
 
-function saveContext(meta = {}) {
+function saveContext() {
   const prev = structuredClone(context);
 
   context.updatedAt = Date.now();
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(context));
+  localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(context));
 
-  dispatchContextChange(prev, context, meta);
+  dispatchContextChange(prev, context);
 }
 
-export function dispatchContextChange(prev, next, meta = {}) {
-  window.dispatchEvent(new CustomEvent("contextchange", {
-    detail: {
-      source: meta.source || "unknown",
-      reason: meta.reason || null,
-      prev,
-      next
-    }
-  }));
+export function dispatchContextChange(prev, next) {
+  window.dispatchEvent(new CustomEvent("contextchange", {detail: {prev,next}}));
 }
 
 function createEmptyContext() {
@@ -47,6 +45,7 @@ function createEmptyContext() {
     active: null,
     updatedAt: Date.now()
   };
+  
 }
 
 function isExpired(ctx) {
@@ -54,9 +53,13 @@ function isExpired(ctx) {
   return Date.now() - ctx.updatedAt > TTL;
 }
 
+/* ---------- GET ---------- */
+
 export function getContext() {
   return context;
 }
+
+/* ---------- NORMALIZE ---------- */
 
 export function normalizeContext() {
   if (isExpired(context)) {
@@ -65,34 +68,35 @@ export function normalizeContext() {
   }
 }
 
-export function resolvePlace(placeId) {
-  return resolvePlaceFromData(placeId);
-}
+/* ---------- RULE ---------- */
 
 export function canSelectPlace(anchorType, targetType) {
   if (!anchorType || !targetType) return false;
   return getAllowedPlaceTypes(anchorType).includes(targetType);
 }
 
-export function applyEntryPlace(resolved, meta = {}) {
+/* ---------- ENTRY ---------- */
+// dùng cho QR / URL / deep link
+
+export function applyEntryPlace(resolved) {
   if (!resolved) return false;
 
   context.anchor = resolved;
   context.active = resolved;
-  saveContext({ source: meta.source || "entry", reason: meta.reason || null });
+  saveContext();
   return true;
 }
 
-export function applyEntryPlaceById(placeId, meta = {}) {
+export function applyEntryPlaceById(placeId) {
   if (!placeId) return false;
 
   const resolved = resolvePlace(placeId);
   if (!resolved) return false;
 
-  return applyEntryPlace(resolved, meta);
+  return applyEntryPlace(resolved);
 }
 
-export function applyResolvedPlace(resolved, meta = {}) {
+export function applyResolvedPlace(resolved) {
   if (!resolved) return false;
 
   const anchorType = context?.anchor?.type;
@@ -101,7 +105,7 @@ export function applyResolvedPlace(resolved, meta = {}) {
   if (!anchorType) {
     context.anchor = resolved;
     context.active = resolved;
-    saveContext({ source: meta.source || "picker", reason: meta.reason || null });
+    saveContext();
     return true;
   }
 
@@ -110,18 +114,19 @@ export function applyResolvedPlace(resolved, meta = {}) {
   }
 
   context.active = resolved;
-  saveContext({ source: meta.source || "picker", reason: meta.reason || null });
+  saveContext();
   return true;
 }
 
-export function applyPlaceById(placeId, meta = {}) {
+export function applyPlaceById(placeId) {
   if (!placeId) return false;
 
   const resolved = resolvePlace(placeId);
   if (!resolved) return false;
 
-  return applyResolvedPlace(resolved, meta);
+  return applyResolvedPlace(resolved);
 }
+/* ---------- RETURN ---------- */
 
 export function returnToAnchor() {
   if (!context.anchor) return false;
@@ -131,6 +136,8 @@ export function returnToAnchor() {
   return true;
 }
 
+/* ---------- OPTIONAL DIRECT SET ---------- */
+// chỉ giữ nếu thực sự cần
 export function setAnchor(place) {
   context.anchor = place;
   saveContext();
