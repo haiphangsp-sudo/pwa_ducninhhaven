@@ -94,16 +94,16 @@ export async function sendCart() {
   
   if (fullItems.length === 0) return;
 
-  const payload = buildPayload(fullItems, state, "cart");
+  const payload = buildPayload(fullItems, state);
   if (!payload) return; // Ngừng nếu buildPayload trả về null
 
   return await enqueue(payload);
 }
 
 // --- HÀM CHUẨN HÓA CHUNG ---
-function buildPayload(items, state, type = "cart") {
+function buildPayload(items, state) {
   return {
-    type: type, 
+    type: items.action, 
     timestamp: new Date().toISOString(),
     mode: state.context?.mode,
     place: state.context.active?.id,
