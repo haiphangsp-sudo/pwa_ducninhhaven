@@ -1,16 +1,11 @@
 
+import { resolvePlaceFromData, getAllowedPlaceTypes } from "./placesStore.js";
+import { CONFIG } from "../config.js"
 
-import { resolvePlace, getAllowedPlaceTypes } from "./placesStore.js";
-import { CONFIG } from "../config.js";
-
-
-/* ---------- CONTEXT STATE ---------- */
 
 const TTL = 1000 * 60 * 30;
 
 let context = loadContext();
-
-/* ---------- LOAD / SAVE ---------- */
 
 function loadContext() {
   try {
@@ -26,17 +21,24 @@ function loadContext() {
   }
 }
 
-function saveContext() {
+function saveContext(meta = {}) {
   const prev = structuredClone(context);
 
   context.updatedAt = Date.now();
-  localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(context));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(context));
 
-  dispatchContextChange(prev, context);
+  dispatchContextChange(prev, context, meta);
 }
 
-export function dispatchContextChange(prev, next) {
-  window.dispatchEvent(new CustomEvent("contextchange", {detail: {prev,next}}));
+export function dispatchContextChange(prev, next, meta = {}) {
+  window.dispatchEvent(new CustomEvent("contextchange", {
+    detail: {
+      source: meta.source || "unknown",
+      reason: meta.reason || null,
+      prev,
+      next
+    }
+  }));
 }
 
 function createEmptyContext() {
@@ -45,7 +47,6 @@ function createEmptyContext() {
     active: null,
     updatedAt: Date.now()
   };
-  
 }
 
 function isExpired(ctx) {
@@ -53,13 +54,9 @@ function isExpired(ctx) {
   return Date.now() - ctx.updatedAt > TTL;
 }
 
-/* ---------- GET ---------- */
-
 export function getContext() {
   return context;
 }
-
-/* ---------- NORMALIZE ---------- */
 
 export function normalizeContext() {
   if (isExpired(context)) {
@@ -68,35 +65,34 @@ export function normalizeContext() {
   }
 }
 
-/* ---------- RULE ---------- */
+export function resolvePlace(placeId) {
+  return resolvePlaceFromData(placeId);
+}
 
 export function canSelectPlace(anchorType, targetType) {
   if (!anchorType || !targetType) return false;
   return getAllowedPlaceTypes(anchorType).includes(targetType);
 }
 
-/* ---------- ENTRY ---------- */
-// dùng cho QR / URL / deep link
-
-export function applyEntryPlace(resolved) {
+export function applyEntryPlace(resolved, meta = {}) {
   if (!resolved) return false;
 
   context.anchor = resolved;
   context.active = resolved;
-  saveContext();
+  saveContext({ source: meta.source || "entry", reason: meta.reason || null });
   return true;
 }
 
-export function applyEntryPlaceById(placeId) {
+export function applyEntryPlaceById(placeId, meta = {}) {
   if (!placeId) return false;
 
   const resolved = resolvePlace(placeId);
   if (!resolved) return false;
 
-  return applyEntryPlace(resolved);
+  return applyEntryPlace(resolved, meta);
 }
 
-export function applyResolvedPlace(resolved) {
+export function applyResolvedPlace(resolved, meta = {}) {
   if (!resolved) return false;
 
   const anchorType = context?.anchor?.type;
@@ -105,7 +101,7 @@ export function applyResolvedPlace(resolved) {
   if (!anchorType) {
     context.anchor = resolved;
     context.active = resolved;
-    saveContext();
+    saveContext({ source: meta.source || "picker", reason: meta.reason || null });
     return true;
   }
 
@@ -114,19 +110,18 @@ export function applyResolvedPlace(resolved) {
   }
 
   context.active = resolved;
-  saveContext();
+  saveContext({ source: meta.source || "picker", reason: meta.reason || null });
   return true;
 }
 
-export function applyPlaceById(placeId) {
+export function applyPlaceById(placeId, meta = {}) {
   if (!placeId) return false;
 
   const resolved = resolvePlace(placeId);
   if (!resolved) return false;
 
-  return applyResolvedPlace(resolved);
+  return applyResolvedPlace(resolved, meta);
 }
-/* ---------- RETURN ---------- */
 
 export function returnToAnchor() {
   if (!context.anchor) return false;
@@ -136,8 +131,6 @@ export function returnToAnchor() {
   return true;
 }
 
-/* ---------- OPTIONAL DIRECT SET ---------- */
-// chỉ giữ nếu thực sự cần
 export function setAnchor(place) {
   context.anchor = place;
   saveContext();
