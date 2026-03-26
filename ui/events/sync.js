@@ -9,7 +9,6 @@ import { renderPanel } from "../render/renderPanel.js";
 import { renderPlacePicker } from "../render/renderPlacePicker.js";
 import { renderDrawer } from "../render/renderDrawer.js";
 import { closeOverlay } from "../interactions/backdropManager.js";
-import { renderDrawer } from "../render/renderDrawer.js";
 import { CONFIG } from "../../config.js";
 
 
