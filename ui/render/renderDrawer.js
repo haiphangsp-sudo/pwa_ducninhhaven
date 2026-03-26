@@ -10,7 +10,8 @@ let drawerBound = false;
 export function renderDrawer(state) {
   const drawer = document.getElementById("cartDrawer");
   if (!drawer) return;
-
+  const sendBtn = document.getElementById("drawerSend");
+  
   const ctx = getContext();
   const activePlace = ctx?.active;
   
@@ -30,7 +31,7 @@ export function renderDrawer(state) {
   
 
   const itemsContainer = document.getElementById("drawerItems");
-  const sendBtn = document.getElementById("drawerSend");
+  
   const headerSummary = drawer.querySelector(".drawer-summary");
   if (!itemsContainer || !sendBtn || !headerSummary) return;
 
