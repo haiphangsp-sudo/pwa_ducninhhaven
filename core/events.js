@@ -80,7 +80,7 @@ export async function sendInstant(line) {
   const fullItem = getFullItemInfo(line); 
   
   // BƯỚC 2: Đóng gói đơn hàng 1 món
-  const payload = buildPayload([fullItem], "INSTANT");
+  const payload = buildPayload([fullItem], state, "instant");
   if (!payload) return; 
 
   return await enqueue(payload);
@@ -94,14 +94,14 @@ export async function sendCart() {
   
   if (fullItems.length === 0) return;
 
-  const payload = buildPayload(fullItems, "CART");
+  const payload = buildPayload(fullItems, state, "cart");
   if (!payload) return; // Ngừng nếu buildPayload trả về null
 
   return await enqueue(payload);
 }
 
 // --- HÀM CHUẨN HÓA CHUNG ---
-function buildPayload(items, type = "CART") {
+function buildPayload(items, state, type = "cart") {
   return {
     type: type, 
     timestamp: new Date().toISOString(),
