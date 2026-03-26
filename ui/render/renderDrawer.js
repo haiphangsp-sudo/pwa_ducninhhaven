@@ -2,36 +2,32 @@
 
 import { translate } from "../utils/translate.js";
 import { updateCartQuantity } from "../../core/events.js";
-import { showOverlay } from "../interactions/backdropManager.js";
 import { getCartStats, getFullCartItems } from "../../ui/utils/cartHelpers.js";
 import { getContext } from "../../core/context.js";
 
-let initialCartSnapshot = localStorage.getItem("haven_cart") || "[]";
 let drawerBound = false;
-
-export function openCartDrawer(state) {
-  initialCartSnapshot = JSON.stringify(state.cart.items || []);
-  renderDrawer(state);
-  showOverlay("cartDrawer");
-}
 
 export function renderDrawer(state) {
   const drawer = document.getElementById("cartDrawer");
-  const placeEl = document.getElementById("drawerPlaceDisplay");
   if (!drawer) return;
 
   const ctx = getContext();
   const activePlace = ctx?.active;
-
-  if (placeEl) {
-    if (activePlace) {
-      placeEl.textContent = activePlace.id;
-      placeEl.classList.remove("text-warning");
-    } else {
-      placeEl.textContent = translate("cart_bar.place_prompt");
-      placeEl.classList.add("text-warning");
-    }
+  
+  if (activePlace) {
+    sendBtn.dataset.action = "send_cart";
+    sendBtn.textContent = translate("cart_bar.send_order");
+    sendBtn.classList.remove("text-warning");
+    sendBtn.dataset.value = "";
+    document.getElementById("namePlace").textContent = activePlace.id;
+  } else {
+    sendBtn.classList.add("text-warning");
+    sendBtn.dataset.action = "open-overlay";
+    sendBtn.dataset.value = "placePicker";
+    sendBtn.textContent = translate("place.select");
+    document.getElementById("namePlace").textContent = translate("place.hello");
   }
+  
 
   const itemsContainer = document.getElementById("drawerItems");
   const sendBtn = document.getElementById("drawerSend");
@@ -50,7 +46,6 @@ export function renderDrawer(state) {
   const hasChanged = JSON.stringify(cartItems) !== initialCartSnapshot;
 
   if (stats.isEmpty) {
-    initialCartSnapshot = "[]";
     itemsContainer.innerHTML = `
       <div class="p-m center text-muted">
         ${translate("cart_bar.empty")}

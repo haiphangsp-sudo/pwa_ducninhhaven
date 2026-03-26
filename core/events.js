@@ -103,15 +103,6 @@ export async function sendCart() {
 
 // --- HÀM CHUẨN HÓA CHUNG ---
 function buildPayload(items, type = "CART") {
-  const state = getState();
-  const active = state.context?.active; // Lấy trực tiếp từ state
-
-  // Chốt chặn: Nếu chưa chọn phòng/bàn thì bắt chọn
-  if (!active || !active.id) {
-    openPicker();
-    return null;
-  }
-
   return {
     type: type, 
     timestamp: new Date().toISOString(),

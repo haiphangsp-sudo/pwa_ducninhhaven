@@ -65,12 +65,12 @@ async function handleGlobalClick(e) {
 
     case "select-place":
       setState({
-        context: {
-          active: { id: value },
-          anchor: null
-        }
-      });
-    break;
+        ...state,                // 1. Giữ lại cart, view, orders...
+        context: {...state.context,      // 2. Giữ lại anchor, updatedAt... bên trong context
+        active: { id: value }  // 3. Chỉ đè duy nhất giá trị mới vào active
+      }
+    });
+    break;  
 
       /* ---------- CART / ORDER ---------- */
 

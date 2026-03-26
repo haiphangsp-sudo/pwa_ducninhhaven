@@ -58,10 +58,11 @@ export const STRINGS = {
     msg_RECOVERING: { vi: "Đang phục hồi sự tĩnh lặng...", en: "Restoring the serenity..." }
   },
   place: {
-    select: { vi: "Bạn muốn phục vụ ở đâu?", en: "Where would you like to serve?" },
+    select: { vi: "Chọn nơi phục vụ?", en: "Where would you like to be served?" },
     my_room: { vi: "Phòng tôi", en: "My room" },
     my_table: { vi: "Bàn tôi", en: "My table" },
-    my_area: { vi: "Khu vực tôi", en: "My area" }
+    my_area: { vi: "Khu vực tôi", en: "My area" },
+    hello: { vi: "Haven Xin chào!", en: "Haven Hello!" }
   },
   mode: {
     in_room: { vi: "Tại phòng", en: "In room" },
@@ -72,7 +73,6 @@ export const STRINGS = {
     table_guest: { vi: "Khách bàn", en: "Table guest" },
     area_guest: { vi: "Khách khu vực", en: "Area guest" }
   },
-    haven: { vi: "Haven", en: "Haven" },
     sending: {
       vi: "Đang gửi yêu cầu…",
       en: "Sending request…"
