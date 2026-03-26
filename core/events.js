@@ -106,7 +106,7 @@ function buildPayload(items, state, type = "cart") {
     type: type, 
     timestamp: new Date().toISOString(),
     mode: state.context?.mode,
-    place: state.context.active.id,
+    place: state.context.active?.id,
     items: items, 
     total: items.reduce((sum, i) => sum + i.subtotal, 0),
     note: state.cart.note || ""
