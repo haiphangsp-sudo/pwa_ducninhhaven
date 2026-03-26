@@ -33,7 +33,13 @@ export function getCartStats(items = []) {
 }
 
 export function calculateCartUpdate(currentItems, newItem) {
-    // Tìm xem món này đã có trong giỏ chưa (trùng category, item và option)
+    // 1. Cầu chì: Nếu không có newItem, trả về mảng cũ luôn, không làm gì cả
+    if (!newItem || !newItem.category || !newItem.item) {
+        console.warn("Dữ liệu món ăn không hợp lệ:", newItem);
+        return currentItems;
+    }
+
+    // 2. Lúc này ta chắc chắn newItem đã "sạch", không cần dùng ?. nữa
     const foundIndex = currentItems.findIndex(it => 
         it.category === newItem.category && 
         it.item === newItem.item && 
@@ -41,12 +47,10 @@ export function calculateCartUpdate(currentItems, newItem) {
     );
 
     if (foundIndex > -1) {
-        // Nếu ĐÃ CÓ: Trả về mảng mới với món đó được tăng qty (dùng spread ...it)
         return currentItems.map((it, idx) => 
             idx === foundIndex ? { ...it, qty: it.qty + 1 } : it
         );
     } else {
-        // Nếu CHƯA CÓ: Trả về mảng mới có thêm món mới vào cuối
         return [...currentItems, { ...newItem, qty: 1 }];
     }
 }
