@@ -133,13 +133,6 @@ export async function sendCart() {
 }
 
 /**
- * FINAL ACTION: Dọn dẹp UI sau khi đơn hàng thành công
- * Dùng cho cả gửi trực tiếp và gửi bù từ Queue
- */
-// core/events.js
-import { setState } from "./state.js";
-
-/**
  * FINAL ACTION: Dọn dẹp và thông báo sau khi đơn hàng thành công
  * @param {string} type - Loại đơn ('cart', 'instant', 'recovery')
  */
