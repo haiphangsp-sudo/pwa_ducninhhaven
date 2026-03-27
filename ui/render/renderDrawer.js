@@ -7,7 +7,7 @@ export function renderDrawer(state) {
   const itemsContainer = document.getElementById("drawerItems");
   const sendBtn = document.getElementById("drawerSend");
   const namePlaceEl = document.getElementById("drawerPlaceDisplay");
-
+  
   // CHỐT CHẶN 1: Nếu không thấy Drawer hoặc đang ẩn thì thoát ngay, tránh crash
   if (!drawer || drawer.classList.contains("hidden")) return;
   if (!itemsContainer || !sendBtn) return;
@@ -21,6 +21,11 @@ export function renderDrawer(state) {
       ? `${translate("place.served")}: ${activePlace.name}` 
       : translate("place.select");
   }
+  const stats = getCartStats(displayItems);
+  drawer.querySelector(".drawer__header-title").textContent = translate("cart_bar.cart_title");
+  drawer.querySelector(".drawer__header-price").textContent = stats.totalPriceFormat;
+  drawer.querySelector(".drawer__header-count").textContent = stats.textFull;
+  drawer.querySelector(".drawer__header-unique").textContent = stats.textLine;
 
   // 2. Xử lý Giỏ hàng trống
   if (cartItems.length === 0) {
