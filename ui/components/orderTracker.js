@@ -1,5 +1,4 @@
 // ui/components/orderTracker.js
-import { showOverlay } from "../interactions/backdropManager.js";
 import { renderStepper } from "../render/renderStepper.js";
 import { getState } from "../../core/state.js";
 import { translate } from "../utils/translate.js";
@@ -9,9 +8,6 @@ export function openOrderTracker() {
     const active = state.orders?.active || []; // Chặn lỗi nếu state.orders chưa init
     
     const listContainer = document.getElementById("orderTrackerList");
-
-    // 1. Hiển thị Overlay (Phải gọi ID của Panel/Page)
-    showOverlay("orderTrackerPage");
 
     // 2. Kiểm tra nếu không có đơn (Chặn lỗi map trên mảng rỗng)
     if (active.length === 0) {
