@@ -5,7 +5,7 @@ import { CONFIG } from "../../config.js";
 import { syncOverlay } from "../../ui/interactions/backdropManager.js"
 import { addToCart, buyNow, sendCart } from "../../core/events.js";
 import { applyPlaceById } from "../../core/context.js";
-
+import { renderDrawer } from "../render/renderDrawer.js";
 import { renderNavBar } from "../render/renderNavBar.js";
 import { renderCartBar } from "../render/renderCartBar.js";
 import { renderStatusBar } from "../render/renderStatusBar.js";
@@ -155,32 +155,7 @@ async function syncOrderFlow(state) {
 
   /* ---------- SEND CART ---------- */
   if (orderType === "send_cart") {
-    if (!activePlace?.id) {
-      if (state.overlay?.view !== "placePicker") {
-        setState({
-          overlay: {
-            view: "placePicker"
-          }
-        });
-      }
-      return;
-    }
-
-    isProcessingOrder = true;
-
     await sendCart();
-
-    setState({
-      order: {
-        type: null,
-        line: null
-      },
-      overlay: {
-        view: null
-      }
-    });
-
-    isProcessingOrder = false;
   }
 }
 
@@ -195,11 +170,7 @@ export function applySelectedPlace(placeId) {
 
   if (!ok) return false;
 
-  setState({
-    overlay: {
-      view: null
-    }
-  });
+  
 
   return true;
 }
