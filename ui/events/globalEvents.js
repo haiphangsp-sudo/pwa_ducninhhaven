@@ -56,6 +56,7 @@ function handleGlobalClick(e) {
         order: {
           type: "cart",
           line: {
+            id: target.dataset.optionId,
             category: target.dataset.category,
             item: target.dataset.item,
             option: target.dataset.option,
@@ -66,12 +67,13 @@ function handleGlobalClick(e) {
       break;
     
     case "instant":
-      const { action: ui, ...rest } = target.dataset;
       setState({
         order: {
           type: "instant",
-          line: { ui,
-            ...rest,
+          line: { id: target.dataset.optionId,
+            category: target.dataset.category,
+            item: target.dataset.item,
+            option: target.dataset.option,
             qty: 1
           }
         }

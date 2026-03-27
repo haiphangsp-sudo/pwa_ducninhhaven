@@ -95,8 +95,8 @@ function buildPayload(items, state) {
     type: items.action, 
     timestamp: new Date().toISOString(),
 
-    mode: state.context?.mode,
-    place: state.context.active?.id,
+    mode: state.context.mode,
+    place: state.context.active.id,
 
     items: items.map(i => ({
       id: i.id,
