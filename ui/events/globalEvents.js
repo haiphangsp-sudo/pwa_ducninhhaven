@@ -50,7 +50,7 @@ function handleGlobalClick(e) {
       setState({
       order: {
         type: "cart", // Kích hoạt addToCart trong sync.js
-        line: value    // ID món ăn lấy từ data-value
+        line: target.dataset.optionId    // ID món ăn lấy từ data-value
       }
     });
       break;
@@ -59,7 +59,7 @@ function handleGlobalClick(e) {
       setState({
       order: {
         type: "instant", // Kích hoạt buyNow trong sync.js
-        line: value        // ID món ăn
+        line: target.dataset.optionId        // ID món ăn
       }
     });
       break;
