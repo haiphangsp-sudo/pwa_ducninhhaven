@@ -5,6 +5,7 @@ import { CONFIG } from "../../config.js";
 import { syncOverlay } from "../../ui/interactions/backdropManager.js"
 import { addToCart, buyNow, sendCart } from "../../core/events.js";
 import { applyPlaceById } from "../../core/context.js";
+import { renderPlacePicker } from "../render/renderPlacePicker.js";
 import { renderDrawer } from "../render/renderDrawer.js";
 import { renderNavBar } from "../render/renderNavBar.js";
 import { renderCartBar } from "../render/renderCartBar.js";
