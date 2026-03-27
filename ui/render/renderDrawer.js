@@ -1,118 +1,84 @@
 // ui/render/renderDrawer.js
 import { translate } from "../utils/translate.js";
 import { getItemById } from "../../core/menuQuery.js";
-import { getCartStats, getFullCartItems } from "../utils/cartHelpers.js";
-
 
 export function renderDrawer(state) {
   const drawer = document.getElementById("cartDrawer");
   const itemsContainer = document.getElementById("drawerItems");
   const sendBtn = document.getElementById("drawerSend");
-  const namePlaceEl = document.getElementById("drawerPlaceDisplay");
   
-  // CHỐT CHẶN 1: Nếu không thấy Drawer hoặc đang ẩn thì thoát ngay, tránh crash
+  // 1. Chốt chặn an toàn: Không có Drawer hoặc đang đóng thì thoát
   if (!drawer || drawer.classList.contains("hidden")) return;
   if (!itemsContainer || !sendBtn) return;
 
   const cartItems = state.cart.items || [];
   const activePlace = state.context.active;
 
-  // 1. Cập nhật thông tin địa điểm (Header)
-  if (namePlaceEl) {
-    namePlaceEl.textContent = activePlace 
-      ? `${translate("place.served")}: ${activePlace.name}` 
-      : translate("place.select");
-  }
-  
-
-  // 2. Xử lý Giỏ hàng trống
-  if (cartItems.length === 0) {
-    itemsContainer.innerHTML = `
-      <div class="p-xl center text-muted stack items-center">
-        <div class="text-xxl mb-m">🛒</div>
-        <p>${translate("cart_bar.empty") || "Giỏ hàng đang trống"}</p>
-      </div>`;
-    
-    sendBtn.textContent = translate("cart_bar.close") || "Đóng";
-    sendBtn.dataset.action = "close-overlay";
-    sendBtn.dataset.value = "cartDrawer";
-    
-    // Ẩn các phần thống kê phụ nếu có
-    const summary = drawer.querySelector(".drawer-summary");
-    if (summary) summary.classList.add("hidden");
-    return;
-  }
-
-  // 3. Vẽ danh sách món ăn & Tính tổng
+  // 2. Tính toán các chỉ số (Stats) dựa trên getItemById chuẩn của bạn
   let totalPrice = 0;
   let totalQty = 0;
-  let line = 0;
-  const stats = getCartStats(cartItems);
+  const validItemsHtml = [];
 
-  const html = cartItems.map(cartItem => {
-    const info = getItemById(cartItem.id); // Dùng hàm chuẩn bạn cung cấp
-    
-    if (!info) return ""; // Phòng hờ ID lỗi
+  cartItems.forEach(cartItem => {
+    const info = getItemById(cartItem.id); // Hàm chui vào Category > Item > Option
+    if (!info) return;
 
-    const subtotal = info.price * cartItem.qty;
-    totalPrice += subtotal;
+    totalPrice += info.price * cartItem.qty;
     totalQty += cartItem.qty;
-    line = info.lenght;
-    return `
-      <div class="drawer__item drawer-item">
-      <div class="drawer__info">
-        <strong>${translate(info.itemLabel)}</strong>
-        <span class="drawer__variant">${translate(info.optionLabel)}</span>
-        <span class="text-s text-muted">
-          ${info.price > 0
-            ? info.price.toLocaleString("vi-VN") + " đ"
-            : info.price === 0
-              ? translate("cart_bar.free")
-              : translate("cart_bar.instant")
-          }
-        </span>
+
+    // Tên hiển thị kết hợp nhãn của Item và Option
+    const displayName = `${translate(info.itemLabel)} - ${translate(info.optionLabel)}`;
+
+    validItemsHtml.push(`
+      <div class="drawer__item row items-center justify-between p-m border-b">
+        <div class="stack">
+          <strong class="text-m">${displayName}</strong>
+          <span class="text-s color-brand">${info.price.toLocaleString()}đ</span>
+        </div>
+        <div class="row items-center gap-m">
+          <button class="btn-qty" data-action="update-qty" data-value="${cartItem.id}" data-delta="-1">—</button>
+          <span class="font-bold">${cartItem.qty}</span>
+          <button class="btn-qty" data-action="update-qty" data-value="${cartItem.id}" data-delta="1">+</button>
+        </div>
       </div>
+    `);
+  });
 
-      <div class="drawer-qty row items-center gap-s">
-        <button
-          class="qty-btn min"
-          data-action="update-qty"
-          data-option-id="${cartItem.id}"
-          data-delta="-1"
-          type="button">-</button>
-        <span class="qty-val weight-600">${cartItem.qty}</span>
-        <button
-          class="qty-btn plus"
-          data-action="update-qty"
-          data-option-id="${cartItem.id}"
-          data-delta="1"
-          type="button">+</button>
-      </div>
-    </div>
-    `;
-  }).join("");
+  // 3. Cập nhật các Class Header bạn yêu cầu (Dùng Safe-Update để không bị trắng màn hình)
+  const updateEl = (cls, text) => {
+    const el = drawer.querySelector(cls);
+    if (el) el.textContent = text;
+  };
 
-  itemsContainer.innerHTML = html;
+  updateEl(".drawer__header-title", translate("cart_bar.cart_title"));
+  updateEl(".drawer__header-price", totalPrice.toLocaleString() + " đ");
+  updateEl(".drawer__header-count", `${totalQty} món`);
+  updateEl(".drawer__header-unique", `${cartItems.length} dòng`);
 
-  drawer.querySelector(".drawer__header-title").textContent = translate("cart_bar.cart_title");
-  drawer.querySelector(".drawer__header-price").textContent = totalPrice;
-  drawer.querySelector(".drawer__header-count").textContent = totalQty;
-  drawer.querySelector(".drawer__header-unique").textContent = line;
-
-  // 4. Cập nhật Footer (Nút gửi đơn)
-  const summary = drawer.querySelector(".drawer-summary");
-  if (summary) summary.classList.remove("hidden");
-
-  if (activePlace) {
-    // Nếu đã chọn phòng: Hiện nút "Gửi đơn"
-    sendBtn.textContent = `${translate("cart_bar.send_order")} • ${totalPrice.toLocaleString()}đ`;
-    sendBtn.dataset.action = "send_cart";
-    sendBtn.classList.remove("text-warning");
+  // 4. Hiển thị danh sách món
+  if (cartItems.length === 0) {
+    itemsContainer.innerHTML = `<div class="p-xl center text-muted">${translate("cart_bar.empty")}</div>`;
+    sendBtn.textContent = translate("cart_bar.close");
+    sendBtn.dataset.action = "close-overlay";
   } else {
-    // Nếu chưa chọn phòng: Hiện nút "Chọn phòng"
-    sendBtn.textContent = translate("place.select");
-    sendBtn.dataset.action = "open-overlay";
-    sendBtn.dataset.value = "placePicker";
-    sendBtn.classList.add("text-warning");
+    itemsContainer.innerHTML = validItemsHtml.join("");
+    
+    // 5. Cập nhật nút Gửi đơn hàng
+    if (activePlace) {
+      sendBtn.textContent = `${translate("cart_bar.send_order")} • ${totalPrice.toLocaleString()}đ`;
+      sendBtn.dataset.action = "send_cart";
+      sendBtn.classList.remove("is-warning");
+    } else {
+      sendBtn.textContent = translate("place.select");
+      sendBtn.dataset.action = "open-overlay";
+      sendBtn.dataset.value = "placePicker";
+      sendBtn.classList.add("is-warning");
+    }
+  }
+
+  // Cập nhật tên địa điểm ở Header (nếu có id namePlace)
+  const namePlaceEl = document.getElementById("namePlace");
+  if (namePlaceEl) {
+    namePlaceEl.textContent = activePlace ? `${translate("place.served")}: ${activePlace.name}` : translate("place.select");
   }
 }

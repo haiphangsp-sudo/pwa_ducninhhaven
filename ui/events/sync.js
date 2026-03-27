@@ -111,47 +111,47 @@ function syncLanguage(state) {
    ORDER ORCHESTRATION
 ======================================================= */
 
-
+// ui/sync.js
 async function syncOrderFlow(state) {
   const { type, line } = state.order || {};
-  
-  // 1. Kiểm tra lồng nhau:
-  // Nếu đang xử lý một hành động UI HOẶC Queue đang bận gửi đơn ngầm -> Thoát sớm
+  const activePlace = state.context.active;
+
   if (!type || isProcessingOrder) return;
 
-  // 2. Kiểm tra điều kiện vị trí cho các đơn hàng cần xác thực bàn/phòng
-  if ((type === "instant" || type === "send_cart") && !state.context.active?.id) {
-    if (state.overlay.view !== "placePicker") {
-      setState({ overlay: { view: "placePicker" } });
+  // 1. Kiểm tra vị trí (Chỉ đơn gửi đi mới cần)
+  if (type === "instant" || type === "send_cart") {
+    if (!activePlace?.id) {
+      if (state.overlay.view !== "placePicker") {
+        setState({ overlay: { view: "placePicker" } });
+      }
+      return; 
     }
-    return;
   }
 
-  // Khóa luồng UI
+  // 2. Thực thi Action
   isProcessingOrder = true;
+  
+  // Hiện loading nếu cần gửi qua API
+  if (type !== "cart") {
+    setState({ ack: { state: "show", status: "sending" } });
+  }
 
   try {
-    // Chỉ hiển thị "Sending..." nếu đây không phải tác vụ thêm vào giỏ hàng (vì nó tức thì)
-    if (type !== "cart") {
-      setState({ ack: { state: "show", status: "sending" } });
-    }
-
     switch (type) {
       case "cart":
         if (line) addToCart(line);
         break;
       case "instant":
-        if (line) await buyNow(line); // Hàm này giờ gọi finalizeOrderSuccess('instant')
+        if (line) await buyNow(line); // Hàm này gọi finalizeOrderSuccess('instant')
         break;
       case "send_cart":
         await sendCart(); // Hàm này gọi finalizeOrderSuccess('cart')
         break;
     }
   } catch (error) {
-    console.error("Lỗi OrderFlow:", error);
     setState({ ack: { state: "show", status: "error" } });
   } finally {
-    // Luôn giải phóng khóa và reset order state
+    // 3. Giải phóng State
     setState({ order: { type: null, line: null } });
     isProcessingOrder = false;
   }

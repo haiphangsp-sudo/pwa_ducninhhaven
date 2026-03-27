@@ -9,36 +9,35 @@ import { translate } from '../utils/translate.js';
    PUBLIC
 ========================= */
 
-export function renderStatusBar() {
-    const { active, isBarExpanded } = getState().orders;
-    const bar = document.getElementById("orderStatusBar");
-    const countEl = document.getElementById("orderActiveCount");
-    const statusTextEl = document.getElementById("orderStatusText");
-    const toggleBtn = document.getElementById("btnToggleBar");
 
-    // 1. Kiểm tra nếu không có đơn hàng nào thì ẩn thanh bar
-    if (!active || active.length === 0) {
-        bar.classList.add("hidden");
-        return;
-    }
+// ui/render/renderStatusBar.js
+export function renderStatusBar(state) {
+  const bar = document.getElementById("orderStatusBar");
+  const statusText = document.getElementById("orderStatusText");
+  if (!bar || !statusText) return;
 
-    // 2. Hiển thị thanh bar và xử lý trạng thái Thu nhỏ/Mở rộng
-    bar.classList.remove("hidden");
-    bar.classList.toggle("is-collapsed", !isBarExpanded);
-    toggleBtn.textContent = isBarExpanded ? "❯" : "❮";
+  const { ack, context, cart } = state;
+  const totalQty = (cart.items || []).reduce((sum, i) => sum + i.qty, 0);
 
-    // 3. Cập nhật số lượng đơn hàng đang hoạt động (chưa DONE)
-    const pendingOrders = active.filter(o => o.status !== 'done');
-    countEl.textContent = pendingOrders.length;
+  // Hiển thị mặc định
+  bar.classList.remove("hidden");
+  let msg = context.active?.name || "Đức Ninh Haven";
+  bar.className = "status-bar";
 
-    // 4. Cập nhật nội dung hiển thị dựa trên đơn hàng mới nhất
-    if (isBarExpanded && pendingOrders.length > 0) {
-        const latestOrder = pendingOrders[pendingOrders.length - 1];
-        // Sử dụng helper để chuyển mã status thành ngôn ngữ Wellness
-        statusTextEl.textContent = getStatusMessage(latestOrder.status, pendingOrders.length);
-    }
+  // Các trạng thái ưu tiên hiển thị
+  if (ack.status === "sending") {
+    msg = "⌛ Đang gửi yêu cầu...";
+    bar.classList.add("is-sending");
+  } else if (ack.status === "success") {
+    msg = "✅ Đã nhận đơn, xin cảm ơn!";
+    bar.classList.add("is-success");
+  } else if (totalQty > 0) {
+    msg = `🛒 ${totalQty} món đang chờ gửi`;
+    bar.classList.add("is-pending");
+  }
+
+  statusText.textContent = msg;
 }
-
 /* =========================
    EVENTS
 ========================= */
