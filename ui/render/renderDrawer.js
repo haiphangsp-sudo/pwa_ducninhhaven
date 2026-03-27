@@ -23,12 +23,7 @@ export function renderDrawer(state) {
       ? `${translate("place.served")}: ${activePlace.name}` 
       : translate("place.select");
   }
-  const displayItems = getFullCartItems(cartItems).filter(Boolean);
-  const stats = getCartStats(displayItems);
-  drawer.querySelector(".drawer__header-title").textContent = translate("cart_bar.cart_title");
-  drawer.querySelector(".drawer__header-price").textContent = stats.totalPriceFormat;
-  drawer.querySelector(".drawer__header-count").textContent = stats.textFull;
-  drawer.querySelector(".drawer__header-unique").textContent = stats.textLine;
+  
 
   // 2. Xử lý Giỏ hàng trống
   if (cartItems.length === 0) {
@@ -51,6 +46,8 @@ export function renderDrawer(state) {
   // 3. Vẽ danh sách món ăn & Tính tổng
   let totalPrice = 0;
   let totalQty = 0;
+  let line = 0;
+  const stats = getCartStats(cartItems);
 
   const html = cartItems.map(cartItem => {
     const info = getItemById(cartItem.id); // Dùng hàm chuẩn bạn cung cấp
@@ -60,7 +57,7 @@ export function renderDrawer(state) {
     const subtotal = info.price * cartItem.qty;
     totalPrice += subtotal;
     totalQty += cartItem.qty;
-
+    line = info.lenght;
     return `
       <div class="drawer__item drawer-item">
       <div class="drawer__info">
@@ -96,6 +93,11 @@ export function renderDrawer(state) {
   }).join("");
 
   itemsContainer.innerHTML = html;
+
+  drawer.querySelector(".drawer__header-title").textContent = translate("cart_bar.cart_title");
+  drawer.querySelector(".drawer__header-price").textContent = subtotal;
+  drawer.querySelector(".drawer__header-count").textContent = totalQty;
+  drawer.querySelector(".drawer__header-unique").textContent = line;
 
   // 4. Cập nhật Footer (Nút gửi đơn)
   const summary = drawer.querySelector(".drawer-summary");
