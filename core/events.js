@@ -40,15 +40,9 @@ export function isValidLineItem(line) {
 export function addToCart(line) {
   const state = getState(); 
   
-  const current = state.cart?.items || [];
+  const current = state.cart.items || [];
 
-  // inject id vào line
-  const enriched = {
-    ...line,
-    id: line.id || buildLineId(line)
-  };
-
-  const nextItems = calculateCartUpdate(current, enriched);
+  const nextItems = calculateCartUpdate(current, line);
 
   setState({ 
     cart: { 
