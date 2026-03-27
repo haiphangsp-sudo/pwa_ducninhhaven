@@ -1,137 +1,245 @@
 // ui/sync.js
-import { renderAckOverlay } from "../render/renderOverlay.js";
-import { subscribe, getState } from "../../core/state.js";
-import { renderNavBar } from "../render/renderNavBar.js";
-import { renderCartBar, loadingCartBar, bounceCartBar } from "../render/renderCartBar.js";
-import { renderStatusBar } from "../render/renderStatusBar.js";
-import { renderHub } from "../render/renderHub.js";
-import { renderPanel } from "../render/renderPanel.js";
-import { renderPlacePicker } from "../render/renderPlacePicker.js";
-import { renderDrawer } from "../render/renderDrawer.js";
-import { closeOverlay, showOverlay } from "../interactions/backdropManager.js";
-import { CONFIG } from "../../config.js";
-import { addToCart, sendCart, sendInstant } from "../../core/events.js";
 
+import { subscribe, getState, setState } from "../core/state.js";
+import { CONFIG } from "../config.js";
+
+import { addToCart, buyNow, sendCart } from "../core/events.js";
+import { applyPlaceById } from "../core/context.js";
+
+import { renderNavBar } from "./render/renderNavBar.js";
+import { renderCartBar } from "./render/renderCartBar.js";
+import { renderStatusBar } from "./render/renderStatusBar.js";
+import { renderHub } from "./render/renderHub.js";
+import { renderPanel } from "./render/renderPanel.js";
+import { renderDrawer } from "./render/renderDrawer.js";
+import { renderPlacePicker } from "./render/renderPlacePicker.js";
+
+import { showOverlay, closeOverlay } from "./interactions/backdropManager.js";
 
 let lastState = {};
+let isProcessingOrder = false;
 
-/* =========================
-   MAIN SYNC
-========================= */
+/* =======================================================
+   ENTRY
+======================================================= */
 
 export function attachUI() {
   subscribe(syncUI);
   syncUI(getState());
 }
 
-async function syncUI(state) {
+/* =======================================================
+   MAIN SYNC
+======================================================= */
 
+async function syncUI(state) {
   /* ---------- OVERLAY ---------- */
 
-    if (state.overlay.view !== lastState.overlay?.view) {
-        switch (state.overlay.view) {
+  if (state.overlay?.view !== lastState.overlay?.view) {
+    syncOverlay(state);
+  }
 
-            case "cartDrawer":
-                renderDrawer(state);
-                break;
-          
-            case "placePicker":
-                renderPlacePicker();
-                break;
-            
-            default:
-                break;
-        }
-        showOverlay(state.overlay.view);
-    } 
+  /* ---------- CONTEXT ---------- */
 
-    if (state.overlay.view === null && lastState.overlay?.view !== null) {
-        closeOverlay();
-    }
+  if (state.context !== lastState.context) {
+    renderNavBar(state);
+    renderDrawer(state);
+  }
 
-    /* ---------- NAV ---------- */
+  /* ---------- PANEL ---------- */
 
-    if (state.context !== lastState.context) {
-        renderNavBar(state);
-    }
+  if (state.panel?.view !== lastState.panel?.view) {
+    renderPanel(state);
+    renderHub(state);
+  }
 
-    /* ---------- PANEL ---------- */
+  /* ---------- CART ---------- */
 
-    if (state.panel.view && state.panel.view !== lastState.panel?.view) {
-        
-        renderPanel(state);
-        renderHub(state);
-        
-    }
+  if (state.cart?.items !== lastState.cart?.items) {
+    renderCartBar(state);
+    renderStatusBar(state);
+    renderDrawer(state);
 
-    /* ---------- CART ---------- */
-    if (state.cart.items !== lastState.cart?.items) {
-    
-        renderCartBar(state);
-        renderStatusBar(state);
-        renderDrawer(state);
-        localStorage.setItem(CONFIG.CART_KEY, JSON.stringify(state.cart.items));
-        
-        // để báo hiệu cho khách là giỏ hàng đã cập nhật
-        document.getElementById("cartBar")?.classList.add("cart-bounce");
-        setTimeout(() => {
-            document.getElementById("cartBar")?.classList.remove("cart-bounce");
-        }, 400);
-        
-    }
-    if (state.order.type !== lastState.order?.type) {
-
-        switch (state.order.type) {
-
-            case "cart": 
-                bounceCartBar();
-                addToCart(state.order.line);
-                break;
-            
-            case "instant":
-                bounceCartBar();
-                await sendInstant(state.order.line);
-                break;
-            
-            case "send_cart":
-                loadingCartBar();
-                await sendCart();
-            break;
-        }
-    } 
-        
-    if (state.ack !== lastState.ack) {
-        renderAckOverlay(state.ack);
-    }
+    localStorage.setItem(CONFIG.CART_KEY, JSON.stringify(state.cart.items || []));
+  }
 
   /* ---------- LANGUAGE ---------- */
 
-    if (state.lang?.current !== lastState.lang?.current) {
-        localStorage.setItem(CONFIG.LANG_KEY, state.lang.current);
-        syncLanguage(state);
-    }
-    if(state.meta?.version !== lastState.meta?.version){
-        //checkVersion(state);
-    }
-    if (state.context?.active?.id !== lastState.context?.active?.id) {
-        applyPlaceById(state.context?.active?.id);
-        closeOverlay();
-    }
-    
+  if (state.lang?.current !== lastState.lang?.current) {
+    localStorage.setItem(CONFIG.LANG_KEY, state.lang.current);
+    syncLanguage(state);
+  }
+
+  /* ---------- ORDER FLOW ---------- */
+
+  if (
+    state.order !== lastState.order ||
+    state.context?.active !== lastState.context?.active
+  ) {
+    await syncOrderFlow(state);
+  }
+
   lastState = structuredClone(state);
 }
 
-/* =========================
+/* =======================================================
+   OVERLAY
+======================================================= */
+
+function syncOverlay(state) {
+  const nextOverlay = state.overlay?.view;
+
+  if (!nextOverlay) {
+    closeOverlay();
+    return;
+  }
+
+  switch (nextOverlay) {
+    case "cartDrawer":
+      renderDrawer(state);
+      showOverlay("cartDrawer");
+      break;
+
+    case "placePicker":
+      renderPlacePicker(state);
+      showOverlay("placePicker");
+      break;
+
+    default:
+      break;
+  }
+}
+
+/* =======================================================
    LANGUAGE
-========================= */
+======================================================= */
 
 function syncLanguage(state) {
-  // re-render toàn bộ UI phụ thuộc ngôn ngữ
+  const lang = state.lang?.current;
+  const langSwitch = document.getElementById("langSwitch");
+
+  if (langSwitch) {
+    langSwitch.querySelectorAll("button").forEach(btn => {
+      btn.classList.toggle("is-active", btn.dataset.value === lang);
+    });
+  }
+
   renderNavBar(state);
   renderCartBar(state);
   renderStatusBar(state);
   renderHub(state);
   renderPanel(state);
+  renderDrawer(state);
 }
 
+/* =======================================================
+   ORDER ORCHESTRATION
+======================================================= */
 
+async function syncOrderFlow(state) {
+  if (isProcessingOrder) return;
+
+  const orderType = state.order?.type;
+  const orderLine = state.order?.line;
+  const activePlace = state.context?.active;
+
+  if (!orderType) return;
+
+  /* ---------- ADD TO CART ---------- */
+  if (orderType === "cart" && orderLine) {
+    isProcessingOrder = true;
+
+    addToCart(orderLine);
+
+    setState({
+      order: {
+        type: null,
+        line: null
+      }
+    });
+
+    isProcessingOrder = false;
+    return;
+  }
+
+  /* ---------- BUY NOW ---------- */
+  if (orderType === "instant" && orderLine) {
+    if (!activePlace?.id) {
+      if (state.overlay?.view !== "placePicker") {
+        setState({
+          overlay: {
+            view: "placePicker"
+          }
+        });
+      }
+      return;
+    }
+
+    isProcessingOrder = true;
+
+    await buyNow(orderLine);
+
+    setState({
+      order: {
+        type: null,
+        line: null
+      },
+      overlay: {
+        view: null
+      }
+    });
+
+    isProcessingOrder = false;
+    return;
+  }
+
+  /* ---------- SEND CART ---------- */
+  if (orderType === "send_cart") {
+    if (!activePlace?.id) {
+      if (state.overlay?.view !== "placePicker") {
+        setState({
+          overlay: {
+            view: "placePicker"
+          }
+        });
+      }
+      return;
+    }
+
+    isProcessingOrder = true;
+
+    await sendCart();
+
+    setState({
+      order: {
+        type: null,
+        line: null
+      },
+      overlay: {
+        view: null
+      }
+    });
+
+    isProcessingOrder = false;
+  }
+}
+
+/* =======================================================
+   OPTIONAL PLACE RESUME
+======================================================= */
+
+export function applySelectedPlace(placeId) {
+  if (!placeId) return false;
+
+  const ok = applyPlaceById(placeId);
+
+  if (!ok) return false;
+
+  setState({
+    overlay: {
+      view: null
+    }
+  });
+
+  return true;
+}
