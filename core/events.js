@@ -131,3 +131,50 @@ export async function sendCart() {
     setState({ ack: { state: "show", status: "error" } });
   }
 }
+
+/**
+ * FINAL ACTION: Dọn dẹp UI sau khi đơn hàng thành công
+ * Dùng cho cả gửi trực tiếp và gửi bù từ Queue
+ */
+// core/events.js
+import { setState } from "./state.js";
+
+/**
+ * FINAL ACTION: Dọn dẹp và thông báo sau khi đơn hàng thành công
+ * @param {string} type - Loại đơn ('cart', 'instant', 'recovery')
+ */
+export function finalizeOrderSuccess(type) {
+  // 1. Bản đồ thông báo theo loại đơn hàng
+  const feedbackMap = {
+    cart: { title: "Thành công", msg: "Giỏ hàng của bạn đã được gửi tới bếp!" },
+    instant: { title: "Đã gửi đơn", msg: "Món ăn đang được chuẩn bị, xin chờ giây lát!" },
+    recovery: { title: "Đã phục hồi", msg: "Các đơn hàng cũ đã được gửi bù thành công!" }
+  };
+
+  const feedback = feedbackMap[type] || feedbackMap.cart;
+
+  // 2. Chuẩn bị bản cập nhật State
+  const patch = {
+    ack: { 
+      state: "show", 
+      status: "success",
+      title: feedback.title,
+      message: feedback.msg
+    },
+    overlay: { view: null } // Đóng mọi cửa sổ (Drawer/Picker)
+  };
+
+  // 3. Chỉ xóa giỏ hàng nếu là đơn từ giỏ
+  if (type === "cart" || type === "send_cart") {
+    patch.cart = { items: [], status: 'idle' };
+  }
+
+  // Thực thi cập nhật State
+  setState(patch);
+
+  // 4. Tự động ẩn thông báo sau 3.5 giây
+  setTimeout(() => {
+    setState({ ack: { state: "hidden" } });
+  }, 3500);
+}
+// ... các hàm handleSendCart, buyNow của bạn sẽ gọi finalizeOrderSuccess() khi thành công

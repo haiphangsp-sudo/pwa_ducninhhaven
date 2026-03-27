@@ -112,57 +112,48 @@ function syncLanguage(state) {
    ORDER ORCHESTRATION
 ======================================================= */
 
-// ui/sync.js
 
 async function syncOrderFlow(state) {
-  // 1. Giải nén dữ liệu để code gọn hơn
   const { type, line } = state.order || {};
-  const activePlace = state.context.active;
-
-  // 2. Guard Clauses: Thoát sớm nếu không có hành động hoặc đang bận xử lý
+  
+  // 1. Kiểm tra lồng nhau:
+  // Nếu đang xử lý một hành động UI HOẶC Queue đang bận gửi đơn ngầm -> Thoát sớm
   if (!type || isProcessingOrder) return;
 
-  // 3. Kiểm tra điều kiện tiên quyết (Place Check)
-  // Mua ngay và Gửi giỏ bắt buộc phải có thông tin phòng/bàn tại resort
-  if (type === "instant" || type === "send_cart") {
-    if (!activePlace?.id) {
-      // Nếu chưa có chỗ, mở bảng chọn vị trí và dừng luồng xử lý
-      if (state.overlay.view !== "placePicker") {
-        setState({ overlay: { view: "placePicker" } });
-      }
-      return; 
+  // 2. Kiểm tra điều kiện vị trí cho các đơn hàng cần xác thực bàn/phòng
+  if ((type === "instant" || type === "send_cart") && !state.context.active?.id) {
+    if (state.overlay.view !== "placePicker") {
+      setState({ overlay: { view: "placePicker" } });
     }
+    return;
   }
 
-  // 4. Bắt đầu xử lý: Khóa luồng để tránh gửi đơn trùng lặp
+  // Khóa luồng UI
   isProcessingOrder = true;
 
   try {
+    // Chỉ hiển thị "Sending..." nếu đây không phải tác vụ thêm vào giỏ hàng (vì nó tức thì)
+    if (type !== "cart") {
+      setState({ ack: { state: "show", status: "sending" } });
+    }
+
     switch (type) {
       case "cart":
-        // Thêm vào giỏ là thao tác đồng bộ, xử lý nhanh
         if (line) addToCart(line);
         break;
-
       case "instant":
-        // Mua ngay cần đợi API phản hồi
-        if (line) await buyNow(line); 
+        if (line) await buyNow(line); // Hàm này giờ gọi finalizeOrderSuccess('instant')
         break;
-
       case "send_cart":
-        // Gửi toàn bộ giỏ hàng
-        await sendCart();
+        await sendCart(); // Hàm này gọi finalizeOrderSuccess('cart')
         break;
     }
   } catch (error) {
-    console.error("Lỗi thực thi đơn hàng:", error);
+    console.error("Lỗi OrderFlow:", error);
+    setState({ ack: { state: "show", status: "error" } });
   } finally {
-    // 5. Centralized Reset: Luôn dọn dẹp trạng thái dù thành công hay thất bại
-    // Việc reset 'order' giúp syncUI không bị lặp lại logic này ở lần render kế tiếp
-    setState({ 
-      order: { type: null, line: null } 
-    });
-    
+    // Luôn giải phóng khóa và reset order state
+    setState({ order: { type: null, line: null } });
     isProcessingOrder = false;
   }
 }

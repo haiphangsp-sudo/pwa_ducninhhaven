@@ -4,7 +4,9 @@ import { sendRequest } from "../services/api.js";
 import { getRetryDelay } from "../services/retryPolicy.js";
 import { setDeliveryState } from "../ui/render/renderDelivery.js";
 import { setRecoveryState } from "../ui/render/renderRecovery.js";
-import { onOrderSuccess } from "./events.js";
+import { finalizeOrderSuccess } from "../core/events.js";
+
+/* ---------- CONSTANTS ---------- */
 
 const STORAGE_KEY = "haven_queue";
 const MAX_QUEUE = 50;
@@ -73,8 +75,9 @@ export async function processQueue() {
       const result = await sendRequest(body);
 
       if (result && result.success === true) {
-        onOrderSuccess(job.type);
-
+        if (queue.length === 1) {
+          finalizeOrderSuccess("recovery"); 
+        }
         queue.shift();
         saveQueue(queue);
 

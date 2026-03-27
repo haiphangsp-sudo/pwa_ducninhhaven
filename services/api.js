@@ -4,6 +4,12 @@ import { CONFIG } from "../config.js";
 import { isOnline, fetchWithTimeout } from "./network.js";
 import { markSuccess } from "./health.js";
 
+/*
+**
+** Giao tiếp (API Layer): Chịu trách nhiệm gửi dữ liệu đi và nhận phản hồi từ Google Sheets.
+**
+*/
+
 export async function sendRequest(payload) {
   if (!isOnline()) {
     throw new Error("offline");
