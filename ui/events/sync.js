@@ -29,11 +29,26 @@ export function attachUI() {
 ======================================================= */
 
 async function syncUI(state) {
-  /* ---------- OVERLAY ---------- */
 
-  if (state.overlay.view !== lastState.overlay?.view) {
-    syncOverlay(state.overlay.view);
-  }
+  /* ---------- OVERLAY ---------- */
+    const activeId = state.overlay.view;
+    if (activeId !== lastState.overlay?.view) {
+        syncOverlay(activeId);
+
+        switch (activeId) {
+        
+            case "cartDrawer":
+            renderDrawer(state);
+            break;
+
+            case "placePicker":
+            renderPlacePicker(state);
+            break;
+
+            default:
+            break;
+        }
+    }
 
   /* ---------- CONTEXT ---------- */
 
