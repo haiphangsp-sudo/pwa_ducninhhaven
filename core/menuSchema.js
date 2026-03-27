@@ -1,12 +1,21 @@
 
+
 export function normalizeMenu(menu) {
-  for (const [, cat] of Object.entries(menu)) {
+  for (const [catKey, cat] of Object.entries(menu)) {
+
+    // CATEGORY ID
+    if (!cat.id) cat.id = `CAT_${catKey}`.toUpperCase();
+
     if (cat.active === undefined) cat.active = true;
     if (cat.ui === undefined) cat.ui = "cart";
     if (cat.allow === undefined) cat.allow = ["table"];
     if (cat.items === undefined) cat.items = {};
 
-    for (const [, item] of Object.entries(cat.items || {})) {
+    for (const [itemKey, item] of Object.entries(cat.items || {})) {
+
+      // ITEM ID
+      if (!item.id) item.id = `ITEM_${catKey}_${itemKey}`.toUpperCase();
+
       if (item.active === undefined) item.active = true;
       if (item.options === undefined) item.options = {};
 
@@ -17,16 +26,15 @@ export function normalizeMenu(menu) {
       }
 
       if (cat.ui === "cart" || cat.ui === "instant") {
-        for (const [, opt] of Object.entries(item.options || {})) {
+        for (const [optKey, opt] of Object.entries(item.options || {})) {
+
+          // OPTION ID (quan trọng nhất)
+          if (!opt.id) {
+            opt.id = `OPT_${catKey}_${itemKey}_${optKey}`.toUpperCase();
+          }
+
           if (opt.active === undefined) opt.active = true;
           if (opt.price > 0 && !opt.unit) opt.unit = "item";
-
-          if (
-            opt.unit &&
-            !["item", "session", "kg", "hour", "person"].includes(opt.unit)
-          ) {
-            throw new Error(`Invalid unit: ${opt.unit}`);
-          }
         }
       }
     }
@@ -34,6 +42,8 @@ export function normalizeMenu(menu) {
 
   return menu;
 }
+
+
 
 export function validateMenu(menu) {
   const errors = [];
