@@ -15,16 +15,7 @@ export function attachAppEvents() {
     attachDrawerEvents();
     attachPlacePickerEvents();
 
-    document.addEventListener("click", handleGlobalClick);
-
-    window.addEventListener("intentresume", (e) => {
-        if (e.detail?.type === "send_cart") {
-            setTimeout(() => {
-                openCartDrawer();
-            }, 300);
-        }
-    });
-
+  document.addEventListener("click", handleGlobalClick);
   
     window.addEventListener("needplace", () => {
         setState({ view: { overlay: "placePicker" } });

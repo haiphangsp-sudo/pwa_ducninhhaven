@@ -24,6 +24,6 @@ export function syncOverlay(activeId) {
   if (activeId) {
     backdrop?.classList.remove("hidden");
   } else {
-    backdrop?.classList.add("hidden");
+      backdrop?.classList.add("hidden");
   }
 }

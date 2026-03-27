@@ -144,6 +144,30 @@ export async function sendCart() {
   return await sendOrder(fullItems, "cart");
 }
 
+export async function handleSendCartAction() {
+  // 1. Logic bắt đầu: Hiện Loading
+  setState({ ack: { state: "show", status: "sending" } });
+
+  // 2. Gọi Helper nội bộ
+  const result = await sendCart();
+
+  // 3. Logic kết thúc: Dọn dẹp chiến trường
+  if (result === "ok") {
+    setState({
+      cart: { items: [], status: 'idle' },
+      overlay: { view: null },
+      order: { type: "cart", line: null },
+      ack: { state: "show", status: "success" }
+    });
+    
+    // Auto-hide thông báo
+    setTimeout(() => setState({ ack: { state: "hidden" } }), 3000);
+  } else {
+    // Xử lý khi có lỗi
+    setState({ ack: { state: "show", status: "error" } });
+  }
+}
+
 /**
  * Mua ngay = gửi ngay 1 sản phẩm
  */
