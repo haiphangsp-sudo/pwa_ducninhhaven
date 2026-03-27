@@ -77,7 +77,6 @@ function handleGlobalClick(e) {
     case "update-qty":
       const delta = parseInt(target.dataset.delta);
       updateCartQuantity(itemId, delta); // Gọi hàm từ events.js
-      setState({ cart: { items } }); // Cập nhật lại giỏ hàng
       break;
     /* ---------- LANGUAGE ---------- */
 

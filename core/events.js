@@ -55,6 +55,8 @@ export function updateCartQuantity(itemId, delta) {
   if (items[idx].qty <= 0) {
     items = items.filter(i => i.id !== itemId);
   }
+  setState({ cart: { items } }); // Cập nhật lại giỏ hàng
+
 }
 
 /**
