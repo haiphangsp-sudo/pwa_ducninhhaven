@@ -1,131 +1,101 @@
+// ui/render/renderDrawer.js
 import { translate } from "../utils/translate.js";
 import { getItemById } from "../../core/menuQuery.js";
 
 export function renderDrawer(state) {
   const drawer = document.getElementById("cartDrawer");
-  if (!drawer) return;
-
-  const titleEl = drawer.querySelector(".drawer__header-title");
-  const placeEl = document.getElementById("drawerPlaceDisplay");
-  const totalEl = drawer.querySelector(".drawer__header-price");
-  const countEl = drawer.querySelector(".drawer__header-count");
-  const uniqueEl = drawer.querySelector(".drawer__header-unique");
-  const itemsEl = document.getElementById("drawerItems");
+  const itemsContainer = document.getElementById("drawerItems");
   const sendBtn = document.getElementById("drawerSend");
-  const summaryEl = drawer.querySelector(".drawer-summary");
+  const namePlaceEl = document.getElementById("namePlace");
 
-  if (!titleEl || !placeEl || !totalEl || !countEl || !uniqueEl || !itemsEl || !sendBtn || !summaryEl) {
-    return;
+  // CHỐT CHẶN 1: Nếu không thấy Drawer hoặc đang ẩn thì thoát ngay, tránh crash
+  if (!drawer || drawer.classList.contains("hidden")) return;
+  if (!itemsContainer || !sendBtn) return;
+
+  const cartItems = state.cart.items || [];
+  const activePlace = state.context.active;
+
+  // 1. Cập nhật thông tin địa điểm (Header)
+  if (namePlaceEl) {
+    namePlaceEl.textContent = activePlace 
+      ? `${translate("place.served")}: ${activePlace.name}` 
+      : translate("place.select");
   }
 
-  const cartItems = Array.isArray(state.cart?.items) ? state.cart.items : [];
-  const activePlace = state.context?.active;
-
-  titleEl.textContent = translate("cart_bar.cart_title");
-
-  placeEl.textContent = activePlace?.id
-    ? activePlace.id
-    : translate("place.select");
-
-  const displayItems = cartItems
-    .map(line => {
-      const info = getItemById(line.id);
-      if (!info) return null;
-
-      const qty = Number(line.qty || 0);
-      const price = Number(info.price || 0);
-      const subtotal = qty * price;
-
-      return {
-        id: line.id,
-        qty,
-        price,
-        subtotal,
-        itemLabel: info.itemLabel,
-        optionLabel: info.optionLabel,
-        fullName: info.fullName
-      };
-    })
-    .filter(Boolean);
-
-  const totalQty = displayItems.reduce((sum, item) => sum + item.qty, 0);
-  const totalPrice = displayItems.reduce((sum, item) => sum + item.subtotal, 0);
-  const uniqueCount = displayItems.length;
-
-  totalEl.textContent = `${totalPrice.toLocaleString("vi-VN")} đ`;
-  countEl.textContent = `${totalQty} ${totalQty > 1 ? translate("cart_bar.items") : translate("cart_bar.item")}`;
-  uniqueEl.textContent = `${uniqueCount} ${translate("cart_bar.lines") || "món"}`;
-
-  if (displayItems.length === 0) {
-    summaryEl.classList.add("hidden");
-
-    itemsEl.innerHTML = `
-      <div class="p-m center text-muted">
-        ${translate("cart_bar.empty")}
-      </div>
-    `;
-
-    sendBtn.textContent = translate("cart_bar.close");
+  // 2. Xử lý Giỏ hàng trống
+  if (cartItems.length === 0) {
+    itemsContainer.innerHTML = `
+      <div class="p-xl center text-muted stack items-center">
+        <div class="text-xxl mb-m">🛒</div>
+        <p>${translate("cart_bar.empty") || "Giỏ hàng đang trống"}</p>
+      </div>`;
+    
+    sendBtn.textContent = translate("cart_bar.close") || "Đóng";
     sendBtn.dataset.action = "close-overlay";
     sendBtn.dataset.value = "cartDrawer";
-    sendBtn.disabled = false;
+    
+    // Ẩn các phần thống kê phụ nếu có
+    const summary = drawer.querySelector(".drawer-summary");
+    if (summary) summary.classList.add("hidden");
     return;
   }
 
-  summaryEl.classList.remove("hidden");
+  // 3. Vẽ danh sách món ăn & Tính tổng
+  let totalPrice = 0;
+  let totalQty = 0;
 
-  itemsEl.innerHTML = displayItems.map(item => {
-    const itemName =
-      item.fullName?.[state.lang?.current] ||
-      item.fullName?.vi ||
-      item.optionLabel?.[state.lang?.current] ||
-      item.optionLabel?.vi ||
-      item.id;
+  const html = cartItems.map(cartItem => {
+    const info = getItemById(cartItem.id); // Dùng hàm chuẩn bạn cung cấp
+    
+    if (!info) return ""; // Phòng hờ ID lỗi
 
-    const itemPrice =
-      item.price > 0
-        ? `${item.price.toLocaleString("vi-VN")} đ`
-        : translate("cart_bar.free");
+    const subtotal = info.price * cartItem.qty;
+    totalPrice += subtotal;
+    totalQty += cartItem.qty;
+
+    // Tên món = Tên Item (VD: Phở) + Tên Option (VD: Tô lớn)
+    const displayName = `${translate(info.itemLabel)} - ${translate(info.optionLabel)}`;
 
     return `
-      <div class="drawer__item drawer-item">
-        <div class="drawer__info">
-          <strong>${itemName}</strong>
-          <span class="text-s text-muted">${itemPrice}</span>
-          <span class="text-s text-muted">
-            ${translate("cart_bar.subtotal") || "Tạm tính"}: ${item.subtotal.toLocaleString("vi-VN")} đ
-          </span>
+      <div class="drawer-item row items-center justify-between p-m border-b">
+        <div class="item-info stack">
+          <strong class="text-m">${displayName}</strong>
+          <span class="text-s text-muted">${info.price.toLocaleString()}đ</span>
         </div>
-
-        <div class="drawer-qty row items-center gap-s">
-          <button
-            class="qty-btn min"
-            type="button"
-            data-action="update-qty"
-            data-option-id="${item.id}"
-            data-delta="-1">-</button>
-          <span class="qty-val weight-600">${item.qty}</span>
-          <button
-            class="qty-btn plus"
-            type="button"
-            data-action="update-qty"
-            data-option-id="${item.id}"
-            data-delta="1"
-          >+</button>
+        
+        <div class="item-controls row items-center gap-m">
+          <button class="btn-qty" 
+                  data-action="update-qty" 
+                  data-value="${cartItem.id}" 
+                  data-delta="-1">—</button>
+          
+          <span class="font-bold">${cartItem.qty}</span>
+          
+          <button class="btn-qty" 
+                  data-action="update-qty" 
+                  data-value="${cartItem.id}" 
+                  data-delta="1">+</button>
         </div>
       </div>
     `;
   }).join("");
 
-  if (activePlace?.id) {
-    sendBtn.textContent = translate("cart_bar.send_order");
+  itemsContainer.innerHTML = html;
+
+  // 4. Cập nhật Footer (Nút gửi đơn)
+  const summary = drawer.querySelector(".drawer-summary");
+  if (summary) summary.classList.remove("hidden");
+
+  if (activePlace) {
+    // Nếu đã chọn phòng: Hiện nút "Gửi đơn"
+    sendBtn.textContent = `${translate("cart_bar.send_order")} • ${totalPrice.toLocaleString()}đ`;
     sendBtn.dataset.action = "send_cart";
-    sendBtn.dataset.value = "";
-    sendBtn.disabled = false;
+    sendBtn.classList.remove("text-warning");
   } else {
+    // Nếu chưa chọn phòng: Hiện nút "Chọn phòng"
     sendBtn.textContent = translate("place.select");
     sendBtn.dataset.action = "open-overlay";
     sendBtn.dataset.value = "placePicker";
-    sendBtn.disabled = false;
+    sendBtn.classList.add("text-warning");
   }
 }
