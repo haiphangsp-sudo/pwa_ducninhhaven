@@ -2,7 +2,7 @@
 
 import { subscribe, getState, setState } from "../../core/state.js";
 import { CONFIG } from "../../config.js";
-
+import { syncOverlay } from "../../ui/interactions/backdropManager.js"
 import { addToCart, buyNow, sendCart } from "../../core/events.js";
 import { applyPlaceById } from "../../core/context.js";
 
@@ -11,10 +11,6 @@ import { renderCartBar } from "../render/renderCartBar.js";
 import { renderStatusBar } from "../render/renderStatusBar.js";
 import { renderHub } from "../render/renderHub.js";
 import { renderPanel } from "../render/renderPanel.js";
-import { renderDrawer } from "../render/renderDrawer.js";
-import { renderPlacePicker } from "../render/renderPlacePicker.js";
-
-import { showOverlay, closeOverlay } from "../interactions/backdropManager.js";
 
 let lastState = {};
 let isProcessingOrder = false;
@@ -80,34 +76,6 @@ async function syncUI(state) {
   }
 
   lastState = structuredClone(state);
-}
-
-/* =======================================================
-   OVERLAY
-======================================================= */
-
-function syncOverlay(state) {
-  const nextOverlay = state.overlay?.view;
-
-  if (!nextOverlay) {
-    closeOverlay();
-    return;
-  }
-
-  switch (nextOverlay) {
-    case "cartDrawer":
-      renderDrawer(state);
-      showOverlay("cartDrawer");
-      break;
-
-    case "placePicker":
-      renderPlacePicker(state);
-      showOverlay("placePicker");
-      break;
-
-    default:
-      break;
-  }
 }
 
 /* =======================================================

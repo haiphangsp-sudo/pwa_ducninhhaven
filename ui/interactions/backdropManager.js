@@ -1,46 +1,29 @@
 // ui/interactions/backdropManager.js
 
-let currentOverlay = null;
-const backdrop = document.getElementById("overlayBackdrop");
+export function syncOverlay(activeId) {
+  const container = document.getElementById("overlay");
+  const backdrop = document.getElementById("overlayBackdrop");
+  if (!container) return;
 
-export function showOverlay(id) {
-    // 1. Nếu đang có cái khác mở, đóng nó trước
-    if (currentOverlay) {
-        closeOverlay(); 
+  // 1. Duyệt qua tất cả các con của container #overlay
+  Array.from(container.children).forEach(el => {
+    // Bỏ qua backdrop để xử lý riêng hoặc nếu nó nằm ngoài vòng lặp logic
+    if (el.id === "overlayBackdrop") return;
+
+    // So khớp ID của element với activeId từ State
+    if (el.id === activeId) {
+      el.classList.remove("hidden");
+      el.classList.add("animate-fade-in");
+    } else {
+      el.classList.add("hidden");
+      el.classList.remove("animate-fade-in");
     }
+  });
 
-    const el = document.getElementById(id);
-    if (!el) return;
-
-    // 2. Hiển thị backdrop
-    if (backdrop) {
-        backdrop.classList.remove("hidden");
-        backdrop.onclick = () => closeOverlay();
-    }
-
-    // 3. Hiển thị Overlay mới
-    el.classList.remove("hidden");
-    el.style.opacity = "0";
-    el.offsetHeight; // Force reflow
-    
-    setTimeout(() => {
-        el.style.opacity = "1";
-    }, 10);
-
-    currentOverlay = el;
-}
-
-export function closeOverlay() {
-    if (!currentOverlay) return;
-
-    // 4. Ẩn overlay hiện tại
-    currentOverlay.style.opacity = "0";
-    currentOverlay.classList.add("hidden");
-    
-    // 5. Ẩn backdrop nếu không còn overlay nào khác (Logic an toàn)
-    if (backdrop) {
-        backdrop.classList.add("hidden");
-    }
-
-    currentOverlay = null;
+  // 2. Điều khiển Backdrop dựa trên việc có cái nào đang mở hay không
+  if (activeId) {
+    backdrop?.classList.remove("hidden");
+  } else {
+    backdrop?.classList.add("hidden");
+  }
 }
