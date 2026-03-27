@@ -97,6 +97,10 @@ export function getState(){
 }
 
 export function setState(patch) {
+  if (patch.overlay) {
+    console.log("Phát hiện lệnh mở Overlay:", patch.overlay);
+    console.trace(); // Nó sẽ hiện ra danh sách các hàm đã gọi đến đây
+  }
   
   const prev = JSON.stringify(UI);
 
