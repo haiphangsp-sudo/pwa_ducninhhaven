@@ -5,13 +5,12 @@
 import { CONFIG } from "./config.js";
 import { loadMenu, MENU } from "./core/menuStore.js";
 import { applyEntryPlaceById, normalizeContext } from "./core/context.js";
-import { loadCart } from "./ui/events/eventsFunction.js";
 import { detectRecovery } from "./core/queue.js";
 import { attachAppEvents } from "./ui/events/globalEvents.js"; 
 import { attachUI } from "./ui/events/sync.js";
 import { loadPlaces } from "./core/placesStore.js";
-
-   
+import { setState } from "./core/state.js";
+ 
 
 boot();
 /* ---------- VERSION ---------- */
@@ -60,6 +59,18 @@ function registerSW(){
     }).catch(err=>{
       console.error("SW registration failed:", err);
     });
+}
+function loadCart() {
+  try {
+    const items = JSON.parse(localStorage.getItem(CONFIG.CART_KEY) || "[]");
+    setState({ cart: { items } });
+  } catch {
+    setState({
+        cart: {
+          items: []
+        }
+      });
+  }
 }
 
 /* ---------- MENU WATCH ---------- */
