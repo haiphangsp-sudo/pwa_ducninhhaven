@@ -15,10 +15,6 @@ export function attachAppEvents() {
     attachPlacePickerEvents();
 
   document.addEventListener("click", handleGlobalClick);
-  
-    window.addEventListener("needplace", () => {
-        setState({ view: { overlay: "placePicker" } });
-    });
 }
 
 /* =========================
