@@ -20,14 +20,11 @@ export function renderDrawer(state) {
   const validItemsHtml = [];
 
   cartItems.forEach(cartItem => {
-    const info = getItemById(cartItem.id); // Hàm chui vào Category > Item > Option
+    const info = getItemById(cartItem.id); 
     if (!info) return;
 
     totalPrice += info.price * cartItem.qty;
     totalQty += cartItem.qty;
-
-    // Tên hiển thị kết hợp nhãn của Item và Option
-    const displayName = `${translate(info.itemLabel)} - ${translate(info.optionLabel)}`;
 
     validItemsHtml.push(`
       <div class="drawer__item row items-center justify-between p-m border-b">
@@ -87,6 +84,6 @@ export function renderDrawer(state) {
   // Cập nhật tên địa điểm ở Header (nếu có id namePlace)
   const namePlaceEl = document.getElementById("namePlace");
   if (namePlaceEl) {
-    namePlaceEl.textContent = activePlace ? `${translate("place.served")}: ${activePlace.name}` : translate("place.select");
+    namePlaceEl.textContent = activePlace ? `${translate("place.served")}: ${activePlace.name}` : translate("place.hello");
   }
 }
