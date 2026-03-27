@@ -88,67 +88,24 @@ export function getArticle(key) {
 /**
  * Tìm kiếm món ăn theo ID
  */
-
 export function getItemById(id) {
   if (!id || !MENU || typeof MENU !== "object") return null;
 
   for (const [categoryKey, category] of Object.entries(MENU)) {
-    if (!category || typeof category !== "object") continue;
-
     for (const [itemKey, item] of Object.entries(category.items || {})) {
-      if (!item || typeof item !== "object") continue;
-
-      // 1) Ưu tiên tìm theo option.id
       for (const [optionKey, option] of Object.entries(item.options || {})) {
-        if (!option || typeof option !== "object") continue;
-
         if (option.id === id) {
           return {
             id: option.id,
-            categoryKey,
-            itemKey,
-            optionKey,
-
-            categoryLabel: category.label,
+            category: categoryKey,
+            item: itemKey,
+            option: optionKey,
             itemLabel: item.label,
             optionLabel: option.label,
-
-            itemName: item.label,
             name: option.label,
-            fullName: {
-              vi: `${item.label?.vi || itemKey} - ${option.label?.vi || optionKey}`,
-              en: `${item.label?.en || itemKey} - ${option.label?.en || optionKey}`
-            },
-
-            price: Number(option.price || 0),
-            unit: option.unit || "item",
-            active: option.active !== false,
-            ui: category.ui || "cart"
+            price: Number(option.price || 0)
           };
         }
-      }
-
-      // 2) Dự phòng: item có id riêng
-      if (item.id === id) {
-        return {
-          id: item.id,
-          categoryKey,
-          itemKey,
-          optionKey: null,
-
-          categoryLabel: category.label,
-          itemLabel: item.label,
-          optionLabel: null,
-
-          itemName: item.label,
-          name: item.label,
-          fullName: item.label,
-
-          price: Number(item.price || 0),
-          unit: item.unit || "item",
-          active: item.active !== false,
-          ui: category.ui || "cart"
-        };
       }
     }
   }
