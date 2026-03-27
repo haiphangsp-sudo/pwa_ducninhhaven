@@ -35,9 +35,9 @@ export function renderDrawer(state) {
         <strong>${translate(info.itemLabel)}</strong>
         <span class="drawer__variant">${translate(info.optionLabel)}</span>
         <span class="text-s text-muted">
-          ${item.price > 0
-            ? item.price.toLocaleString("vi-VN") + " đ"
-            : item.price === 0
+          ${info.price > 0
+            ? info.price.toLocaleString("vi-VN") + " đ"
+            : info.price === 0
               ? translate("cart_bar.free")
               : translate("cart_bar.instant")
           }
