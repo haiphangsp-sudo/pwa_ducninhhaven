@@ -42,6 +42,7 @@ export function renderDrawer(state) {
               : translate("cart_bar.instant")
           }
         </span>
+        </div>
         <div class="drawer-qty row items-center gap-s">
           <button class="qty-btn" data-action="update-qty" data-value="${cartItem.id}" data-delta="-1">—</button>
           <span class="qty-val">${cartItem.qty}</span>
