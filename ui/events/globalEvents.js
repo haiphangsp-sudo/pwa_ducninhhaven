@@ -1,7 +1,6 @@
 // ui/events/globalEvents.js
 
 import { setState } from "../../core/state.js";
-import { attachDrawerEvents } from "../render/renderDrawer.js";
 import { attachPlacePickerEvents } from "../render/renderPlacePicker.js";
 import { updateCartQuantity } from "../../core/events.js";
 
