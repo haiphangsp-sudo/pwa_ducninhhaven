@@ -57,11 +57,11 @@ export function renderDrawer(state) {
     const el = drawer.querySelector(cls);
     if (el) el.textContent = text;
   };
-
+  
   updateEl(".drawer__header-title", translate("cart_bar.cart_title"));
   updateEl(".drawer__header-price", totalPrice.toLocaleString() + " đ");
-  updateEl(".drawer__header-count", `${totalQty} món`);
-  updateEl(".drawer__header-unique", `${cartItems.length} dòng`);
+  updateEl(".drawer__header-count", `${totalQty} ${totalQty>1?translate("cart_bar.items"):translate("cart_bar.item")}`);
+  updateEl(".drawer__header-unique", `${cartItems.length} ${translate(cart_bar.unique)}`);
 
   // 4. Hiển thị danh sách món
   if (cartItems.length === 0) {
