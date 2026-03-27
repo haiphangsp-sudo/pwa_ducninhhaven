@@ -3,6 +3,7 @@
 import { setState } from "../../core/state.js";
 import { attachDrawerEvents } from "../render/renderDrawer.js";
 import { attachPlacePickerEvents } from "../render/renderPlacePicker.js";
+import { updateCartQuantity } from "../../core/events.js";
 
 
 
@@ -49,44 +50,39 @@ function handleGlobalClick(e) {
       setState({ overlay: { view: null } });
       break;
 
-      /* ---------- CART / ORDER ---------- */
+    /* ---------- CART / ORDER ---------- */
 
     case "cart":
       setState({
-        order: {
-          type: "cart",
-          line: {
-            id: target.dataset.optionId,
-            category: target.dataset.category,
-            item: target.dataset.item,
-            option: target.dataset.option,
-            qty: 1
-          }
-        }
-      });
+      order: {
+        type: "cart", // Kích hoạt addToCart trong sync.js
+        line: value    // ID món ăn lấy từ data-value
+      }
+    });
       break;
     
     case "instant":
       setState({
-        order: {
-          type: "instant",
-          line: { id: target.dataset.optionId,
-            category: target.dataset.category,
-            item: target.dataset.item,
-            option: target.dataset.option,
-            qty: 1
-          }
-        }
-      });
+      order: {
+        type: "instant", // Kích hoạt buyNow trong sync.js
+        line: value        // ID món ăn
+      }
+    });
       break;
 
     case "send_cart":
       setState({
         order: {
-          type: "send_cart",
-          line: null
+          type: "send_cart", // Kích hoạt sendCart trong sync.js
+          line: null         // Không cần ID cụ thể vì gửi cả giỏ
         }
       });
+      break;
+    
+    case "update-qty":
+      const delta = parseInt(target.dataset.delta);
+      updateCartQuantity(value, delta); // Gọi hàm từ events.js
+      setState({ cart: { items } }); // Cập nhật lại giỏ hàng
       break;
     /* ---------- LANGUAGE ---------- */
 
@@ -97,4 +93,4 @@ function handleGlobalClick(e) {
     default:
       break;
   }
-}    
+}

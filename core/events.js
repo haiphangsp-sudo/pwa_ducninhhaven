@@ -1,204 +1,133 @@
 // core/events.js
 
 import { getState, setState } from "./state.js";
-import { enqueue } from "./queue.js";
-import {
-  calculateCartUpdate,
-  getFullCartItems,
-  getFullItemInfo
-} from "../ui/utils/cartHelpers.js";
+import { getItemById } from "./menuQuery.js";
+import { sendRequest } from "../services/api.js";
+import { CONFIG } from "../config.js";
 
 
+/* ========================================================
+   INTERNAL HELPERS (Không export)
+   ======================================================== */
 
-/* =======================================================
-   LINE ITEM
-======================================================= */
+/**
+ * Chuẩn hóa dữ liệu để gửi đi
+ */
+function buildPayload(items, state, type) {
+  const placeId = state.context.active?.id || "N/A";
 
-export function makeLineItem(raw = {}) {
+  const summary = items.map(item => {
+    const info = getItemById(item.id);
+    const name = info.parentName ? `${info.parentName} (${info.name})` : info.name;
+    return `${item.qty}x ${name}`;
+  }).join(", ");
+
+  const total = items.reduce((sum, item) => {
+    const info = getItemById(item.id);
+    return sum + (info.price * item.qty);
+  }, 0);
+
   return {
-    category: raw.category,
-    item: raw.item,
-    option: raw.option,
-    qty: Number(raw.qty || 1)
+    place: placeId,
+    order_type: type === "instant" ? "Mua ngay" : "Giỏ hàng",
+    details: summary,
+    total_amount: total
   };
 }
 
-export function isValidLineItem(line) {
-  return !!(
-    line &&
-    line.category &&
-    line.item &&
-    line.option &&
-    Number(line.qty || 0) > 0
-  );
-}
+/* ========================================================
+   PUBLIC ACTIONS (Export)
+   ======================================================== */
 
-/* =======================================================
-   CART
-======================================================= */
-
-export function addToCart(line) {
-  const state = getState(); 
-  
-  const current = state.cart.items || [];
-
-  const nextItems = calculateCartUpdate(current, line);
-
-  setState({ 
-    cart: { 
-      ...state.cart, 
-      items: nextItems 
-    } 
-  });
-}
-
-export function updateCartQuantity(index, delta) {
+/**
+ * Cập nhật số lượng món trong giỏ (Dùng cho nút +/- trong Drawer)
+ */
+export function updateCartQuantity(itemId, delta) {
   const state = getState();
-  const currentItems = state.cart.items || [];
+  let items = [...(state.cart.items || [])];
 
-  if (!Array.isArray(currentItems)) return false;
-  if (index < 0 || index >= currentItems.length) return false;
+  const idx = items.findIndex(i => i.id === itemId);
+  if (idx === -1) return;
 
-  const nextItems = currentItems.map(it => ({ ...it }));
-  const target = nextItems[index];
-  if (!target) return false;
+  items[idx].qty += delta;
 
-  target.qty = Number(target.qty || 0) + Number(delta || 0);
-
-  if (target.qty <= 0) {
-    nextItems.splice(index, 1);
+  // Nếu số lượng về 0 thì xóa khỏi giỏ
+  if (items[idx].qty <= 0) {
+    items = items.filter(i => i.id !== itemId);
   }
-
-  setState({
-    cart: {
-      items: nextItems
-    }
-  });
-
-  return true;
-}
-
-export function clearCart() {
-  setState({
-    cart: {
-      items: []
-    }
-  });
-}
-
-/* =======================================================
-   ORDER BUILD
-======================================================= */
-
-function buildPayload(items, state) {
-  return {
-    type: items.action, 
-    timestamp: new Date().toISOString(),
-
-    mode: state.context.mode,
-    place: state.context.active.id,
-
-    items: items.map(i => ({
-      id: i.id,
-      qty: i.qty,
-      price: i.price,
-      subtotal: i.subtotal
-    })),
-
-    total: items.reduce((sum, i) => sum + i.subtotal, 0),
-    note: state.cart.note || ""
-  };
-}
-
-/* =======================================================
-   SEND
-======================================================= */
-
-export async function sendOrder(orderItems, type = "cart") {
-  const state = getState();
-  const payload = buildPayload(orderItems, state, type);
-
-  if (!payload) return null;
-
-  setState({
-    ack: {
-      state: "show",
-      status: "sending"
-    }
-  });
-
-  return await enqueue(payload);
 }
 
 /**
- * Gửi toàn bộ giỏ hàng
+ * Thêm món vào giỏ hàng
  */
-export async function sendCart() {
+export function addToCart(itemId) {
   const state = getState();
-  const fullItems = getFullCartItems(state.cart.items || []);
+  const items = [...(state.cart.items || [])];
+  
+  const existing = items.find(i => i.id === itemId);
+  if (existing) {
+    existing.qty += 1;
+  } else {
+    items.push({ id: itemId, qty: 1 });
+  }
 
-  if (!fullItems.length) return null;
+  setState({ 
+    cart: { items },
+    ack: { state: "show", status: "added" } 
+  });
 
-  return await sendOrder(fullItems, "cart");
+  setTimeout(() => setState({ ack: { state: "hidden" } }), 1500);
 }
 
-export async function handleSendCartAction() {
-  // 1. Logic bắt đầu: Hiện Loading
+/**
+ * Xử lý Mua ngay (Gửi 1 món)
+ */
+export async function buyNow(itemId) {
+  const state = getState();
   setState({ ack: { state: "show", status: "sending" } });
 
-  // 2. Gọi Helper nội bộ
-  const result = await sendCart();
+  try {
+    const payload = buildPayload([{ id: itemId, qty: 1 }], state, "instant");
+    const res = await sendRequest(payload); // Gọi trực tiếp api.js
 
-  // 3. Logic kết thúc: Dọn dẹp
-  if (result === "ok") {
-    setState({
-      cart: { items: [], status: 'idle' },
-      overlay: { view: null },
-      order: { type: "cart", line: null },
-      ack: { state: "show", status: "success" }
-    });
-    
-    // Auto-hide thông báo
-    setTimeout(() => setState({ ack: { state: "hidden" } }), 3000);
-  } else {
-    // Xử lý khi có lỗi
+    if (res.success) {
+      setState({ ack: { state: "show", status: "success" } });
+      setTimeout(() => setState({ ack: { state: "hidden" } }), 3000);
+    } else {
+      throw new Error(res.message);
+    }
+  } catch (err) {
     setState({ ack: { state: "show", status: "error" } });
   }
 }
 
 /**
- * Mua ngay = gửi ngay 1 sản phẩm
+ * Xử lý Gửi toàn bộ giỏ hàng
  */
-export async function buyNow(raw) {
-  const line = makeLineItem(raw);
-  if (!isValidLineItem(line)) return null;
+export async function sendCart() {
+  const state = getState();
+  const cartItems = state.cart.items || [];
 
-  const fullItem = getFullItemInfo(line);
-  if (!fullItem) return null;
+  if (cartItems.length === 0) return;
 
-  return await sendOrder([fullItem], "instant");
-}
+  setState({ ack: { state: "show", status: "sending" } });
 
-export function onOrderSuccess(orderId, items) { // Nhận thêm orderId từ server
-  clearCart();
+  try {
+    const payload = buildPayload(cartItems, state, "cart");
+    const res = await sendRequest(payload); // Xử lý kết quả trả về từ api.js
 
-  // Đẩy đơn hàng mới vào State để StatusBar và Tracker có dữ liệu hiển thị
-  const newOrder = {
-    id: orderId,
-    status: 'pending', // Trạng thái mặc định
-    items: items,
-    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-  };
-
-  const currentOrders = getState().orders.active || [];
-  setState({ orders: { active: [...currentOrders, newOrder] } });
-
-  // Lưu ID vào localStorage để F5 không mất
-  const savedIds = JSON.parse(localStorage.getItem("haven_active_order_ids") || "[]");
-  localStorage.setItem("haven_active_order_ids", JSON.stringify([...savedIds, orderId]));
-
-  setState({ ack: { state: "show", status: "success" } });
-  
-  // Cập nhật ngay thanh StatusBar
-  renderStatusBar(); 
+    if (res.success) {
+      setState({
+        cart: { items: [] }, // Xóa giỏ hàng khi thành công
+        order: { type: null, line: null }, // Reset trạng thái order
+        overlay: { view: null }, // Đóng overlay
+        ack: { state: "show", status: "success" }
+      });
+      setTimeout(() => setState({ ack: { state: "hidden" } }), 3000);
+    } else {
+      throw new Error(res.message);
+    }
+  } catch (err) {
+    setState({ ack: { state: "show", status: "error" } });
+  }
 }

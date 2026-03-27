@@ -76,26 +76,11 @@ export function renderDrawer(state) {
       </div>
 
       <div class="drawer-qty row items-center gap-s">
-        <button class="qty-btn min" data-index="${index}" type="button">-</button>
-        <span class="qty-val weight-600">${item.qty}</span>
-        <button class="qty-btn plus" data-index="${index}" type="button">+</button>
+        <button data-action="update-qty" data-value="${item.id}" data-delta="-1">-</button>
+          <span class="qty-val">${item.qty}</span>
+        <button data-action="update-qty" data-value="${item.id}" data-delta="1">+</button>
       </div>
     </div>
   `).join("");
 
-}
-
-export function attachDrawerEvents() {
-  if (drawerBound) return;
-  drawerBound = true;
-
-  document.addEventListener("click", (e) => {
-    const btn = e.target.closest(".qty-btn");
-    if (!btn) return;
-
-    updateCartQuantity(
-      parseInt(btn.dataset.index, 10),
-      btn.classList.contains("plus") ? 1 : -1
-    );
-  });
 }

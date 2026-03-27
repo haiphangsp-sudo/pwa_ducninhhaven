@@ -112,65 +112,57 @@ function syncLanguage(state) {
    ORDER ORCHESTRATION
 ======================================================= */
 
+// ui/sync.js
+
 async function syncOrderFlow(state) {
-  if (isProcessingOrder) return;
+  // 1. Giải nén dữ liệu để code gọn hơn
+  const { type, line } = state.order || {};
+  const activePlace = state.context.active;
 
-  const orderType = state.order?.type;
-  const orderLine = state.order?.line;
-  const activePlace = state.context?.active;
+  // 2. Guard Clauses: Thoát sớm nếu không có hành động hoặc đang bận xử lý
+  if (!type || isProcessingOrder) return;
 
-  if (!orderType) return;
-
-  /* ---------- ADD TO CART ---------- */
-  if (orderType === "cart" && orderLine) {
-    isProcessingOrder = true;
-
-    addToCart(orderLine);
-
-    setState({
-      order: {
-        type: null,
-        line: null
-      }
-    });
-
-    isProcessingOrder = false;
-    return;
-  }
-
-  /* ---------- BUY NOW ---------- */
-  if (orderType === "instant" && orderLine) {
+  // 3. Kiểm tra điều kiện tiên quyết (Place Check)
+  // Mua ngay và Gửi giỏ bắt buộc phải có thông tin phòng/bàn tại resort
+  if (type === "instant" || type === "send_cart") {
     if (!activePlace?.id) {
-      if (state.overlay?.view !== "placePicker") {
-        setState({
-          overlay: {
-            view: "placePicker"
-          }
-        });
+      // Nếu chưa có chỗ, mở bảng chọn vị trí và dừng luồng xử lý
+      if (state.overlay.view !== "placePicker") {
+        setState({ overlay: { view: "placePicker" } });
       }
-      return;
+      return; 
     }
-    isProcessingOrder = true;
-
-    await buyNow(orderLine);
-
-    setState({
-      order: {
-        type: null,
-        line: null
-      },
-      overlay: {
-        view: null
-      }
-    });
-
-    isProcessingOrder = false;
-    return;
   }
 
-  /* ---------- SEND CART ---------- */
-  if (orderType === "send_cart") {
-    await sendCart();
+  // 4. Bắt đầu xử lý: Khóa luồng để tránh gửi đơn trùng lặp
+  isProcessingOrder = true;
+
+  try {
+    switch (type) {
+      case "cart":
+        // Thêm vào giỏ là thao tác đồng bộ, xử lý nhanh
+        if (line) addToCart(line);
+        break;
+
+      case "instant":
+        // Mua ngay cần đợi API phản hồi
+        if (line) await buyNow(line); 
+        break;
+
+      case "send_cart":
+        // Gửi toàn bộ giỏ hàng
+        await sendCart();
+        break;
+    }
+  } catch (error) {
+    console.error("Lỗi thực thi đơn hàng:", error);
+  } finally {
+    // 5. Centralized Reset: Luôn dọn dẹp trạng thái dù thành công hay thất bại
+    // Việc reset 'order' giúp syncUI không bị lặp lại logic này ở lần render kế tiếp
+    setState({ 
+      order: { type: null, line: null } 
+    });
+    
+    isProcessingOrder = false;
   }
 }
-

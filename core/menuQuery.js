@@ -84,4 +84,28 @@ export function getArticle(key) {
     .filter(item=>item.active!==false)
     
 }
-    
+// core/menuQuery.js
+
+/**
+ * Tìm kiếm thông tin món/variant từ ID duy nhất
+ */
+export function getItemById(id) {
+  for (const cat in MENU) {
+    for (const item of MENU[cat].items) {
+      // 1. Kiểm tra nếu trùng ID món gốc (và không có variants)
+      if (item.id === id) return item;
+
+      // 2. Nếu có variants, tìm trong danh sách variants
+      if (item.variants) {
+        const variant = item.variants.find(v => v.id === id);
+        if (variant) {
+          return {
+            ...variant,
+            parentName: item.name // Trả về kèm tên món gốc để hiển thị
+          };
+        }
+      }
+    }
+  }
+  return null;
+}
