@@ -32,7 +32,7 @@ async function syncUI(state) {
   /* ---------- OVERLAY ---------- */
 
   if (state.overlay.view !== lastState.overlay?.view) {
-    syncOverlay(state);
+    syncOverlay(state.overlay.view);
   }
 
   /* ---------- CONTEXT ---------- */
