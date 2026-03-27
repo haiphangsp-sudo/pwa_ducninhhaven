@@ -1,6 +1,8 @@
 // ui/render/renderDrawer.js
 import { translate } from "../utils/translate.js";
 import { getItemById } from "../../core/menuQuery.js";
+import { getCartStats } from "../utils/cartHelpers.js";
+
 
 export function renderDrawer(state) {
   const drawer = document.getElementById("cartDrawer");
