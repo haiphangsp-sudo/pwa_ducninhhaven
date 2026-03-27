@@ -1,7 +1,7 @@
 // ui/render/renderDrawer.js
 import { translate } from "../utils/translate.js";
 import { getItemById } from "../../core/menuQuery.js";
-import { getCartStats } from "../utils/cartHelpers.js";
+import { getCartStats, getFullCartItems } from "../utils/cartHelpers.js";
 
 
 export function renderDrawer(state) {
@@ -23,6 +23,7 @@ export function renderDrawer(state) {
       ? `${translate("place.served")}: ${activePlace.name}` 
       : translate("place.select");
   }
+  const displayItems = getFullCartItems(cartItems).filter(Boolean);
   const stats = getCartStats(displayItems);
   drawer.querySelector(".drawer__header-title").textContent = translate("cart_bar.cart_title");
   drawer.querySelector(".drawer__header-price").textContent = stats.totalPriceFormat;
