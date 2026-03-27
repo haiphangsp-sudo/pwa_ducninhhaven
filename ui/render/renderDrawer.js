@@ -31,10 +31,17 @@ export function renderDrawer(state) {
 
     validItemsHtml.push(`
       <div class="drawer__item row items-center justify-between p-m border-b">
-        <div class="stack">
-          <strong class="text-m">${displayName}</strong>
-          <span class="text-s color-brand">${info.price.toLocaleString()}đ</span>
-        </div>
+        <div class="drawer__info">
+        <strong>${translate(info.itemLabel)}</strong>
+        <span class="drawer__variant">${translate(info.optionLabel)}</span>
+        <span class="text-s text-muted">
+          ${item.price > 0
+            ? item.price.toLocaleString("vi-VN") + " đ"
+            : item.price === 0
+              ? translate("cart_bar.free")
+              : translate("cart_bar.instant")
+          }
+        </span>
         <div class="drawer-qty row items-center gap-s">
           <button class="qty-btn" data-action="update-qty" data-value="${cartItem.id}" data-delta="-1">—</button>
           <span class="qty-val">${cartItem.qty}</span>
