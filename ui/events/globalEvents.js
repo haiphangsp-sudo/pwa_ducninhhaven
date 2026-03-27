@@ -45,12 +45,12 @@ function handleGlobalClick(e) {
       break;
 
     /* ---------- CART / ORDER ---------- */
-
+    const itemId = target.dataset.optionId
     case "cart":
       setState({
       order: {
         type: "cart", // Kích hoạt addToCart trong sync.js
-        line: target.dataset.optionId    // ID món ăn lấy từ data-value
+        line: itemId    // ID món ăn lấy từ data-value
       }
     });
       break;
@@ -59,7 +59,7 @@ function handleGlobalClick(e) {
       setState({
       order: {
         type: "instant", // Kích hoạt buyNow trong sync.js
-        line: target.dataset.optionId        // ID món ăn
+        line: itemId        // ID món ăn
       }
     });
       break;
@@ -75,7 +75,7 @@ function handleGlobalClick(e) {
     
     case "update-qty":
       const delta = parseInt(target.dataset.delta);
-      updateCartQuantity(value, delta); // Gọi hàm từ events.js
+      updateCartQuantity(itemId, delta); // Gọi hàm từ events.js
       setState({ cart: { items } }); // Cập nhật lại giỏ hàng
       break;
     /* ---------- LANGUAGE ---------- */
