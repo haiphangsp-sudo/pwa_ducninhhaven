@@ -67,7 +67,7 @@ async function syncUI(state) {
 
   /* ---------- CART ---------- */
 
-  if (state.cart?.items !== lastState.cart?.items) {
+  if (state.cart.items !== lastState.cart?.items) {
     renderCartBar(state);
     renderStatusBar(state);
     renderDrawer(state);
@@ -86,7 +86,7 @@ async function syncUI(state) {
 
   if (
     state.order !== lastState.order ||
-    state.context?.active !== lastState.context?.active
+    state.context.active !== lastState.context?.active
   ) {
     await syncOrderFlow(state);
   }
@@ -150,7 +150,6 @@ async function syncOrderFlow(state) {
       }
       return;
     }
-
     isProcessingOrder = true;
 
     await buyNow(orderLine);
@@ -175,18 +174,3 @@ async function syncOrderFlow(state) {
   }
 }
 
-/* =======================================================
-   OPTIONAL PLACE RESUME
-======================================================= */
-
-export function applySelectedPlace(placeId) {
-  if (!placeId) return false;
-
-  const ok = applyPlaceById(placeId);
-
-  if (!ok) return false;
-
-  
-
-  return true;
-}
