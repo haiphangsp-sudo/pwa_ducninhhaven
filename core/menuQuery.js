@@ -88,28 +88,37 @@ export function getArticle(key) {
 /**
  * Tìm kiếm món ăn theo ID
  */
-// core/menuQuery.js
+
 
 export function getItemById(id) {
-  if (!id || !MENU) return null;
+  if (!id || !MENU || typeof MENU !== "object") return null;
 
-  for (const cat in MENU) {
-    // Kiểm tra an toàn: Nếu items không phải mảng thì bỏ qua category này
-    const items = MENU[cat]?.items;
-    if (!Array.isArray(items)) continue; 
+  for (const catKey in MENU) {
+    const category = MENU[catKey];
+    if (!category || !Array.isArray(category.items)) continue;
 
-    for (const item of items) {
-      if (item.id === id) return item;
-
-      // Kiểm tra trong các tùy chọn (variants)
-      if (Array.isArray(item.variants)) {
-        const variant = item.variants.find(v => v.id === id);
-        if (variant) {
+    for (const item of category.items) {
+      // 1. Kiểm tra mảng options (Vì bạn đang dùng categoryOption.js)
+      if (Array.isArray(item.options)) {
+        const option = item.options.find(opt => opt.id === id);
+        if (option) {
           return {
-            ...variant,
-            parentName: item.name // Trả về kèm tên món chính
+            ...option,
+            id: option.id,
+            // Kết hợp tên: "Phở - Tô lớn"
+            name: `${translate(item.label)} - ${translate(option.label)}`,
+            price: option.price || 0
           };
         }
+      }
+      
+      // 2. Dự phòng: Kiểm tra nếu ID khớp trực tiếp với Item
+      if (item.id === id) {
+        return {
+          ...item,
+          name: translate(item.label),
+          price: item.price || 0
+        };
       }
     }
   }
