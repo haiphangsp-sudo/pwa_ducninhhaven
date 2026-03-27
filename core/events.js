@@ -8,6 +8,15 @@ import {
   getFullItemInfo
 } from "../ui/utils/cartHelpers.js";
 
+export function loadCart() {
+  try {
+    const items = JSON.parse(localStorage.getItem(CONFIG.CART_KEY) || "[]");
+    setState({ cart: { items } });
+  } catch {
+    clearCart();
+  }
+}
+
 /* =======================================================
    LINE ITEM
 ======================================================= */
