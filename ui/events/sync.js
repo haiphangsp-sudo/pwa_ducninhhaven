@@ -1,7 +1,7 @@
 // ui/sync.js
 
 import { subscribe, getState, setState } from "../../core/state.js";
-import { CONFIG } from "../config.js";
+import { CONFIG } from "../../config.js";
 
 import { addToCart, buyNow, sendCart } from "../../core/events.js";
 import { applyPlaceById } from "../../core/context.js";
