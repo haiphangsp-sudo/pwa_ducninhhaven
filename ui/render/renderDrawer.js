@@ -84,6 +84,6 @@ export function renderDrawer(state) {
   // Cập nhật tên địa điểm ở Header (nếu có id namePlace)
   const namePlaceEl = document.getElementById("namePlace");
   if (namePlaceEl) {
-    namePlaceEl.textContent = activePlace ? `${translate("place.served")}: ${activePlace.name}` : translate("place.hello");
+    namePlaceEl.textContent = activePlace.id ? `${translate("place.served")}: ${activePlace.id}` : translate("place.hello");
   }
 }
