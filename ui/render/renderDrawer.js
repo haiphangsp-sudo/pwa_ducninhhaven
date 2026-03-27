@@ -36,9 +36,9 @@ export function renderDrawer(state) {
           <span class="text-s color-brand">${info.price.toLocaleString()}đ</span>
         </div>
         <div class="row items-center gap-m">
-          <button class="btn-qty" data-action="update-qty" data-value="${cartItem.id}" data-delta="-1">—</button>
-          <span class="font-bold">${cartItem.qty}</span>
-          <button class="btn-qty" data-action="update-qty" data-value="${cartItem.id}" data-delta="1">+</button>
+          <button class="qty-btn" data-action="update-qty" data-value="${cartItem.id}" data-delta="-1">—</button>
+          <span class="qty-val">${cartItem.qty}</span>
+          <button class="qty-btn" data-action="update-qty" data-value="${cartItem.id}" data-delta="1">+</button>
         </div>
       </div>
     `);
