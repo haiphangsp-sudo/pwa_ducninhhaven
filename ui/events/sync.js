@@ -33,8 +33,7 @@ async function syncUI(state) {
   /* ---------- OVERLAY ---------- */
     const activeId = state.overlay.view;
     if (activeId !== lastState.overlay?.view) {
-        syncOverlay(activeId);
-
+        
         switch (activeId) {
         
             case "cartDrawer":
@@ -48,6 +47,7 @@ async function syncUI(state) {
             default:
             break;
         }
+        syncOverlay(activeId);
     }
 
   /* ---------- CONTEXT ---------- */
