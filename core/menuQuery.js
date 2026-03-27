@@ -88,38 +88,30 @@ export function getArticle(key) {
 /**
  * Tìm kiếm món ăn theo ID
  */
+// core/menuQuery.js
+
 export function getItemById(id) {
-  // 1. Nếu MENU chưa load hoặc ID không có giá trị, thoát sớm
-  if (!MENU || typeof MENU !== "object") return null;
-  if (!id) returnnull;
+  if (!id || !MENU) return null;
 
-  // 2. Lặp qua các Category (food, drink, ...)
   for (const cat in MENU) {
-    const category = MENU[cat];
+    // Kiểm tra an toàn: Nếu items không phải mảng thì bỏ qua category này
+    const items = MENU[cat]?.items;
+    if (!Array.isArray(items)) continue; 
 
-    // KIỂM TRA QUAN TRỌNG: Nếu category không có mảng items, bỏ qua category này
-    if (!category || !Array.isArray(category.items)) {
-      continue; 
-    }
-
-    // 3. Tìm trong danh sách items của category
-    for (const item of category.items) {
-      // Kiểm tra món gốc
+    for (const item of items) {
       if (item.id === id) return item;
 
-      // Kiểm tra các tùy chọn (variants) nếu có
+      // Kiểm tra trong các tùy chọn (variants)
       if (Array.isArray(item.variants)) {
         const variant = item.variants.find(v => v.id === id);
         if (variant) {
           return {
             ...variant,
-            parentName: item.name, // Trả về tên món cha để hiển thị
-            baseId: item.id
+            parentName: item.name // Trả về kèm tên món chính
           };
         }
       }
     }
   }
-
   return null;
 }
