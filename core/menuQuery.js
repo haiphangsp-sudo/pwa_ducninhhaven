@@ -90,37 +90,71 @@ export function getArticle(key) {
  */
 
 
+import { MENU } from "./menuStore.js";
+
 export function getItemById(id) {
   if (!id || !MENU || typeof MENU !== "object") return null;
 
-  for (const catKey in MENU) {
-    const category = MENU[catKey];
-    if (!category || !Array.isArray(category.items)) continue;
+  for (const [categoryKey, category] of Object.entries(MENU)) {
+    if (!category || typeof category !== "object") continue;
 
-    for (const item of category.items) {
-      // 1. Kiểm tra mảng options (Vì bạn đang dùng categoryOption.js)
-      if (Array.isArray(item.options)) {
-        const option = item.options.find(opt => opt.id === id);
-        if (option) {
+    for (const [itemKey, item] of Object.entries(category.items || {})) {
+      if (!item || typeof item !== "object") continue;
+
+      // 1) Ưu tiên tìm theo option.id
+      for (const [optionKey, option] of Object.entries(item.options || {})) {
+        if (!option || typeof option !== "object") continue;
+
+        if (option.id === id) {
           return {
-            ...option,
             id: option.id,
-            // Kết hợp tên: "Phở - Tô lớn"
-            name: `${translate(item.label)} - ${translate(option.label)}`,
-            price: option.price || 0
+            categoryKey,
+            itemKey,
+            optionKey,
+
+            categoryLabel: category.label,
+            itemLabel: item.label,
+            optionLabel: option.label,
+
+            itemName: item.label,
+            name: option.label,
+            fullName: {
+              vi: `${item.label?.vi || itemKey} - ${option.label?.vi || optionKey}`,
+              en: `${item.label?.en || itemKey} - ${option.label?.en || optionKey}`
+            },
+
+            price: Number(option.price || 0),
+            unit: option.unit || "item",
+            active: option.active !== false,
+            ui: category.ui || "cart"
           };
         }
       }
-      
-      // 2. Dự phòng: Kiểm tra nếu ID khớp trực tiếp với Item
+
+      // 2) Dự phòng: item có id riêng
       if (item.id === id) {
         return {
-          ...item,
-          name: translate(item.label),
-          price: item.price || 0
+          id: item.id,
+          categoryKey,
+          itemKey,
+          optionKey: null,
+
+          categoryLabel: category.label,
+          itemLabel: item.label,
+          optionLabel: null,
+
+          itemName: item.label,
+          name: item.label,
+          fullName: item.label,
+
+          price: Number(item.price || 0),
+          unit: item.unit || "item",
+          active: item.active !== false,
+          ui: category.ui || "cart"
         };
       }
     }
   }
+
   return null;
 }

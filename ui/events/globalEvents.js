@@ -27,6 +27,7 @@ function handleGlobalClick(e) {
 
   const action = target.dataset.action;
   const value = target.dataset.value;
+  const itemId = target.dataset.optionId || target.dataset.value;
 
   switch (action) {
 
@@ -45,7 +46,7 @@ function handleGlobalClick(e) {
       break;
 
     /* ---------- CART / ORDER ---------- */
-    const itemId = target.dataset.optionId
+    
     case "cart":
       setState({
       order: {
