@@ -27,9 +27,9 @@ function updateNavBar(state) {
   if (refs.identityLabel) refs.identityLabel.textContent = getIdentityLabel(anchor);
   if (refs.locLabel) refs.locLabel.textContent = getLocationLabel(ctx);
   if (refs.langButtons) { 
-  refs.langButtons.forEach(btn => {
-    btn.classList.toggle("is-active", btn.dataset.value === currentLang);
-  });
+    refs.langButtons.querySelectorAll("button").forEach(btn => {
+      btn.classList.toggle("is-active", btn.dataset.value === currentLang);
+    });
   }
 }
 
@@ -37,7 +37,7 @@ function cacheElements() {
   refs.identityIcon = document.querySelector(".identity-icon");
   refs.identityLabel = document.querySelector(".identity-label");
   refs.locLabel = document.querySelector(".loc-label");
-  refs.langButtons = document.querySelectorAll("#langSwitch button");
+  refs.langButtons = document.getElementById("langSwitch");
   refs.pickerButton = document.getElementById("pickerNav");
 }
 

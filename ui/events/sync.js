@@ -48,7 +48,7 @@ async function syncUI(state) {
 
   /* ---------- PANEL ---------- */
 
-  if (state.panel?.view !== lastState.panel?.view) {
+  if (state.panel.view !== lastState.panel?.view) {
     renderPanel(state);
     renderHub(state);
   }
@@ -65,7 +65,7 @@ async function syncUI(state) {
 
   /* ---------- LANGUAGE ---------- */
 
-  if (state.lang?.current !== lastState.lang?.current) {
+  if (state.lang.current !== lastState.lang?.current) {
     localStorage.setItem(CONFIG.LANG_KEY, state.lang.current);
     syncLanguage(state);
   }
@@ -115,14 +115,6 @@ function syncOverlay(state) {
 ======================================================= */
 
 function syncLanguage(state) {
-  const lang = state.lang?.current;
-  const langSwitch = document.getElementById("langSwitch");
-
-  if (langSwitch) {
-    langSwitch.querySelectorAll("button").forEach(btn => {
-      btn.classList.toggle("is-active", btn.dataset.value === lang);
-    });
-  }
 
   renderNavBar(state);
   renderCartBar(state);
