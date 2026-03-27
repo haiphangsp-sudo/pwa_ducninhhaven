@@ -84,13 +84,6 @@ export function getArticle(key) {
     .filter(item=>item.active!==false)
     
 }
-// core/menuQuery.js
-
-/**
- * Tìm kiếm thông tin món/variant từ ID duy nhất
- */
-// core/menuQuery.js
-import { MENU } from "./menuStore.js";
 
 /**
  * Tìm kiếm món ăn theo ID
