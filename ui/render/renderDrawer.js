@@ -6,7 +6,7 @@ export function renderDrawer(state) {
   const drawer = document.getElementById("cartDrawer");
   const itemsContainer = document.getElementById("drawerItems");
   const sendBtn = document.getElementById("drawerSend");
-  const namePlaceEl = document.getElementById("namePlace");
+  const namePlaceEl = document.getElementById("drawerPlaceDisplay");
 
   // CHỐT CHẶN 1: Nếu không thấy Drawer hoặc đang ẩn thì thoát ngay, tránh crash
   if (!drawer || drawer.classList.contains("hidden")) return;
@@ -53,30 +53,37 @@ export function renderDrawer(state) {
     totalPrice += subtotal;
     totalQty += cartItem.qty;
 
-    // Tên món = Tên Item (VD: Phở) + Tên Option (VD: Tô lớn)
-    const displayName = `${translate(info.itemLabel)} - ${translate(info.optionLabel)}`;
-
     return `
-      <div class="drawer-item row items-center justify-between p-m border-b">
-        <div class="item-info stack">
-          <strong class="text-m">${displayName}</strong>
-          <span class="text-s text-muted">${info.price.toLocaleString()}đ</span>
-        </div>
-        
-        <div class="item-controls row items-center gap-m">
-          <button class="btn-qty" 
-                  data-action="update-qty" 
-                  data-value="${cartItem.id}" 
-                  data-delta="-1">—</button>
-          
-          <span class="font-bold">${cartItem.qty}</span>
-          
-          <button class="btn-qty" 
-                  data-action="update-qty" 
-                  data-value="${cartItem.id}" 
-                  data-delta="1">+</button>
-        </div>
+      <div class="drawer__item drawer-item">
+      <div class="drawer__info">
+        <strong>${translate(info.itemLabel)}</strong>
+        <span class="drawer__variant">${translate(info.optionLabel)}</span>
+        <span class="text-s text-muted">
+          ${info.price > 0
+            ? info.price.toLocaleString("vi-VN") + " đ"
+            : info.price === 0
+              ? translate("cart_bar.free")
+              : translate("cart_bar.instant")
+          }
+        </span>
       </div>
+
+      <div class="drawer-qty row items-center gap-s">
+        <button
+          class="qty-btn min"
+          data-action="update-qty"
+          data-option-id="${info.id}"
+          data-delta="-1"
+          type="button">-</button>
+        <span class="qty-val weight-600">${info.qty}</span>
+        <button
+          class="qty-btn plus"
+          data-action="update-qty"
+          data-option-id="${info.id}"
+          data-delta="1"
+          type="button">+</button>
+      </div>
+    </div>
     `;
   }).join("");
 
