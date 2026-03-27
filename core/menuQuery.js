@@ -89,9 +89,6 @@ export function getArticle(key) {
  * Tìm kiếm món ăn theo ID
  */
 
-
-import { MENU } from "./menuStore.js";
-
 export function getItemById(id) {
   if (!id || !MENU || typeof MENU !== "object") return null;
 
