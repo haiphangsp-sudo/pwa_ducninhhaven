@@ -72,14 +72,14 @@ export function renderDrawer(state) {
         <button
           class="qty-btn min"
           data-action="update-qty"
-          data-option-id="${info.id}"
+          data-option-id="${cartItem.id}"
           data-delta="-1"
           type="button">-</button>
-        <span class="qty-val weight-600">${info.qty}</span>
+        <span class="qty-val weight-600">${cartItem.qty}</span>
         <button
           class="qty-btn plus"
           data-action="update-qty"
-          data-option-id="${info.id}"
+          data-option-id="${cartItem.id}"
           data-delta="1"
           type="button">+</button>
       </div>
