@@ -95,7 +95,7 @@ export function renderDrawer(state) {
   itemsContainer.innerHTML = html;
 
   drawer.querySelector(".drawer__header-title").textContent = translate("cart_bar.cart_title");
-  drawer.querySelector(".drawer__header-price").textContent = subtotal;
+  drawer.querySelector(".drawer__header-price").textContent = totalPrice;
   drawer.querySelector(".drawer__header-count").textContent = totalQty;
   drawer.querySelector(".drawer__header-unique").textContent = line;
 
