@@ -12,7 +12,6 @@ import { updateCartQuantity } from "../../core/events.js";
 ========================= */
 
 export function attachAppEvents() {
-    attachDrawerEvents();
     attachPlacePickerEvents();
 
   document.addEventListener("click", handleGlobalClick);
