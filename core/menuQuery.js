@@ -1,125 +1,79 @@
-// core/menuQuery.js
+// ui/render/renderDrawer.js
+import { translate } from "../utils/translate.js";
+import { getItemById } from "../../core/menuQuery.js";
 
-import { MENU } from "./menuStore.js";
-import { getContext } from "./context.js";
+export function renderDrawer(state) {
+  const drawer = document.getElementById("cartDrawer");
+  if (!drawer || drawer.classList.contains("hidden")) return;
 
+  const itemsContainer = document.getElementById("drawerItems");
+  const sendBtn = document.getElementById("drawerSend");
+  const namePlaceEl = document.getElementById("namePlace");
+  
+  const cartItems = state.cart.items || [];
+  const activePlace = state.context.active;
 
-function getPlace() {
-    const ctx = getContext();
-    const anchor=ctx?.anchor;
-    if(!anchor) return "table";
-    return anchor.type;
-}
-export function getCategories() {
-    const place = getPlace();
-    const out = [];
-    for (const [key, cat] of Object.entries(MENU)) {
-        if (typeof cat!== "object") continue
-        if (cat.active === false) continue;
-        if (cat.allow&&!cat.allow.includes(place)) continue;
-        out.push({
-            key,
-            label: cat.label,
-            ui: cat.ui,
-            icon: cat.icon
-        });
-    
-    }
-return out;
-
-}
-export function getCategory(key) {
-    const category = MENU[key];
-    if (!category) return null;
-    
-    const items = Object.entries(category.items || {}).map(([itemKey, item]) => ({
-        ...item,
-        key: itemKey
-    })
-    );
-    
-    return {
-        ...category,
-        key,
-        items
-    };
-}
-
-export function getItems(catKey) {
-    const cat = MENU[catKey];
-    if (!cat) return [];
-    const out = [];
-    for (const [itemKey, item] of Object.entries(cat.items || {})) {
-        if (item.active === false) continue;
-        out.push({
-            key: itemKey,
-            label: item.label,
-            price: item.price,
-            unit: item.unit,
-            image: item.image
-        });
-    }
-    return out;
-}
-
-export function getOptions(catKey, itemKey) {
-
-  const options = MENU?.[catKey]?.items?.[itemKey]?.options;
-  if (!options) return [];
-
-  return Object.entries(options)
-    .map(([optKey, opt]) => ({
-      ...opt,
-      key: optKey
-    }))
-    .filter(opt => opt.active !== false);
-}
-
-
-export function getArticle(key) {
-    const cat = MENU[key];
-    if (!cat) return [];
-   
-    return Object.values(cat.items)
-    .filter(item=>item.active!==false)
-    
-}
-
-/**
- * Tìm kiếm món ăn theo ID
- */
-export function getItemById(id) {
-  // 1. Nếu MENU chưa load hoặc ID không có giá trị, thoát sớm
-  if (!MENU || typeof MENU !== "object") return null;
-  if (!id) return null;
-
-  // 2. Lặp qua các Category (food, drink, ...)
-  for (const cat in MENU) {
-    const category = MENU[cat];
-
-    // KIỂM TRA QUAN TRỌNG: Nếu category không có mảng items, bỏ qua category này
-    if (!category || !Array.isArray(category.items)) {
-      continue; 
-    }
-
-    // 3. Tìm trong danh sách items của category
-    for (const item of category.items) {
-      // Kiểm tra món gốc
-      if (item.id === id) return item;
-
-      // Kiểm tra các tùy chọn (variants) nếu có
-      if (Array.isArray(item.variants)) {
-        const variant = item.variants.find(v => v.id === id);
-        if (variant) {
-          return {
-            ...variant,
-            parentName: item.name, // Trả về tên món cha để hiển thị
-            baseId: item.id
-          };
-        }
-      }
-    }
+  // 1. Hiển thị thông tin Vị trí (Phòng/Bàn)
+  if (activePlace) {
+    namePlaceEl.textContent = `${translate("place.served")}: ${activePlace.name}`;
+    sendBtn.dataset.action = "send_cart";
+    sendBtn.classList.remove("text-warning");
+  } else {
+    namePlaceEl.textContent = translate("place.select");
+    sendBtn.dataset.action = "open-overlay";
+    sendBtn.dataset.value = "placePicker";
+    sendBtn.classList.add("text-warning");
   }
 
-  return null;
+  // 2. Xử lý danh sách món ăn & Tính toán Stats
+  if (cartItems.length === 0) {
+    itemsContainer.innerHTML = `
+      <div class="p-xl center text-muted stack items-center">
+        <div class="text-xxl mb-m">🛒</div>
+        <p>${translate("cart_bar.empty")}</p>
+      </div>`;
+    
+    sendBtn.textContent = translate("cart_bar.close");
+    sendBtn.dataset.action = "close-overlay";
+    sendBtn.dataset.value = "cartDrawer";
+    return;
+  }
+
+  let totalPrice = 0;
+  let totalQty = 0;
+
+  const html = cartItems.map(cartItem => {
+    const info = getItemById(cartItem.id);
+    if (!info) return ""; // Bỏ qua nếu không tìm thấy món (tránh lỗi hiển thị trắng)
+
+    const subtotal = info.price * cartItem.qty;
+    totalPrice += subtotal;
+    totalQty += cartItem.qty;
+
+    const displayName = info.parentName ? `${info.parentName} (${info.name})` : info.name;
+
+    return `
+      <div class="drawer-item row items-center justify-between p-m border-b">
+        <div class="item-info stack">
+          <span class="font-bold">${displayName}</span>
+          <span class="text-s text-muted">${info.price.toLocaleString()}đ</span>
+        </div>
+        
+        <div class="row items-center gap-m">
+          <button class="btn-qty" data-action="update-qty" data-value="${cartItem.id}" data-delta="-1">—</button>
+          <span class="qty-val font-medium">${cartItem.qty}</span>
+          <button class="btn-qty" data-action="update-qty" data-value="${cartItem.id}" data-delta="1">+</button>
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  itemsContainer.innerHTML = html;
+
+  // 3. Cập nhật nút Gửi đơn hàng
+  const btnText = activePlace 
+    ? `${translate("cart_bar.send_order")} • ${totalPrice.toLocaleString()}đ`
+    : translate("place.select");
+  
+  sendBtn.textContent = btnText;
 }
