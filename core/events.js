@@ -37,22 +37,25 @@ export function isValidLineItem(line) {
    CART
 ======================================================= */
 
-export function addToCart(raw) {
-  const state = getState();
-  const line = makeLineItem(raw);
+export function addToCart(line) {
+  const state = getState(); 
+  
+  const current = state.cart?.items || [];
 
-  if (!isValidLineItem(line)) return false;
+  // inject id vào line
+  const enriched = {
+    ...line,
+    id: line.id || buildLineId(line)
+  };
 
-  const currentItems = state.cart.items || [];
-  const nextItems = calculateCartUpdate(currentItems, line);
+  const nextItems = calculateCartUpdate(current, enriched);
 
-  setState({
-    cart: {
-      items: nextItems
-    }
+  setState({ 
+    cart: { 
+      ...state.cart, 
+      items: nextItems 
+    } 
   });
-
-  return true;
 }
 
 export function updateCartQuantity(index, delta) {
@@ -93,22 +96,23 @@ export function clearCart() {
    ORDER BUILD
 ======================================================= */
 
-export function buildPayload(orderItems, state, type = "cart") {
-  const active = state?.context?.active;
-
-  if (!active?.id || !active?.type) return null;
-  if (!Array.isArray(orderItems) || orderItems.length === 0) return null;
-
+function buildPayload(items, state) {
   return {
-    type, // "cart" | "instant"
+    type: items.action, 
     timestamp: new Date().toISOString(),
-    place: active.id,
-    mode: active.type,
-    items: orderItems,
-    total: orderItems.reduce((sum, item) => {
-      return sum + Number(item.subtotal || 0);
-    }, 0),
-    note: state.cart?.note || ""
+
+    mode: state.context?.mode,
+    place: state.context.active?.id,
+
+    items: items.map(i => ({
+      id: i.id,
+      qty: i.qty,
+      price: i.price,
+      subtotal: i.subtotal
+    })),
+
+    total: items.reduce((sum, i) => sum + i.subtotal, 0),
+    note: state.cart.note || ""
   };
 }
 
@@ -151,7 +155,7 @@ export async function handleSendCartAction() {
   // 2. Gọi Helper nội bộ
   const result = await sendCart();
 
-  // 3. Logic kết thúc: Dọn dẹp chiến trường
+  // 3. Logic kết thúc: Dọn dẹp
   if (result === "ok") {
     setState({
       cart: { items: [], status: 'idle' },
