@@ -16,8 +16,8 @@ export const UI = {
   /* ---------------- SERVICE CONTEXT ---------------- */
 
   context: {
-    anchor: null,   // {place:"room|table|area", id:string, ts: number}
-    active: null, // {id:string}
+    mode: null,   // {place:"room|table|area", id:string, ts: number}
+    room: null, // {id:string}
     updatedAt: null
   },
   /* ---------------- NAVIGATION ---------------- */
