@@ -80,7 +80,7 @@ function renderGroup(type, items, isAnchorRoom = false) {
     <div class="picker-list">
       ${items.map((p) => `
         <button
-          data-action="place-select"
+          data-action="place-selected"
           data-value="${p.id}"
           class="picker-option btn center"
           type="button">

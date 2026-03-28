@@ -11,7 +11,7 @@ import { renderCartBar } from "../render/renderCartBar.js";
 import { renderStatusBar } from "../render/renderStatusBar.js";
 import { renderHub } from "../render/renderHub.js";
 import { renderPanel } from "../render/renderPanel.js";
-import { applyPlaceById, syncContextToState } from "../../core/context.js";
+import { applyPlaceById } from "../../core/context.js";
 
 
 let lastState = {};
@@ -53,13 +53,11 @@ async function syncUI(state) {
     }
 
   /* ---------- CONTEXT ---------- */
-  if (state.place !== lastState?.place) {
+  if (state.place.selected !== lastState.place?.selected) {
     applyPlaceById(state.place.selected);
-    syncContextToState();
   }
   if (state.context !== lastState.context) {
     renderNavBar(state);
-    syncContextToState();
     renderDrawer(state);
   }
 

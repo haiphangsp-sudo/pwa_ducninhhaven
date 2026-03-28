@@ -43,9 +43,14 @@ function handleGlobalClick(e) {
       });
       break;
     
-    case "place-select":
+    case "place-selected":
       setState({
         place: { selected: value },
+        context: {
+          anchor: ctx?.anchor|| null,
+          active: ctx?.active|| null,
+          updatedAt: Date.now()
+        },
         overlay: { view: null }
       });
       break;
