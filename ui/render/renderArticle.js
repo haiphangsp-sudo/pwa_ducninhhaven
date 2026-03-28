@@ -12,7 +12,7 @@ export function renderArticle(categoryKey, ui) {
   const category = getCategory(categoryKey);
   if (!category) return "";
 
-  const products = getProducts(category);
+  const products = getProducts(categoryKey);
 
   if (products.length === 0) {
     return `
