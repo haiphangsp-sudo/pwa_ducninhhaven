@@ -7,20 +7,19 @@ import { getItemById } from "../../core/menuQuery.js";
    PUBLIC
 ========================= */
 
-export function categoryOpt(id) {
-    const opt = getItemById(id);
-    if (!opt) return;
+export function categoryOpt(categoryKey, productKey, variantKey, isRecommend, type ) {
+    if (!variantKey) return;
 
-    const price = opt.price;
+    const price = variantKey.price;
 
     return `
         <div class="card">
             <div class="stack menu-cart__info">
-                <div data-service="${opt.type}" class="menu-card__title ${opt.recommend ? "is-default" : ""}">
-                ${translate(opt.itemLabel)}
+                <div data-service="${type}" class="menu-card__title ${isRecommend ? "is-default" : ""}">
+                ${translate(variantKey.label)}
                 </div>           
                 <div class="card-desc menu-cart__desc">
-                      ${opt.description ?  translate(opt.description) : ""}
+                      ${variantKey.desc ?  translate(variantKey.desc) : ""}
                 </div>
             </div>
             <div class="row menu-cart__action card-bottom">
@@ -32,14 +31,15 @@ export function categoryOpt(id) {
                     }
                 </div>
                 <button class="btn btn-primary"
-                    data-action="${opt.type}"
-                    data-category="${opt.category}"
-                    data-item="${opt.item}"
-                    data-option="${opt.option}"
-                    data-option-id="${opt.id}">
-                    ${opt.type === "cart"
+                    data-action="${type}"
+                    data-category="${categoryKey}"
+                    data-item="${productKey}"
+                    data-option="${variantKey}"
+                    data-option-id="${variantKey.id}">
+                    ${type === "cart"
                         ? "+ " + translate("cart_bar.add_to_order")
-                        : "⚡ " + translate("cart_bar.send_request")}
+                        : "⚡ " + translate("cart_bar.send_request")
+                    }
                 </button>
             </div>
         </div>`;

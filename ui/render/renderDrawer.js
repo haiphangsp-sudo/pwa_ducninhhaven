@@ -1,6 +1,6 @@
 // ui/render/renderDrawer.js
 import { translate } from "../utils/translate.js";
-import { getItemById } from "../../core/menuQuery.js";
+import { getVariantById } from "../../core/menuQuery.js";
 
 export function renderDrawer(state) {
   const drawer = document.getElementById("cartDrawer");
@@ -19,18 +19,18 @@ export function renderDrawer(state) {
   let totalQty = 0;
   const validItemsHtml = [];
 
-  cartItems.forEach(cartItem => {
-    const info = getItemById(cartItem.id); 
+  cartItems.forEach(line => {
+    const info = getVariantById(line.id); 
     if (!info) return;
 
-    totalPrice += info.price * cartItem.qty;
-    totalQty += cartItem.qty;
+    totalPrice += info.price * line.qty;
+    totalQty += line.qty;
 
     validItemsHtml.push(`
       <div class="drawer__item row items-center justify-between p-m border-b">
         <div class="drawer__info">
-        <strong>${translate(info.itemLabel)}</strong>
-        <span class="drawer__variant">${translate(info.optionLabel)}</span>
+        <strong>${translate(info.productLabel)}</strong>
+        <span class="drawer__variant">${translate(info.variantLabel)}</span>
         <span class="text-s text-muted">
           ${info.price > 0
             ? info.price.toLocaleString("vi-VN") + " đ"
@@ -41,9 +41,9 @@ export function renderDrawer(state) {
         </span>
         </div>
         <div class="drawer-qty row items-center gap-s">
-          <button class="qty-btn" data-action="update-qty" data-value="${cartItem.id}" data-delta="-1">—</button>
-          <span class="qty-val">${cartItem.qty}</span>
-          <button class="qty-btn" data-action="update-qty" data-value="${cartItem.id}" data-delta="1">+</button>
+          <button class="qty-btn" data-action="update-qty" data-value="${line.id}" data-delta="-1">—</button>
+          <span class="qty-val">${line.qty}</span>
+          <button class="qty-btn" data-action="update-qty" data-value="${line.id}" data-delta="1">+</button>
         </div>
       </div>
     `);
@@ -84,6 +84,8 @@ export function renderDrawer(state) {
   // Cập nhật tên địa điểm ở Header (nếu có id namePlace)
   const namePlaceEl = document.getElementById("namePlace");
   if (namePlaceEl) {
-    namePlaceEl.textContent = activePlace ? `${translate("place.served")}: ${activePlace}` : translate("place.hello");
+    namePlaceEl.textContent = activePlace?.id
+      ? `${translate("place.served")}: ${activePlace.id}`
+      : translate("place.hello");
   }
 }

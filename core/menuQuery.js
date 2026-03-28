@@ -28,53 +28,31 @@ export function getCategories() {
 return out;
 
 }
-export function getCategory(key) {
-    const category = MENU[key];
-    if (!category) return null;
-    
-    const items = Object.entries(category.items || {}).map(([itemKey, item]) => ({
-        ...item,
-        key: itemKey
-    })
-    );
-    
-    return {
-        ...category,
-        key,
-        items
-    };
+export function getProducts(categoryKey) {
+  const category = MENU[categoryKey];
+  if (!category?.active) return [];
+
+  return Object.entries(category.products || {})
+    .filter(([, product]) => product.active !== false)
+    .map(([key, product]) => ({
+      key,
+      ...product
+    }));
 }
 
-export function getItems(catKey) {
-    const cat = MENU[catKey];
-    if (!cat) return [];
-    const out = [];
-    for (const [itemKey, item] of Object.entries(cat.items || {})) {
-        if (item.active === false) continue;
-        out.push({
-            key: itemKey,
-            label: item.label,
-            price: item.price,
-            unit: item.unit,
-            image: item.image
-        });
-    }
-    return out;
+
+export function getVariants(categoryKey, productKey) {
+  const product = MENU[categoryKey]?.products?.[productKey];
+  if (!product?.active) return [];
+
+  return Object.entries(product.variants || {})
+    .filter(([, variant]) => variant.active !== false)
+    .map(([key, variant]) => ({
+      key,
+      ...variant,
+      recommend: (product.recommend || []).includes(key)
+    }));
 }
-
-export function getOptions(catKey, itemKey) {
-
-  const options = MENU?.[catKey]?.items?.[itemKey]?.options;
-  if (!options) return [];
-
-  return Object.entries(options)
-    .map(([optKey, opt]) => ({
-      ...opt,
-      key: optKey
-    }))
-    .filter(opt => opt.active !== false);
-}
-
 
 export function getArticle(key) {
     const cat = MENU[key];
@@ -88,23 +66,25 @@ export function getArticle(key) {
 /**
  * Tìm kiếm món ăn theo ID
  */
-export function getItemById(id) {
-  if (!id || !MENU || typeof MENU !== "object") return null;
+export function getVariantById(id) {
+  if (!id) return null;
 
   for (const [categoryKey, category] of Object.entries(MENU)) {
-    for (const [itemKey, item] of Object.entries(category.items || {})) {
-      for (const [optionKey, option] of Object.entries(item.options || {})) {
-        if (option.id === id) {
+    for (const [productKey, product] of Object.entries(category.products || {})) {
+      for (const [variantKey, variant] of Object.entries(product.variants || {})) {
+        if (variant.id === id) {
           return {
-            category: categoryKey,
-            type: category.ui,
-            item: itemKey,
-            recommend: item.recommend,
-            option: optionKey,
-            itemLabel: item.label,
-            optionLabel: option.label,
-            unit: option.unit,
-            price: Number(option.price || 0)
+            id: variant.id,
+            categoryKey,
+            productKey,
+            variantKey,
+            categoryLabel: category.label,
+            productLabel: product.label,
+            variantLabel: variant.label,
+            price: Number(variant.price || 0),
+            unit: variant.unit || "item",
+            active: variant.active !== false,
+            ui: category.ui || "cart"
           };
         }
       }

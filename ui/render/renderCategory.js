@@ -1,34 +1,34 @@
 // ui/render/renderMenu.js
 
-import { getOptions } from "../../core/menuQuery.js";
+import { getVariants } from "../../core/menuQuery.js";
 import { translate } from "../utils/translate.js";
 import { categoryOpt } from "../components/categoryOption.js";
 
-export function renderMenu(category) {
+export function renderMenu(products) {
 
-  const type = category.ui;
-  return category.items.map(item => {
-      
-      const options = getOptions(category.key, item.key)
-        .filter(opt => opt.active !== false); // 1. Lấy và lọc các Option con đang active
+  const type = products.ui;
+  return products.items.map(product => {
+    const categoryKey = products.key;
+    const productKey = product.key;
+    const variants = getVariants(categoryKey, productKey);
 
-      if (options.length === 0) return ""; // 2. NẾU KHÔNG CÓ OPTION NÀO ACTIVE -> KHÔNG VẼ NHÓM NÀY
-      const cards = options.map(opt => {
-          //const isRecommend = Array.isArray(item.recommend) && item.recommend.includes(opt.key);
-          return categoryOpt(opt.id);
-        })
-        .join("");
-
-      return `
+      const cards = variants.map(variant => {
+        const isRecommend = variant.recommend;
+        const variantKey = variant;
+        return categoryOpt(categoryKey, productKey, variantKey, isRecommend, type );
+      }).join("");
+    
+    return `
         <section class="menu-group">
           <h2 class="menu-group-title">
-            ${translate(item.label)}
+            ${translate(product.label)}
           </h2>
           <div class="menu-grid grid">
             ${cards}
           </div>
         </section>
       `;
+    
     }).join("");
 }
 

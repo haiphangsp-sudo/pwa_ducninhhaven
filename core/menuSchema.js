@@ -1,49 +1,40 @@
 
-
 export function normalizeMenu(menu) {
-  for (const [catKey, cat] of Object.entries(menu)) {
+  for (const [categoryKey, category] of Object.entries(menu)) {
+    if (category.active === undefined) category.active = true;
+    if (category.ui === undefined) category.ui = "cart";
+    if (category.allow === undefined) category.allow = ["table"];
 
-    // CATEGORY ID
-    if (!cat.id) cat.id = `CAT_${catKey}`.toUpperCase();
+    if (category.products === undefined) {
+      category.products = category.items || {};
+      delete category.items;
+    }
 
-    if (cat.active === undefined) cat.active = true;
-    if (cat.ui === undefined) cat.ui = "cart";
-    if (cat.allow === undefined) cat.allow = ["table"];
-    if (cat.items === undefined) cat.items = {};
+    for (const [productKey, product] of Object.entries(category.products || {})) {
+      if (!product.id) product.id = `PRODUCT_${categoryKey}_${productKey}`.toUpperCase();
+      if (product.active === undefined) product.active = true;
 
-    for (const [itemKey, item] of Object.entries(cat.items || {})) {
-
-      // ITEM ID
-      if (!item.id) item.id = `ITEM_${catKey}_${itemKey}`.toUpperCase();
-
-      if (item.active === undefined) item.active = true;
-      if (item.options === undefined) item.options = {};
-
-      if (cat.ui === "cart") {
-        if (item.recommend === undefined) {
-          item.recommend = Object.keys(item.options).slice(0, 1);
-        }
+      if (product.variants === undefined) {
+        product.variants = product.options || {};
+        delete product.options;
       }
 
-      if (cat.ui === "cart" || cat.ui === "instant") {
-        for (const [optKey, opt] of Object.entries(item.options || {})) {
+      if (category.ui === "cart" && product.recommend === undefined) {
+        product.recommend = Object.keys(product.variants).slice(0, 1);
+      }
 
-          // OPTION ID (quan trọng nhất)
-          if (!opt.id) {
-            opt.id = `OPT_${catKey}_${itemKey}_${optKey}`.toUpperCase();
-          }
-
-          if (opt.active === undefined) opt.active = true;
-          if (opt.price > 0 && !opt.unit) opt.unit = "item";
+      for (const [variantKey, variant] of Object.entries(product.variants || {})) {
+        if (!variant.id) {
+          variant.id = `VARIANT_${categoryKey}_${productKey}_${variantKey}`.toUpperCase();
         }
+        if (variant.active === undefined) variant.active = true;
+        if (variant.price > 0 && !variant.unit) variant.unit = "item";
       }
     }
   }
 
   return menu;
 }
-
-
 
 export function validateMenu(menu) {
   const errors = [];
