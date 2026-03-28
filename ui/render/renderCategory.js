@@ -8,7 +8,7 @@ export function renderMenu(categoryKey) {
 
   const products = getProducts(categoryKey);
   if (products.length === 0) return "";
-  const type = category.ui;
+  const type = products.ui;
 
   return products.map(product => {
     const productKey = product.key;
