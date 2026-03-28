@@ -9,19 +9,19 @@ import { getItemById } from "../../core/menuQuery.js";
 
 export function categoryOpt(id) {
     const opt = getItemById(id);
-    if (!opt) return "";
+    if (!opt) return;
 
-
-    const title = translate(opt.label);
-    const desc = opt.description ? translate(opt.description) : "";
     const price = opt.price;
-    const isRecommend = opt.recommend;  
 
     return `
         <div class="card">
             <div class="stack menu-cart__info">
-                <div data-service="${opt.key}" class="menu-card__title ${isRecommend ? "is-default" : ""}">${title}</div>
-                ${desc ? `<div class="card-desc menu-cart__desc">${desc}</div>` : ""}
+                <div data-service="${opt.type}" class="menu-card__title ${opt.recommend ? "is-default" : ""}">
+                ${translate(opt.itemLabel)}
+                </div>           
+                <div class="card-desc menu-cart__desc">
+                      ${opt.description ?  translate(opt.description) : ""}
+                </div>
             </div>
             <div class="row menu-cart__action card-bottom">
                 <div class="price">
@@ -37,7 +37,9 @@ export function categoryOpt(id) {
                     data-item="${opt.item}"
                     data-option="${opt.option}"
                     data-option-id="${opt.id}">
-                    ${opt.type==="cart" ? "+ " + translate("cart_bar.add_to_order") : "⚡ " + translate("cart_bar.send_request")}
+                    ${opt.type === "cart"
+                        ? "+ " + translate("cart_bar.add_to_order")
+                        : "⚡ " + translate("cart_bar.send_request")}
                 </button>
             </div>
         </div>`;
