@@ -1,7 +1,6 @@
 // ui/components/categoryCard.js
 
 import { translate } from "../utils/translate.js";
-import { getItemById } from "../../core/menuQuery.js";
 
 /* =========================
    PUBLIC
