@@ -35,11 +35,12 @@ function checkVersion(){
 
 function applyURLContext() {
   const params = new URLSearchParams(location.search);
-  const placeId = params.get("place");
+  const placeId = params.get("place")
+  const modeId = params.get("mode");
 
-  if (!placeId) return;
+  if (!placeId|| !mode) return;
 
-  applyEntryPlaceById(placeId);
+  applyEntryPlaceById(placeId,modeId);
   history.replaceState({}, "", location.pathname);
 }
 /* ---------- SW ---------- */

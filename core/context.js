@@ -79,20 +79,38 @@ export function applyEntryPlace(resolved) {
   if (!resolved) return false;
 
   context.anchor = resolved;
-  context.active = resolved;
+  context.mode = resolved;
+  
   saveContext();
   return true;
 }
 
-export function applyEntryPlaceById(placeId) {
-  if (!placeId) return false;
+export function applyUrlEntry({ mode, place }) {
+  if (!place) return false;
 
-  const resolved = resolvePlace(placeId);
+  const resolved = resolvePlace(place);
   if (!resolved) return false;
 
-  return applyEntryPlace(resolved);
-}
+  // CASE 1: URL có mode => reset anchor mới
+  if (mode) {
+    if (resolved.type !== mode) return false;
 
+    applyEntryPlace(resolved); // anchor = active = resolved
+    return true;
+  }
+
+  // CASE 2: URL không có mode
+  const ctx = getContext();
+
+  // chưa có local => mặc định khách vãng lai
+  if (!ctx?.anchor) {
+    applyEntryPlace(resolved); // anchor = active = T1
+    return true;
+  }
+
+  // đã có local => đổi active theo quyền anchor
+  return applyResolvedPlace(resolved);
+}
 export function applyResolvedPlace(resolved) {
   if (!resolved) return false;
 
@@ -128,7 +146,7 @@ export function applyPlaceById(placeId) {
 export function returnToAnchor() {
   if (!context.anchor) return false;
 
-  context.active = context.anchor;
+  context.mode = context.anchor;
   saveContext();
   return true;
 }
@@ -139,7 +157,7 @@ export function syncContextToState() {
   setState({
     context: {
       anchor: ctx?.anchor|| null,
-      active: ctx?.active|| null
+      mode: ctx?.mode|| null
     }
   });
 
@@ -151,8 +169,8 @@ export function setAnchor(place) {
   saveContext();
 }
 
-export function setActive(place) {
-  context.active = place;
+export function setActive(mode) {
+  context.mode = mode;
   saveContext();
 }
 
