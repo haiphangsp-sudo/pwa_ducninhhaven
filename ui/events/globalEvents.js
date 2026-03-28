@@ -47,8 +47,8 @@ function handleGlobalClick(e) {
       setState({
         place: { selected: value },
         context: {
-          place: value,
-          mode: "table",
+          anchor: value,
+          active: "table",
           updatedAt: Date.now()
         },
         overlay: { view: null }

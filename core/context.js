@@ -85,32 +85,6 @@ export function applyEntryPlace(resolved) {
   return true;
 }
 
-export function applyEntryPlaceById({ mode, place }) {
-  if (!place) return false;
-
-  const resolved = resolvePlace(place);
-  if (!resolved) return false;
-
-  // CASE 1: URL có mode => reset anchor mới
-  if (mode) {
-    if (resolved.type !== mode) return false;
-
-    applyEntryPlace(resolved); // anchor = active = resolved
-    return true;
-  }
-
-  // CASE 2: URL không có mode
-  const ctx = getContext();
-
-  // chưa có local => mặc định khách vãng lai
-  if (!ctx?.anchor) {
-    applyEntryPlace(resolved); // anchor = active = T1
-    return true;
-  }
-
-  // đã có local => đổi active theo quyền anchor
-  return applyResolvedPlace(resolved);
-}
 export function applyResolvedPlace(resolved) {
   if (!resolved) return false;
 
@@ -151,17 +125,7 @@ export function returnToAnchor() {
   return true;
 }
 
-export function syncContextToState() {
-  const ctx = getContext();
-  if (!ctx) return;
-  setState({
-    context: {
-      anchor: ctx?.anchor|| null,
-      mode: ctx?.mode|| null
-    }
-  });
 
-}
 /* ---------- OPTIONAL DIRECT SET ---------- */
 // chỉ giữ nếu thực sự cần
 export function setAnchor(place) {

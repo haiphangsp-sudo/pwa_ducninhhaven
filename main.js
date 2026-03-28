@@ -4,13 +4,13 @@
 
 import { CONFIG } from "./config.js";
 import { loadMenu, MENU } from "./core/menuStore.js";
-import { applyEntryPlaceById, normalizeContext } from "./core/context.js";
+import { normalizeContext, applyEntryPlace, applyResolvedPlace, getContext} from "./core/context.js";
 import { detectRecovery } from "./core/queue.js";
 import { attachAppEvents } from "./ui/events/globalEvents.js"; 
 import { attachUI } from "./ui/events/sync.js";
-import { loadPlaces } from "./core/placesStore.js";
-import { setState } from "./core/state.js";
- 
+import { loadPlaces, resolvePlace } from "./core/placesStore.js";
+import { setState, syncContextToState } from "./core/state.js";
+
 
 boot();
 /* ---------- VERSION ---------- */
@@ -33,15 +33,45 @@ function checkVersion(){
 /* ---------- READ QR ---------- */
 // - Nếu URL có param "place", giải mã và lưu vào context để dùng cho các thao tác sau này (gửi yêu cầu, hiển thị ở nav, ...)
 
-function applyURLContext() {
+export function applyURLContext() {
   const params = new URLSearchParams(location.search);
-  const placeId = params.get("place")
+
+  const placeId = params.get("place");
   const modeId = params.get("mode");
 
-  if (!placeId|| !mode) return;
+  if (!placeId) return false;
 
-  applyEntryPlaceById(placeId,modeId);
+  const resolved = resolvePlace(placeId);
+  if (!resolved) return false;
+
+  const ctx = getContext();
+
+  // CASE 1: URL có mode => đây là entry gốc
+  if (modeId) {
+    if (resolved.type !== modeId) return false;
+
+    applyEntryPlace(resolved);
+    syncContextToState();
+    history.replaceState({}, "", location.pathname);
+    return true;
+  }
+
+  // CASE 2: URL không có mode
+  // 2a. Chưa có local context => mặc định là entry mới
+  if (!ctx?.anchor) {
+    applyEntryPlace(resolved);
+    syncContextToState();
+    history.replaceState({}, "", location.pathname);
+    return true;
+  }
+
+  // 2b. Đã có context => chỉ đổi active
+  const ok = applyResolvedPlace(resolved);
+  if (!ok) return false;
+
+  syncContextToState();
   history.replaceState({}, "", location.pathname);
+  return true;
 }
 /* ---------- SW ---------- */
 // - Đăng ký Service Worker để hỗ trợ offline và background sync

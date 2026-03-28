@@ -16,8 +16,8 @@ export const UI = {
   /* ---------------- SERVICE CONTEXT ---------------- */
 
   context: {
-    mode: null,   // {place:"room|table|area", id:string, ts: number}
-    room: null, // {id:string}
+    anchor: null,   // {place:"room|table|area", id:string, ts: number}
+    active: null, // {id:string}
     updatedAt: null
   },
   /* ---------------- NAVIGATION ---------------- */
@@ -132,4 +132,15 @@ function deepMerge(target,source){
       target[key]=value;
     }
   }
+}
+export function syncContextToState() {
+  const ctx = getContext();
+  if (!ctx) return;
+  setState({
+    context: {
+      anchor: ctx?.anchor|| null,
+      active: ctx?.active|| null
+    }
+  });
+
 }
