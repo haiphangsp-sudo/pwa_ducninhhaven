@@ -25,15 +25,14 @@ export function renderPanel(state) {
     );
     panelEl = document.getElementById(panel);
   }
-
   // 2. Chỉ vẽ lại nội dung khi panel còn trống (tránh render thừa)
   if (panelEl.innerHTML === "") {
-    const category = getProducts(panel);
-    
-    if (panel !== "intro") {
-      panelEl.innerHTML = renderMenu(category);
+    const products = getProducts(panel);
+
+    if (products.ui !== "article") {
+      panelEl.innerHTML = renderMenu(products);
     }else{
-      panelEl.innerHTML = renderArticle(category);
+      panelEl.innerHTML = renderArticle(products);
     }
   }
 

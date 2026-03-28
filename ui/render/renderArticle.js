@@ -1,8 +1,8 @@
 import { translate } from "../utils/translate.js";
 
-export function renderArticle(articles) {
+export function renderArticle(category) {
   
-  return articles.products.map(art => `
+  return category.map(art => `
     <div class="article">
       <h2 class="article-title">${translate(art.label)}</h2> 
       <div class="article-content">

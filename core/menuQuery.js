@@ -28,19 +28,20 @@ export function getCategories() {
 return out;
 
 }
-export function getProducts(categoryKey) {
-  const cat = MENU[categoryKey];
-  if (!cat) return [];
 
-  return Object.entries(cat.products || {})
-    .filter(([, product]) => product.active !== false)
+export function getProducts(categoryKey) {
+  const category = MENU[categoryKey];
+  if (!category?.active) return [];
+
+  const products = category.products || category.items || {};
+
+  return Object.entries(products)
+    .filter(([, product]) => product?.active !== false)
     .map(([key, product]) => ({
-      key,
-      ...product
+      ...product,
+      key
     }));
 }
-
-
 
 export function getVariants(categoryKey, productKey) {
   const product = MENU[categoryKey]?.products?.[productKey];

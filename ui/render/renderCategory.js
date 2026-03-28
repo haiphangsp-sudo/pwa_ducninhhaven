@@ -4,13 +4,12 @@ import { getVariants } from "../../core/menuQuery.js";
 import { translate } from "../utils/translate.js";
 import { categoryOpt } from "../components/categoryOption.js";
 
-export function renderMenu(category) {
+export function renderMenu(products) {
 
-  const type = category.ui;
-  const categoryKey = category.key;
-  const products = category.products;
+  const type = products.ui;
+  const categoryKey = products.key;
 
-  return products.items.map(product => {
+  return products.map(product => {
     const productKey = product.key;
     const variants = getVariants(categoryKey, productKey);
 
