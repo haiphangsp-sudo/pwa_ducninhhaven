@@ -14,58 +14,21 @@ export function renderPanel(state) {
   
   if (!container || !panel) return;
 
-  if (!document.getElementById(panel)) {
     container.insertAdjacentHTML(
       "beforeend",
-      `<div id="${panel}" class="category-panel stack hidden"></div>`
+      `<div id="${panel}" class="category-panel stack hidden">
+      ${render(state, panel)};
+      </div>`
     );
-  }
-
-  const panelEl = document.getElementById(panel);
-  const isNewLang = syncLanguage(state);
-  
-  if (panelEl.innerHTML !== "" && !isNewLang) {
-     toggleVisibility(panel);
-  } else {
-    render(state);
-  } 
-
 }
 
-function render(state) {
-  const ui = state.panel.ui;
-  const panel = state.panel.view;
-  const panelEl = document.getElementById(panel);
-
-  if (ui === "cart") {
-    panelEl.innerHTML = renderMenu(panel);
-  }else{
-    panelEl.innerHTML = renderArticle(panel);
-  }
+function render(u,p) {
+  const panelEl = document.getElementById(p);
+    if (u === "cart") {
+      panelEl.innerHTML = renderMenu(p);
+    } else {
+      panelEl.innerHTML = renderArticle(p);
+    }
 }
 
-function syncLanguage(state) {
-  const currentLang = state.lang.current;
-  const cls = document.body.classList;
-  if (cls.contains(currentLang)) return false;
-  cls.remove('vi', 'en');
-  cls.add(currentLang);
-  return true; 
-}
-
-
-
-function toggleVisibility (panel) {
-  
-document.querySelectorAll(".category-panel").forEach(el => {
-      if (el.id === panel) {
-        el.classList.remove("hidden");
-        el.classList.add("animate-fade-in");
-      } else {
-        el.classList.add("hidden");
-        el.classList.remove("animate-fade-in");
-      }
-    });
-  }
-  
 
