@@ -34,7 +34,7 @@ export function categoryOpt(categoryKey, productKey, variantKey, isRecommend, ty
                     data-category="${categoryKey}"
                     data-product="${productKey}"
                     data-variant="${variantKey}"
-                    data-variant-id="${variantKey.id}">
+                    data-value="${variantKey.id}">
                     ${type === "cart"
                         ? "+ " + translate("cart_bar.add_to_order")
                         : "⚡ " + translate("cart_bar.send_request")

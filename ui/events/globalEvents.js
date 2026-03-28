@@ -27,7 +27,6 @@ function handleGlobalClick(e) {
 
   const action = target.dataset.action;
   const value = target.dataset.value;
-  const itemId = target.dataset.optionId;
 
   switch (action) {
 
@@ -51,7 +50,7 @@ function handleGlobalClick(e) {
       setState({
       order: {
         type: "cart", // Kích hoạt addToCart trong sync.js
-        line: itemId   
+        line: value   
       }
     });
       break;
@@ -60,7 +59,7 @@ function handleGlobalClick(e) {
       setState({
       order: {
         type: "instant", // Kích hoạt buyNow trong sync.js
-        line: itemId        // ID món ăn
+        line: value        // ID món ăn
       }
     });
       break;
@@ -76,7 +75,7 @@ function handleGlobalClick(e) {
     
     case "update-qty":
       const delta = parseInt(target.dataset.delta);
-      updateCartQuantity(itemId, delta); // Gọi hàm từ events.js
+      updateCartQuantity(value, delta); // Gọi hàm từ events.js
       break;
     /* ---------- LANGUAGE ---------- */
 
