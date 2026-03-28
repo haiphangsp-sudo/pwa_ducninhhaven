@@ -1,7 +1,7 @@
 // core/events.js
 
 import { getState, setState } from "./state.js";
-import { getItemById } from "./menuQuery.js";
+import { getVariantById } from "./menuQuery.js";
 import { sendRequest } from "../services/api.js";
 import { CONFIG } from "../config.js";
 
@@ -17,13 +17,13 @@ function buildPayload(items, state, type) {
   const placeId = state.context.active?.id || "N/A";
 
   const summary = items.map(item => {
-    const info = getItemById(item.id);
-    const name = info.parentName ? `${info.parentName} (${info.name})` : info.name;
+    const info = getVariantById(item.id);
+    const name = `${info.productLabel} - ${info.variantLabel}`;
     return `${item.qty}x ${name}`;
   }).join(", ");
 
   const total = items.reduce((sum, item) => {
-    const info = getItemById(item.id);
+    const info = getVariantById(item.id);
     return sum + (info.price * item.qty);
   }, 0);
 
