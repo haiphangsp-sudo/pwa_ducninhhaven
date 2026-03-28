@@ -28,11 +28,11 @@ export function renderPanel(state) {
 
   // 2. Chỉ vẽ lại nội dung khi panel còn trống (tránh render thừa)
   if (panelEl.innerHTML === "") {
-    const products = getProducts(categoryKey);
-    if (products) {
+    const category = getProducts(categoryKey);
+    if (category ){
       panelEl.innerHTML = (categoryKey === "intro") 
-        ? renderArticle(products) 
-        : renderMenu(products);
+        ? renderArticle(category) 
+        : renderMenu(category);
     }
   }
 
