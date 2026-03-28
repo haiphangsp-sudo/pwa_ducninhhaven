@@ -25,7 +25,8 @@ export function renderPanel(state) {
     panelEl = document.getElementById(panel);
   }
   // 2. Chỉ vẽ lại nội dung khi panel còn trống (tránh render thừa)
-  if (panelEl.innerHTML === "") {
+  const isNewLang = syncLanguage(state);
+  if (panelEl.innerHTML === "" && !isNewLang) {
     const category = getCategory(panel);
     if (!category) return;
     const type = category.ui;
@@ -46,4 +47,15 @@ export function renderPanel(state) {
       el.classList.remove("animate-fade-in");
     }
   });
+}
+/* =========================
+   PRIVATE
+========================= */
+function syncLanguage(state) {
+  const currentLang = state.lang.current;
+  const cls = document.body.classList;
+  if (cls.contains(currentLang)) return false``
+  cls.remove('vi', 'en');
+  cls.add(currentLang);
+  return true; 
 }

@@ -12,7 +12,7 @@ import { renderStatusBar } from "../render/renderStatusBar.js";
 import { renderHub } from "../render/renderHub.js";
 import { renderPanel } from "../render/renderPanel.js";
 import { applyPlaceById } from "../../core/context.js";
-//import { syncContextToState } from "../../core/state.js"
+import { syncContextToState } from "../../core/state.js"
 
 
 let lastState = {};
@@ -57,7 +57,7 @@ async function syncUI(state) {
   if (state.place.selected !== lastState.place?.selected) {
     const ok = applyPlaceById(state.place.selected);
     if (!ok) return;
-    //syncContextToState();
+    syncContextToState();
   }
   if (state.context !== lastState.context) {
     renderNavBar(state);
