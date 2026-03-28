@@ -6,18 +6,18 @@ import { translate } from "../utils/translate.js";
    PUBLIC
 ========================= */
 
-export function categoryOpt(categoryKey, productKey, variantKey, isRecommend, type ) {
+export function categoryOpt(variant,categoryKey, productKey, isRecommend, type ) {
 
-    const price = variantKey.price;
+    const price = variant.price;
 
     return `
         <div class="card">
             <div class="stack menu-cart__info">
                 <div data-service="${type}" class="menu-card__title ${isRecommend ? "is-default" : ""}">
-                ${translate(variantKey.label)}
+                ${translate(variant.label)}
                 </div>           
                 <div class="card-desc menu-cart__desc">
-                      ${variantKey.desc ?  translate(variantKey.desc) : ""}
+                    ${variant.desc ?  translate(variant.desc) : ""}
                 </div>
             </div>
             <div class="row menu-cart__action card-bottom">
@@ -32,8 +32,8 @@ export function categoryOpt(categoryKey, productKey, variantKey, isRecommend, ty
                     data-action="${type}"
                     data-category="${categoryKey}"
                     data-product="${productKey}"
-                    data-variant="${variantKey}"
-                    data-value="${variantKey.id}">
+                    data-variant="${variant.key}"
+                    data-value="${variant.id}">
                     ${type === "cart"
                         ? "+ " + translate("cart_bar.add_to_order")
                         : "⚡ " + translate("cart_bar.send_request")

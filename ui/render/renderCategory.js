@@ -15,8 +15,7 @@ export function renderMenu(categoryKey,type) {
 
       const cards = variants.map(variant => {
         const isRecommend = variant.recommend;
-        const variantKey = variant.key;
-        return categoryOpt(categoryKey, productKey, variantKey, isRecommend, type );
+        return categoryOpt(variant,categoryKey, productKey, isRecommend, type );
       }).join("");
     
     return `
