@@ -29,10 +29,10 @@ return out;
 
 }
 export function getProducts(categoryKey) {
-  const category = MENU[categoryKey];
-  if (!category?.active) return [];
+  const cat = MENU[categoryKey];
+  if (!cat) return [];
 
-  return Object.entries(category.products || {})
+  return Object.entries(cat.products || {})
     .filter(([, product]) => product.active !== false)
     .map(([key, product]) => ({
       key,
@@ -40,14 +40,6 @@ export function getProducts(categoryKey) {
     }));
 }
 
-export function getArticle(articleKey) {
-    const cat = MENU[articleKey];
-    if (!cat) return [];
-   
-    return Object.values(cat.products)
-    .filter(product=>product.active!==false)
-    
-}
 
 
 export function getVariants(categoryKey, productKey) {
