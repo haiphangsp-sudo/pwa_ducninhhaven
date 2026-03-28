@@ -40,6 +40,15 @@ export function getProducts(categoryKey) {
     }));
 }
 
+export function getArticle(articleKey) {
+    const cat = MENU[articleKey];
+    if (!cat) return [];
+   
+    return Object.values(cat.products)
+    .filter(product=>product.active!==false)
+    
+}
+
 
 export function getVariants(categoryKey, productKey) {
   const product = MENU[categoryKey]?.products?.[productKey];
@@ -52,15 +61,6 @@ export function getVariants(categoryKey, productKey) {
       ...variant,
       recommend: (product.recommend || []).includes(key)
     }));
-}
-
-export function getArticle(key) {
-    const cat = MENU[key];
-    if (!cat) return [];
-   
-    return Object.values(cat.items)
-    .filter(item=>item.active!==false)
-    
 }
 
 /**
