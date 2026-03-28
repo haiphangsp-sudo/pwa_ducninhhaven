@@ -87,7 +87,7 @@ function renderGroup(type, items, active) {
           <button
             class="picker-option btn center ${isActive ? "is-active" : ""}"
             type="button"
-            data-action="pick-place"
+            data-action="place-selected"
             data-value="${place.id}">
             ${translate(place.label)}
           </button>
