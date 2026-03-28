@@ -36,7 +36,7 @@ return out;
 export function getProducts(categoryKey) {
   if (!categoryKey) return [];
   const category = MENU[categoryKey];
-  if (!category?.active) return [];
+  if (category?.active === false) return [];
 
   const products = category.products || category.items || {};
 
@@ -50,7 +50,7 @@ export function getProducts(categoryKey) {
 
 export function getVariants(categoryKey, productKey) {
   const product = MENU[categoryKey]?.products?.[productKey];
-  if (!product?.active) return [];
+  if (product?.active===false) return [];
 
   return Object.entries(product.variants || {})
     .filter(([, variant]) => variant.active !== false)
