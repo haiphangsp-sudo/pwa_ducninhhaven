@@ -46,7 +46,7 @@ export function applyURLContext() {
 
   const ctx = getContext();
 
-  // CASE 1: URL có mode => đây là entry gốc
+  // CASE 1: có mode => entry gốc mới
   if (modeId) {
     if (resolved.type !== modeId) return false;
 
@@ -56,8 +56,8 @@ export function applyURLContext() {
     return true;
   }
 
-  // CASE 2: URL không có mode
-  // 2a. Chưa có local context => mặc định là entry mới
+  // CASE 2: không có mode
+  // chưa có local => khách vãng lai / entry mới
   if (!ctx?.anchor) {
     applyEntryPlace(resolved);
     syncContextToState();
@@ -65,7 +65,7 @@ export function applyURLContext() {
     return true;
   }
 
-  // 2b. Đã có context => chỉ đổi active
+  // đã có local => chỉ đổi active
   const ok = applyResolvedPlace(resolved);
   if (!ok) return false;
 
