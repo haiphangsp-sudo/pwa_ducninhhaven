@@ -27,7 +27,7 @@ function handleGlobalClick(e) {
 
   const action = target.dataset.action;
   const value = target.dataset.value;
-  const itemId = target.dataset.optionId || target.dataset.value;
+  const itemId = target.dataset.optionId;
 
   switch (action) {
 
@@ -51,7 +51,7 @@ function handleGlobalClick(e) {
       setState({
       order: {
         type: "cart", // Kích hoạt addToCart trong sync.js
-        line: itemId    // ID món ăn lấy từ data-value
+        line: itemId   
       }
     });
       break;
