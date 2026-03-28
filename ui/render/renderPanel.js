@@ -54,7 +54,7 @@ export function renderPanel(state) {
 function syncLanguage(state) {
   const currentLang = state.lang.current;
   const cls = document.body.classList;
-  if (cls.contains(currentLang)) return false``
+  if (cls.contains(currentLang)) return false;
   cls.remove('vi', 'en');
   cls.add(currentLang);
   return true; 
