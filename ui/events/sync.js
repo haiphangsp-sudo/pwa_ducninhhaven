@@ -11,7 +11,8 @@ import { renderCartBar } from "../render/renderCartBar.js";
 import { renderStatusBar } from "../render/renderStatusBar.js";
 import { renderHub } from "../render/renderHub.js";
 import { renderPanel } from "../render/renderPanel.js";
-import { applyPlaceById, syncContextToState } from "../../core/context.js";
+import { applyPlaceById } from "../../core/context.js";
+//import { syncContextToState } from "../../core/state.js"
 
 
 let lastState = {};
