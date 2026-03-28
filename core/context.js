@@ -85,7 +85,7 @@ export function applyEntryPlace(resolved) {
   return true;
 }
 
-export function applyUrlEntry({ mode, place }) {
+export function applyEntryPlaceById({ mode, place }) {
   if (!place) return false;
 
   const resolved = resolvePlace(place);
