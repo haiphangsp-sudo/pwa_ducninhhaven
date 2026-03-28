@@ -10,6 +10,10 @@ function getPlace() {
     if(!anchor) return "table";
     return anchor.type;
 }
+export function getCategory(key) {
+  return MENU[key] || null;
+}
+
 export function getCategories() {
     const place = getPlace();
     const out = [];
@@ -30,6 +34,7 @@ return out;
 }
 
 export function getProducts(categoryKey) {
+  if (!categoryKey) return [];
   const category = MENU[categoryKey];
   if (!category?.active) return [];
 

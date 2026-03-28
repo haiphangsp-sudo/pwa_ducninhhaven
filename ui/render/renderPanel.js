@@ -1,7 +1,6 @@
 // ui/render/renderPanel.js
 
-
-import { getProducts } from "../../core/menuQuery.js";
+import { getCategory } from "../../core/menuQuery.js";
 import { renderArticle } from "./renderArticle.js";
 import { renderMenu } from "./renderCategory.js";
 
@@ -27,12 +26,13 @@ export function renderPanel(state) {
   }
   // 2. Chỉ vẽ lại nội dung khi panel còn trống (tránh render thừa)
   if (panelEl.innerHTML === "") {
-    const products = getProducts(panel);
+    const category = getCategory(panel);
+    if (!category) return;
 
-    if (products.ui !== "article") {
-      panelEl.innerHTML = renderMenu(products);
+    if (category.ui !== "article") {
+      panelEl.innerHTML = renderMenu(panel);
     }else{
-      panelEl.innerHTML = renderArticle(products);
+      panelEl.innerHTML = renderArticle(panel);
     }
   }
 

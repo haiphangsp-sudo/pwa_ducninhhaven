@@ -1,13 +1,14 @@
 // ui/render/renderMenu.js
 
-import { getVariants } from "../../core/menuQuery.js";
+import { getVariants, getProducts} from "../../core/menuQuery.js";
 import { translate } from "../utils/translate.js";
 import { categoryOpt } from "../components/categoryOption.js";
 
-export function renderMenu(products) {
+export function renderMenu(categoryKey) {
 
-  const type = products.ui;
-  const categoryKey = products.key;
+  const products = getProducts(categoryKey);
+  if (products.length === 0) return "";
+  const type = category.ui;
 
   return products.map(product => {
     const productKey = product.key;
