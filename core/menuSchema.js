@@ -42,55 +42,90 @@ export function validateMenu(menu) {
   const validUnits = ["item", "session", "kg", "hour", "person"];
   const validUi = ["article", "cart", "instant"];
 
-  for (const [catKey, cat] of Object.entries(menu)) {
-    req(cat, "label", catKey);
-    req(cat, "ui", catKey);
-    req(cat, "active", catKey);
-    req(cat, "items", catKey);
-    req(cat, "allow", catKey);
+  for (const [categoryKey, category] of Object.entries(menu || {})) {
+    req(category, "label", categoryKey);
+    req(category, "ui", categoryKey);
+    req(category, "active", categoryKey);
+    req(category, "allow", categoryKey);
 
-    for (const a of cat.allow) {
-      if (!validAllow.includes(a)) errors.push(`Invalid allow: ${a}`);
+    const products = category.products || category.items || {};
+    if (typeof products !== "object" || Array.isArray(products)) {
+      errors.push(`${categoryKey}: products must be object`);
+      continue;
     }
 
-    if (typeof cat.active !== "boolean") {
-      errors.push(`${catKey}: invalid active: active must be boolean`);
+    if (!validUi.includes(category.ui)) {
+      errors.push(`${categoryKey}: invalid ui`);
     }
 
-    if (!validUi.includes(cat.ui)) {
-      errors.push(`${catKey}: invalid ui`);
+    if (typeof category.active !== "boolean") {
+      errors.push(`${categoryKey}: active must be boolean`);
     }
 
-    for (const [itemKey, item] of Object.entries(cat.items || {})) {
-      req(item, "label", `${catKey}.${itemKey}`);
-      req(item, "active", `${catKey}.${itemKey}`);
+    if (!Array.isArray(category.allow)) {
+      errors.push(`${categoryKey}: allow must be array`);
+    } else {
+      for (const a of category.allow) {
+        if (!validAllow.includes(a)) {
+          errors.push(`${categoryKey}: invalid allow: ${a}`);
+        }
+      }
+    }
 
-      if (cat.ui === "cart") {
-        req(item, "options", `${catKey}.${itemKey}`);
-        req(item, "recommend", `${catKey}.${itemKey}`);
+    for (const [productKey, product] of Object.entries(products)) {
+      req(product, "label", `${categoryKey}.${productKey}`);
+      req(product, "active", `${categoryKey}.${productKey}`);
 
-        if (!Array.isArray(item.recommend)) {
-          errors.push(`${catKey}.${itemKey}: recommend not exists`);
-        } else {
-          for (const r of item.recommend) {
-            if (!item.options?.[r]) {
-              errors.push(`${catKey}.${itemKey}: invalid recommend: ${r}`);
-            }
-          }
+      const variants = product.variants || product.options || {};
+
+      if (category.ui === "cart" || category.ui === "instant") {
+        if (typeof variants !== "object" || Array.isArray(variants)) {
+          errors.push(`${categoryKey}.${productKey}: variants must be object`);
+          continue;
+        }
+      }
+
+      if (typeof product.active !== "boolean") {
+        errors.push(`${categoryKey}.${productKey}: active must be boolean`);
+      }
+
+      if (category.ui === "cart") {
+        if (product.recommend !== undefined && !Array.isArray(product.recommend)) {
+          errors.push(`${categoryKey}.${productKey}: recommend must be array`);
         }
 
-        for (const [optKey, opt] of Object.entries(item.options || {})) {
-          req(opt, "label", `${catKey}.${itemKey}.${optKey}`);
-          req(opt, "active", `${catKey}.${itemKey}.${optKey}`);
-
-          if (opt.unit && !validUnits.includes(opt.unit)) {
-            errors.push(`${catKey}.${itemKey}.${optKey}: invalid unit`);
+        for (const r of product.recommend || []) {
+          if (!variants[r]) {
+            errors.push(`${categoryKey}.${productKey}: invalid recommend: ${r}`);
           }
         }
       }
 
-      if (cat.ui === "article") {
-        req(item, "content", `${catKey}.${itemKey}`);
+      if (category.ui === "article") {
+        req(product, "content", `${categoryKey}.${productKey}`);
+      }
+
+      if (category.ui === "cart" || category.ui === "instant") {
+        for (const [variantKey, variant] of Object.entries(variants)) {
+          req(variant, "label", `${categoryKey}.${productKey}.${variantKey}`);
+          req(variant, "active", `${categoryKey}.${productKey}.${variantKey}`);
+
+          if (variant.id !== undefined && typeof variant.id !== "string") {
+            errors.push(`${categoryKey}.${productKey}.${variantKey}: id must be string`);
+          }
+
+          if (variant.price !== undefined && !Number.isFinite(variant.price)) {
+            errors.push(`${categoryKey}.${productKey}.${variantKey}: price must be number`);
+          }
+
+          if (variant.unit && !validUnits.includes(variant.unit)) {
+            errors.push(`${categoryKey}.${productKey}.${variantKey}: invalid unit`);
+          }
+
+          if (typeof variant.active !== "boolean") {
+            errors.push(`${categoryKey}.${productKey}.${variantKey}: active must be boolean`);
+          }
+        }
       }
     }
   }
