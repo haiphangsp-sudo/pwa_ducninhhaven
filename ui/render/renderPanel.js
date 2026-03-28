@@ -27,7 +27,7 @@ export function renderPanel(state) {
   const isNewLang = syncLanguage(state);
   
   if (panelEl.innerHTML !== "" && !isNewLang) {
-     toggleVisibility();
+     toggleVisibility(panel);
   } else {
     const category = getCategory(panel);
     if (!category) return;
@@ -51,7 +51,7 @@ function syncLanguage(state) {
   cls.add(currentLang);
   return true; 
 }
-function toggleVisibility () {
+function toggleVisibility (panel) {
   
 document.querySelectorAll(".category-panel").forEach(el => {
       if (el.id === panel) {
