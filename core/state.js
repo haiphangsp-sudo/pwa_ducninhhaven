@@ -140,7 +140,8 @@ export function syncContextToState() {
   setState({
     context: {
       anchor: ctx?.anchor || null,
-      active: ctx?.active || null
+      active: ctx?.active || null,
+      updatedAt: ctx?.updatedAt || null
     }
   });
 }

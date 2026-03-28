@@ -57,7 +57,7 @@ async function syncUI(state) {
   if (state.place.selected !== lastState.place?.selected) {
     const ok = applyPlaceById(state.place.selected);
     if (!ok) return;
-    syncContextToState();
+    //syncContextToState();
   }
   if (state.context !== lastState.context) {
     renderNavBar(state);
