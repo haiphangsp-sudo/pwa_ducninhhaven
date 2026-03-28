@@ -28,9 +28,9 @@ export function renderPanel(state) {
   if (panelEl.innerHTML === "") {
     const category = getCategory(panel);
     if (!category) return;
-
+    const type = category.ui;
     if (category.ui !== "article") {
-      panelEl.innerHTML = renderMenu(panel);
+      panelEl.innerHTML = renderMenu(panel,type);
     }else{
       panelEl.innerHTML = renderArticle(panel);
     }

@@ -7,7 +7,6 @@ import { translate } from "../utils/translate.js";
 ========================= */
 
 export function categoryOpt(categoryKey, productKey, variantKey, isRecommend, type ) {
-    if (!variantKey) return;
 
     const price = variantKey.price;
 
