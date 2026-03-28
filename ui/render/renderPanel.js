@@ -23,11 +23,10 @@ export function renderPanel(state) {
 }
 
 function render(u,p) {
-  const panelEl = document.getElementById(p);
     if (u === "cart") {
-      panelEl.innerHTML = renderMenu(p);
+    return  renderMenu(p);
     } else {
-      panelEl.innerHTML = renderArticle(p);
+    return  renderArticle(p);
     }
 }
 
