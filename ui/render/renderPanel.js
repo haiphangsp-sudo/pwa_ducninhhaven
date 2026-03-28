@@ -14,14 +14,14 @@ export function renderPanel(state) {
   
   if (!container || !panel) return;
 
-  const panelEl = document.getElementById(panel);
-
-  if (!panelEl) {
+  if (!document.getElementById(panel)) {
     container.insertAdjacentHTML(
       "beforeend",
       `<div id="${panel}" class="category-panel stack hidden"></div>`
     );
   }
+  
+  const panelEl = document.getElementById(panel);
   const isNewLang = syncLanguage(state);
   
   if (panelEl.innerHTML !== "" && !isNewLang) {
