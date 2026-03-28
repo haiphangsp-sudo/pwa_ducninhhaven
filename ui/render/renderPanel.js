@@ -20,25 +20,29 @@ export function renderPanel(state) {
       `<div id="${panel}" class="category-panel stack hidden"></div>`
     );
   }
-  
+
   const panelEl = document.getElementById(panel);
   const isNewLang = syncLanguage(state);
   
   if (panelEl.innerHTML !== "" && !isNewLang) {
      toggleVisibility(panel);
   } else {
-
-    panelEl.innerHTML = renderMenu(panel);
-      
-    panelEl.innerHTML = renderArticle(panel);
+    render(state);
   } 
 
 }
 
+function render(state) {
+  const ui = state.panel.ui;
+  const panel = state.panel.view;
+  const panelEl = document.getElementById(panel);
 
-/* =========================
-   PRIVATE
-========================= */
+  if (ui === "cart") {
+    panelEl.innerHTML = renderMenu(panel);
+  }else{
+    panelEl.innerHTML = renderArticle(panel);
+  }
+}
 
 function syncLanguage(state) {
   const currentLang = state.lang.current;

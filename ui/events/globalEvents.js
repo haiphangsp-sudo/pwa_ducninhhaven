@@ -29,7 +29,12 @@ function handleGlobalClick(e) {
     /* ---------- NAV ---------- */
 
     case "nav-menu":
-      setState({ panel: { view: value } });
+      setState({
+        panel: {
+          view: value,
+          ui: target.dataset.ui
+        }
+      });
       break;
 
     case "open-overlay":
