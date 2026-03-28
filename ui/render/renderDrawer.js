@@ -19,12 +19,12 @@ export function renderDrawer(state) {
   let totalQty = 0;
   const validItemsHtml = [];
 
-  cartItems.forEach(line => {
-    const info = getVariantById(line.id); 
+  cartItems.forEach(item => {
+    const info = getVariantById(item.id); 
     if (!info) return;
 
-    totalPrice += info.price * line.qty;
-    totalQty += line.qty;
+    totalPrice += info.price * item.qty;
+    totalQty += item.qty;
 
     validItemsHtml.push(`
       <div class="drawer__item row items-center justify-between p-m border-b">
@@ -41,9 +41,9 @@ export function renderDrawer(state) {
         </span>
         </div>
         <div class="drawer-qty row items-center gap-s">
-          <button class="qty-btn" data-action="update-qty" data-value="${line.id}" data-delta="-1">—</button>
-          <span class="qty-val">${line.qty}</span>
-          <button class="qty-btn" data-action="update-qty" data-value="${line.id}" data-delta="1">+</button>
+          <button class="qty-btn" data-action="update-qty" data-value="${item.id}" data-delta="-1">—</button>
+          <span class="qty-val">${item.qty}</span>
+          <button class="qty-btn" data-action="update-qty" data-value="${item.id}" data-delta="1">+</button>
         </div>
       </div>
     `);

@@ -12,6 +12,7 @@ import { renderStatusBar } from "../render/renderStatusBar.js";
 import { renderHub } from "../render/renderHub.js";
 import { renderPanel } from "../render/renderPanel.js";
 
+
 let lastState = {};
 let isProcessingOrder = false;
 
@@ -54,6 +55,8 @@ async function syncUI(state) {
 
   if (state.context !== lastState.context) {
     renderNavBar(state);
+    applyPlaceById();
+    syncContextToState();
     renderDrawer(state);
   }
 

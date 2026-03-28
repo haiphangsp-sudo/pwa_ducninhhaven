@@ -7,7 +7,7 @@ import { categoryOpt } from "../components/categoryOption.js";
 export function renderMenu(categoryKey,type) {
 
   const products = getProducts(categoryKey);
-  if (products.length === 0) return "";
+  if (!products.length ) return "";
 
   return products.map(product => {
     const productKey = product.key;
