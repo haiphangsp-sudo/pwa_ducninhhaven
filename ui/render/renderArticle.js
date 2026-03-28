@@ -1,12 +1,12 @@
 import { translate } from "../utils/translate.js";
 
-export function renderArticle(category){
+export function renderArticle(article){
 
-  return category.items.map(item => `
+  return article.products.map(article => `
     <div class="article">
-      <h2 class="article-title">${translate(item.label)}</h2> 
+      <h2 class="article-title">${translate(article.label)}</h2> 
       <div class="article-content">
-      ${item.content
+      ${article.content
     .map(p => `<p>${translate(p)}</p>`)
     .join("")}
       </div>
