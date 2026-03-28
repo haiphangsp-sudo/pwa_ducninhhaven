@@ -14,8 +14,8 @@ export function renderMenu(category) {
 
       if (options.length === 0) return ""; // 2. NẾU KHÔNG CÓ OPTION NÀO ACTIVE -> KHÔNG VẼ NHÓM NÀY
       const cards = options.map(opt => {
-          const isRecommend = Array.isArray(item.recommend) && item.recommend.includes(opt.key);
-          return categoryOpt({ ...opt, recommend: isRecommend }, item.key, category.key, type);
+          //const isRecommend = Array.isArray(item.recommend) && item.recommend.includes(opt.key);
+          return categoryOpt(opt.id);
         })
         .join("");
 

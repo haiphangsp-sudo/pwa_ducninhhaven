@@ -1,17 +1,21 @@
 // ui/components/categoryCard.js
 
 import { translate } from "../utils/translate.js";
+import { getItemById } from "../../core/menuQuery.js";
 
 /* =========================
    PUBLIC
 ========================= */
 
-export function categoryOpt(opt, itemKey, categoryKey, type) {
-    
+export function categoryOpt(id) {
+    const opt = getItemById(id);
+    if (!opt) return "";
+
+
     const title = translate(opt.label);
     const desc = opt.description ? translate(opt.description) : "";
     const price = opt.price;
-    const isRecommend = opt.recommend;
+    const isRecommend = opt.recommend;  
 
     return `
         <div class="card">
@@ -28,12 +32,12 @@ export function categoryOpt(opt, itemKey, categoryKey, type) {
                     }
                 </div>
                 <button class="btn btn-primary"
-                    data-action="${type}"
-                    data-category="${categoryKey}"
-                    data-item="${itemKey}"
-                    data-option="${opt.key}"
+                    data-action="${opt.type}"
+                    data-category="${opt.category}"
+                    data-item="${opt.item}"
+                    data-option="${opt.option}"
                     data-option-id="${opt.id}">
-                    ${type==="cart" ? "+ " + translate("cart_bar.add_to_order") : "⚡ " + translate("cart_bar.send_request")}
+                    ${opt.type==="cart" ? "+ " + translate("cart_bar.add_to_order") : "⚡ " + translate("cart_bar.send_request")}
                 </button>
             </div>
         </div>`;

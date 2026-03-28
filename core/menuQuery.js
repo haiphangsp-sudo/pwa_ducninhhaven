@@ -97,6 +97,7 @@ export function getItemById(id) {
         if (option.id === id) {
           return {
             category: categoryKey,
+            type: category.ui,
             item: itemKey,
             recommend: item.recommend,
             option: optionKey,
