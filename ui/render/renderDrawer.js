@@ -41,9 +41,9 @@ export function renderDrawer(state) {
         </span>
         </div>
         <div class="drawer-qty row items-center gap-s">
-          <button class="qty-btn" data-action="update-qty" data-value="${line.id}" data-delta="-1">—</button>
+          <button class="qty-btn" data-action="update-qty" data-value="${info.id}" data-delta="-1">—</button>
           <span class="qty-val">${line.qty}</span>
-          <button class="qty-btn" data-action="update-qty" data-value="${line.id}" data-delta="1">+</button>
+          <button class="qty-btn" data-action="update-qty" data-value="${info.id}" data-delta="1">+</button>
         </div>
       </div>
     `);
