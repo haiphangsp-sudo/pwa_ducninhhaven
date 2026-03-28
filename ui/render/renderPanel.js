@@ -8,40 +8,38 @@ import { renderMenu } from "./renderCategory.js";
    PUBLIC
 ========================= */
 
-// ui/render/renderPanel.js
 export function renderPanel(state) {
   const panel = state.panel.view; 
   const container = document.querySelector(".page-container");
   
   if (!container || !panel) return;
 
-  // 1. Tìm hoặc tạo element cho panel nếu chưa có
-  let panelEl = document.getElementById(panel);
+  const panelEl = document.getElementById(panel);
+
   if (!panelEl) {
     container.insertAdjacentHTML(
       "beforeend",
-      `<div id="${panel}" class="category-panel hidden"></div>`
+      `<div id="${panel}" class="category-panel stack hidden"></div>`
     );
-    panelEl = document.getElementById(panel);
   }
   const isNewLang = syncLanguage(state);
   
   if (panelEl.innerHTML !== "" && !isNewLang) {
      toggleVisibility(panel);
   } else {
-    const category = getCategory(panel);
-    if (!category) return;
 
-    const type = category.ui;
-    if (category.ui === "cart") panelEl.innerHTML = renderMenu(panel, type);
+    panelEl.innerHTML = renderMenu(panel);
       
-    if (category.ui === "article") panelEl.innerHTML = renderArticle(panel);
+    panelEl.innerHTML = renderArticle(panel);
   } 
 
 }
+
+
 /* =========================
    PRIVATE
 ========================= */
+
 function syncLanguage(state) {
   const currentLang = state.lang.current;
   const cls = document.body.classList;
@@ -50,6 +48,9 @@ function syncLanguage(state) {
   cls.add(currentLang);
   return true; 
 }
+
+
+
 function toggleVisibility (panel) {
   
 document.querySelectorAll(".category-panel").forEach(el => {
