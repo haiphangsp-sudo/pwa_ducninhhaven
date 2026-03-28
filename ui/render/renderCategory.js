@@ -12,12 +12,10 @@ export function renderMenu(categoryKey,type) {
   return products.map(product => {
     const productKey = product.key;
     const variants = getVariants(categoryKey, productKey);
-
-      const cards = variants.map(variant => {
+    const cards = variants.map(variant => {
         const isRecommend = variant.recommend;
-        return categoryOpt(variant,categoryKey, productKey, isRecommend, type );
+        return categoryOpt(variant.key,categoryKey, productKey, isRecommend, type );
       }).join("");
-    
     return `
         <section class="menu-group">
           <h2 class="menu-group-title">
@@ -28,7 +26,6 @@ export function renderMenu(categoryKey,type) {
           </div>
         </section>
       `;
-    
     }).join("");
 }
 
