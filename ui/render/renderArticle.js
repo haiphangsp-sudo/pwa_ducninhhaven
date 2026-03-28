@@ -1,12 +1,10 @@
 
 import { translate } from "../utils/translate.js";
-import { getProducts } from "../../core/menuQuery.js";
+import { getProducts, getCategory } from "../../core/menuQuery.js";
 
 /* =========================
    PUBLIC
 ========================= */
-import { translate } from "../utils/translate.js";
-import { getCategory, getProducts } from "../../core/menuQuery.js";
 
 export function renderArticle(categoryKey) {
   if (!categoryKey) return "";
