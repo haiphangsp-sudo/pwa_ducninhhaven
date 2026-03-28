@@ -7,7 +7,7 @@ import { getProducts } from "../../core/menuQuery.js";
 ========================= */
 
 export function renderArticle(categoryKey) {
-  if (!category) return "";
+  if (!categoryKey) return "";
 
   const products = getProducts(categoryKey);
 
