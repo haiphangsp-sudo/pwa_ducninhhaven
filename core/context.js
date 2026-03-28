@@ -133,6 +133,17 @@ export function returnToAnchor() {
   return true;
 }
 
+export function syncContextToState() {
+  const ctx = getContext();
+  if (!ctx) return;
+  setState({
+    context: {
+      anchor: ctx?.anchor|| null,
+      active: ctx?.active|| null
+    }
+  });
+
+}
 /* ---------- OPTIONAL DIRECT SET ---------- */
 // chỉ giữ nếu thực sự cần
 export function setAnchor(place) {

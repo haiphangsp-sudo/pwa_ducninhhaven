@@ -21,7 +21,9 @@ export const UI = {
     updatedAt: null
   },
   /* ---------------- NAVIGATION ---------------- */
-
+  place: {
+    selected: null // T1, T2, .....
+  },
   panel: {
     view: "intro" // food || drink ....
   },
@@ -130,15 +132,4 @@ function deepMerge(target,source){
       target[key]=value;
     }
   }
-}
-export function syncContextToState() {
-  const ctx = getContext();
-  if (!ctx) return;
-  setState({
-    context: {
-      anchor: ctx?.anchor|| null,
-      active: ctx?.active|| null
-    }
-  });
-
 }

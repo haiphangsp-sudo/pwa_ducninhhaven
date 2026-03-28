@@ -80,7 +80,7 @@ function renderGroup(type, items, isAnchorRoom = false) {
     <div class="picker-list">
       ${items.map((p) => `
         <button
-          data-action="close-overlay"
+          data-action="place-select"
           data-value="${p.id}"
           class="picker-option btn center"
           type="button">
@@ -107,12 +107,3 @@ function getGroupTitle(type, isAnchorRoom) {
   return translate(group.meta.label);
 }
 
-export function attachPlacePickerEvents() {
-  document.addEventListener("click", handlePlacePickerClick);
-}
-
-function handlePlacePickerClick(e) {
-  const btn = e.target.closest(".picker-option");
-  if (!btn) return;
-  applyPlaceById(btn.dataset.value);
-}

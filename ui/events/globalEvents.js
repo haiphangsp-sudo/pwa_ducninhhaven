@@ -1,10 +1,7 @@
 // ui/events/globalEvents.js
 
 import { setState } from "../../core/state.js";
-import { attachPlacePickerEvents } from "../render/renderPlacePicker.js";
 import { updateCartQuantity } from "../../core/events.js";
-
-
 
 
 /* =========================
@@ -12,7 +9,6 @@ import { updateCartQuantity } from "../../core/events.js";
 ========================= */
 
 export function attachAppEvents() {
-    attachPlacePickerEvents();
 
   document.addEventListener("click", handleGlobalClick);
 }
@@ -41,8 +37,19 @@ function handleGlobalClick(e) {
       break;
 
     case "close-overlay":
-      setState({ overlay: { view: null } });
+      setState({
+        overlay: { view: null },
+        ack: { state: "hidden" }
+      });
       break;
+    
+    case "place-select":
+      setState({
+        place: { selected: value },
+        overlay: { view: null }
+      });
+      break;
+
 
     /* ---------- CART / ORDER ---------- */
     
