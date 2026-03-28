@@ -1,7 +1,7 @@
-// ui/components/placePicker.js
+// ui/render/renderPlacePicker.js
 
+import { getContext } from "../../core/context.js";
 import { getAllowedPlaceTypes, getPlaceGroup, getPlaceItems } from "../../core/placesStore.js";
-import { getContext, applyPlaceById } from "../../core/context.js";
 import { translate } from "../utils/translate.js";
 
 let shellReady = false;
@@ -32,8 +32,10 @@ function renderPlacePickerShell() {
 function renderPlacePickerContent() {
   const ctx = getContext();
   const anchor = ctx?.anchor;
-  const mode = anchor?.type || "table";
-  const allowedTypes = getAllowedPlaceTypes(mode);
+  const active = ctx?.active;
+
+  const ruleType = anchor?.type || "table";
+  const allowedTypes = getAllowedPlaceTypes(ruleType);
 
   updatePickerTitle();
 
@@ -44,22 +46,21 @@ function renderPlacePickerContent() {
     }
 
     if (type === "room" && anchor?.type === "room") {
-      renderGroup("room", [anchor], true);
+      renderGroup(type, [anchor], active);
       return;
     }
 
-    renderGroup(type, getPlaceItems(type));
+    renderGroup(type, getPlaceItems(type), active);
   });
 }
 
 function updatePickerTitle() {
   const titleEl = document.querySelector(".picker-panel_title");
   if (!titleEl) return;
-
   titleEl.textContent = translate("place.select");
 }
 
-function renderGroup(type, items, isAnchorRoom = false) {
+function renderGroup(type, items, active) {
   const group = document.querySelector(`[data-group="${type}"]`);
   if (!group) return;
 
@@ -68,8 +69,9 @@ function renderGroup(type, items, isAnchorRoom = false) {
     return;
   }
 
-  const title = getGroupTitle(type, isAnchorRoom);
-  const icon = getPlaceGroup(type)?.meta?.icon || "";
+  const meta = getPlaceGroup(type)?.meta || {};
+  const title = meta.label ? translate(meta.label) : type;
+  const icon = meta.icon || "";
 
   group.innerHTML = `
     <div class="flex gap-s">
@@ -78,15 +80,19 @@ function renderGroup(type, items, isAnchorRoom = false) {
     </div>
 
     <div class="picker-list">
-      ${items.map((p) => `
-        <button
-          data-action="place-selected"
-          data-value="${p.id}"
-          class="picker-option btn center"
-          type="button">
-          ${translate(p.label)}
-        </button>
-      `).join("")}
+      ${items.map(place => {
+        const isActive = active?.id === place.id;
+
+        return `
+          <button
+            class="picker-option btn center ${isActive ? "is-active" : ""}"
+            type="button"
+            data-action="pick-place"
+            data-value="${place.id}">
+            ${translate(place.label)}
+          </button>
+        `;
+      }).join("")}
     </div>
   `;
 }
@@ -95,15 +101,3 @@ function clearGroup(type) {
   const group = document.querySelector(`[data-group="${type}"]`);
   if (group) group.innerHTML = "";
 }
-
-function getGroupTitle(type, isAnchorRoom) {
-  const group = getPlaceGroup(type);
-  if (!group) return type;
-
-  if (type === "room" && isAnchorRoom) {
-    return translate(group.meta.label);
-  }
-
-  return translate(group.meta.label);
-}
-
