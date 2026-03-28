@@ -13,8 +13,7 @@ export function renderMenu(category) {
         .filter(opt => opt.active !== false); // 1. Lấy và lọc các Option con đang active
 
       if (options.length === 0) return ""; // 2. NẾU KHÔNG CÓ OPTION NÀO ACTIVE -> KHÔNG VẼ NHÓM NÀY
-      const cards = options
-        .map(opt => {
+      const cards = options.map(opt => {
           const isRecommend = Array.isArray(item.recommend) && item.recommend.includes(opt.key);
           return categoryOpt({ ...opt, recommend: isRecommend }, item.key, category.key, type);
         })

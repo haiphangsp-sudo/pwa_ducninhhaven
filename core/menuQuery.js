@@ -96,13 +96,13 @@ export function getItemById(id) {
       for (const [optionKey, option] of Object.entries(item.options || {})) {
         if (option.id === id) {
           return {
-            id: option.id,
             category: categoryKey,
             item: itemKey,
+            recommend: item.recommend,
             option: optionKey,
             itemLabel: item.label,
             optionLabel: option.label,
-            name: option.label,
+            unit: option.unit,
             price: Number(option.price || 0)
           };
         }

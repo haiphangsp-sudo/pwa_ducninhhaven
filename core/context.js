@@ -1,8 +1,9 @@
 import { resolvePlace, getAllowedPlaceTypes } from "./placesStore.js";
+import { CONFIG } from "../../config.js";
+
 
 /* ---------- CONTEXT STATE ---------- */
 
-const STORAGE_KEY = "app_context";
 const TTL = 1000 * 60 * 30;
 
 let context = loadContext();
@@ -11,7 +12,7 @@ let context = loadContext();
 
 function loadContext() {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = localStorage.getItem(CONFIG.STORAGE_KEY);
     if (!raw) return createEmptyContext();
 
     const parsed = JSON.parse(raw);
@@ -27,7 +28,7 @@ function saveContext() {
   const prev = structuredClone(context);
 
   context.updatedAt = Date.now();
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(context));
+  localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(context));
 
   dispatchContextChange(prev, context);
 }

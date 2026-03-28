@@ -49,6 +49,7 @@ export function validateMenu(menu) {
   const errors = [];
   const validAllow = ["room", "table", "area"];
   const validUnits = ["item", "session", "kg", "hour", "person"];
+  const validUi = ["article", "cart", "instant"];
 
   for (const [catKey, cat] of Object.entries(menu)) {
     req(cat, "label", catKey);
@@ -65,7 +66,7 @@ export function validateMenu(menu) {
       errors.push(`${catKey}: invalid active: active must be boolean`);
     }
 
-    if (!["article", "cart", "instant"].includes(cat.ui)) {
+    if (!validUi.includes(cat.ui)) {
       errors.push(`${catKey}: invalid ui`);
     }
 

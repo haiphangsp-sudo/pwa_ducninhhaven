@@ -11,7 +11,6 @@ import { renderMenu } from "./renderCategory.js";
 
 // ui/render/renderPanel.js
 export function renderPanel(state) {
-  // Lấy đúng đường dẫn theo state.js
   const nextPanelId = state.panel.view; 
   const container = document.querySelector(".page-container");
   
