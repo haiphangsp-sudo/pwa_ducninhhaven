@@ -38,7 +38,7 @@ export function renderPanel(state) {
 
   // 3. Điều phối hiển thị (Toggle Visibility)
   document.querySelectorAll(".category-panel").forEach(el => {
-    if (el.id === categoryKey) {
+    if (el.id === panel) {
       el.classList.remove("hidden");
       el.classList.add("animate-fade-in");
     } else {
