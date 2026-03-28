@@ -24,29 +24,21 @@ export function renderPanel(state) {
     );
     panelEl = document.getElementById(panel);
   }
-  // 2. Chỉ vẽ lại nội dung khi panel còn trống (tránh render thừa)
   const isNewLang = syncLanguage(state);
-  if (panelEl.innerHTML === "" && isNewLang) {
+  
+  if (panelEl.innerHTML !== "" && !isNewLang) {
+     toggleVisibility();
+  } else {
     const category = getCategory(panel);
     if (!category) return;
     const type = category.ui;
     if (category.ui !== "article") {
-      panelEl.innerHTML = renderMenu(panel,type);
-    }else{
+      panelEl.innerHTML = renderMenu(panel, type);
+    } else {
       panelEl.innerHTML = renderArticle(panel);
     }
-  }
+  } 
 
-  // 3. Điều phối hiển thị (Toggle Visibility)
-  document.querySelectorAll(".category-panel").forEach(el => {
-    if (el.id === panel) {
-      el.classList.remove("hidden");
-      el.classList.add("animate-fade-in");
-    } else {
-      el.classList.add("hidden");
-      el.classList.remove("animate-fade-in");
-    }
-  });
 }
 /* =========================
    PRIVATE
@@ -59,3 +51,17 @@ function syncLanguage(state) {
   cls.add(currentLang);
   return true; 
 }
+function toggleVisibility () {
+  
+document.querySelectorAll(".category-panel").forEach(el => {
+      if (el.id === panel) {
+        el.classList.remove("hidden");
+        el.classList.add("animate-fade-in");
+      } else {
+        el.classList.add("hidden");
+        el.classList.remove("animate-fade-in");
+      }
+    });
+  }
+  
+
