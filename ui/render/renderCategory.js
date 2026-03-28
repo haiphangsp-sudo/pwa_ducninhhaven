@@ -17,7 +17,6 @@ export function renderMenu(categoryKey,ui) {
       return categoryOpt({ ...variant },categoryKey, productKey, isRecommend, ui );
       }).join("");
     return `
-      <div id="${categoryKey}" class="category-panel stack">
         <section class="menu-group">
           <h2 class="menu-group-title">
             ${translate(product.label)}
@@ -26,7 +25,6 @@ export function renderMenu(categoryKey,ui) {
             ${cards}
           </div>
         </section>
-      </div>
       `;
     }).join("");
 }

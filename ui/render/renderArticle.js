@@ -16,13 +16,11 @@ export function renderArticle(categoryKey, ui) {
 
   if (products.length === 0) {
     return `
-    <div id="${categoryKey}" class="category-panel stack">
       <div class="article-panel stack gap-l">
         <div class="text-muted">
           ${translate("article.empty") || "Chưa có nội dung"}
         </div>
       </div>
-    </div>
     `;
   }
 

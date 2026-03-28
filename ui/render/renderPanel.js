@@ -11,7 +11,7 @@ export function renderPanel(state) {
   const panel = state.panel.view; 
   const ui = state.panel.ui;
 
-  const container = document.querySelector(".page-container");
+  const container = document.querySelector(".category-panel");
   
   if (!container || !panel) return;
 
