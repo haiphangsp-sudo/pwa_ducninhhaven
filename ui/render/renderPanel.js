@@ -26,7 +26,7 @@ export function renderPanel(state) {
   }
   // 2. Chỉ vẽ lại nội dung khi panel còn trống (tránh render thừa)
   const isNewLang = syncLanguage(state);
-  if (panelEl.innerHTML === "" && !isNewLang) {
+  if (panelEl.innerHTML === "" && isNewLang) {
     const category = getCategory(panel);
     if (!category) return;
     const type = category.ui;
