@@ -17,7 +17,7 @@ export function categoryOpt(opt, categoryKey, productKey, isRecommend, type ) {
                 ${translate(opt.label)}
                 </div>           
                 <div class="card-desc menu-cart__desc">
-                    ${opt.desc ?  translate(opt.desc) : ""}
+                    ${opt.description ?  translate(opt.description) : ""}
                 </div>
             </div>
             <div class="row menu-cart__action card-bottom">
@@ -32,7 +32,7 @@ export function categoryOpt(opt, categoryKey, productKey, isRecommend, type ) {
                     data-action="${type}"
                     data-category="${categoryKey}"
                     data-product="${productKey}"
-                    data-variant="${opt.variant}"
+                    data-variant="${opt.key}"
                     data-value="${opt.id}">
                     ${type === "cart"
                         ? "+ " + translate("cart_bar.add_to_order")
