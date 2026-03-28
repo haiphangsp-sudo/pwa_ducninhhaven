@@ -6,21 +6,23 @@ import { getProducts, getCategory } from "../../core/menuQuery.js";
    PUBLIC
 ========================= */
 
-export function renderArticle(categoryKey) {
+export function renderArticle(categoryKey, ui) {
   if (!categoryKey) return "";
 
   const category = getCategory(categoryKey);
   if (!category) return "";
 
-  const products = getProducts(categoryKey);
+  const products = getProducts(category);
 
   if (products.length === 0) {
     return `
+    <div id="${categoryKey}" class="category-panel stack">
       <div class="article-panel stack gap-l">
         <div class="text-muted">
           ${translate("article.empty") || "Chưa có nội dung"}
         </div>
       </div>
+    </div>
     `;
   }
 
