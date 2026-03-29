@@ -2,7 +2,6 @@
 // Thanh giỏ dưới cùng (state-driven)
 
 import { translate } from "../utils/translate.js";
-import { getCartStats } from "../utils/cartHelpers.js"
 
 
 /* =========================
@@ -10,19 +9,22 @@ import { getCartStats } from "../utils/cartHelpers.js"
 ========================= */
 
 export function renderCartBar(state) {
+
+  const cart = getCartExtended(state);
   const bar = document.getElementById("cartBar");
   const btn = document.getElementById("cartOpen");
   const countEl = document.getElementById("cartCount");
   if (!bar || !btn || !countEl) return;
   
-  const {isEmpty, textFull } = getCartStats(state.cart.items);
   
-  if (isEmpty) {
+  if (cart.isEmpty) {
     bar.classList.add("hidden");
   } else {
     bar.classList.remove("hidden");
     btn.textContent = translate("cart_bar.cart_title");
-    countEl.textContent = textFull;
+    countEl.textContent = cart.totalQty > 1
+      ? `${cart.totalQty} ${translate("cart_bar.items")}`
+      : `${cart.totalQty} ${translate("cart_bar.item")}`
   }
 }
 

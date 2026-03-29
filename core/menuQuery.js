@@ -91,3 +91,37 @@ export function getVariantById(id) {
 
   return null;
 }
+
+/**
+ * Biến đổi giỏ hàng thô thành dữ liệu chi tiết để hiển thị
+ */
+export function getCartExtended(state) {
+  const items = state.cart.items || [];
+  
+  let totalPrice = 0;
+  let totalQty = 0;
+
+  // Làm giàu dữ liệu cho từng item trong giỏ
+  const detailedItems = items.map(cartItem => {
+    const info = getVariantById(cartItem.id);
+    
+    if (!info) return null; // Trường hợp món đã bị xóa khỏi MENU
+
+    const linePrice = info.price * cartItem.qty;
+    totalPrice += linePrice;
+    totalQty += cartItem.qty;
+
+    return {
+      ...cartItem,      // { id, qty }
+      ...info,          // { itemLabel, optionLabel, price, categoryKey, ... }
+      linePrice: linePrice
+    };
+  }).filter(Boolean); // Loại bỏ những món null
+
+  return {
+    items: detailedItems,
+    totalPrice: totalPrice,
+    totalQty: totalQty,
+    isEmpty: detailedItems.length === 0
+  };
+}
