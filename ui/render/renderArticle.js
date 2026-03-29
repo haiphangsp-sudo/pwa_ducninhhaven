@@ -1,17 +1,19 @@
 // ui/render/renderArticle.js
 import { translate } from "../utils/translate.js";
 import { getProducts } from "../../core/menuQuery.js";
-import { getState } from "../../core/state.js"; // Cần để lấy ngôn ngữ hiện tại
+import { getState } from "../../core/state.js";
 
 export function renderArticle(categoryKey) {
   if (!categoryKey) return "";
+  
+  // Lấy danh sách sản phẩm (đã được normalize thành .products)
   const products = getProducts(categoryKey);
 
-  if (!products.length) {
+  if (!products || products.length === 0) {
     return `<div class="p-xl center text-muted">${translate("article.empty")}</div>`;
   }
 
-  // 1. Lấy ngôn ngữ hiện tại từ State
+  // Lấy ngôn ngữ hiện tại để truy xuất thẳng vào content
   const lang = getState().lang?.current || 'vi';
 
   return `
@@ -34,38 +36,23 @@ export function renderArticle(categoryKey) {
   `;
 }
 
-/**
- * Hàm xử lý nội dung: Lặp qua mảng các đoạn văn
- */
 function renderArticleContent(content, lang) {
   if (!content) return "";
 
-  // Nếu là mảng (như trong menu.json: "content": [...])
+  // Nếu content là mảng các object {"vi": "...", "en": "..."}
   if (Array.isArray(content)) {
-    return content.map(block => renderBlock(block, lang)).join("");
+    return content.map(block => {
+      // Truy xuất trực tiếp theo ngôn ngữ (lang)
+      const text = typeof block === "object" ? (block[lang] || block['vi']) : block;
+      return text ? `<p class="article-text mb-m">${text}</p>` : "";
+    }).join("");
   }
 
-  // Nếu là một khối duy nhất
-  return renderBlock(content, lang);
-}
-
-/**
- * Hàm vẽ từng khối (Block) nội dung
- */
-function renderBlock(block, lang) {
-  if (!block) return "";
-
-  // Trường hợp là Object dịch: {"vi": "...", "en": "..."}
-  if (typeof block === "object") {
-    // Lấy nội dung theo ngôn ngữ, nếu không có thì lấy tiếng Việt làm dự phòng
-    const text = block[lang] || block['vi'] || "";
-    return text ? `<p class="article-text mb-m">${text}</p>` : "";
+  // Nếu content là object đơn
+  if (typeof content === "object") {
+    const text = content[lang] || content['vi'];
+    return text ? `<p class="article-text">${text}</p>` : "";
   }
 
-  // Trường hợp là chuỗi thuần túy
-  if (typeof block === "string") {
-    return `<p class="article-text mb-m">${block}</p>`;
-  }
-
-  return "";
+  return typeof content === "string" ? `<p>${content}</p>` : "";
 }
