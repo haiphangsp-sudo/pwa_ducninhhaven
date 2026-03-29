@@ -115,7 +115,7 @@ export function getCartExtended(state) {
   return {
     items: detailedItems,
     itemUnique:`${detailedItems.length} ${translate("cart_bar.unique")}`,
-    totalPrice: new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(variant.price),
+    totalPrice: new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(linePrice),
     totalQty:totalQ > 1
       ? `${totalQ} ${translate("cart_bar.items")}`
       : `${totalQ} ${translate("cart_bar.item")}`,
