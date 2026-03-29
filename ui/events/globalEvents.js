@@ -10,6 +10,7 @@ import { updateCartQuantity } from "../../core/events.js";
 
 export function attachAppEvents() {
 
+
   document.addEventListener("click", handleGlobalClick);
 }
 
@@ -62,30 +63,29 @@ function handleGlobalClick(e) {
 
 
     /* ---------- CART / ORDER ---------- */
-    
     case "cart":
-      setState({
-      order: {
-        type: "cart", // Kích hoạt addToCart trong sync.js
-        line: value   
-      }
-    });
-      break;
-    
     case "instant":
-      setState({
-      order: {
-        type: "instant", // Kích hoạt buyNow trong sync.js
-        line: value        // ID món ăn
-      }
-    });
-      break;
-
     case "send_cart":
+     const needsPlace = action !== "cart";
+      const hasPlace = !!state.context.active?.id;
+
+      // XÁC ĐỊNH STATUS TRƯỚC KHI SET STATE
+      let initialStatus = "pending";
+      let overlayView = state.overlay.view;
+
+      if (needsPlace && !hasPlace) {
+        initialStatus = "waiting_place";
+        overlayView = "placePicker"; // Mở luôn picker nếu thiếu vị trí
+      }
+
       setState({
+        overlay: { view: overlayView },
         order: {
-          type: "send_cart", // Kích hoạt sendCart trong sync.js
-          line: null         // Không cần ID cụ thể vì gửi cả giỏ
+          type: action,
+          line: value,
+          status: initialStatus,
+          at: Date.now(),
+          msg: initialStatus === "waiting_place" ? "Vui lòng chọn vị trí" : ""
         }
       });
       break;
@@ -102,54 +102,5 @@ function handleGlobalClick(e) {
 
     default:
       break;
-  }
-}
-
-/* =======================================================
-   ORDER ORCHESTRATION
-======================================================= */
-
-async function syncOrderFlow(state) {
-  const { type, line } = state.order || {};
-  const activePlace = state.context.active;
-
-  if (!type || isProcessingOrder) return;
-
-  // 1. Kiểm tra vị trí (Chỉ đơn gửi đi mới cần)
-  if (type === "instant" || type === "send_cart") {
-    if (!activePlace?.id) {
-      if (state.overlay.view !== "placePicker") {
-        setState({ overlay: { view: "placePicker" } });
-      }
-      return; 
-    }
-  }
-
-  // 2. Thực thi Action
-  isProcessingOrder = true;
-  
-  // Hiện loading nếu cần gửi qua API
-  if (type !== "cart") {
-    setState({ ack: { state: "show", status: "sending" } });
-  }
-
-  try {
-    switch (type) {
-      case "cart":
-        if (line) addToCart(line);
-        break;
-      case "instant":
-        if (line) await buyNow(line); // Hàm này gọi finalizeOrderSuccess('instant')
-        break;
-      case "send_cart":
-        await sendCart(); // Hàm này gọi finalizeOrderSuccess('cart')
-        break;
-    }
-  } catch (error) {
-    setState({ ack: { state: "show", status: "error" } });
-  } finally {
-    // 3. Giải phóng State
-    setState({ order: { type: null, line: null } });
-    isProcessingOrder = false;
   }
 }
