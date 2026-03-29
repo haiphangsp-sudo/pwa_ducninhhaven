@@ -20,8 +20,8 @@ export function renderDrawer(state) {
   if (!titleEl || !placeEl || !totalEl || !countEl || !uniqueEl || !itemsEl || !sendBtn || !summaryEl) {
     return;
   }
+  const cartLines = getCartExtended(state);
 
-  const cartLines = Array.isArray(state.cart?.items) ? state.cart.items : [];
   const activePlace = state.context?.active;
 
   titleEl.textContent = translate("cart_bar.cart_title");
@@ -29,27 +29,6 @@ export function renderDrawer(state) {
   placeEl.textContent = activePlace?.label
     ? translate(activePlace.label)
     : activePlace?.id || translate("place.select");
-
-  const lines = cartLines.map(line => {
-    const info = getVariantById(line.id);
-    if (!info) return null;
-
-    const qty = Number(line.qty || 0);
-    const price = Number(info.price || 0);
-
-    return {
-      id: line.id,
-      qty,
-      price,
-      subtotal: qty * price,
-      productLabel: info.productLabel,
-      variantLabel: info.variantLabel
-    };
-  }).filter(Boolean);
-
-  const totalQty = lines.reduce((sum, line) => sum + line.qty, 0);
-  const totalPrice = lines.reduce((sum, line) => sum + line.subtotal, 0);
-  const uniqueCount = lines.length;
 
   if (lines.length === 0) {
     summaryEl.classList.add("hidden");
@@ -68,34 +47,27 @@ export function renderDrawer(state) {
 
   summaryEl.classList.remove("hidden");
 
-  totalEl.textContent = `${totalPrice.toLocaleString("vi-VN")} đ`;
-  countEl.textContent = `${totalQty}`;
-  uniqueEl.textContent = `${uniqueCount}`;
+  totalEl.textContent = `${cartLines.totalPrice.toLocaleString("vi-VN")} đ`;
+  countEl.textContent = `${cartLines.totalQty}`;
+  uniqueEl.textContent = `${cartLines.lenght}`;
 
-  const cart = getCartExtended(state);
-  
-  itemsEl.innerHTML = cart.map(line => {
-    const productName = line.productLabel ? translate(line.productLabel) : "";
-    const variantName = line.variantLabel ? translate(line.variantLabel) : "";
-    const itemName = variantName || productName || line.id;
+  itemsEl.innerHTML = cartLines.items.map(item => {
 
-    const priceText = line.price > 0
-      ? `${line.price.toLocaleString("vi-VN")} đ`
-      : line.price === 0
+    const priceText = item.linePrice > 0
+      ? `${item.linePrice.toLocaleString("vi-VN")} đ`
+      : item.linePrice === 0
         ? translate("cart_bar.free")
         : translate("cart_bar.instant");
 
     return `
-      <div class="drawer__item drawer-item">
+      <div class="drawer__item drawer-item" data-id="${item.id}">
         <div class="drawer__info">
-          <strong>${itemName}</strong>
-          ${productName && variantName && productName !== variantName
-            ? `<span class="drawer__variant">${productName}</span>`
-            : ""
-          }
+          <strong>${item.itemLabel}</strong>
+          <span class="drawer__variant">${item.optionLabel}</span>
+          
           <span class="text-s text-muted">${priceText}</span>
           <span class="text-s text-muted">
-            ${translate("cart_bar.subtotal") || "Tạm tính"}: ${line.subtotal.toLocaleString("vi-VN")} đ
+            ${translate("cart_bar.subtotal") || "Tạm tính"}: ${item.subtotal.toLocaleString("vi-VN")} đ
           </span>
         </div>
 
@@ -104,16 +76,16 @@ export function renderDrawer(state) {
             class="qty-btn min"
             type="button"
             data-action="update-qty"
-            data-value="${line.id}"
+            data-value="${item.id}"
             data-delta="-1">-</button>
 
-          <span class="qty-val data-qty-id="${line.id}">${line.qty}</span>
+          <span class="qty-val data-qty-id="${item.id}">${item.qty}</span>
 
           <button
             class="qty-btn plus"
             type="button"
             data-action="update-qty"
-            data-value="${line.id}"
+            data-value="${item.id}"
             data-delta="1">+</button>
         </div>
       </div>

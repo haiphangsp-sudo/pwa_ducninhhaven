@@ -120,6 +120,7 @@ export function getCartExtended(state) {
 
   return {
     items: detailedItems,
+    lenght: detailedItems.length,
     totalPrice: totalPrice,
     totalQty: totalQty,
     isEmpty: detailedItems.length === 0
