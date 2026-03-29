@@ -134,7 +134,7 @@ function renderArticleContent(content) {
     return content
       .map(block => {
         if (typeof block === "string") {
-          return `<p>${block}</p>`;
+          return `<p class="content">${block}</p>`;
         }
 
         if (block && typeof block === "object") {
