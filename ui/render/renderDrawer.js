@@ -42,7 +42,7 @@ export function renderDrawer(state) {
       <div class="drawer__info">
         <strong>${item.productLabel}</strong>
         <span class="drawer__variant text-xs opacity-70">${item.variantLabel}</span>
-        <span class="text-s font-bold">${item.linePrice}</span>
+        <span class="text-s font-bold">${item.price}</span>
       </div>
       <div class="drawer-qty row items-center gap-s">
         <button class="qty-btn" data-action="update-qty" data-value="${item.id}" data-delta="-1">-</button>
