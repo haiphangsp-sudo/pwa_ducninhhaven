@@ -76,9 +76,9 @@ export function getVariantById(id) {
             categoryKey,
             productKey,
             variantKey,
-            categoryLabel: category.label,
-            productLabel: product.label,
-            variantLabel: variant.label,
+            catLabel: category.label,
+            proLabel: product.label,
+            varLabel: variant.label,
             price: Number(variant.price || 0),
             unit: variant.unit || "item",
             active: variant.active !== false,
@@ -89,7 +89,11 @@ export function getVariantById(id) {
     }
   }
 
-  return null;
+  return {
+    categoryLabel: translate(catLabel),
+    productLabel: translate(proLabel),
+    variantLabel: translate(varLabel)
+  };
 }
 
 /**
