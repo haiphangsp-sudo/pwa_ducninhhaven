@@ -25,8 +25,9 @@ export const UI = {
     selected: null // ID từ Picker
   },
   panel: {
-    view: "menu",   // menu, article, ...
-    ui: "cart"      // Kiểu hiển thị (grid, list)
+    view: "intro",   // menu, article, ...
+    ui: "article",
+    type: "grid",    // Kiểu hiển thị (grid, list)
   },
   /* ---------------- OVERLAY ---------------- */
   overlay: {
