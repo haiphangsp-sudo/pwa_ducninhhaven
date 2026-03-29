@@ -112,14 +112,12 @@ async function boot() {
     ]);
 
     loadCart();
-    applyURLContext();
     normalizeContext();
     
     attachAppEvents();
     attachUI(); // Gắn các listener cho state
     
-    // Render lần đầu
-    renderApp();
+    
     
     // Bắt đầu theo dõi ngầm
     watchMenu();
