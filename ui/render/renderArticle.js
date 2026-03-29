@@ -1,4 +1,5 @@
 import { getCategory, getProducts } from "../../core/menuQuery.js";
+import { translate } from "../utils/translate.js";
 
 export function renderArticle(categoryKey) {
   if (!categoryKey) return "";
@@ -42,25 +43,27 @@ export function renderArticle(categoryKey) {
 function renderArticleContent(content) {
   if (!content) return "";
 
-  if (typeof content === "string") {
-    return `<p>${content}</p>`;
-  }
-
+  // 1) object đa ngôn ngữ: { vi, en }
   if (!Array.isArray(content) && typeof content === "object") {
     const text = translate(content);
-    return typeof text === "string" ? `<p>${text}</p>` : "";
+    return renderParagraphs(text);
   }
 
+  // 2) string thường
+  if (typeof content === "string") {
+    return renderParagraphs(content);
+  }
+
+  // 3) mảng block
   if (Array.isArray(content)) {
     return content
       .map(block => {
         if (typeof block === "string") {
-          return `<p>${block}</p>`;
+          return renderParagraphs(block);
         }
 
         if (block && typeof block === "object") {
-          const text = translate(block);
-          return typeof text === "string" ? `<p>${text}</p>` : "";
+          return renderParagraphs(translate(block));
         }
 
         return "";
@@ -71,25 +74,14 @@ function renderArticleContent(content) {
 
   return "";
 }
-function translate(label) {
-  const currentLang = getState().lang.current;
 
-  if (!label) return "";
+function renderParagraphs(text) {
+  if (!text || typeof text !== "string") return "";
 
-  // 1. string key
-  if (typeof label === "string") {
-    return t(label, currentLang);
-  }
-
-  // 2. array → map từng phần tử
-  if (Array.isArray(label)) {
-    return label.map(item => translate(item));
-  }
-
-  // 3. object đa ngôn ngữ
-  if (typeof label === "object") {
-    return label[currentLang] || label.vi || label.en || "";
-  }
-
-  return "";
+  return text
+    .split(/\n\s*\n/)
+    .map(p => p.trim())
+    .filter(Boolean)
+    .map(p => `<p>${p}</p>`)
+    .join("");
 }
