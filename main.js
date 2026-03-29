@@ -114,9 +114,9 @@ async function boot() {
     loadCart();
     normalizeContext();
     
-    attachAppEvents();
-    attachUI(); // Gắn các listener cho state
     
+    attachUI(); // Gắn các listener cho state
+    attachAppEvents();
     
     
     // Bắt đầu theo dõi ngầm
