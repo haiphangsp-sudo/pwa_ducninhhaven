@@ -2,7 +2,7 @@
 // ui/render/renderDrawer.js
 
 import { translate } from "../utils/translate.js";
-import { getVariantById } from "../../core/menuQuery.js";
+import { getVariantById, getCartExtended } from "../../core/menuQuery.js";
 
 export function renderDrawer(state) {
   const drawer = document.getElementById("cartDrawer");
@@ -72,7 +72,9 @@ export function renderDrawer(state) {
   countEl.textContent = `${totalQty}`;
   uniqueEl.textContent = `${uniqueCount}`;
 
-  itemsEl.innerHTML = lines.map(line => {
+  const cart = getCartExtended(state);
+  
+  itemsEl.innerHTML = cart.map(line => {
     const productName = line.productLabel ? translate(line.productLabel) : "";
     const variantName = line.variantLabel ? translate(line.variantLabel) : "";
     const itemName = variantName || productName || line.id;
