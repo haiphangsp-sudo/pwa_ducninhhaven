@@ -4,12 +4,12 @@
 
 import { CONFIG } from "./config.js";
 import { loadMenu, MENU } from "./core/menuStore.js";
-import { normalizeContext, applyEntryPlace, applyResolvedPlace, getContext} from "./core/context.js";
+import { normalizeContext} from "./core/context.js";
 import { detectRecovery } from "./core/queue.js";
 import { attachAppEvents } from "./ui/events/globalEvents.js"; 
 import { attachUI } from "./ui/events/sync.js";
-import { loadPlaces, resolvePlace } from "./core/placesStore.js";
-import { setState, syncContextToState } from "./core/state.js";
+import { loadPlaces } from "./core/placesStore.js";
+import { setState } from "./core/state.js";
 
 
 boot();
@@ -30,46 +30,6 @@ function checkVersion(){
   document.querySelector(".app-version").textContent = `v${CONFIG.VERSION}`;
 }
 
-/* ---------- READ QR ---------- */
-// - Nếu URL có param "place", giải mã và lưu vào context để dùng cho các thao tác sau này (gửi yêu cầu, hiển thị ở nav, ...)
-
-export function applyURLContext() {
-  const params = new URLSearchParams(location.search);
-
-  const placeId = params.get("place");
-  const modeId = params.get("mode");
-
-  if (!placeId) return false;
-
-  const resolved = resolvePlace(placeId);
-  if (!resolved) return false;
-
-  const ctx = getContext();
-
-  // CASE 1: có mode => entry gốc mới
-  if (modeId) {
-    if (resolved.type !== modeId) return false;
-
-    applyEntryPlace(resolved);
-    history.replaceState({}, "", location.pathname);
-    return true;
-  }
-
-  // CASE 2: không có mode
-  // chưa có local => khách vãng lai / entry mới
-  if (!ctx?.anchor) {
-    applyEntryPlace(resolved);
-    history.replaceState({}, "", location.pathname);
-    return true;
-  }
-
-  // đã có local => chỉ đổi active
-  const ok = applyResolvedPlace(resolved);
-  if (!ok) return false;
-
-  history.replaceState({}, "", location.pathname);
-  return true;
-}
 /* ---------- SW ---------- */
 // - Đăng ký Service Worker để hỗ trợ offline và background sync
 function registerSW(){

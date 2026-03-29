@@ -8,6 +8,48 @@ const TTL = 1000 * 60 * 30;
 
 let context = loadContext();
 
+
+/* ---------- READ QR ---------- */
+// - Nếu URL có param "place", giải mã và lưu vào context để dùng cho các thao tác sau này (gửi yêu cầu, hiển thị ở nav, ...)
+
+export function applyURLContext() {
+  const params = new URLSearchParams(location.search);
+
+  const placeId = params.get("place");
+  const modeId = params.get("mode");
+
+  if (!placeId) return false;
+
+  const resolved = resolvePlace(placeId);
+  if (!resolved) return false;
+
+  const ctx = getContext();
+
+  // CASE 1: có mode => entry gốc mới
+  if (modeId) {
+    if (resolved.type !== modeId) return false;
+
+    applyEntryPlace(resolved);
+    history.replaceState({}, "", location.pathname);
+    return true;
+  }
+
+  // CASE 2: không có mode
+  // chưa có local => khách vãng lai / entry mới
+  if (!ctx?.anchor) {
+    applyEntryPlace(resolved);
+    history.replaceState({}, "", location.pathname);
+    return true;
+  }
+
+  // đã có local => chỉ đổi active
+  const ok = applyResolvedPlace(resolved);
+  if (!ok) return false;
+
+  history.replaceState({}, "", location.pathname);
+  return true;
+}
+
 /* ---------- LOAD / SAVE ---------- */
 
 function loadContext() {
