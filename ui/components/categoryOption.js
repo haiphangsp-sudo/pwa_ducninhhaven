@@ -6,14 +6,14 @@ import { translate } from "../utils/translate.js";
    PUBLIC
 ========================= */
 
-export function categoryOpt(opt, categoryKey, productKey, isRecommend, type ) {
+export function categoryOpt(opt, categoryKey, productKey, isRecommend, ui ) {
 
     const price = opt.price;
 
     return `
         <div class="card">
             <div class="stack menu-cart__info">
-                <div data-service="${type}" class="menu-card__title ${isRecommend ? "is-default" : ""}">
+                <div data-service="${ui}" class="menu-card__title ${isRecommend ? "is-default" : ""}">
                 ${translate(opt.label)}
                 </div>           
                 <div class="card-desc menu-cart__desc">
@@ -29,11 +29,11 @@ export function categoryOpt(opt, categoryKey, productKey, isRecommend, type ) {
                     }
                 </div>
                 <button class="btn btn-primary"
-                    data-action="${type="cart"?"add-cart":"send-instant"}"
+                    data-action="${ui==="cart"?"add-cart":"send-instant"}"
                     data-extra="${categoryKey}"
-                    data-option="${opt.key}"
+                    data-option="${productKey}"
                     data-value="${opt.id}">
-                    ${type = "cart"
+                    ${ui === "cart"
                         ? "+ " + translate("cart_bar.add_to_order")
                         : "⚡ " + translate("cart_bar.send_request")
                     }
