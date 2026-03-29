@@ -17,16 +17,19 @@ export function renderDrawer(state) {
 
   const cart = getCartExtended(state);
 
-  drawerHeader.textContent = translate("cart_bar.cart_title");
-
   if (cart.isEmpty) {
     if (summaryEl) summaryEl.classList.add("hidden");
     itemsEl.innerHTML = `<div class="p-xl center opacity-50">${translate("cart_bar.empty")}</div>`;
     if (totalEl) totalEl.textContent = "0 đ";
     if (countEl) countEl.textContent = "0";
+    sendBtn.disabled = true;
     return;
   }
 
+  updateSendButton(state, sendBtn);
+
+  drawerHeader.textContent = translate("cart_bar.cart_title");
+  
   if (summaryEl) summaryEl.classList.remove("hidden");
   totalEl.textContent = cart.totalPrice;
   
@@ -48,5 +51,28 @@ export function renderDrawer(state) {
       </div>
     </div>
   `).join("");
+}
+
+function updateSendButton(state, sendBtn) {
+  const { order, context} = state;
+  const isSending = order.status === "sending";
+  const hasPlace = !!context.active?.id;
+
+  // 1. Cập nhật Text dựa trên trạng thái
+  if (isSending) {
+    sendBtn.textContent = translate("cart_bar.sending");
+  } else {
+    sendBtn.textContent = translate("cart_bar.send_request");
+  }
+  sendBtn.disabled = false;
+
+  // 3. Gán Action (Luôn là send_cart trong Drawer)
+  sendBtn.dataset.action = "send_cart";
+
+  // 4. Thêm Class để làm đẹp CSS
+  sendBtn.classList.toggle("is-loading", isSending);
+  
+  // Wellness touch: Nếu chưa có chỗ ngồi, nút có thể mờ đi một chút
+  sendBtn.style.opacity = hasPlace ? "1" : "0.6";
 }
  
