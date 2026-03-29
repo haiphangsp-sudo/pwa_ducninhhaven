@@ -40,3 +40,26 @@ export function renderStepper(currentStatus) {
         </div>
     `;
 }
+
+
+export function updateStepperUI(itemId, qty) {
+  // 1. Tìm tất cả các chỗ hiển thị số lượng của món này (trong Menu và trong Drawer)
+  const qtyDisplays = document.querySelectorAll(`[data-qty-id="${itemId}"]`);
+  
+  qtyDisplays.forEach(el => {
+    // Chỉ cập nhật con số, không render lại HTML
+    if (el.textContent !== String(qty)) {
+      el.textContent = qty;
+      
+      // Hiệu ứng Wellness: Chớp nhẹ một cái để khách biết đã nhảy số
+      el.classList.add('pulse');
+      setTimeout(() => el.classList.remove('pulse'), 300);
+    }
+  });
+
+  // 2. Nếu số lượng về 0 và đang ở trong Drawer, ta mới cần xóa dòng đó
+  if (qty === 0) {
+    const itemRow = document.querySelector(`.drawer-item[data-id="${itemId}"]`);
+    if (itemRow) itemRow.remove();
+  }
+}

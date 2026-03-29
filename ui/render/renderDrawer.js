@@ -105,7 +105,7 @@ export function renderDrawer(state) {
             data-value="${line.id}"
             data-delta="-1">-</button>
 
-          <span class="qty-val weight-600">${line.qty}</span>
+          <span class="qty-val data-qty-id="${line.id}">${line.qty}</span>
 
           <button
             class="qty-btn plus"

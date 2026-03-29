@@ -8,7 +8,7 @@ import { renderPlacePicker } from "../render/renderPlacePicker.js";
 import { renderDrawer } from "../render/renderDrawer.js";
 import { renderNavBar } from "../render/renderNavBar.js";
 import { renderCartBar } from "../render/renderCartBar.js";
-import { renderStatusBar } from "../render/renderStatusBar.js";
+import { renderStatusBar, updateStepperUI } from "../render/renderStatusBar.js";
 import { renderHub } from "../render/renderHub.js";
 import { renderPanel } from "../render/renderPanel.js";
 import { applyPlaceById } from "../../core/context.js";
@@ -151,14 +151,21 @@ async function syncUI(state) {
     syncLanguage(state);
   }
 
-  /* ---------- ORDER FLOW ---------- */
-
-  if (
-    state.order !== lastState.order ||
-    state.context.active !== prevState.context?.active
-  ) {
-    
-  }
+  /* ---------- STEPPER SYNC ---------- */
+  // So sánh từng món trong giỏ hàng để cập nhật số lượng
+  state.cart.items.forEach(item => {
+    const prevItem = prevState.cart?.items.find(i => i.id === item.id);
+    if (!prevItem || prevItem.qty !== item.qty) {
+      updateStepperUI(item.id, item.qty);
+    }
+  });
+  
+  // Xử lý trường hợp món bị xóa hoàn toàn khỏi giỏ
+  prevState.cart?.items.forEach(prevItem => {
+    const stillExists = state.cart.items.find(i => i.id === prevItem.id);
+    if (!stillExists) updateStepperUI(prevItem.id, 0);
+  });
+  
 
   lastState = structuredClone(state);
 }
