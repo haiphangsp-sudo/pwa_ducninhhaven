@@ -2,6 +2,7 @@
 // Thanh giỏ dưới cùng (state-driven)
 
 import { translate } from "../utils/translate.js";
+import { getCartExtended } from "../../core/menuQuery.js";
 
 
 /* =========================
