@@ -9,8 +9,8 @@
       "welcome": {
         "label": {"vi": "Chào mừng", "en": "Welcome"},
         "content": {
-          "vi": "Chào mừng bạn đến với Duc Ninh Haven!\n\nChúng tôi hy vọng bạn có những giây phút thư giãn.",
-          "en": "Welcome to Duc Ninh Haven!\n\nWe hope you have a relaxing time here."
+          "vi": "Chào mừng bạn đến với Duc Ninh Haven! Chúng tôi hy vọng bạn có những giây phút thư giãn.",
+          "en": "Welcome to Duc Ninh Haven! We hope you have a relaxing time here."
         },  
         "active": true
       },
