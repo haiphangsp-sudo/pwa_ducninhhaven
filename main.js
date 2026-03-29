@@ -103,48 +103,58 @@ function loadCart() {
 
 /* ---------- MENU WATCH ---------- */
 // - Theo dõi thay đổi của menu (thông qua polling), nếu có thay đổi thì render lại app để cập nhật menu mới nhất
-async function watchMenu() {
 
-  window.__menuHash = JSON.stringify(MENU);
+async function watchMenu() {
+  // 1. Tạo bản băm nội dung ban đầu (dùng stringify 1 lần duy nhất lúc đầu)
+  let currentHash = JSON.stringify(MENU);
 
   setInterval(async () => {
-    const old = window.__menuHash;
+    try {
+      // 2. Tải menu mới ngầm
+      await loadMenu(); 
+      
+      // 3. So sánh nhanh
+      const nextHash = JSON.stringify(MENU);
 
-    await loadMenu();
-    
-    const next = JSON.stringify(MENU);
+      if (currentHash !== nextHash) {
+        console.log("[Haven] Menu có sự thay đổi, đang cập nhật...");
+        currentHash = nextHash;
 
-    if (old !== next) {
-      renderApp();
-      window.__menuHash = next;
-      showMenuUpdated();
+        // 4. THAY THẾ renderApp(): Chỉ cập nhật dữ liệu vào State
+        // Điều này sẽ kích hoạt syncUI mà không cần tải lại toàn bộ trang
+        setState({ menu: { data: MENU, updatedAt: Date.now() } });
+        
+        showMenuUpdated();
+      }
+    } catch (err) {
+      console.warn("Không thể kiểm tra cập nhật thực đơn:", err);
     }
-
-  }, 10000);
-
-  function showMenuUpdated() {
+  }, 30000); // Tăng lên 30 giây để tiết kiệm pin cho khách hàng
+}
+function showMenuUpdated() {
     const el = document.createElement("div");
     el.className = "menu-update-banner";
     el.textContent = "Thực đơn vừa được cập nhật";
     document.querySelector(".app-version").appendChild(el);
     setTimeout(() => el.remove(), 2500);
   }
-}
-
 /* ---------- BOOT ---------- */
-// - Hàm khởi động ứng dụng, chạy tất cả các thiết lập cần thiết và render giao diện lần đầu
-async function boot() {
 
-  checkVersion();
-  registerSW();
-  await loadMenu();
-  await loadPlaces();
-  applyURLContext();   // ← phải chạy trước render
-  normalizeContext(); // đảm bảo context được lưu lại với timestamp mới, tránh bị xoá do TTL
-  loadCart();
-  detectRecovery();
-  watchMenu();
-  attachUI();
-  attachAppEvents();
-  
+async function boot() {
+  try {
+    checkVersion();
+    registerSW();
+    await loadMenu();
+    await loadPlaces();
+    applyURLContext();   // ← phải chạy trước render
+    normalizeContext(); // đảm bảo context được lưu lại với timestamp mới, tránh bị xoá do TTL
+    loadCart();
+    detectRecovery();
+    watchMenu();
+    attachUI();
+    attachAppEvents();
+  } catch (error) {
+    console.error("App không thể khởi động:", error);
+    // Hiện nút "Thử lại" cho khách thay vì để màn hình trắng
+  }
 }
