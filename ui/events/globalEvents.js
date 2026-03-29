@@ -66,26 +66,12 @@ function handleGlobalClick(e) {
     case "cart":
     case "instant":
     case "send_cart":
-     const needsPlace = action !== "cart";
-      const hasPlace = !!state.context.active?.id;
-
-      // XÁC ĐỊNH STATUS TRƯỚC KHI SET STATE
-      let initialStatus = "pending";
-      let overlayView = state.overlay.view;
-
-      if (needsPlace && !hasPlace) {
-        initialStatus = "waiting_place";
-        overlayView = "placePicker"; // Mở luôn picker nếu thiếu vị trí
-      }
-
       setState({
-        overlay: { view: overlayView },
         order: {
           type: action,
           line: value,
-          status: initialStatus,
-          at: Date.now(),
-          msg: initialStatus === "waiting_place" ? "Vui lòng chọn vị trí" : ""
+          status: "pending",
+          at: Date.now()
         }
       });
       break;

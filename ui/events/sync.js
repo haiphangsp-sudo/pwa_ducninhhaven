@@ -58,7 +58,6 @@ async function syncUI(state) {
   /* ---------- CONTEXT ---------- */
   if (state.place.selected !== prevState.place?.selected) {
     applyPlaceById(state.place.selected);
-    //syncContextToState();
   }
   if (state.context !== prevState.context) {
     renderNavBar(state);
@@ -76,7 +75,6 @@ async function syncUI(state) {
 
   if (state.cart.items !== prevState.cart?.items) {
     renderCartBar(state);
-    //
     renderDrawer(state);
 
     localStorage.setItem(CONFIG.CART_KEY, JSON.stringify(state.cart.items || []));
@@ -89,9 +87,9 @@ async function syncUI(state) {
 
   /* ---------- 1. LOGIC TỰ PHỤC HỒI (AUTO-RESUME) ---------- */
   // Nếu lệnh đang chờ vị trí, mà nay context đã có vị trí -> Tự động kích hoạt
-  if (order.status === "waiting_place" && context.active?.id) {
+  if (order.status === "place-selected" && context.active?.id) {
     setState({ 
-      order: { status: "pending", at: Date.now() } 
+      order: { status: "pending", at: isNewOrder } 
     });
     return;
   }
