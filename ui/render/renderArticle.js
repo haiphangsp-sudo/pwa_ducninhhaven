@@ -121,52 +121,31 @@ function renderArticleEntry(product) {
 function renderArticleContent(content) {
   if (!content) return "";
 
-  const translated = translate(content);
-
-  // 1) string
-  if (typeof translated === "string") {
-    return `<p>${translated}</p>`;
+  if (typeof content === "string") {
+    return `<p>${content}</p>`;
   }
 
-  // 2) array of strings
-  if (Array.isArray(translated)) {
-    return translated
+  if (!Array.isArray(content) && typeof content === "object") {
+    const text = translate(content);
+    return typeof text === "string" ? `<p>${text}</p>` : "";
+  }
+
+  if (Array.isArray(content)) {
+    return content
+      .map(block => {
+        if (typeof block === "string") {
+          return `<p>${block}</p>`;
+        }
+
+        if (block && typeof block === "object") {
+          const text = translate(block);
+          return typeof text === "string" ? `<p>${text}</p>` : "";
+        }
+
+        return "";
+      })
       .filter(Boolean)
-      .map(block => `<p>${block}</p>`)
       .join("");
-  }
-
-  // 3) object đa ngôn ngữ nhưng translate không unwrap được như mong đợi
-  if (translated && typeof translated === "object") {
-    // a. object có sections
-    if (Array.isArray(translated.sections)) {
-      return translated.sections
-        .map(section => {
-          if (typeof section === "string") {
-            return `<p>${section}</p>`;
-          }
-
-          if (section && typeof section === "object") {
-            const title = section.title ? `<h3>${section.title}</h3>` : "";
-            const body = Array.isArray(section.body)
-              ? section.body.filter(Boolean).map(p => `<p>${p}</p>`).join("")
-              : section.body
-                ? `<p>${section.body}</p>`
-                : "";
-
-            return `<section class="stack gap-s">${title}${body}</section>`;
-          }
-
-          return "";
-        })
-        .join("");
-    }
-
-    // b. object fallback
-    const values = Object.values(translated).filter(v => typeof v === "string");
-    if (values.length) {
-      return values.map(v => `<p>${v}</p>`).join("");
-    }
   }
 
   return "";
