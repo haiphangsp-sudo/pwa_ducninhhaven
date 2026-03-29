@@ -144,17 +144,29 @@ async function boot() {
   try {
     checkVersion();
     registerSW();
-    await loadMenu();
-    await loadPlaces();
-    applyURLContext();   // ← phải chạy trước render
-    normalizeContext(); // đảm bảo context được lưu lại với timestamp mới, tránh bị xoá do TTL
+    
+    // Chạy song song để tăng tốc độ khởi động
+    await Promise.all([
+      loadMenu().catch(e => console.error("Lỗi menu:", e)),
+      loadPlaces().catch(e => console.error("Lỗi vị trí:", e))
+    ]);
+
     loadCart();
-    detectRecovery();
-    watchMenu();
-    attachUI();
+    applyURLContext();
+    normalizeContext();
+    
     attachAppEvents();
-  } catch (error) {
-    console.error("App không thể khởi động:", error);
-    // Hiện nút "Thử lại" cho khách thay vì để màn hình trắng
+    attachUI(); // Gắn các listener cho state
+    
+    // Render lần đầu
+    renderApp();
+    
+    // Bắt đầu theo dõi ngầm
+    watchMenu();
+    detectRecovery();
+    
+  } catch (criticalError) {
+    // Nếu có lỗi cực nặng, hiển thị thông báo cho khách
+    document.body.innerHTML = `<div class="p-xl center">Xin lỗi, ứng dụng Haven đang gặp sự cố kết nối. Vui lòng tải lại trang.</div>`;
   }
 }
