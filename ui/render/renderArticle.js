@@ -107,7 +107,7 @@ function renderArticleEntry(product) {
         }
       </header>
 
-      <div class="article-card__body stack gap-m">
+      <div class="article article-card__body stack gap-m">
         ${renderArticleContent(product.content)}
       </div>
     </article>
