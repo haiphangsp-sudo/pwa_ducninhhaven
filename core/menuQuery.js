@@ -2,6 +2,7 @@
 
 import { MENU } from "./menuStore.js";
 import { getContext } from "./context.js";
+import { translate } from "../ui/utils/translate.js";
 
 
 function getPlace() {
@@ -76,9 +77,9 @@ export function getVariantById(id) {
             categoryKey,
             productKey,
             variantKey,
-            catLabel: category.label,
-            proLabel: product.label,
-            varLabel: variant.label,
+            categoryLabel: translate(category.label),
+            productLabel: translate(product.label),
+            variantLabel: translate(variant.label),
             price: Number(variant.price || 0),
             unit: variant.unit || "item",
             active: variant.active !== false,
@@ -89,11 +90,7 @@ export function getVariantById(id) {
     }
   }
 
-  return {
-    categoryLabel: translate(catLabel),
-    productLabel: translate(proLabel),
-    variantLabel: translate(varLabel)
-  };
+  return null
 }
 
 /**
