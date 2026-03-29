@@ -33,9 +33,12 @@ export function attachUI() {
 
 async function syncUI(state) {
 
+  const prevState = lastState;
+  lastState = { ...state };
+
   /* ---------- OVERLAY ---------- */
     const activeId = state.overlay.view;
-    if (activeId !== lastState.overlay?.view) {
+    if (activeId !== prevState.overlay?.view) {
         
         switch (activeId) {
         
@@ -54,26 +57,26 @@ async function syncUI(state) {
     }
 
   /* ---------- CONTEXT ---------- */
-  if (state.place.selected !== lastState.place?.selected) {
+  if (state.place.selected !== prevState.place?.selected) {
     const ok = applyPlaceById(state.place.selected);
     if (!ok) return;
     //syncContextToState();
   }
-  if (state.context !== lastState.context) {
+  if (state.context !== prevState.context) {
     renderNavBar(state);
     renderDrawer(state);
   }
 
   /* ---------- PANEL ---------- */
 
-  if (state.panel.view !== lastState.panel?.view) {
+  if (state.panel.view !== prevState.panel?.view) {
     renderPanel(state);
     renderHub(state);
   }
 
   /* ---------- CART ---------- */
 
-  if (state.cart.items !== lastState.cart?.items) {
+  if (state.cart.items !== prevState.cart?.items) {
     renderCartBar(state);
     renderStatusBar(state);
     renderDrawer(state);
@@ -83,7 +86,7 @@ async function syncUI(state) {
 
   /* ---------- LANGUAGE ---------- */
 
-  if (state.lang.current !== lastState.lang?.current) {
+  if (state.lang.current !== prevState.lang?.current) {
     localStorage.setItem(CONFIG.LANG_KEY, state.lang.current);
     syncLanguage(state);
   }
@@ -92,7 +95,7 @@ async function syncUI(state) {
 
   if (
     state.order !== lastState.order ||
-    state.context.active !== lastState.context?.active
+    state.context.active !== prevState.context?.active
   ) {
     await syncOrderFlow(state);
   }
