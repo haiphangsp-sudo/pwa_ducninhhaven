@@ -8,10 +8,11 @@ import { renderPlacePicker } from "../render/renderPlacePicker.js";
 import { renderDrawer } from "../render/renderDrawer.js";
 import { renderNavBar } from "../render/renderNavBar.js";
 import { renderCartBar } from "../render/renderCartBar.js";
-import { renderStatusBar, updateStepperUI } from "../render/renderStatusBar.js";
+import { renderStatusBar } from "../render/renderStatusBar.js";
 import { renderHub } from "../render/renderHub.js";
 import { renderPanel } from "../render/renderPanel.js";
 import { applyPlaceById } from "../../core/context.js";
+import { updateStepperUI } from "../render/renderStepper.js";
 
 
 let lastState = {};

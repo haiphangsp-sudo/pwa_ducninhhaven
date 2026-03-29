@@ -2,7 +2,12 @@
 import { getState, setState } from '../../core/state.js';
 import { translate } from '../utils/translate.js';
 
-// ui/render/renderStatusBar.js
+
+
+/* =========================
+   PUBLIC
+========================= */
+
 export function renderStatusBar(state) {
   const bar = document.getElementById("orderStatusBar");
   const text = document.getElementById("orderStatusText");
