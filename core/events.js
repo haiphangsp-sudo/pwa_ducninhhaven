@@ -18,7 +18,7 @@ function buildPayload(items, state, type) {
 
   const summary = items.map(item => {
     const info = getVariantById(item.id);
-    const name = `${info.productLabel} - ${info.varianLabel}`;
+    const name = `${info.productLabel} - ${info.variantLabel}`;
     return `${item.qty}x ${name}`;
   }).join(", ");
 

@@ -177,8 +177,42 @@ function syncLanguage(state) {
 
   renderNavBar(state);
   renderCartBar(state);
-  //renderStatusBar(state);
+  renderStatusBar(state);
   renderHub(state);
   renderPanel(state);
   renderDrawer(state);
+}
+
+async function syncOrderFlow(state) {
+    const { type, line, at, status } = state.order;
+    
+    // Chỉ chạy nếu có click mới (at thay đổi) và chưa ở trạng thái đang xử lý
+    if (!at || at === lastState.order?.at || isProcessingOrder) return;
+
+    // KIỂM TRA VỊ TRÍ (Place Check)
+    if ((type === "instant" || type === "send_cart") && !state.context.active?.id) {
+        setState({ 
+            order: { ...state.order, status: "waiting_place", msg: translate("place.required") },
+            overlay: { view: "placePicker" } 
+        });
+        return;
+    }
+
+    isProcessingOrder = true;
+
+    try {
+        if (type === "cart") {
+            addToCart(line);
+        } else {
+            // Cập nhật trạng thái 'sending' để renderStatusBar hiện spinner
+            setState({ order: { ...state.order, status: "sending", msg: translate("order.sending") } });
+            
+            if (type === "instant") await buyNow(line);
+            if (type === "send_cart") await sendCart();
+        }
+    } catch (error) {
+        setState({ order: { ...state.order, status: "error", msg: translate("order.fail") } });
+    } finally {
+        isProcessingOrder = false;
+    }
 }
