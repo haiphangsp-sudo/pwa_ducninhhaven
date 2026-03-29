@@ -1,10 +1,11 @@
 // ui/render/renderArticle.js
 import { translate } from "../utils/translate.js";
 import { getProducts } from "../../core/menuQuery.js";
-import { getState } from "../../core/state.js";
 
 export function renderArticle(categoryKey) {
   if (!categoryKey) return "";
+  
+  // Lấy danh sách sản phẩm (đã được menuSchema đổi items -> products)
   const products = getProducts(categoryKey);
 
   if (!products || products.length === 0) {
@@ -13,7 +14,11 @@ export function renderArticle(categoryKey) {
 
   return `
     <div class="article-panel stack gap-xl">
-      ${products.map(product => `
+      ${products.map(product => {
+        // 1. Lấy chuỗi nội dung đã dịch (ví dụ: "Chào mừng...\n\nHy vọng...")
+        const rawContent = translate(product.content);
+        
+        return `
         <article class="article-card stack gap-m" id="${product.id}">
           <header class="stack gap-s">
             <h2 class="article-card__title">${translate(product.label)}</h2>
@@ -23,46 +28,25 @@ export function renderArticle(categoryKey) {
           </header>
 
           <div class="article-card__body stack">
-            ${renderArticleContent(product.content)}
+            ${formatContent(rawContent)}
           </div>
         </article>
-      `).join("")}
+      `}).join("")}
     </div>
   `;
 }
 
 /**
- * HÀM XỬ LÝ NỘI DUNG "VẠN NĂNG"
- * Chấp nhận: Mảng, Object có \n, hoặc Chuỗi thuần túy
+ * Hàm quan trọng nhất: Chuyển đổi chuỗi \n thành các thẻ <p>
  */
-function renderArticleContent(content) {
-  if (!content) return "";
-
-  // TRƯỜNG HỢP 1: Content là MẢNG (Như trong ảnh Console của bạn)
-  if (Array.isArray(content)) {
-    return content
-      .map(block => {
-        const text = translate(block); // Dịch từng phần tử trong mảng
-        return text ? formatTextToParagraphs(text) : "";
-      })
-      .join("");
-  }
-
-  // TRƯỜNG HỢP 2 & 3: Content là Object {vi, en} hoặc String
-  const text = translate(content);
-  return formatTextToParagraphs(text);
-}
-
-/**
- * Hàm phụ trợ: Chuyển đổi mọi chuỗi có \n thành các thẻ <p>
- */
-function formatTextToParagraphs(text) {
+function formatContent(text) {
   if (!text || typeof text !== "string") return "";
   
+  // Tách văn bản thành các đoạn dựa trên dấu xuống dòng \n
   return text
-    .split("\n")
-    .map(line => line.trim())
-    .filter(line => line.length > 0)
-    .map(line => `<p class="article-paragraph mb-m">${line}</p>`)
+    .split('\n')
+    .map(line => line.trim()) // Xóa khoảng trắng thừa ở đầu/cuối dòng
+    .filter(line => line.length > 0) // Loại bỏ các dòng trống
+    .map(line => `<p class="article-text mb-m">${line}</p>`) // Bọc mỗi đoạn vào thẻ <p>
     .join("");
 }
