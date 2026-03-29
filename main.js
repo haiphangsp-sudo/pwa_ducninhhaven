@@ -51,7 +51,6 @@ export function applyURLContext() {
     if (resolved.type !== modeId) return false;
 
     applyEntryPlace(resolved);
-    syncContextToState();
     history.replaceState({}, "", location.pathname);
     return true;
   }
@@ -60,7 +59,6 @@ export function applyURLContext() {
   // chưa có local => khách vãng lai / entry mới
   if (!ctx?.anchor) {
     applyEntryPlace(resolved);
-    syncContextToState();
     history.replaceState({}, "", location.pathname);
     return true;
   }
@@ -69,7 +67,6 @@ export function applyURLContext() {
   const ok = applyResolvedPlace(resolved);
   if (!ok) return false;
 
-  syncContextToState();
   history.replaceState({}, "", location.pathname);
   return true;
 }
