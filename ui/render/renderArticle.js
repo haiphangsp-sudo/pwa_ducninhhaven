@@ -4,6 +4,8 @@ import { getProducts } from "../../core/menuQuery.js";
 
 export function renderArticle(categoryKey) {
   if (!categoryKey) return "";
+  
+  // Lấy danh sách sản phẩm (đã chuẩn hóa thành .products trong menuSchema)
   const products = getProducts(categoryKey);
 
   if (!products || products.length === 0) {
@@ -12,8 +14,12 @@ export function renderArticle(categoryKey) {
 
   return `
     <div class="article-panel stack gap-xl">
-      ${products.map(product => `
-        <article class="article-card stack gap-m">
+      ${products.map(product => {
+        // Dùng hàm translate chuẩn của bạn để lấy chuỗi nội dung
+        const rawContent = translate(product.content);
+        
+        return `
+        <article class="article-card stack gap-m" id="${product.id}">
           <header class="stack gap-s">
             <h2 class="article-card__title">${translate(product.label)}</h2>
             ${product.description 
@@ -22,24 +28,23 @@ export function renderArticle(categoryKey) {
           </header>
 
           <div class="article-card__body stack">
-            ${formatContent(translate(product.content))}
+            ${formatParagraphs(rawContent)}
           </div>
         </article>
-      `).join("")}
+      `}).join("")}
     </div>
   `;
 }
 
 /**
- * Biến đổi chuỗi văn bản có \n thành các thẻ <p>
+ * Tách chuỗi theo dấu xuống dòng \n và bọc trong thẻ <p>
  */
-function formatContent(text) {
-  if (!text) return "";
+function formatParagraphs(text) {
+  if (!text || typeof text !== "string") return "";
   
-  // Tách chuỗi bằng dấu xuống dòng và lọc bỏ các dòng trống
   return text
     .split('\n')
-    .filter(line => line.trim() !== "")
+    .filter(line => line.trim() !== "") // Loại bỏ dòng trống
     .map(line => `<p class="article-text mb-m">${line.trim()}</p>`)
     .join("");
 }
