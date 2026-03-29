@@ -7,6 +7,7 @@ export function renderDrawer(state) {
   if (!drawer) return;
 
   // Lấy các element con
+  const drawerHeader = drawer.querySelector(".drawer__header-title");
   const totalEl = drawer.querySelector(".drawer__header-price");
   const countEl = drawer.querySelector(".drawer__header-count");
   const uniqueEl = drawer.querySelector(".drawer__header-unique");
@@ -15,7 +16,7 @@ export function renderDrawer(state) {
   const sendBtn = document.getElementById("drawerSend");
 
   const cart = getCartExtended(state);
-  const lang = state.lang.current;
+  drawerHeader.textContent = translate("cart_bar.cart_title");
 
   // 1. Kiểm tra rỗng (Dùng isEmpty như đã bàn)
   if (cart.isEmpty) {
@@ -31,16 +32,16 @@ export function renderDrawer(state) {
   totalEl.textContent = `${cart.totalPrice.toLocaleString("vi-VN")} đ`;
   
   // Logic xử lý item/items tại chỗ
-  const unit = lang === 'en' ? (cart.totalQty > 1 ? 'items' : 'item') : 'món';
+  const unit = cart.totalQty > 1 ? translate("cart_bar.items") : translate("cart_bar.item");
   countEl.textContent = `${cart.totalQty} ${unit}`;
-  uniqueEl.textContent = `${cart.items.length}`; // Đã sửa lỗi chính tả lenght
+  uniqueEl.textContent = `${cart.items.length} ${translate("cart_bar.unique")}`;
 
   // 3. Vẽ danh sách món
   itemsEl.innerHTML = cart.items.map(item => `
     <div class="drawer__item drawer-item" data-id="${item.id}">
       <div class="drawer__info">
-        <strong>${item.itemLabel}</strong>
-        <span class="drawer__variant text-xs opacity-70">${item.optionLabel}</span>
+        <strong>${item.productLabel}</strong>
+        <span class="drawer__variant text-xs opacity-70">${item.variantLabel}</span>
         <span class="text-s font-bold">${item.linePrice.toLocaleString()} đ</span>
       </div>
       <div class="drawer-qty row items-center gap-s">
@@ -51,3 +52,4 @@ export function renderDrawer(state) {
     </div>
   `).join("");
 }
+ 
