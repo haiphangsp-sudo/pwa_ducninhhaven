@@ -173,7 +173,6 @@ body.app{
     color: var(--color-primary, #2c3e50); 
 }
 /* Layout & Spacing */
-.stack { display: flex; flex-direction: column; }
 .row { display: flex; flex-direction: row; }
 .items-center { align-items: center; }
 .justify-between { justify-content: space-between; }

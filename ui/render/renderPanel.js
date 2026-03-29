@@ -15,11 +15,11 @@ export function renderPanel(state) {
   
   if (!container || !panel) return;
 
-  if (ui === "cart") {
+  if (ui !== "article") {
     container.innerHTML = renderMenu( panel, ui );
-  } else {
+  } else { //cart || instant
     container.innerHTML = renderArticle( panel, ui );
   }
-  }
+}
 
 
