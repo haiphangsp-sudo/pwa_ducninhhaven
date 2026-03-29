@@ -30,7 +30,7 @@ export function renderDrawer(state) {
     ? translate(activePlace.label)
     : activePlace?.id || translate("place.select");
 
-  if (lines.length === 0) {
+  if (cartLines.isEmpty) {
     summaryEl.classList.add("hidden");
 
     itemsEl.innerHTML = `
@@ -49,7 +49,7 @@ export function renderDrawer(state) {
 
   totalEl.textContent = `${cartLines.totalPrice.toLocaleString("vi-VN")} đ`;
   countEl.textContent = `${cartLines.totalQty}`;
-  uniqueEl.textContent = `${cartLines.lenght}`;
+  uniqueEl.textContent = `${cartLines.length}`;
 
   itemsEl.innerHTML = cartLines.items.map(item => {
 
@@ -79,7 +79,7 @@ export function renderDrawer(state) {
             data-value="${item.id}"
             data-delta="-1">-</button>
 
-          <span class="qty-val data-qty-id="${item.id}">${item.qty}</span>
+          <span class="qty-val" data-qty-id="${item.id}">${item.qty}</span>
 
           <button
             class="qty-btn plus"
