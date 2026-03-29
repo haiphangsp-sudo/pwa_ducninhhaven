@@ -5,24 +5,23 @@
     "ui":"article",
     "active":true,
     "icon":"info",
-    "items":
-    {
-      "welcome":{
-        "label":{"vi":"Chào mừng","en":"Welcome"},
-        "content":[
-          {"vi":"Chào mừng bạn đến với Duc Ninh Haven!", "en": "Welcome to Duc Ninh Haven!"},
-          {"vi": "Chúng tôi hy vọng bạn có những giờ phút nghỉ ngơi yên tĩnh và thư giãn tại đây.","en":"We hope you enjoy a quiet and relaxing stay with us."}
-        ],
-        "active":true
+    "items":{
+      "welcome": {
+        "label": {"vi": "Chào mừng", "en": "Welcome"},
+        "content": {
+          "vi": "Chào mừng bạn đến với Duc Ninh Haven!\n\nChúng tôi hy vọng bạn có những giây phút thư giãn.",
+          "en": "Welcome to Duc Ninh Haven!\n\nWe hope you have a relaxing time here."
+        },  
+        "active": true
       },
-      "about":{
-        "label":{"vi":"Về chúng tôi","en":"About Us"},
-        "content":[
-          {"vi":"Chúng tôi không cố trở thành một nơi ai cũng thích.","en":"We're not trying to be a place everyone likes."},
-          {"vi":"Chúng tôi chỉ cố trở thành một nơi mà một số người cần.","en":"We're just trying to be a place that some people need."}
-          ],
-        "active":true
-      }
+        "about":{
+          "label":{"vi":"Về chúng tôi","en":"About Us"},
+          "content":{
+            "vi":"Chúng tôi không cố trở thành một nơi ai cũng thích.\n\nChúng tôi chỉ cố trở thành một nơi mà một số người cần.",
+            "en":"We're not trying to be a place everyone likes.\n\nWe're just trying to be a place that some people need."
+        },
+          "active":true
+        }
   }
   },
 
