@@ -80,7 +80,7 @@ export function getVariantById(id) {
             categoryLabel: translate(category.label),
             productLabel: translate(product.label),
             variantLabel: translate(variant.label),
-            price:`${Number(variant.price || 0).toLocaleString("vi-VN")} đ`,
+            price:`${Number(variant.price).toLocaleString("vi-VN")} đ`,
             unit: variant.unit || "item",
             active: variant.active !== false,
             ui: category.ui || "cart"
