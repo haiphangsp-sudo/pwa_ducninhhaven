@@ -57,8 +57,7 @@ async function syncUI(state) {
 
   /* ---------- CONTEXT ---------- */
   if (state.place.selected !== prevState.place?.selected) {
-    const ok = applyPlaceById(state.place.selected);
-    if (!ok) return;
+    applyPlaceById(state.place.selected);
     //syncContextToState();
   }
   if (state.context !== prevState.context) {
@@ -77,7 +76,7 @@ async function syncUI(state) {
 
   if (state.cart.items !== prevState.cart?.items) {
     renderCartBar(state);
-    renderStatusBar(state);
+    //renderStatusBar(state);
     renderDrawer(state);
 
     localStorage.setItem(CONFIG.CART_KEY, JSON.stringify(state.cart.items || []));
@@ -110,7 +109,7 @@ function syncLanguage(state) {
 
   renderNavBar(state);
   renderCartBar(state);
-  renderStatusBar(state);
+  //renderStatusBar(state);
   renderHub(state);
   renderPanel(state);
   renderDrawer(state);
