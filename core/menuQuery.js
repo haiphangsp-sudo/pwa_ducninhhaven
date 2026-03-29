@@ -80,7 +80,7 @@ export function getVariantById(id) {
             categoryLabel: translate(category.label),
             productLabel: translate(product.label),
             variantLabel: translate(variant.label),
-            price: variant.price,
+            price: Number(variant.price),
             priceFormat: new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(variant.price),
             unit: variant.unit || "item",
             active: variant.active !== false,
