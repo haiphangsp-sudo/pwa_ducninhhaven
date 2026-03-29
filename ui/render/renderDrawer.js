@@ -16,9 +16,9 @@ export function renderDrawer(state) {
   const sendBtn = document.getElementById("drawerSend");
 
   const cart = getCartExtended(state);
+
   drawerHeader.textContent = translate("cart_bar.cart_title");
 
-  // 1. Kiểm tra rỗng (Dùng isEmpty như đã bàn)
   if (cart.isEmpty) {
     if (summaryEl) summaryEl.classList.add("hidden");
     itemsEl.innerHTML = `<div class="p-xl center opacity-50">${translate("cart_bar.empty")}</div>`;
@@ -27,14 +27,11 @@ export function renderDrawer(state) {
     return;
   }
 
-  // 2. Hiển thị tổng quan
   if (summaryEl) summaryEl.classList.remove("hidden");
-  totalEl.textContent = `${cart.totalPrice.toLocaleString("vi-VN")} đ`;
+  totalEl.textContent = cart.totalPrice;
   
-  // Logic xử lý item/items tại chỗ
-  const unit = cart.totalQty > 1 ? translate("cart_bar.items") : translate("cart_bar.item");
-  countEl.textContent = `${cart.totalQty} ${unit}`;
-  uniqueEl.textContent = `${cart.items.length} ${translate("cart_bar.unique")}`;
+  countEl.textContent = cart.totalQty;
+  uniqueEl.textContent = cart.itemUnique;
 
   // 3. Vẽ danh sách món
   itemsEl.innerHTML = cart.items.map(item => `
@@ -42,7 +39,7 @@ export function renderDrawer(state) {
       <div class="drawer__info">
         <strong>${item.productLabel}</strong>
         <span class="drawer__variant text-xs opacity-70">${item.variantLabel}</span>
-        <span class="text-s font-bold">${item.linePrice.toLocaleString()} đ</span>
+        <span class="text-s font-bold">${item.linePrice}</span>
       </div>
       <div class="drawer-qty row items-center gap-s">
         <button class="qty-btn" data-action="update-qty" data-value="${item.id}" data-delta="-1">-</button>

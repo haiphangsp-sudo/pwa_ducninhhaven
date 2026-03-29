@@ -80,7 +80,7 @@ export function getVariantById(id) {
             categoryLabel: translate(category.label),
             productLabel: translate(product.label),
             variantLabel: translate(variant.label),
-            price: Number(variant.price || 0),
+            price:`${Number(variant.price || 0).toLocaleString("vi-VN")} đ`,
             unit: variant.unit || "item",
             active: variant.active !== false,
             ui: category.ui || "cart"
@@ -98,25 +98,27 @@ export function getVariantById(id) {
  */
 export function getCartExtended(state) {
   const items = state.cart?.items || [];
-  let totalPrice = 0;
-  let totalQty = 0;
+  let totalP = 0;
+  let totalQ = 0;
 
   const detailedItems = items.map(cartItem => {
     const info = getVariantById(cartItem.id);
     if (!info) return null;
 
     const linePrice = info.price * cartItem.qty;
-    totalPrice += linePrice;
-    totalQty += cartItem.qty;
+    totalP += linePrice;
+    totalQ += cartItem.qty;
 
     return { ...cartItem, ...info, linePrice };
   }).filter(Boolean);
 
   return {
     items: detailedItems,
-    length: detailedItems.length,
-    totalPrice,
-    totalQty,
+    itemUnique:`${detailedItems.length} ${translate("cart_bar.unique")}`,
+    totalPrice: `${totalP.toLocaleString("vi-VN")} đ`,
+    totalQty:totalQ > 1
+      ? `${totalQ} ${translate("cart_bar.items")}`
+      : `${totalQ} ${translate("cart_bar.item")}`,
     isEmpty: detailedItems.length === 0
   };
 }
