@@ -104,3 +104,52 @@ function handleGlobalClick(e) {
       break;
   }
 }
+
+/* =======================================================
+   ORDER ORCHESTRATION
+======================================================= */
+
+async function syncOrderFlow(state) {
+  const { type, line } = state.order || {};
+  const activePlace = state.context.active;
+
+  if (!type || isProcessingOrder) return;
+
+  // 1. Kiểm tra vị trí (Chỉ đơn gửi đi mới cần)
+  if (type === "instant" || type === "send_cart") {
+    if (!activePlace?.id) {
+      if (state.overlay.view !== "placePicker") {
+        setState({ overlay: { view: "placePicker" } });
+      }
+      return; 
+    }
+  }
+
+  // 2. Thực thi Action
+  isProcessingOrder = true;
+  
+  // Hiện loading nếu cần gửi qua API
+  if (type !== "cart") {
+    setState({ ack: { state: "show", status: "sending" } });
+  }
+
+  try {
+    switch (type) {
+      case "cart":
+        if (line) addToCart(line);
+        break;
+      case "instant":
+        if (line) await buyNow(line); // Hàm này gọi finalizeOrderSuccess('instant')
+        break;
+      case "send_cart":
+        await sendCart(); // Hàm này gọi finalizeOrderSuccess('cart')
+        break;
+    }
+  } catch (error) {
+    setState({ ack: { state: "show", status: "error" } });
+  } finally {
+    // 3. Giải phóng State
+    setState({ order: { type: null, line: null } });
+    isProcessingOrder = false;
+  }
+}
