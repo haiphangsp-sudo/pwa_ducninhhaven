@@ -26,7 +26,6 @@ export const UI = {
   },
   panel: {
     view: "intro",   // menu, article, ...
-    ui: "article",
     type: "grid",    // Kiểu hiển thị (grid, list)
   },
   /* ---------------- OVERLAY ---------------- */

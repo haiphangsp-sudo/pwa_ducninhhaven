@@ -4,7 +4,7 @@ import { getVariants, getProducts} from "../../core/menuQuery.js";
 import { translate } from "../utils/translate.js";
 import { categoryOpt } from "../components/categoryOption.js";
 
-export function renderMenu(categoryKey,ui) {
+export function renderMenu(categoryKey) {
 
   const products = getProducts(categoryKey);
   if (!products.length ) return "";
@@ -13,8 +13,7 @@ export function renderMenu(categoryKey,ui) {
     const productKey = product.key;
     const variants = getVariants(categoryKey, productKey);
     const cards = variants.map(variant => {
-        const isRecommend = variant.recommend;
-      return categoryOpt({ ...variant },categoryKey, productKey, isRecommend, ui );
+      return categoryOpt({ ...variant },categoryKey, productKey);
       }).join("");
     return `
         <section class="menu-group">

@@ -6,9 +6,11 @@ import { translate } from "../utils/translate.js";
    PUBLIC
 ========================= */
 
-export function categoryOpt(opt, categoryKey, productKey, isRecommend, ui ) {
+export function categoryOpt(opt, categoryKey, productKey) {
 
     const price = opt.price;
+    const isRecommend = opt.recommend;
+    const ui = opt.ui;
 
     return `
         <div class="card">
