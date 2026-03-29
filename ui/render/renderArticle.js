@@ -3,7 +3,7 @@
 import { translate } from "../utils/translate.js";
 import { getProducts } from "../../core/menuQuery.js";
 
-export function renderArticle(categoryKey, ui) {
+export function renderArticle(categoryKey) {
   if (!categoryKey) return "";
 
 

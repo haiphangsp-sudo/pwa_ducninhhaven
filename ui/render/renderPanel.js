@@ -15,10 +15,10 @@ export function renderPanel(state) {
   
   if (!container || !panel) return;
 
-  if (ui !== "article") {
-    container.innerHTML = renderMenu( panel, ui );
+  if (ui === "article") {
+    container.innerHTML = renderArticle(panel);
   } else { //cart || instant
-    container.innerHTML = renderArticle( panel, ui );
+    container.innerHTML = renderMenu( panel, ui );
   }
 }
 
