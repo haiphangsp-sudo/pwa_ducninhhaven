@@ -1,38 +1,74 @@
-// ui/render/renderArticle.js
 import { translate } from "../utils/translate.js";
-import { getProducts } from "../../core/menuQuery.js";
+import { getCategory, getProducts } from "../../core/menuQuery.js";
 
 export function renderArticle(categoryKey) {
+  if (!categoryKey) return "";
+
+  const category = getCategory(categoryKey);
+  if (!category || category.ui !== "article") return "";
+
   const products = getProducts(categoryKey);
-  if (!products.length) return "";
+
+  if (!products.length) {
+    return `
+      <div class="article-panel stack gap-l">
+        <div class="text-muted">
+          ${translate("article.empty") || "Chưa có nội dung"}
+        </div>
+      </div>
+    `;
+  }
 
   return `
-    <div class="article-panel">
-      ${products.map(product => {
-        // Lấy nội dung qua hàm dịch
-        const rawContent = translate(product.content);
-        
-        return `
-          <article class="article-card">
+    <div class="article-panel stack gap-l">
+      ${products.map(product => `
+        <article class="article-card stack gap-m">
+          <header class="stack gap-s">
             <h2 class="article-card__title">${translate(product.label)}</h2>
-            <div class="article-card__body">
-              ${formatContent(rawContent)}
-            </div>
-          </article>
-        `;
-      }).join("")}
+            ${product.description
+              ? `<p class="article-card__desc text-muted">${translate(product.description)}</p>`
+              : ""
+            }
+          </header>
+
+          <div class="article-card__body stack gap-m">
+            ${renderArticleContent(product.content)}
+          </div>
+        </article>
+      `).join("")}
     </div>
   `;
 }
 
-function formatContent(text) {
-  if (!text) return '<p class="text-muted">...</p>'; // Báo hiệu nếu dữ liệu thực sự trống
-  if (typeof text !== "string") return `<p>${JSON.stringify(text)}</p>`; // Debug nếu vẫn là mảng
+function renderArticleContent(content) {
+  if (!content) return "";
 
-  // Tách dòng bằng \n và bọc từng dòng vào thẻ p
-  return text
-    .split("\n")
-    .filter(line => line.trim() !== "")
-    .map(line => `<p class="article-text">${line.trim()}</p>`)
-    .join("");
+  if (typeof content === "string") {
+    return `<p>${content}</p>`;
+  }
+
+  if (!Array.isArray(content) && typeof content === "object") {
+    const text = translate(content);
+    return typeof text === "string" ? `<p>${text}</p>` : "";
+  }
+
+  if (Array.isArray(content)) {
+    return content
+      .map(block => {
+        if (typeof block === "string") {
+          return `<p>${block}</p>`;
+        }
+
+        if (block && typeof block === "object") {
+          const text = translate(block);
+          return typeof text === "string" ? `<p>${text}</p>` : "";
+        }
+
+        return "";
+      })
+      .filter(Boolean)
+      .join("");
+  }
+
+  return "";
 }
