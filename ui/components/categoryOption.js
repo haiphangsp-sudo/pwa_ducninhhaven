@@ -29,11 +29,11 @@ export function categoryOpt(opt, categoryKey, productKey, isRecommend, ui ) {
                     }
                 </div>
                 <button class="btn btn-primary"
-                    data-action="${ui==="cart"?"add-cart":"send-instant"}"
+                    data-action="${(ui==="cart")?"add-cart":"send-instant"}"
                     data-extra="${categoryKey}"
                     data-option="${productKey}"
                     data-value="${opt.id}">
-                    ${ui === "cart"
+                    ${(ui === "cart")
                         ? "+ " + translate("cart_bar.add_to_order")
                         : "⚡ " + translate("cart_bar.send_request")
                     }
