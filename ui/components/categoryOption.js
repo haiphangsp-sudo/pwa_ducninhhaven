@@ -29,10 +29,9 @@ export function categoryOpt(opt, categoryKey, productKey, isRecommend, type ) {
                     }
                 </div>
                 <button class="btn btn-primary"
-                    data-action="${type}"
-                    data-category="${categoryKey}"
-                    data-product="${productKey}"
-                    data-variant="${opt.key}"
+                    data-action="${type==="cart"?"add-cart":"send-instant"}"
+                    data-extra="${categoryKey}"
+                    data-option="${opt.key}"
                     data-value="${opt.id}">
                     ${type === "cart"
                         ? "+ " + translate("cart_bar.add_to_order")

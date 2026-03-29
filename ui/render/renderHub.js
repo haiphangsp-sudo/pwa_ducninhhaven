@@ -13,8 +13,8 @@ export function renderHub(state) {
     const isActive = cat.key === currentPanel ? "is-active" : "";
     return `
     <button class="hub-btn btn center ${isActive}"
-      data-action="nav-menu"
-      data-ui="${cat.ui}"
+      data-action="open-panel"
+      data-option="${cat.ui}"
       data-value="${cat.key}">
       <span class="hub-icon">
         <img src="/icons/${cat.key}.svg" alt="">

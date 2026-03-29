@@ -45,9 +45,9 @@ export function renderDrawer(state) {
         <span class="text-s font-bold">${item.priceFormat}</span>
       </div>
       <div class="drawer-qty row items-center gap-s">
-        <button class="qty-btn" data-action="update-qty" data-value="${item.id}" data-delta="-1">-</button>
+        <button class="qty-btn" data-action="update-qty" data-value="${item.id}" data-option="-1">-</button>
         <span class="qty-val" data-qty-id="${item.id}">${item.qty}</span>
-        <button class="qty-btn" data-action="update-qty" data-value="${item.id}" data-delta="1">+</button>
+        <button class="qty-btn" data-action="update-qty" data-value="${item.id}" data-option="1">+</button>
       </div>
     </div>
   `).join("");
@@ -68,6 +68,8 @@ function updateSendButton(state, sendBtn) {
 
   // 3. Gán Action (Luôn là send_cart trong Drawer)
   sendBtn.dataset.action = "send_cart";
+  sendBtn.dataset.option = "cart";
+  sendBtn.dataset.extra = "pending";
 
   // 4. Thêm Class để làm đẹp CSS
   sendBtn.classList.toggle("is-loading", isSending);

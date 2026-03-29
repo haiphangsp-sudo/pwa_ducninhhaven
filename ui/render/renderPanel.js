@@ -9,7 +9,7 @@ import { renderMenu } from "./renderCategory.js";
 
 export function renderPanel(state) {
   const panel = state.panel.view; 
-  const ui = state.panel.ui;
+  const ui = state.panel.option;
 
   const container = document.querySelector(".category-panel");
   

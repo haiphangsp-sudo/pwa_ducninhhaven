@@ -41,25 +41,26 @@
         </div>
         <div id="hub" class="flex">
             <aside id="hubMenu" class="hub-menu flex"></aside>
+             <div id="orderStatusBar" class="order-status-bar hidden">
+            <div class="bar-content">
+                <div class="bar-mini">
+                    <span class="icon">🔔</span>
+                    <span id="orderActiveCount" class="count">0</span>
+                </div>
+                <div class="bar-expanded">
+                    <span id="orderStatusText" class="status-text"></span>
+                    <button id="btnCheckOrders" class="btn-check-order">Kiểm tra ❯</button>
+                </div>
+            </div>
+            <button id="btnToggleBar" class="btn-toggle-status">❯</button>
+        </div>
             <section id="hubContent" class="main hub-content">
                 <div class="page-container">    
                     <div class="category-panel stack"></div>
                 </div>
             </section>
         </div>
-        <div id="orderStatusBar" class="order-status-bar hidden">
-        <div class="bar-content">
-            <div class="bar-mini">
-                <span class="icon">🔔</span>
-                <span id="orderActiveCount" class="count">0</span>
-            </div>
-            <div class="bar-expanded">
-                <span id="orderStatusText" class="status-text"></span>
-                <button id="btnCheckOrders" class="btn-check-order">Kiểm tra ❯</button>
-            </div>
-        </div>
-        <button id="btnToggleBar" class="btn-toggle-status">❯</button>
-        </div>
+       
         <div id="cartBar" class="row cart-bar center hidden">
             <div class="cart-info">
                 <span class="cart-bar__icon">🛒</span>

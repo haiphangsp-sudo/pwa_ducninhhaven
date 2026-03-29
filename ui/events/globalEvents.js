@@ -12,6 +12,7 @@ export function attachAppEvents() {
 
 
   document.addEventListener("click", handleGlobalClick);
+  
 }
 
 /* =========================
@@ -22,24 +23,30 @@ function handleGlobalClick(e) {
   const target = e.target.closest("[data-action]");
   if (!target) return;
 
-  const action = target.dataset.action;
-  const value = target.dataset.value;
+  const cmd = {
+    action: target.dataset.action,
+    value: target.dataset.value,
+    option: target.dataset.option,
+    extra: target.dataset.extra,
+    source: "global"
+  };
+  
 
-  switch (action) {
+  switch (cmd.action) {
 
     /* ---------- NAV ---------- */
 
-    case "nav-menu":
+    case "open-panel":
       setState({
         panel: {
-          view: value,
-          ui: target.dataset.ui
+          view: cmd.value,
+          ui: cmd.option
         }
       });
       break;
 
     case "open-overlay":
-      setState({ overlay: { view: value } });
+      setState({ overlay: { view: cmd.value } });
       break;
 
     case "close-overlay":
@@ -49,12 +56,15 @@ function handleGlobalClick(e) {
       });
       break;
     
-    case "place-selected":
+    case "select-place":
       setState({
-        place: { selected: value },
+        place: {
+          selected: cmd.value,
+          type: cmd.option
+        },
         context: {
-          anchor: value,
-          active: "table",
+          anchor: "table",
+          active: {id: cmd.value},
           updatedAt: Date.now()
         },
         overlay: { view: null }
@@ -63,27 +73,27 @@ function handleGlobalClick(e) {
 
 
     /* ---------- CART / ORDER ---------- */
-    case "cart":
-    case "instant":
+    case "add-cart":
+    case "send-instant":
     case "send_cart":
       setState({
         order: {
-          type: action,
-          line: value,
-          status: "pending",
+          type: cmd.action,
+          line: cmd.value,
+          status: cmd.extra,
           at: Date.now()
         }
       });
       break;
     
     case "update-qty":
-      const delta = parseInt(target.dataset.delta);
-      updateCartQuantity(value, delta); // Gọi hàm từ events.js
+      const delta = parseInt(cmd.option);
+      updateCartQuantity(cmd.value, delta); // Gọi hàm từ events.js
       break;
     /* ---------- LANGUAGE ---------- */
 
     case "change-lang":
-      setState({ lang: { current: value } });
+      setState({ lang: { current: cmd.value } });
       break;
 
     default:
