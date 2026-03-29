@@ -22,23 +22,27 @@ export const UI = {
   },
   /* ---------------- NAVIGATION ---------------- */
   place: {
-    selected: null // T1, T2, .....
+    selected: null // ID từ Picker
   },
   panel: {
-    view: "intro" // food || drink ....
+    view: "menu",   // menu, article, ...
+    ui: "cart"      // Kiểu hiển thị (grid, list)
   },
+  /* ---------------- OVERLAY ---------------- */
   overlay: {
     view: null  // close || placePicker || cartDrawer ....
   },
   order: {
-    type: "cart", // cart || instant || send_card
-    line: null
+    type: null,     // cart, instant, send_cart
+    line: null,     // ID món ăn (nếu có)
+    status: "idle", // idle, pending, sending, success, error, waiting_place
+    msg: "",        // Thông báo phản hồi cho khách
+    at: null        // Timestamp để syncUI nhận diện cú click mới
   },
   /* ---------------- CART ---------------- */
 
   cart: {
-    items: [],    // 'idle' (mặc định), 'modified' (đã sửa), 'sending' (đang gửi), 
-    status: 'idle' // 'success' (thành công - thay cho ack), 'error' (lỗi)
+    items: [] 
   },
   /* ---------------- ACK (tap feedback) ---------------- */
 
