@@ -31,50 +31,47 @@ function showAck(status, message = "", timeout = 1800) {
  * Tạo Payload gửi đi. Đã lược bỏ tổng tiền toàn đơn 
  * vì GAS sẽ xử lý ghi từng món thành một dòng riêng biệt.
  */
+// core/events.js
+
 function buildPayload(state, action) {
+  // Sử dụng Optional Chaining (?.) để an toàn
   const activePlace = state.context?.active;
   const placeId = activePlace?.id?.toLowerCase();
 
+  // Nếu không có placeId, báo lỗi cho khách và dừng lại
   if (!placeId) {
     showAck("error", translate("place.select"), 2000);
-    return null;
+    return null; 
   }
 
-  // Lấy danh sách món từ giỏ hoặc từ lệnh mua ngay
   const rawItems = action === "send-cart" 
     ? (state.cart?.items || []) 
     : (state.order?.line ? [{ id: state.order.line, qty: 1 }] : []);
 
   if (rawItems.length === 0) return null;
 
-  // Chuẩn bị mảng items. Mỗi item này sẽ trở thành một dòng trong Sheets
+  // Lọc kỹ các món ăn
   const items = rawItems.map(cartItem => {
     const info = getVariantById(cartItem.id);
-    if (!info) return null;
-
-    // Vẫn gửi subtotal của từng món để GAS có thể kiểm tra chéo nếu cần
-    const price = Number(info.price || 0);
-    const subtotal = price * cartItem.qty;
+    if (!info) return null; // Bỏ qua món không tìm thấy trong menu
 
     return {
-      id: cartItem.id,                     // Cột F (option_id)
-      category: info.categoryKey || "",    // Cột G
-      item: info.productLabel,  // Cột H
-      option: info.variantLabel,// Cột I
-      qty: Number(cartItem.qty),           // Cột J
-      price: price,                        // Cột K
-      subtotal: subtotal                   // Cột L
+      id: cartItem.id,
+      category: info.categoryKey || "",
+      item: translate(info.productLabel),
+      option: translate(info.variantLabel),
+      qty: Number(cartItem.qty),
+      price: Number(info.price || 0),
+      subtotal: Number(info.price || 0) * cartItem.qty
     };
-  }).filter(Boolean);
+  }).filter(Boolean); // Xóa bỏ các item null
 
   return {
-    id: `H-${Date.now()}-${Math.floor(Math.random() * 1000)}`, // ID đơn hàng (Cột A)
-    type: action === "send-cart" ? "cart" : "instant",         // Cột O
-    timestamp: new Date().toISOString(),                       // Cột C (client_time)
-    mode: state.context?.anchor?.type || "web",                // Cột D
-    place: placeId,                                            // Cột E
-    device: navigator.userAgent,                               // Cột P
+    id: `H-${Date.now()}`,
+    type: action,
+    place: placeId,
     items: items
+    // ... các thông tin khác
   };
 }
 
