@@ -13,7 +13,8 @@ import { getVariantById } from "./menuQuery.js";
 /**
  * Chuẩn hóa dữ liệu để gửi đi
  */
-function buildPayload(state, type) {
+function buildPayload(type) {
+  const state = getState();
   const place = state?.context?.active?.type;
   const mode = state?.context?.anchor?.type;
   const cat = getCart(state, type);
@@ -24,7 +25,6 @@ function buildPayload(state, type) {
     timestamp: new Date().toISOString(),
     mode: cat.mode,
     place: cat.place,
-    total: cat.total,
     device: navigator.userAgent,
     items: cat.items
   };
@@ -144,7 +144,8 @@ export function finalizeOrderSuccess(type) {
   setTimeout(() => setState({ ack: { state: "hidden" } }), 3000);
 }
 
-function getCart(state, type) {
+function getCart(type) {
+  const state = getState();
   if (type !== "cart" && type !== "instant") return null;
 
   let rawItems = [];
