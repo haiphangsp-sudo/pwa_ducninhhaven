@@ -1,5 +1,5 @@
 import { resolvePlace, getAllowedPlaceTypes } from "./placesStore.js";
-import { CONFIG } from "../../config.js";
+import { CONFIG } from "../config.js";
 
 
 /* ---------- CONTEXT STATE ---------- */
