@@ -63,22 +63,19 @@ export function updateCartQuantity(itemId, delta) {
  * Thêm món vào giỏ hàng
  */
 export function addToCart(itemId) {
-  const state = getState();
-  const items = [...(state.cart.items || [])];
+  // Bấm máy tính
+  updateCartQuantity(itemId, 1); 
   
-  const existing = items.find(i => i.id === itemId);
-  if (existing) {
-    existing.qty += 1;
-  } else {
-    items.push({ id: itemId, qty: 1 });
-  }
-
-  setState({ 
-    cart: { items },
-    ack: { state: "show", status: "added" } 
-  });
-
-  setTimeout(() => setState({ ack: { state: "hidden" } }), 1500);
+  // Thông báo tin vui cho khách
+  setTimeout(() => setState({
+    ack: { 
+      state: "show", 
+      status: "success", 
+      message: "Đã thêm vào giỏ hàng" 
+    }
+  }));
+  // Tự động ẩn thông báo sau 2 giây
+  setTimeout(() => setState({ ack: { state: "hidden" } }), 2000);
 }
 
 /**
