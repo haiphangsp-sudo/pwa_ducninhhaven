@@ -4,7 +4,7 @@
 // Single source of truth.
 import { getContext } from "./context.js";
 import { CONFIG } from "../config.js";
-import { deepMerge } from "../data/helpers.js";
+//import { deepMerge } from "../data/helpers.js";
 
 
 export const UI = {
@@ -155,7 +155,7 @@ function deepMergeMenu(base, patch) {
 }
 /* ======================================================= */
 
-function deepMergeSai(target,source){
+function deepMerge(target,source){
   for(const key in source){
 
     const value=source[key];
