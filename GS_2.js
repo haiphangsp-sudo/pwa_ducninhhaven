@@ -7,8 +7,8 @@ const SHEET_ARCHIVE = "ARCHIVE";
 const SHEET_SECURITY = "SECURITY_LOG";
 const API_SECRET = "HNV-2026";
 const VALID_PLACES = [
-  "Olive","Juniper","Cloud","Lounge","Courtyard","Dining",
-  "Pergola","T1","T2","T3","T4","Garden"
+  "olive","juniper","cloud","lounge","courtyard","dining",
+  "pergola","t1","t2","t3","t4","garden"
 ];
 
 /* ================= ENTRY ================= */
@@ -59,22 +59,36 @@ function doGet(e) {
   
   if (action === "getStatuses") {
     const ids = e.parameter.ids.split(",");
-    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("LIVE");
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_LIVE);
     const data = sheet.getDataRange().getValues(); // Lấy toàn bộ data
     
     const results = {};
     
     // Duyệt qua danh sách ID khách gửi lên
     ids.forEach(id => {
-      // Tìm dòng có ID tương ứng (Giả sử ID ở cột A, Trạng thái ở cột E)
+      // Tìm dòng có ID tương ứng (ID ở cột A, Trạng thái ở cột J)
       const row = data.find(r => r[0] == id);
       if (row) {
-        results[id] = row[4]; // Trả về trạng thái hiện tại trong Sheets
+        results[id] = row[9]; // Trả về trạng thái hiện tại trong Sheets
       }
     });
+    if (action === "update") {
+    const id = e.parameter.id;
+    const status = e.parameter.status;
+    const success = updateOrderStatus(id, status);
+    return ContentService.createTextOutput(JSON.stringify({success: success}))
+           .setMimeType(ContentService.MimeType.JSON);
+  }
     
     return ContentService.createTextOutput(JSON.stringify(results))
       .setMimeType(ContentService.MimeType.JSON);
+  }
+  if (action === "update") {
+    const id = e.parameter.id;
+    const status = e.parameter.status;
+    const success = updateOrderStatus(id, status);
+    return ContentService.createTextOutput(JSON.stringify({success: success}))
+           .setMimeType(ContentService.MimeType.JSON);
   }
 }
 
@@ -83,23 +97,43 @@ function doGet(e) {
 
 function parseData(p) {
   return {
-    secret: p.secret,
-    id: p.id,
-    type: p.type,
-    mode: p.mode,
-    place: p.place,
-    category: p.category,
-    items: Array.isArray(p.items) ? p.items : [], 
-    option: p.option,
-    qty: p.qty,
-    device: p.device
+    secret: p?.secret || "",
+    id: p?.id || "",
+    type: p?.type || "",
+    timestamp: p?.timestamp || "",
+    mode: p?.mode || "",
+    place: p?.place || "",
+    total: Number(p?.total || 0),
+    device: p?.device || "",
+    items: Array.isArray(p?.items)
+      ? p.items.map(item => ({
+          id: item?.id || "",
+          category: item?.category || "",
+          item: item?.item || "",
+          option: item?.option || "",
+          qty: Number(item?.qty || 0),
+          price: Number(item?.price || 0),
+          subtotal: Number(item?.subtotal || 0)
+        }))
+      : []
   };
 }
 
 /* ================= VALIDATION ================= */
 function validate(data) {
+  if (!data || typeof data !== "object") return false;
   if (!data.place || !VALID_PLACES.includes(data.place)) return false;
   if (!Array.isArray(data.items) || data.items.length === 0) return false;
+
+  for (const item of data.items) {
+    if (!item || typeof item !== "object") return false;
+    if (!item.id || typeof item.id !== "string") return false;
+    if (!Number.isFinite(item.qty) || item.qty <= 0) return false;
+    if (!Number.isFinite(item.price) || item.price < 0) return false;
+    if (!Number.isFinite(item.subtotal) || item.subtotal < 0) return false;
+    if (item.subtotal !== item.qty * item.price) return false;
+  }
+
   return true;
 }
 /* ================= SAVE ================= */
@@ -107,23 +141,35 @@ function validate(data) {
 function saveCart(data) {
   const sheet = getSheet(SHEET_LIVE);
   const now = new Date();
-  const items = data.items || [];
+  const items = Array.isArray(data.items) ? data.items : [];
+
+  if (items.length === 0) {
+    return json({ status: "invalid", message: "empty_items" });
+  }
+
   const rows = items.map(it => [
-    data.id,
-    now,
-    data.mode,
-    data.place,
-    it.category,
-    it.item,
-    it.option,
-    it.qty,
+    data.id || "",                  // request_id
+    now,                            // server_time
+    data.timestamp || "",           // client_time
+    data.mode || "",
+    data.place || "",
+    it.id || "",                    // option_id
+    it.category || "",
+    it.item || "",
+    it.option || "",
+    Number(it.qty || 0),
+    Number(it.price || 0),
+    Number(it.subtotal || 0),
     getPriority(it.category),
     "NEW",
-    data.type,
-    data.device
+    data.type || "",
+    data.device || ""
   ]);
 
-  sheet.getRange(sheet.getLastRow() + 1, 1, rows.length, rows[0].length).setValues(rows);
+  sheet
+    .getRange(sheet.getLastRow() + 1, 1, rows.length, rows[0].length)
+    .setValues(rows);
+
   return json({ status: "success" });
 }
 
@@ -160,7 +206,7 @@ function getPriority(category) {
   return "ASK";
 }
 
-/* ================= SHEET ================= */
+/* ================= HELPERS ================= */
 
 function getSheet(name) {
   return SpreadsheetApp
@@ -187,6 +233,55 @@ function json(obj) {
     .createTextOutput(JSON.stringify(obj))
     .setMimeType(ContentService.MimeType.JSON);
 }
+
+
+// xử lý việc cập nhật trạng thái từ PWA
+function updateOrderStatus(orderId, newStatus) {
+  const sheet = getSheet(SHEET_LIVE);
+  const data = sheet.getDataRange().getValues();
+  
+  // Tìm dòng có ID tương ứng
+  for (let i = 1; i < data.length; i++) {
+    if (data[i][0] == orderId) { // Cột A là ID
+      // Cập nhật giá trị tại cột J (index 9)
+      sheet.getRange(i + 1, 10).setValue(newStatus); 
+      return true;
+    }
+  }
+  return false;
+}
+/**
+ * Tự động chuyển các đơn hàng đã hoàn tất sang kho lưu trữ (ARCHIVE)
+ * Giúp sheet LIVE luôn nhẹ và mượt.
+ */
+function archiveOrder() {
+  const liveSheet = getSheet(SHEET_LIVE);
+  const archiveSheet = getSheet(SHEET_ARCHIVE);
+  
+  if (!liveSheet || !archiveSheet) return;
+
+  const data = liveSheet.getDataRange().getValues();
+  // Nếu chỉ có dòng tiêu đề thì thoát
+  if (data.length < 2) return;
+
+  // Duyệt ngược từ dưới lên để việc xóa dòng không làm nhảy index
+  for (let i = data.length - 1; i >= 1; i--) {
+    const row = data[i];
+    const status = row[9]; // Cột J - Trạng thái
+
+    if (status === "DONE") {
+      // 1. Chép dòng này sang sheet ARCHIVE
+      archiveSheet.appendRow([...row, new Date()]);
+      
+      // 2. Xóa dòng này khỏi sheet LIVE
+      liveSheet.deleteRow(i + 1); 
+      
+      console.log("Đã lưu trữ đơn hàng ID: " + row[0]);
+    }
+  }
+}
+
+
 
 
 
