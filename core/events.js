@@ -42,41 +42,36 @@ function buildPayload(items, state, type) {
 /**
  * Cập nhật số lượng món trong giỏ (Dùng cho nút +/- trong Drawer)
  */
+// core/events.js
+
 export function updateCartQuantity(itemId, delta) {
   const state = getState();
-  let items = [...(state.cart.items || [])];
-
+  const items = [...(state.cart.items || [])]; // Clone mảng để đảm bảo tính bất biến
   const idx = items.findIndex(i => i.id === itemId);
-  if (idx === -1) return;
 
-  items[idx].qty += delta;
-
-  // Nếu số lượng về 0 thì xóa khỏi giỏ
-  if (items[idx].qty <= 0) {
-    items = items.filter(i => i.id !== itemId);
+  if (idx > -1) {
+    items[idx].qty += delta;
+    if (items[idx].qty <= 0) items.splice(idx, 1);
+  } else if (delta > 0) {
+    // NẾU CHƯA CÓ VÀ DELTA > 0 THÌ MỚI THÊM VÀO
+    items.push({ id: itemId, qty: delta });
   }
-  setState({ cart: { items } }); // Cập nhật lại giỏ hàng
 
+  setState({ cart: { items } });
 }
 
 /**
  * Thêm món vào giỏ hàng
  */
 export function addToCart(itemId) {
-  // Bấm máy tính
-  updateCartQuantity(itemId, 1); 
-  
-  // Thông báo tin vui cho khách
-  setTimeout(() => setState({
-    ack: { 
-      state: "show", 
-      status: "success", 
-      message: "Đã thêm vào giỏ hàng" 
-    }
-  }));
-  // Tự động ẩn thông báo sau 2 giây
-  setTimeout(() => setState({ ack: { state: "hidden" } }), 2000);
+  // Chỉ cần gọi hàm này, nó sẽ tự xử lý việc tăng qty hoặc push mới
+  updateCartQuantity(itemId, 1);
+
+  // Hiện thông báo phản hồi (Ack)
+  setState({ ack: { state: "show", status: "success", message: "Đã thêm vào giỏ hàng"  } });
+  setTimeout(() => setState({ ack: { state: "hidden" } }), 1500);
 }
+
 
 /**
  * Xử lý Mua ngay (Gửi 1 món)
