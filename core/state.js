@@ -6,8 +6,8 @@ import { getContext } from "./context.js";
 import { CONFIG } from "../config.js";
 import { deepMerge } from "../data/helpers.js";
 
-
-export const UI = {
+let listeners=[];
+export let UI = {
   /* ---------------- MENU ---------------- */
 
   menu: {
@@ -106,7 +106,7 @@ export const UI = {
 };
 /* ======================================================= */
 
-let listeners=[];
+
 
 export function subscribe(fn){
   
@@ -117,23 +117,19 @@ export function subscribe(fn){
 }
 
 export function getState(){
-  return structuredClone(UI);
+  return { ...UI };
 }
-
 export function setState(patch) {
-  if (patch.overlay) {
-    console.log("Phát hiện lệnh mở Overlay:", patch.overlay);
-    console.trace(); // Nó sẽ hiện ra danh sách các hàm đã gọi đến đây
+  const nextState = deepMerge(UI, patch);
+
+  // So sánh tham chiếu (Reference) cực nhanh thay vì JSON.stringify
+  if (nextState !== UI) {
+    UI = nextState;
+    // Thông báo cho tất cả các UI Component cập nhật
+    listeners.forEach(fn => fn(UI));
   }
-  
-  const prev = JSON.stringify(UI);
-
-  deepMerge(UI, patch);
-  const next = JSON.stringify(UI);
-
-  if (prev !== next) listeners.forEach(fn => fn(UI));
-  
 }
+
 
 function deepMergeMenu(base, patch) {
   const out = structuredClone(base);
