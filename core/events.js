@@ -165,7 +165,7 @@ function getCart(state,action) {
       option: info.variantLabel,
       qty: cartItem.qty,
       type:info.ui,
-      price: info.priceFormat
+      price: info.price===null? 0 : info.priceFormat
     };
   }).filter(Boolean);
 
