@@ -110,7 +110,7 @@ function checkCart(cmd) {
 function setOrder(cmd) {
   setState({
     order: {
-      type: cmd.action,
+      action: cmd.action,
       mode: cmd.option,
       line: cmd.value,
       status: cmd.extra,

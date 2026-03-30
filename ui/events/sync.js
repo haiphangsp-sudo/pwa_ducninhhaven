@@ -121,19 +121,19 @@ function syncLanguage(state) {
 }
 
 async function syncOrderFlow(state,prevState) {
-    const { type, line, at, status } = state.order;
+    const { action, line, at, status } = state.order;
     // Chỉ chạy nếu có click mới (at thay đổi) và chưa ở trạng thái đang xử lý
     if (!at || at === prevState.order?.at || isProcessingOrder) return;
 
     isProcessingOrder = true;
 
     try {
-        if (type === "add-cart") {
-            addToCart(state,line,type);
+        if (action === "add-cart") {
+            addToCart(state,action);
         } else {
             
-            if (type === "instant") await buyNow(state,line,type);
-            if (type === "send-cart") await sendCart(state,type);
+            if (action === "instant") await buyNow(state,action);
+            if (action === "send-cart") await sendCart(state,action);
         }
     } catch (error) {
 

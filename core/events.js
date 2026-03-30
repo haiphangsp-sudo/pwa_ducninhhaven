@@ -13,10 +13,10 @@ import { getVariantById } from "./menuQuery.js";
 /**
  * Chuẩn hóa dữ liệu để gửi đi
  */
-function buildPayload(state,line,t) {
+function buildPayload(state,action) {
   const place = state?.context?.active?.type;
   const mode = state?.context?.anchor?.type;
-  const cat = getCart(state, line,t);
+  const cat = getCart(state,action);
 
   return {
     id: cat.id,
@@ -28,7 +28,6 @@ function buildPayload(state,line,t) {
     items: cat.items
   };
 }
-
 
 /**
  * Cập nhật số lượng món trong giỏ (Dùng cho nút +/- trong Drawer)
@@ -54,7 +53,9 @@ export function updateCartQuantity(itemId, delta) {
 /**
  * Thêm món vào giỏ hàng
  */
-export function addToCart(state,itemId,type) {
+export function addToCart(state, action) {
+  const itemId = state.order.line;
+  if (!itemId) return;
   // Chỉ cần gọi hàm này, nó sẽ tự xử lý việc tăng qty hoặc push mới
   updateCartQuantity(itemId, 1);
 
@@ -67,15 +68,15 @@ export function addToCart(state,itemId,type) {
 /**
  * Xử lý Mua ngay (Gửi 1 món)
  */
-export async function buyNow(state,line,type) {
+export async function buyNow(state,action) {
   setState({ ack: { state: "show", status: "sending" } });
 
   try {
-    const payload = buildPayload(state,line, type);
+    const payload = buildPayload(state, action);
     const res = await sendRequest(payload);
 
     if (res.success) {
-      finalizeOrderSuccess(type);
+      finalizeOrderSuccess(action);
     } else {
       throw new Error(res.message);
     }
@@ -87,7 +88,7 @@ export async function buyNow(state,line,type) {
 /**
  * Xử lý Gửi toàn bộ giỏ hàng
  */
-export async function sendCart(state,no,type) {
+export async function sendCart(state,action) {
   const cartItems = state.cart.items || [];
 
   if (cartItems.length === 0) return;
@@ -95,11 +96,11 @@ export async function sendCart(state,no,type) {
   setState({ ack: { state: "show", status: "sending" } });
 
   try {
-    const payload = buildPayload(state,null, type);
+    const payload = buildPayload(state,action);
     const res = await sendRequest(payload);
 
     if (res.success) {
-      finalizeOrderSuccess(type);
+      finalizeOrderSuccess(action);
 
       setTimeout(() => setState({ ack: { state: "hidden" } }), 3000);
     } else {
@@ -116,18 +117,18 @@ export async function sendCart(state,no,type) {
  */
 // core/events.js
 
-export function finalizeOrderSuccess(type) {
+export function finalizeOrderSuccess(action) {
   const patch = {
     // 1. Hiện thông báo
     ack: { 
       state: "show", 
       status: "success",
-      message: type === "send-cart" ? "Đơn hàng đã được gửi!" : "Yêu cầu đã được gửi!"
+      message: action === "send-cart" ? "Đơn hàng đã được gửi!" : "Yêu cầu đã được gửi!"
     },
     // 2. Đóng Overlay (Drawer/Picker)
     overlay: { view: null },
     // 3. Reset lệnh Order về ban đầu
-    order: { type: null, line: null, status: "idle", at: null }
+    order: { action: null, line: null, status: "idle", at: null }
   };
 
   // 4. CHỐT HẠ: Nếu là đơn từ Giỏ hàng thì mới xóa sạch món
@@ -141,12 +142,12 @@ export function finalizeOrderSuccess(type) {
   setTimeout(() => setState({ ack: { state: "hidden" } }), 3000);
 }
 
-function getCart(state,line,type) {
-  if (type !== "cart" && type !== "instant") return null;
+function getCart(state,action) {
+  if (action !== "send-cart" && action !== "instant") return null;
 
   let rawItems = [];
-  if (type === "cart") rawItems = state.cart?.items || [];
-  if (type === "instant") {
+  if (action === "send-cart") rawItems = state.cart?.items || [];
+  if (action === "instant") {
     rawItems = line ? [{ id: line, qty: 1 }] : [];
   }
 
