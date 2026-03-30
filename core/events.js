@@ -131,21 +131,25 @@ function buildPayload(state, action) {
   const items = buildItems(rawItems);
   if (!items.length) return null;
 
-  const anchor = state?.context?.anchor || null;
-  const active = state?.context?.active || null;
+  const ctx = getContext();
+  const anchor = ctx?.anchor || null;
+  const active = ctx?.active || null;
+
+  if (!anchor?.type || !active?.id) {
+    return null;
+  }
 
   return {
     id: createOrderId(),
     type: action === "send-cart" ? "cart" : "instant",
     timestamp: new Date().toISOString(),
-    mode: anchor?.type || "",
-    place: active?.id || "",
-    placeType: active?.type || "",
+    mode: anchor.type,
+    place: active.id,
+    placeType: active.type || "",
     device: navigator.userAgent,
     items
   };
 }
-
 /* ========================================================
    ORDER SUCCESS / RESET
 ======================================================== */
