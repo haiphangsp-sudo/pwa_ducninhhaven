@@ -138,18 +138,22 @@ export async function submitOrder(action) {
   }
 }
 
+// core/events.js
 export function finalizeOrderSuccess(action) {
   const patch = {
     overlay: { view: null },
-    order: { action: null, line: null, status: "idle", msg: "", at: null }
+    order: { 
+      action: null, 
+      line: null, 
+      status: "idle", 
+      at: null // ĐƯA VỀ NULL để reset hoàn toàn
+    }
   };
 
   if (action === "send-cart") {
-    patch.cart = { items: [] }; // Reset giỏ hàng sau khi gửi thành công
+    patch.cart = { items: [] };
   }
 
   setState(patch);
   showAck("success", translate("cart_bar.success"), 2500);
-  
-  if (navigator.vibrate) navigator.vibrate(50);
 }
