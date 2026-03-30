@@ -6,27 +6,7 @@ import { getContext } from "../core/context.js";
 import { resolvePlace } from "../core/placesStore.js";
 import { translate } from "../ui/utils/translate.js"
 
-// core/utils.js
 
-export function deepMergeCu(target, source) {
-  // 1. Tạo bản sao của target để không làm hỏng dữ liệu gốc
-  // Nếu dùng cho setState, 'target' chính là 'state' hiện tại
-  const output = Array.isArray(target) ? [...target] : { ...target };
-
-  for (const key in source) {
-    const value = source[key];
-
-    if (typeof value === "object" && value !== null && !Array.isArray(value)) {
-      // Đệ quy: Nếu thuộc tính là object, ta gộp sâu tiếp
-      output[key] = deepMerge(target[key] || {}, value);
-    } else {
-      // Nếu là giá trị đơn giản (string, number) hoặc mảng, ta gán đè
-      output[key] = value;
-    }
-  }
-
-  return output; // Trả về bản sao đã được gộp
-}
 /**
  * Hàm gộp sâu Bất biến: Trả về một Object hoàn toàn mới
  */
