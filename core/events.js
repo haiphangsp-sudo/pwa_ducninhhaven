@@ -110,12 +110,9 @@ function buildItems(rawItems) {
       return {
         id: cartItem.id,
         category: info.categoryKey,
-        productKey: info.productKey,
-        variantKey: info.variantKey,
         item: info.productLabel,
         option: info.variantLabel,
         qty: Number(cartItem.qty || 0),
-        unit: info.unit || "item",
         price: Number(info.price || 0)
       };
     })
