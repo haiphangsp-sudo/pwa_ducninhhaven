@@ -133,7 +133,7 @@ export function finalizeOrderSuccess(type) {
   };
 
   // 4. CHỐT HẠ: Nếu là đơn từ Giỏ hàng thì mới xóa sạch món
-  if (type === "cart" || type === "send_cart") {
+  if (type === "send-cart") {
     patch.cart = { items: [] };
   }
 

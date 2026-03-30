@@ -71,15 +71,15 @@ function handleGlobalClick(e) {
 
 
     /* ---------- CART / ORDER ---------- */
-    case "add-cart":
+    case "cart":
       setOrder(cmd)
       break;
 
-    case "send-instant":
+    case "instant":
       checkCart(cmd);
       break;
 
-    case "send_cart":
+    case "send-cart":
       checkCart(cmd);
       break;
     
