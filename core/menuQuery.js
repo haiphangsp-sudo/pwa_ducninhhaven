@@ -48,18 +48,20 @@ export function getProductsOld(categoryKey) {
       key
     }));
 }
+
 export function getProducts(categoryKey) {
   
   // Dùng vòng lặp ổn định để tìm đúng Category
-  for (const [key, category] of Object.entries(MENU)) {
-    if (key === categoryKey) {
-      // Ở đây ta biết chắc chắn mình đang ở đúng chỗ
-      // menuSchema đã đổi items thành products, ta lấy nó ra
+  for (const [key, category] of Object.entries(MENU[categoryKey])) {
+    if (typeof category!== "object") continue
+    if (category.active === false) continue;
       const products = category.products || {};
-      return Object.values(products); 
-    }
+    out.push({
+      key,
+      ...products,
+    });
   }
-  return [];
+  return out;
 }
 
 export function getVariants(categoryKey, productKey) {
