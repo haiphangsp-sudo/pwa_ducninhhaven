@@ -1,9 +1,8 @@
 // core/events.js
 
 import { getState, setState } from "./state.js";
-import { getVariantById } from "./menuQuery.js";
+import { getCartExtended } from "./menuQuery.js";
 import { sendRequest } from "../services/api.js";
-import { CONFIG } from "../config.js";
 
 
 /* ========================================================
@@ -13,26 +12,18 @@ import { CONFIG } from "../config.js";
 /**
  * Chuẩn hóa dữ liệu để gửi đi
  */
-function buildPayload(items, state, type) {
-  const placeId = state.context.active?.id || "N/A";
-
-  const summary = items.map(item => {
-    const info = getVariantById(item.id);
-    const name = `${info.productLabel} - ${info.variantLabel}`;
-    return `${item.qty}x ${name}`;
-  }).join(", ");
-
-  const total = items.reduce((sum, item) => {
-    const info = getVariantById(item.id);
-    return sum + (info.price * item.qty);
-  }, 0);
-
+function buildPayload( state, type) {
+  const orderId = `HNV-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+  const info = getCartExtended(state, type);
   return {
-    place: placeId,
-    order_type: type === "instant" ? "Mua ngay" : "Giỏ hàng",
-    details: summary,
-    total_amount: total
-  };
+      id: orderId,
+      type: type,
+      ts: new Date().toISOString(),
+      mode: state.context?.mode,
+      place: state.context.active?.id,
+      items:info.items,
+      qty: 1
+    }
 }
 
 /* ========================================================
@@ -76,13 +67,13 @@ export function addToCart(itemId) {
 /**
  * Xử lý Mua ngay (Gửi 1 món)
  */
-export async function buyNow(itemId) {
+export async function buyNow() {
   const state = getState();
   setState({ ack: { state: "show", status: "sending" } });
 
   try {
-    const payload = buildPayload([{ id: itemId, qty: 1 }], state, "instant");
-    const res = await sendRequest(payload); // Gọi trực tiếp api.js
+    const payload = buildPayload(state, "instant");
+    const res = await sendRequest(payload);
 
     if (res.success) {
       finalizeOrderSuccess("instant");
@@ -106,8 +97,8 @@ export async function sendCart() {
   setState({ ack: { state: "show", status: "sending" } });
 
   try {
-    const payload = buildPayload(cartItems, state, "send-cart");
-    const res = await sendRequest(payload); // Xử lý kết quả trả về từ api.js
+    const payload = buildPayload(state, "send-cart");
+    const res = await sendRequest(payload);
 
     if (res.success) {
       finalizeOrderSuccess("send-cart");
