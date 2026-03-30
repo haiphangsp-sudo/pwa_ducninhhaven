@@ -66,6 +66,7 @@ export function validateMenu(menu) {
   const validUi = ["article", "cart", "instant"];
 
   for (const [categoryKey, category] of Object.entries(menu || {})) {
+    category.key = categoryKey;
     if (!category || typeof category !== "object") {
       errors.push(`${categoryKey}: invalid category object`);
       continue;
@@ -101,6 +102,7 @@ export function validateMenu(menu) {
     }
 
     for (const [productKey, product] of Object.entries(category.products || {})) {
+      product.key = productKey;
       if (!product || typeof product !== "object") {
         errors.push(`${categoryKey}.${productKey}: invalid product object`);
         continue;
@@ -156,6 +158,7 @@ export function validateMenu(menu) {
       }
 
       for (const [variantKey, variant] of Object.entries(product.variants || {})) {
+        variant.key = variantKey;
         if (!variant || typeof variant !== "object") {
           errors.push(`${categoryKey}.${productKey}.${variantKey}: invalid variant object`);
           continue;
