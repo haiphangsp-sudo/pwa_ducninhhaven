@@ -167,7 +167,7 @@ export function applyPlaceById(placeId) {
 export function returnToAnchor() {
   if (!context.anchor) return false;
 
-  context.anchor = context.anchor;
+  context.active = context.anchor;
   saveContext();
   return true;
 }
