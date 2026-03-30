@@ -51,6 +51,7 @@ export function getProductsOld(categoryKey) {
 
 export function getProducts(categoryKey) {
   if (!categoryKey) return [];
+  const out = []
   const category = MENU[categoryKey];
   // Dùng vòng lặp ổn định để tìm đúng Category
   for (const [key, car] of Object.entries(category)) {
@@ -58,9 +59,13 @@ export function getProducts(categoryKey) {
     if (categoryKey === key) continue;
     if (car.active === false) continue;
     const products = car.products;
-    return Object.products;
+    out.push({
+            key,
+            products
+        });
+    
   }
-  return [];
+  return out;
 }
 
 export function getVariants(categoryKey, productKey) {
