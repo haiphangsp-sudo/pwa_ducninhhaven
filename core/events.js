@@ -3,6 +3,7 @@
 import { getState, setState } from "./state.js";
 import { sendRequest } from "../services/api.js";
 import { getVariantById } from "./menuQuery.js";
+import { getContext } from "./context.js";
 
 /* ========================================================
    ACK HELPERS
