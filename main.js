@@ -2,13 +2,12 @@
 
 import { CONFIG } from "./config.js";
 import { loadMenu, MENU } from "./core/menuStore.js";
-import { normalizeContext} from "./core/context.js";
+import { normalizeContext, applyURLContext } from "./core/context.js";
 import { detectRecovery } from "./core/queue.js";
 import { attachAppEvents } from "./ui/events/globalEvents.js"; 
 import { attachUI } from "./ui/events/sync.js";
 import { loadPlaces } from "./core/placesStore.js";
 import { setState } from "./core/state.js";
-
 
 boot();
 /* ---------- VERSION ---------- */
@@ -109,11 +108,11 @@ async function boot() {
       loadPlaces().catch(e => console.error("Lỗi vị trí:", e))
     ]);
     
-    applyURLContext();
+    
   
     loadCart();
     normalizeContext();
-    
+    applyURLContext();
     
     attachUI(); // Gắn các listener cho state
     attachAppEvents();
