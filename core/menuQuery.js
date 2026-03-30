@@ -125,7 +125,8 @@ export function getVariantById(id) {
 /**
  * BIẾN ĐỔI GIỎ HÀNG: Từ mảng {id, qty} thành dữ liệu hiển thị Drawer
  */
-export function getDrawerExtended(state) {
+export function getDrawerExtended() {
+  const state = getState();
   const items = state.cart?.items || [];
   let totalP = 0;
   let totalQ = 0;
