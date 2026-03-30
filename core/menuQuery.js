@@ -34,7 +34,7 @@ return out;
 
 }
 
-export function getProductsOld(categoryKey) {
+export function getProducts(categoryKey) {
   if (!categoryKey) return [];
   const category = MENU[categoryKey];
   if (category?.active === false) return [];
@@ -49,12 +49,12 @@ export function getProductsOld(categoryKey) {
     }));
 }
 
-export function getProducts(categoryKey) {
+export function getProductsTest(categoryKey) {
   const menuData = MENU[categoryKey];
   const out = [];
   if (!menuData) return [];
-  for (const [key, category] of Object.entries(menuData)) {
-    if (category?.active === false) continue;
+  for (const [key, products] of Object.entries(menuData)) {
+    if (products?.active === false) continue;
       out.push({
         key,
         products: category.products
