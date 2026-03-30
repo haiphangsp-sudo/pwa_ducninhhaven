@@ -125,20 +125,20 @@ export function getVariantById(id) {
 /**
  * BIẾN ĐỔI GIỎ HÀNG: Từ mảng {id, qty} thành dữ liệu hiển thị Drawer
  */
-export function getCartExtended(state) {
-  let items = [];
-  const mode = state.order.mode;
-
-  if (mode === "cart"){
-    items = state.cart?.items || [];
-  } else {
-    items = state.order?.line ? [state.order?.line] : [];
-  }
+export function getCartExtended(state, type) {
+  const { line } = state.order;
+  const { items: cat } = state.cart;
 
   let totalP = 0;
   let totalQ = 0;
 
-  const detailedItems = items.map(cartItem => {
+  const rawItems = (type === "instant" && line) 
+    ? [{ id: line, qty: 1 }] 
+    : (cat || []);
+
+  if (rawItems.length === 0) return null;
+
+  const detailedItems = rawItems.map(cartItem => {
     const info = getVariantById(cartItem.id);
     if (!info) return null;
 
