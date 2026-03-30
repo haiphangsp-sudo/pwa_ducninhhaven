@@ -4,13 +4,12 @@ import { getVariants, getProducts} from "../../core/menuQuery.js";
 import { translate } from "../utils/translate.js";
 import { categoryOpt } from "../components/categoryOption.js";
 
-export function renderMenu(categoryKey) {
+export function renderMenu(categoryKey,ui) {
 
   const products = getProducts(categoryKey);
   if (!products.length ) return "";
 
   return products.map(product => {
-    const ui = product.ui;
     const productKey = product.key;
     const variants = getVariants(categoryKey, productKey);
     const cards = variants.map(variant => {

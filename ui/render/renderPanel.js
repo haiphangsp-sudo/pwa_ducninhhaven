@@ -8,20 +8,19 @@ import { renderMenu } from "./renderCategory.js";
 ========================= */
 
 export function renderPanel(state) {
-  const panel = state.panel.view; 
-  const ui = state.panel.option;
+  const panel = state.panel; 
 
   const container = document.querySelector(".category-panel");
   
-  if (!container || !panel) return;
+  if (!container || !panel.view) return;
 
-  switch (ui) {
+  switch (panel.type) {
     case "article":
-      container.innerHTML = renderArticle(panel);
+      container.innerHTML = renderArticle(panel.view);
       break;
   
     default:
-      container.innerHTML = renderMenu( panel, ui );
+      container.innerHTML = renderMenu( panel.view, panel.type );
       break;
  
   }
