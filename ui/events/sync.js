@@ -66,12 +66,11 @@ async function syncUI(state) {
 
   /* ---------- PANEL ---------- */
 
-  if (state.panel !== prevState?.panel) {
+  if (state.panel.view !== prevState.panel.view) {
     renderHub(state);
     renderPanel(state);
   }
-
-
+  
   /* ---------- CART ---------- */
 
   if (state.cart.items !== prevState.cart?.items) {
