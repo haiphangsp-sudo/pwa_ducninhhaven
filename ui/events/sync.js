@@ -149,7 +149,7 @@ async function syncOrderFlow(state,prevState) {
             if (type === "send_cart") await sendCart();
         }
     } catch (error) {
-        setState({ order: { ...state.order, status: "error", msg: translate("order.fail") } });
+        setState({ order: { ...state.order, status: "error" } });
     } finally {
         isProcessingOrder = false;
     }
