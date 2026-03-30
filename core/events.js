@@ -2,193 +2,18 @@
 
 import { getState, setState } from "./state.js";
 import { sendRequest } from "../services/api.js";
-import { translate } from "../ui/utils/translate.js";
 import { getVariantById } from "./menuQuery.js";
 
-
 /* ========================================================
-   INTERNAL HELPERS (Không export)
-   ======================================================== */
+   ACK HELPERS
+======================================================== */
 
-/**
- * Chuẩn hóa dữ liệu để gửi đi
- */
-function buildPayload(state, action) {
-  const cart = getCart(state, action);
-  if (!cart) return null;
-
-  return {
-    id: cart.id,
-    type: cart.type,
-    timestamp: new Date().toISOString(),
-    mode: cart.mode,
-    place: cart.place,
-    placeType: cart.placeType,
-    device: navigator.userAgent,
-    items: cart.items
-  };
-}
-/**
- * Cập nhật số lượng món trong giỏ (Dùng cho nút +/- trong Drawer)
- */
-// core/events.js
-
-export function updateCartQuantity(itemId, delta) {
-  const state = getState();
-  const items = [...(state.cart.items || [])]; // Clone mảng để đảm bảo tính bất biến
-  const idx = items.findIndex(i => i.id === itemId);
-
-  if (idx > -1) {
-    items[idx].qty += delta;
-    if (items[idx].qty <= 0) items.splice(idx, 1);
-  } else if (delta > 0) {
-    // NẾU CHƯA CÓ VÀ DELTA > 0 THÌ MỚI THÊM VÀO
-    items.push({ id: itemId, qty: delta });
-  }
-
-  setState({ cart: { items } });
-}
-
-/**
- * Thêm món vào giỏ hàng
- */
-export function addToCart(state, action) {
-  const itemId = state.order.line;
-  if (!itemId) return;
-  // Chỉ cần gọi hàm này, nó sẽ tự xử lý việc tăng qty hoặc push mới
-  updateCartQuantity(itemId, 1);
-
-  // Hiện thông báo phản hồi (Ack)
-  setState({ ack: { state: "show", status: "success", message: "Đã thêm vào giỏ hàng"  } });
-  setTimeout(() => setState({ ack: { state: "hidden" } }), 1500);
-}
-
-
-/**
- * Xử lý Mua ngay (Gửi 1 món)
- */
-export async function buyNow(state,action) {
-  setState({ ack: { state: "show", status: "sending" } });
-
-  try {
-    const payload = buildPayload(state, action);
-    const res = await sendRequest(payload);
-
-    if (res.success) {
-      finalizeOrderSuccess(action);
-    } else {
-      throw new Error(res.message);
-    }
-  } catch (err) {
-    setState({ ack: { state: "show", status: "error" } });
-  }
-}
-
-/**
- * Xử lý Gửi toàn bộ giỏ hàng
- */
-export async function sendCart(state,action) {
-  const cartItems = state.cart.items || [];
-
-  if (cartItems.length === 0) return;
-
-  setState({ ack: { state: "show", status: "sending" } });
-
-  try {
-    const payload = buildPayload(state,action);
-    const res = await sendRequest(payload);
-
-    if (res.success) {
-      finalizeOrderSuccess(action);
-
-      setTimeout(() => setState({ ack: { state: "hidden" } }), 3000);
-    } else {
-      throw new Error(res.message);
-    }
-  } catch (err) {
-    setState({ ack: { state: "show", status: "error" } });
-  }
-}
-
-/**
- * FINAL ACTION: Dọn dẹp và thông báo sau khi đơn hàng thành công
- * @param {string} type - Loại đơn ('cart', 'instant', 'recovery')
- */
-// core/events.js
-
-export function finalizeOrderSuccess(action) {
-  const patch = {
-    // 1. Hiện thông báo
-    ack: { 
-      state: "show", 
-      status: "success",
-      message: action === "send-cart" ? "Đơn hàng đã được gửi!" : "Yêu cầu đã được gửi!"
-    },
-    // 2. Đóng Overlay (Drawer/Picker)
-    overlay: { view: null },
-    // 3. Reset lệnh Order về ban đầu
-    order: { action: null, line: null, status: "idle", at: null }
-  };
-
-  // 4. CHỐT HẠ: Nếu là đơn từ Giỏ hàng thì mới xóa sạch món
-  if (action === "send-cart") {
-    patch.cart = { items: [] };
-  }
-
-  setState(patch);
-  
-  // Tự ẩn thông báo sau 3s
-  setTimeout(() => setState({ ack: { state: "hidden" } }), 3000);
-}
-
-function getCart(state, action) {
-  if (action !== "send-cart" && action !== "instant") return null;
-
-  const line = state.order.line;
-  const type = action === "send-cart" ? "cart" : action;
-
-  let rawItems = [];
-  if (action === "send-cart") rawItems = state.cart?.items || [];
-  if (action === "instant") {
-    rawItems = line ? [{ id: line, qty: 1 }] : [];
-  }
-
-  if (rawItems.length === 0) return null;
-
-  const detailedItems = rawItems.map(cartItem => {
-    const info = getVariantById(cartItem.id);
-    if (!info) return null;
-
-    return {
-      id: cartItem.id,
-      category: info.categoryKey,
-      productKey: info.productKey,
-      variantKey: info.variantKey,
-      item: info.productLabel,
-      option: info.variantLabel,
-      qty: cartItem.qty,
-      unit: info.unit || "item",
-      price: Number(info.price || 0)
-    };
-  }).filter(Boolean);
-
-  return {
-    id: `H-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
-    type,
-    mode: state.context.anchor?.type || "",
-    place: state.context.active?.id || "",
-    placeType: state.context.active?.type || "",
-    items: detailedItems
-  };
-}
-
-export function showAck(status, message, timeout = 1500) {
+function showAck(status, message = "", timeout = 1800) {
   setState({
     ack: {
-      visible: true,
+      state: "show",
       status,
-      message,
-      at: Date.now()
+      message
     }
   });
 
@@ -196,12 +21,222 @@ export function showAck(status, message, timeout = 1500) {
     setTimeout(() => {
       setState({
         ack: {
-          visible: false,
+          state: "hidden",
           status: null,
-          message: "",
-          at: Date.now()
+          message: ""
         }
       });
     }, timeout);
   }
+}
+
+/* ========================================================
+   CART HELPERS
+======================================================== */
+
+export function updateCartQuantity(itemId, delta) {
+  if (!itemId || !Number.isFinite(delta) || delta === 0) return;
+
+  const state = getState();
+  const items = [...(state.cart?.items || [])];
+  const idx = items.findIndex(i => i.id === itemId);
+
+  if (idx > -1) {
+    const nextQty = (Number(items[idx].qty) || 0) + delta;
+
+    if (nextQty <= 0) {
+      items.splice(idx, 1);
+    } else {
+      items[idx] = {
+        ...items[idx],
+        qty: nextQty
+      };
+    }
+  } else if (delta > 0) {
+    items.push({
+      id: itemId,
+      qty: delta
+    });
+  }
+
+  setState({
+    cart: { items }
+  });
+}
+
+export function addToCart(state) {
+  const itemId = state?.order?.line;
+  if (!itemId) return false;
+
+  const info = getVariantById(itemId);
+  if (!info) {
+    showAck("error", "Món không hợp lệ", 1800);
+    return false;
+  }
+
+  updateCartQuantity(itemId, 1);
+  showAck("success", "Đã thêm vào giỏ hàng", 1200);
+  return true;
+}
+
+/* ========================================================
+   PAYLOAD
+======================================================== */
+
+function createOrderId() {
+  return `H-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+}
+
+function getRawOrderItems(state, action) {
+  if (action === "send-cart") {
+    return state.cart?.items || [];
+  }
+
+  if (action === "instant") {
+    const line = state.order?.line;
+    return line ? [{ id: line, qty: 1 }] : [];
+  }
+
+  return [];
+}
+
+function buildItems(rawItems) {
+  return rawItems
+    .map(cartItem => {
+      const info = getVariantById(cartItem.id);
+      if (!info) return null;
+
+      return {
+        id: cartItem.id,
+        category: info.categoryKey,
+        productKey: info.productKey,
+        variantKey: info.variantKey,
+        item: info.productLabel,
+        option: info.variantLabel,
+        qty: Number(cartItem.qty || 0),
+        unit: info.unit || "item",
+        price: Number(info.price || 0)
+      };
+    })
+    .filter(Boolean)
+    .filter(item => item.qty > 0);
+}
+
+function buildPayload(state, action) {
+  if (action !== "send-cart" && action !== "instant") return null;
+
+  const rawItems = getRawOrderItems(state, action);
+  if (!rawItems.length) return null;
+
+  const items = buildItems(rawItems);
+  if (!items.length) return null;
+
+  const anchor = state?.context?.anchor || null;
+  const active = state?.context?.active || null;
+
+  return {
+    id: createOrderId(),
+    type: action === "send-cart" ? "cart" : "instant",
+    timestamp: new Date().toISOString(),
+    mode: anchor?.type || "",
+    place: active?.id || "",
+    placeType: active?.type || "",
+    device: navigator.userAgent,
+    items
+  };
+}
+
+/* ========================================================
+   ORDER SUCCESS / RESET
+======================================================== */
+
+function resetOrderState() {
+  setState({
+    order: {
+      action: null,
+      line: null,
+      status: "idle",
+      msg: "",
+      at: null
+    }
+  });
+}
+
+export function finalizeOrderSuccess(action) {
+  const patch = {
+    overlay: { view: null },
+    order: {
+      action: null,
+      line: null,
+      status: "idle",
+      msg: "",
+      at: null
+    }
+  };
+
+  if (action === "send-cart") {
+    patch.cart = { items: [] };
+    setState(patch);
+    showAck("success", "Đơn hàng đã được gửi", 2200);
+    return;
+  }
+
+  setState(patch);
+  showAck("success", "Yêu cầu đã được gửi", 2200);
+}
+
+/* ========================================================
+   SEND ACTIONS
+======================================================== */
+
+async function submitOrder(state, action) {
+  const payload = buildPayload(state, action);
+  if (!payload) {
+    showAck("error", "Không có dữ liệu để gửi", 1800);
+    return false;
+  }
+
+  setState({
+    order: {
+      ...state.order,
+      status: "pending"
+    }
+  });
+
+  showAck("sending", "Đang gửi yêu cầu...", 0);
+
+  try {
+    const res = await sendRequest(payload);
+
+    if (res?.success === true) {
+      finalizeOrderSuccess(action);
+      return true;
+    }
+
+    throw new Error(res?.message || "send_failed");
+  } catch (err) {
+    setState({
+      order: {
+        ...getState().order,
+        status: "error"
+      }
+    });
+
+    showAck("error", "Không thể gửi lúc này", 2200);
+    return false;
+  }
+}
+
+export async function buyNow(state) {
+  return submitOrder(state, "instant");
+}
+
+export async function sendCart(state) {
+  const cartItems = state?.cart?.items || [];
+  if (!cartItems.length) {
+    showAck("error", "Giỏ hàng đang trống", 1500);
+    return false;
+  }
+
+  return submitOrder(state, "send-cart");
 }
