@@ -11,7 +11,6 @@ import { renderCartBar } from "../render/renderCartBar.js";
 import { renderStatusBar } from "../render/renderStatusBar.js";
 import { renderHub } from "../render/renderHub.js";
 import { renderPanel } from "../render/renderPanel.js";
-import { applyPlaceById } from "../../core/context.js";
 import { updateStepperUI } from "../render/renderStepper.js";
 
 
@@ -59,9 +58,7 @@ async function syncUI(state) {
     }
 
   /* ---------- CONTEXT ---------- */
-  if (state.place.selected !== prevState.place?.selected) {
-    applyPlaceById(state.place.selected);
-  }
+  
   if (state.context !== prevState.context) {
     renderNavBar(state);
     renderDrawer(state);
