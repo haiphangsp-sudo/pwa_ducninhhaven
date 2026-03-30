@@ -136,7 +136,7 @@ async function syncOrderFlow(state,prevState) {
             if (action === "send-cart") await sendCart(state,action);
         }
     } catch (error) {
-
+        console.error("Error processing order:", error);
     } finally {
         isProcessingOrder = false;
     }

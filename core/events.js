@@ -132,7 +132,7 @@ export function finalizeOrderSuccess(action) {
   };
 
   // 4. CHỐT HẠ: Nếu là đơn từ Giỏ hàng thì mới xóa sạch món
-  if (type === "send-cart") {
+  if (action === "send-cart") {
     patch.cart = { items: [] };
   }
 
@@ -144,7 +144,8 @@ export function finalizeOrderSuccess(action) {
 
 function getCart(state,action) {
   if (action !== "send-cart" && action !== "instant") return null;
-
+  const line = state.order.line;
+  const type = action === "send-cart" ? "cart" : action;
   let rawItems = [];
   if (action === "send-cart") rawItems = state.cart?.items || [];
   if (action === "instant") {
