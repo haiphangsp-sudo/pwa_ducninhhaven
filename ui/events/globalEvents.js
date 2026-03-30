@@ -99,12 +99,11 @@ function handleGlobalClick(e) {
 }
 function checkCart(cmd) {
   if (getActivePlaceId()!==null) {
+    setOrder(cmd);
+  }else{
     setState({
-      order: { ...state.order, status: "waiting_place", msg: translate("place.required") },
       overlay: { view: "placePicker" }
     });
-  }else{
-    setOrder(cmd);
   }
 }
 
