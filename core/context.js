@@ -126,8 +126,8 @@ export function applyEntryPlace(resolved) {
   if (!resolved) return false;
 
   context.anchor = resolved;
-  context.mode = resolved;
-  
+  context.active = resolved;
+
   saveContext();
   return true;
 }
