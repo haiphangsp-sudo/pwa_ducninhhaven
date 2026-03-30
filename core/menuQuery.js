@@ -1,109 +1,92 @@
 // core/menuQuery.js
 
-import { MENU } from "./menuStore.js";
-import { getContext } from "./context.js";
+import { getState } from "./state.js";
 import { translate } from "../ui/utils/translate.js";
-import { getState } from "../../core/state.js";
 
+/**
+ * Helper: Luôn lấy dữ liệu mới nhất từ State mỗi khi hàm được gọi
+ */
+const getMenuData = () => getState().menu.data || {};
 
-
-function getPlace() {
-    
-    const ctx = getContext();
-    const anchor=ctx?.anchor;
-    if(!anchor) return "table";
-    return anchor.type;
-}
-export function getCategory(key) {
-  const menuData = getState().menu.data;
-  return menuData[key] || null;
-}
-
+/**
+ * Lấy danh mục (Categories) phù hợp với vị trí khách đang đứng
+ */
 export function getCategories() {
-  const menuData = getState().menu.data;
-    const place = getPlace();
-    const out = [];
-    for (const [key, cat] of Object.entries(menuData)) {
-        if (typeof cat!== "object") continue
-        if (cat.active === false) continue;
-        if (cat.allow&&!cat.allow.includes(place)) continue;
-        out.push({
-            key,
-            label: cat.label,
-            ui: cat.ui,
-            icon: cat.icon
-        });
+  const menuData = getMenuData();
+  const currentPlaceType = getState().context.active?.type || "table"; 
+  const out = [];
+
+  for (const [key, cat] of Object.entries(menuData)) {
+    if (cat.active === false) continue;
     
-    }
-return out;
+    // Kiểm tra quyền truy cập (ví dụ: Spa chỉ cho Room, không cho Table)
+    if (cat.allow && !cat.allow.includes(currentPlaceType)) continue;
 
-}
-
-export function getProducts(categoryKey) {
-  if (!categoryKey) return [];
-  const menuData = getState().menu.data;
-  const category = menuData[categoryKey];
-  if (category?.active === false) return [];
-
-  const products = category.products || category.items || {};
-
-  return Object.entries(products)
-    .filter(([, product]) => product?.active !== false)
-    .map(([key, product]) => ({
-      ...product,
-      key
-    }));
-}
-
-
-export function getVariants(categoryKey, productKey) {
-  const menuData = getState().menu.data;
-  const product = menuData[categoryKey].products?.[productKey];
-  if (product?.active===false) return [];
-
-  return Object.entries(product.variants || {})
-    .filter(([, variant]) => variant.active !== false)
-    .map(([key, variant]) => ({
+    out.push({
       key,
-      ...variant,
-      recommend: (product.recommend || []).includes(key)
-    }));
+      label: cat.label,
+      ui: cat.ui,
+      icon: cat.icon
+    });
+  }
+  return out;
 }
 
 /**
- * Tìm kiếm món ăn theo ID
+ * Lấy danh sách sản phẩm trong một Category
+ */
+export function getProducts(categoryKey) {
+  const category = getMenuData()[categoryKey];
+  if (!category || category.active === false) return [];
+
+  const out = [];
+  // menuSchema đã đổi items -> products
+  const products = category.products || {};
+
+  for (const [key, product] of Object.entries(products)) {
+    if (product.active === false) continue;
+    out.push({ ...product, key });
+  }
+  return out;
+}
+
+/**
+ * TRÍ TRÍ QUAN TRỌNG: Truy tìm thông tin chi tiết từ một ID duy nhất
+ * Dùng cho Giỏ hàng và Mua ngay
  */
 export function getVariantById(id) {
-  if (!id) return null;
-  const menuData = getState().menu.data;
-  for (const [categoryKey, category] of Object.entries(menuData)) {
-    for (const [productKey, product] of Object.entries(category.products || {})) {
-      for (const [variantKey, variant] of Object.entries(product.variants || {})) {
+  const menuData = getMenuData();
+
+  for (const [catKey, cat] of Object.entries(menuData)) {
+    const products = cat.products || {};
+    
+    for (const [prodKey, prod] of Object.entries(products)) {
+      const variants = prod.variants || {};
+      
+      for (const [varKey, variant] of Object.entries(variants)) {
         if (variant.id === id) {
           return {
             id: variant.id,
-            categoryKey,
-            productKey,
-            variantKey,
-            categoryLabel: translate(category.label),
-            productLabel: translate(product.label),
+            categoryKey: catKey,
+            productKey: prodKey,
+            variantKey: varKey,
+            // Đã dịch sẵn để UI chỉ việc hiển thị
+            productLabel: translate(prod.label),
             variantLabel: translate(variant.label),
             price: Number(variant.price || 0),
             priceFormat: new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(variant.price),
             unit: variant.unit || "item",
-            active: variant.active !== false,
-            ui: category.ui || "cart"
+            ui: cat.ui || "cart"
           };
         }
       }
     }
   }
-
-  return null
+  return null;
 }
 
 /**
- * Biến đổi giỏ hàng thô thành dữ liệu chi tiết để hiển thị
+ * BIẾN ĐỔI GIỎ HÀNG: Từ mảng {id, qty} thành dữ liệu hiển thị Drawer
  */
 export function getCartExtended(state) {
   const items = state.cart?.items || [];
@@ -118,16 +101,19 @@ export function getCartExtended(state) {
     totalP += linePrice;
     totalQ += cartItem.qty;
 
-    return { ...cartItem, ...info, linePrice };
+    return { 
+        ...cartItem, 
+        ...info, 
+        linePrice,
+        linePriceFormat: new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(linePrice)
+    };
   }).filter(Boolean);
 
   return {
     items: detailedItems,
-    itemUnique:`${detailedItems.length} ${translate("cart_bar.unique")}`,
-    totalPrice: new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(totalP),
-    totalQty:totalQ > 1
-      ? `${totalQ} ${translate("cart_bar.items")}`
-      : `${totalQ} ${translate("cart_bar.item")}`,
-    isEmpty: detailedItems.length === 0
+    isEmpty: detailedItems.length === 0,
+    itemUnique: `${detailedItems.length} ${translate("cart_bar.unique")}`,
+    totalQty: totalQ,
+    totalPrice: new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(totalP)
   };
 }
