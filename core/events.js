@@ -2,6 +2,8 @@
 
 import { getState, setState } from "./state.js";
 import { sendRequest } from "../services/api.js";
+import { translate } from "../ui/utils/translate.js";
+import { getVariantById } from "./menuQuery.js";
 
 
 /* ========================================================
@@ -14,7 +16,8 @@ import { sendRequest } from "../services/api.js";
 function buildPayload(state, type) {
   const place = state?.context?.active?.type;
   const mode = state?.context?.anchor?.type;
-  const cat = getCart(state, type)
+  const cat = getCart(state, type);
+
   return {
     id: cat.id,
     type: cat.type,
@@ -26,14 +29,7 @@ function buildPayload(state, type) {
     items: cat.items
   };
 }
-function normalizeLineId(line) {
-  if (typeof line === "string") return line;
-  if (line && typeof line === "object") {
-    if (line.id) return String(line.id);
-    if (line.item) return String(line.item);
-  }
-  return "";
-}
+
 
 /**
  * Cập nhật số lượng món trong giỏ (Dùng cho nút +/- trong Drawer)
@@ -188,8 +184,8 @@ function getCart(state, type) {
   return {
     payload: {
       id: `HNV-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
-      mode: state.context.anchor?.type || "",
-      place: state.context.active?.type || "",
+      mode: translate(state.context.anchor?.type) || "",
+      place: translate(state.context.active?.type) || "",
       type: type,
       items: itemsSummary, // Đây là chuỗi văn bản cho cột E
       total: totalAmount,  // Đây là con số cho cột F
