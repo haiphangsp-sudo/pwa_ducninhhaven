@@ -33,8 +33,8 @@ export function attachUI() {
 
 async function syncUI(state) {
 
-  const prevState = lastState;
-  lastState = { ...state };
+  const prevState = lastState ? JSON.parse(JSON.stringify(lastState)) : {};
+  lastState = JSON.parse(JSON.stringify(state));
 
   syncOrderFlow(state,prevState);
 
