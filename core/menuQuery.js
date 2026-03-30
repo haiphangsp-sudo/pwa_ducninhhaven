@@ -129,7 +129,7 @@ export function getCartExtended(state) {
   let items = [];
   const type = state.order.type;
 
-  if (type === "cart") {
+  if (type === "cart"){
     items = state.cart?.items || [];
   } else {
     items = state.order?.line ? [state.order?.line] : [];
