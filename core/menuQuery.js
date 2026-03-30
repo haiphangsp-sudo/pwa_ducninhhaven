@@ -52,10 +52,9 @@ export function getProductsOld(categoryKey) {
 export function getProducts(categoryKey) {
   
   // Dùng vòng lặp ổn định để tìm đúng Category
-  for (const [key, category] of Object.entries(MENU[categoryKey])) {
-    if (typeof category!== "object") continue
-    if (category.active === false) continue;
-      const products = category.products || {};
+  for (const [key, products] of Object.entries(MENU[categoryKey])) {
+    if (typeof products!== "object") continue
+    if (products.active === false) continue;
     out.push({
       key,
       ...products,
