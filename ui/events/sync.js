@@ -12,6 +12,7 @@ import { renderStatusBar } from "../render/renderStatusBar.js";
 import { renderHub } from "../render/renderHub.js";
 import { renderPanel } from "../render/renderPanel.js";
 import { updateStepperUI } from "../render/renderStepper.js";
+import { renderAck } from "../render/renderAck.js";
 
 
 let lastState = {};
@@ -70,7 +71,11 @@ async function syncUI(state) {
     renderHub(state);
     renderPanel(state);
   }
+  /* ---------- ACK ---------- */
 
+  if (state.ack !== prevState.ack) {
+    renderAck(state);
+  }
   /* ---------- CART ---------- */
 
   if (state.cart.items !== prevState.cart?.items) {

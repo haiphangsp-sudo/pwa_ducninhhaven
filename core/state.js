@@ -63,10 +63,12 @@ export let UI = {
   },
   /* ---------------- ACK (tap feedback) ---------------- */
 
-  ack:{
-    state: "hidden",  // hidden | show
-    status: null
-  },
+  ack: {
+  visible: false,
+  status: null,
+  message: "",
+  at: null
+},
 
   /* ---------------- ORDERS ---------------- */
 

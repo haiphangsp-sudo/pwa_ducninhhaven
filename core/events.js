@@ -177,3 +177,26 @@ function getCart(state,action) {
       items: detailedItems 
   }
 }
+export function showAck(status, message, timeout = 1500) {
+  setState({
+    ack: {
+      visible: true,
+      status,
+      message,
+      at: Date.now()
+    }
+  });
+
+  if (timeout > 0) {
+    setTimeout(() => {
+      setState({
+        ack: {
+          visible: false,
+          status: null,
+          message: "",
+          at: Date.now()
+        }
+      });
+    }, timeout);
+  }
+}
