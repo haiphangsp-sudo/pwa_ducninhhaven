@@ -1,28 +1,28 @@
+// ui/render/renderArticle.js
 import { translate } from "../utils/translate.js";
 import { getProducts } from "../../core/menuQuery.js";
 
 /**
- * Render giao diện bài viết giới thiệu (Article)
- * @param {string} categoryKey - Key của category (ví dụ: 'intro')
+ * Render giao diện dạng bài viết (Article)
  */
 export function renderArticle(categoryKey) {
   if (!categoryKey) return "";
 
-  // 1. Lấy danh sách sản phẩm (đã chuẩn hóa qua menuQuery)
+  // 1. Lấy danh sách sản phẩm (welcome, about...) từ menuQuery
   const products = getProducts(categoryKey);
 
-  // 2. Nếu rỗng, trả về thông báo (đã dịch)
+  // 2. Chốt chặn nếu không có dữ liệu
   if (!products || products.length === 0) {
     return `
-      <div class="article-empty p-xl center text-muted">
-        ${translate("article.empty") || "Chưa có nội dung giới thiệu."}
+      <div class="p-xl center opacity-50">
+        ${translate("article.empty") || "Đang cập nhật nội dung..."}
       </div>
     `;
   }
 
-  // 3. Render danh sách các bài viết
+  // 3. Render danh sách các thẻ <article>
   return `
-    <div class="article-container stack gap-xl">
+    <div class="article-panel stack gap-xl">
       ${products.map(product => `
         <article class="article-card stack gap-m" id="${product.id}">
           <header class="article-header stack gap-s">
@@ -34,7 +34,7 @@ export function renderArticle(categoryKey) {
           </header>
 
           <div class="article-body">
-            ${formatArticleBody(product.content)}
+            ${formatArticleContent(product.content)}
           </div>
         </article>
       `).join("")}
@@ -43,20 +43,19 @@ export function renderArticle(categoryKey) {
 }
 
 /**
- * Hàm phụ trợ: Chuyển đổi chuỗi có \n thành các đoạn văn <p>
- * Đảm bảo nội dung hiển thị thoáng đãng và dễ đọc.
+ * Hàm "chẻ" văn bản: Biến \n thành các thẻ <p>
  */
-function formatArticleBody(content) {
-  // Dùng hàm translate để lấy chuỗi theo ngôn ngữ hiện tại
+function formatArticleContent(content) {
+  // Dùng hàm translate để lấy chuỗi (string) theo ngôn ngữ hiện tại
   const rawText = translate(content);
 
   if (!rawText || typeof rawText !== "string") return "";
 
-  // Tách dòng, dọn khoảng trắng và bọc vào thẻ <p>
+  // Tách dòng, lọc dòng trống và bọc vào thẻ <p>
   return rawText
     .split("\n")
     .map(line => line.trim())
     .filter(line => line.length > 0)
-    .map(line => `<p class="article-paragraph">${line}</p>`)
+    .map(line => `<p class="article-text mb-m">${line}</p>`)
     .join("");
 }
