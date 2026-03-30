@@ -13,19 +13,18 @@ import { sendRequest } from "../services/api.js";
  * Chuẩn hóa dữ liệu để gửi đi
  */
 function buildPayload(state, type) {
-  const items = getHydratedItems(state, type);
-  const total = items.reduce((sum, it) => sum + it.subtotal, 0);
   const place = state?.context?.active?.type;
   const mode = state?.context?.anchor?.type;
+  const cat = getCartExtended (state, type)
   return {
-    id: `V-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
-    type: type,
+    id: cat.id,
+    type: cat.type,
     timestamp: new Date().toISOString(),
-    mode: mode,
-    place: place,
-    total,
+    mode: cat.mode,
+    place: cat.place,
+    total: cat.total,
     device: navigator.userAgent,
-    items
+    items: cat.items
   };
 }
 function normalizeLineId(line) {
@@ -179,4 +178,53 @@ export function finalizeOrderSuccess(type) {
   
   // Tự ẩn thông báo sau 3s
   setTimeout(() => setState({ ack: { state: "hidden" } }), 3000);
+}
+
+export function getCartExtended(state, type) {
+  if (type !== "cart" && type !== "instant") return null;
+
+  let rawItems = [];
+  if (type === "cart") rawItems = state.cart?.items || [];
+  if (type === "instant") {
+    const lineId = state.order?.line;
+    rawItems = lineId ? [{ id: lineId, qty: 1 }] : [];
+  }
+
+  if (rawItems.length === 0) return null;
+
+  let totalAmount = 0;
+  let totalQty = 0;
+
+  // 1. Chi tiết hóa từng món
+  const detailedItems = rawItems.map(cartItem => {
+    const info = getVariantById(cartItem.id);
+    if (!info) return null;
+
+    const linePrice = info.price * cartItem.qty;
+    totalAmount += linePrice;
+    totalQty += cartItem.qty;
+
+    return {
+      ...cartItem,
+      label: `${translate(info.productLabel)} - ${translate(info.varianLabel)}`,
+      price: info.price,
+      linePrice
+    };
+  }).filter(Boolean);
+
+  // 2. Tạo chuỗi tóm tắt cho Google Sheets (Ví dụ: "1x Phở bò - Tô lớn")
+  const itemsSummary = detailedItems
+    .map(i => `${i.qty}x ${i.label}`)
+    .join(", ");
+
+  return {
+    payload: {
+      id: `HNV-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+      mode: state.context.anchor?.type || "",
+      place: state.context.active?.type || "",
+      type: type,
+      items: itemsSummary, // Đây là chuỗi văn bản cho cột E
+      total: totalAmount,  // Đây là con số cho cột F
+    }
+  };
 }
