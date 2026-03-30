@@ -126,13 +126,12 @@ export function getVariantById(id) {
  * BIẾN ĐỔI GIỎ HÀNG: Từ mảng {id, qty} thành dữ liệu hiển thị Drawer
  */
 export function getCartExtended(state, type) {
-  if (type !== "cart"&& type !== "instant") return null;
+  if (type !== "cart" || type !== "instant") return null;
 
   let items = [];
   if (type === "cart") items = state.cart?.items || [];
   if (type === "instant") items = state.order?.line ? [state.order?.line] : [];
   
-
   let totalP = 0;
   let totalQ = 0;
 
