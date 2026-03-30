@@ -13,8 +13,7 @@ import { getVariantById } from "./menuQuery.js";
 /**
  * Chuẩn hóa dữ liệu để gửi đi
  */
-function buildPayload(type) {
-  const state = getState();
+function buildPayload(state,type) {
   const place = state?.context?.active?.type;
   const mode = state?.context?.anchor?.type;
   const cat = getCart(state, type);
@@ -37,7 +36,7 @@ function buildPayload(type) {
 // core/events.js
 
 export function updateCartQuantity(itemId, delta) {
-  const state = getState();
+  state = getState();
   const items = [...(state.cart.items || [])]; // Clone mảng để đảm bảo tính bất biến
   const idx = items.findIndex(i => i.id === itemId);
 
@@ -55,7 +54,7 @@ export function updateCartQuantity(itemId, delta) {
 /**
  * Thêm món vào giỏ hàng
  */
-export function addToCart(itemId) {
+export function addToCart(state,itemId) {
   // Chỉ cần gọi hàm này, nó sẽ tự xử lý việc tăng qty hoặc push mới
   updateCartQuantity(itemId, 1);
 
@@ -68,12 +67,11 @@ export function addToCart(itemId) {
 /**
  * Xử lý Mua ngay (Gửi 1 món)
  */
-export async function buyNow() {
-  const state = getState();
+export async function buyNow(state,type) {
   setState({ ack: { state: "show", status: "sending" } });
 
   try {
-    const payload = buildPayload(state, "instant");
+    const payload = buildPayload(state, type);
     const res = await sendRequest(payload);
 
     if (res.success) {
@@ -89,8 +87,7 @@ export async function buyNow() {
 /**
  * Xử lý Gửi toàn bộ giỏ hàng
  */
-export async function sendCart() {
-  const state = getState();
+export async function sendCart(state) {
   const cartItems = state.cart.items || [];
 
   if (cartItems.length === 0) return;

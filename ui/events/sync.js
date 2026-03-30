@@ -129,11 +129,11 @@ async function syncOrderFlow(state,prevState) {
 
     try {
         if (type === "cart") {
-            addToCart(line);
+            addToCart(state,line);
         } else {
             
-            if (type === "instant") await buyNow(line);
-            if (type === "send-cart") await sendCart();
+            if (type === "instant") await buyNow(state,line);
+            if (type === "send-cart") await sendCart(state);
         }
     } catch (error) {
 
