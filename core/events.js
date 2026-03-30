@@ -28,11 +28,11 @@ function showAck(status, message = "", timeout = 1800) {
    ======================================================== */
 
 /**
- * Tạo Payload khớp hoàn toàn với hàm parseData trong GS_2.js
+ * Tạo Payload gửi đi. Đã lược bỏ tổng tiền toàn đơn 
+ * vì GAS sẽ xử lý ghi từng món thành một dòng riêng biệt.
  */
 function buildPayload(state, action) {
   const activePlace = state.context?.active;
-  // GAS yêu cầu place phải thuộc VALID_PLACES (chữ thường)
   const placeId = activePlace?.id?.toLowerCase();
 
   if (!placeId) {
@@ -40,41 +40,40 @@ function buildPayload(state, action) {
     return null;
   }
 
-  // Xác định nguồn hàng: từ giỏ (cart) hoặc mua ngay (instant)
+  // Lấy danh sách món từ giỏ hoặc từ lệnh mua ngay
   const rawItems = action === "send-cart" 
     ? (state.cart?.items || []) 
     : (state.order?.line ? [{ id: state.order.line, qty: 1 }] : []);
 
   if (rawItems.length === 0) return null;
 
-  let totalAmount = 0;
-
-  // Xây dựng mảng items theo cấu trúc GAS mong đợi
+  // Chuẩn bị mảng items. Mỗi item này sẽ trở thành một dòng trong Sheets
   const items = rawItems.map(cartItem => {
     const info = getVariantById(cartItem.id);
     if (!info) return null;
 
-    const subtotal = Number(info.price || 0) * cartItem.qty;
-    totalAmount += subtotal;
+    // Vẫn gửi subtotal của từng món để GAS có thể kiểm tra chéo nếu cần
+    const price = Number(info.price || 0);
+    const subtotal = price * cartItem.qty;
 
     return {
-      id: cartItem.id,
-      category: info.categoryKey || "",
-      item: translate(info.productLabel), // Tên sản phẩm chính
-      option: translate(info.variantLabel), // Loại (đá/nóng/tô lớn...)
-      qty: Number(cartItem.qty),
-      type: info.ui,
-      price: Number(info.price || 0)
+      id: cartItem.id,                     // Cột F (option_id)
+      category: info.categoryKey || "",    // Cột G
+      item: info.productLabel,  // Cột H
+      option: info.variantLabel,// Cột I
+      qty: Number(cartItem.qty),           // Cột J
+      price: price,                        // Cột K
+      subtotal: subtotal                   // Cột L
     };
   }).filter(Boolean);
 
   return {
-    id: `H-${Date.now()}-${Math.floor(Math.random() * 1000)}`, // ID chống trùng
-    type: action=== "send-cart" ? "cart" : "instant",
-    timestamp: new Date().toISOString(),
-    mode: state.context?.anchor?.type || "web",
-    place: placeId,
-    device: navigator.userAgent,
+    id: `H-${Date.now()}-${Math.floor(Math.random() * 1000)}`, // ID đơn hàng (Cột A)
+    type: action === "send-cart" ? "cart" : "instant",         // Cột O
+    timestamp: new Date().toISOString(),                       // Cột C (client_time)
+    mode: state.context?.anchor?.type || "web",                // Cột D
+    place: placeId,                                            // Cột E
+    device: navigator.userAgent,                               // Cột P
     items: items
   };
 }
@@ -112,7 +111,7 @@ export function addToCart() {
 }
 
 /* ========================================================
-   4. SEND ACTIONS (Gửi đơn hàng)
+   4. SEND ACTIONS
    ======================================================== */
 
 export async function submitOrder(action) {
@@ -121,12 +120,10 @@ export async function submitOrder(action) {
   
   if (!payload) return false;
 
-  // Cập nhật trạng thái chờ
   setState({ order: { ...state.order, status: "pending" } });
   showAck("sending", translate("cart_bar.sending"), 0);
 
   try {
-    // api.js sẽ tự động đính kèm CONFIG.API_SECRET
     const res = await sendRequest(payload);
 
     if (res?.success) {
@@ -148,13 +145,11 @@ export function finalizeOrderSuccess(action) {
   };
 
   if (action === "send-cart") {
-    patch.cart = { items: [] }; // Xóa giỏ hàng khi gửi cả giỏ thành công
+    patch.cart = { items: [] }; // Reset giỏ hàng sau khi gửi thành công
   }
 
   setState(patch);
   showAck("success", translate("cart_bar.success"), 2500);
   
-  // Rung phản hồi nhẹ nếu thiết bị hỗ trợ
   if (navigator.vibrate) navigator.vibrate(50);
 }
-
