@@ -182,13 +182,13 @@ function getCart(state, type) {
     .join(", ");
 
   return {
-    payload: {
+     
       id: `HNV-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
       mode: translate(state.context.anchor?.type) || "",
       place: translate(state.context.active?.type) || "",
       type: type,
       items: itemsSummary, // Đây là chuỗi văn bản cho cột E
       total: totalAmount,  // Đây là con số cho cột F
-    }
+    
   };
 }
