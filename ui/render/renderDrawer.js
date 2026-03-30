@@ -14,8 +14,8 @@ export function renderDrawer(state) {
   const itemsEl = document.getElementById("drawerItems");
   const summaryEl = drawer.querySelector(".drawer-summary");
   const sendBtn = document.getElementById("drawerSend");
-
-  const cart = getCartExtended(state);
+  const type = "cart";
+  const cart = getCartExtended(state, type);
 
   if (cart.isEmpty) {
     if (summaryEl) summaryEl.classList.add("hidden");
@@ -27,7 +27,7 @@ export function renderDrawer(state) {
   }
   sendBtn.disabled = false;
   sendBtn.dataset.action = "send_cart";
-  sendBtn.dataset.option = "cart";
+  sendBtn.dataset.option = type;
   sendBtn.dataset.extra = "pending";
   
   updateSendButton(state, sendBtn);
