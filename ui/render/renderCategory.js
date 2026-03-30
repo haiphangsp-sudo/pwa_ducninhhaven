@@ -10,10 +10,11 @@ export function renderMenu(categoryKey) {
   if (!products.length ) return "";
 
   return products.map(product => {
+    const ui = product.ui;
     const productKey = product.key;
     const variants = getVariants(categoryKey, productKey);
     const cards = variants.map(variant => {
-      return categoryOpt({ ...variant },categoryKey, productKey);
+      return categoryOpt({ ...variant },categoryKey, productKey,ui);
       }).join("");
     return `
         <section class="menu-group">
