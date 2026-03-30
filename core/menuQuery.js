@@ -154,3 +154,62 @@ export function getDrawerExtended(state) {
     totalPrice: new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(totalP)
   };
 }
+export function getCartExtended(state, type) {
+  if (type !== "cart" && type !== "instant") return null;
+
+  let rawItems = [];
+  if (type === "cart") rawItems = state.cart?.items || [];
+  if (type === "instant") {
+    const lineId = state.order?.line;
+    rawItems = lineId ? [{ id: lineId, qty: 1 }] : [];
+  }
+
+  if (rawItems.length === 0) return null;
+
+  let totalAmount = 0;
+  let totalQty = 0;
+
+  // 1. Chi tiết hóa từng món
+  const detailedItems = rawItems.map(cartItem => {
+    const info = getVariantById(cartItem.id);
+    if (!info) return null;
+
+    const linePrice = info.price * cartItem.qty;
+    totalAmount += linePrice;
+    totalQty += cartItem.qty;
+
+    return {
+      ...cartItem,
+      label: `${translate(info.productLabel)} - ${translate(info.varianLabel)}`,
+      price: info.price,
+      linePrice
+    };
+  }).filter(Boolean);
+
+  // 2. Tạo chuỗi tóm tắt cho Google Sheets (Ví dụ: "1x Phở bò - Tô lớn")
+  const itemsSummary = detailedItems
+    .map(i => `${i.qty}x ${i.label}`)
+    .join(", ");
+
+  // 3. Trả về Object "2 trong 1"
+  return {
+    // Nhóm 1: Dữ liệu chuẩn để gửi GAS (Khớp với GS_2.js)
+    payload: {
+      id: `HNV-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+      place: state.context.active?.id || "",
+      type: type === "instant" ? "⚡ Mua ngay" : "🛒 Giỏ hàng",
+      items: itemsSummary, // Đây là chuỗi văn bản cho cột E
+      total: totalAmount,  // Đây là con số cho cột F
+      notes: state.order?.notes || "",
+      lang: state.lang?.current || "vi"
+    },
+
+    // Nhóm 2: Dữ liệu để Render UI (Drawer)
+    display: {
+      items: detailedItems,
+      totalQty: totalQty,
+      totalPriceFormat: new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(totalAmount),
+      itemUnique: `${detailedItems.length} ${translate("cart_bar.unique")}`
+    }
+  };
+}
