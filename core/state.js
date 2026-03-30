@@ -34,7 +34,8 @@ export const UI = {
   },
   panel: {
     view: "intro",   // menu, article, ...
-    type: "grid",    // Kiểu hiển thị (grid, list)
+    type: "article",
+    mode: "grid"     // Kiểu hiển thị (grid, list)
   },
   /* ---------------- OVERLAY ---------------- */
   overlay: {
