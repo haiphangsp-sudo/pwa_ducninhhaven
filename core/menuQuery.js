@@ -60,7 +60,7 @@ export function getProducts(categoryKey) {
       // Ở đây ta biết chắc chắn mình đang ở đúng chỗ
       // menuSchema đã đổi items thành products, ta lấy nó ra
       const products = category.products || {};
-      return Object.values(products); 
+      return Object.entries(products); 
     
   }
   return [];
