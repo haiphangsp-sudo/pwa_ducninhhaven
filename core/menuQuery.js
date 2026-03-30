@@ -55,7 +55,6 @@ export function getProducts(categoryKey) {
   if (!menuData) return [];
   for (const [key, category] of Object.entries(menuData)) {
     if (category?.active === false) continue;
-    if (category.products||category.items)continue;
       out.push({
         key,
         products: category.products
