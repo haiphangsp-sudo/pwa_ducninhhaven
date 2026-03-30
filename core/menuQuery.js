@@ -57,8 +57,8 @@ export function getProducts(categoryKey) {
     if (typeof car !== "object") continue;
     if (categoryKey === key) continue;
     if (car.active === false) continue;
-    const products = car.products || car.items || {};
-    return Object.values(products);
+    const products = car.products;
+    return Object.products;
   }
   return [];
 }
