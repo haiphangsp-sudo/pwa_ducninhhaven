@@ -35,7 +35,7 @@ async function syncUI(state) {
   const prevState = lastState;
   lastState = { ...state };
 
-  syncOrderFlow(state);
+  syncOrderFlow(state,prevState);
 
   /* ---------- OVERLAY ---------- */
     const activeId = state.overlay.view;
@@ -120,10 +120,10 @@ function syncLanguage(state) {
   renderDrawer(state);
 }
 
-async function syncOrderFlow(state) {
+async function syncOrderFlow(state,prevState) {
     const { type, line, at, status } = state.order;
     // Chỉ chạy nếu có click mới (at thay đổi) và chưa ở trạng thái đang xử lý
-    if (!at || at === lastState.order?.at || isProcessingOrder) return;
+    if (!at || at === prevState.order?.at || isProcessingOrder) return;
 
     
     /* ---------- RENDER DỰA TRÊN TRẠNG THÁI GIỎ ---------- */
