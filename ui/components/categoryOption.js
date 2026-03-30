@@ -13,7 +13,7 @@ export function categoryOpt(opt, categoryKey, productKey) {
     const ui = opt.ui;
 
     return `
-        <div class="card">
+        <div class="card ${opt.ui}">
             <div class="stack menu-cart__info">
                 <div data-service="${ui}" class="menu-card__title ${isRecommend ? "is-default" : ""}">
                 ${translate(opt.label)}
