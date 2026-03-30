@@ -53,10 +53,12 @@ export function getProducts(categoryKey) {
   if (!categoryKey) return [];
   const category = MENU[categoryKey];
   // Dùng vòng lặp ổn định để tìm đúng Category
-  for (const [key, products] of Object.entries(category)) {
-    if (typeof products !== "object") continue;
+  for (const [key, car] of Object.entries(category)) {
+    if (typeof car !== "object") continue;
     if (categoryKey === key) continue;
-    if (products.active === false) continue;
+    if (car.active === false) continue;
+    const products = car.products || car.items || {};
+    const out = [];
     out.push({
       key,
       ...products,
