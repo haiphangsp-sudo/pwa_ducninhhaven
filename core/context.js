@@ -191,3 +191,10 @@ export function getAnchor() {
 export function getActivePlace() {
   return context?.active || null;
 }
+export function getActivePlaceId() {
+  return getContext()?.active?.id || null;
+}
+
+export function getActivePlaceType() {
+  return getContext()?.active?.type || null;
+}

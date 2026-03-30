@@ -38,9 +38,7 @@ export let UI = {
     updatedAt: null
   },
   /* ---------------- NAVIGATION ---------------- */
-  place: {
-    selected: null // ID từ Picker
-  },
+
   panel: {
     view: "intro",   // menu, article, ...
     option: "article",
@@ -50,6 +48,7 @@ export let UI = {
   overlay: {
     view: null  // close || placePicker || cartDrawer ....
   },
+  
   order: {
     type: null,     // cart, instant, send_cart
     line: null,     // ID món ăn (nếu có)

@@ -2,6 +2,10 @@
 
 import { setState } from "../../core/state.js";
 import { updateCartQuantity } from "../../core/events.js";
+import { applyPlaceById, getActivePlaceId } from "../../core/context.js";
+import { syncContextToState } from "../../core/state.js";
+import { translate } from "../utils/translate.js";
+
 
 
 /* =========================
@@ -60,17 +64,9 @@ function handleGlobalClick(e) {
     
     case "select-place":
       setState({
-        place: {
-          selected: cmd.value,
-          type: cmd.option
-        },
-        context: {
-          anchor: context?.anchor,
-          active: {id: cmd.value},
-          updatedAt: Date.now()
-        },
         overlay: { view: null }
       });
+      applyPlaceById(cmd.value);
       break;
 
 
@@ -80,11 +76,11 @@ function handleGlobalClick(e) {
       break;
 
     case "send-instant":
-      checkCartPlace(cmd);
+      checkCart(cmd);
       break;
 
     case "send_cart":
-      checkCartPlace(cmd);
+      checkCart(cmd);
       break;
     
     case "update-qty":
@@ -101,8 +97,8 @@ function handleGlobalClick(e) {
       break;
   }
 }
-function checkCartPlace(cmd) {
-  if (!state.context.active?.id) {
+function checkCart(cmd) {
+  if (getActivePlaceId()!==null) {
     setState({
       order: { ...state.order, status: "waiting_place", msg: translate("place.required") },
       overlay: { view: "placePicker" }
