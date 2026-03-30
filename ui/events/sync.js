@@ -16,6 +16,7 @@ import { updateStepperUI } from "../render/renderStepper.js";
 
 
 let lastState = {};
+let isProcessingOrder = false;
 
 /* =======================================================
    ENTRY
@@ -34,6 +35,8 @@ async function syncUI(state) {
 
   const prevState = lastState;
   lastState = { ...state };
+
+  syncOrderFlow(state);
 
   /* ---------- OVERLAY ---------- */
     const activeId = state.overlay.view;
@@ -78,71 +81,16 @@ async function syncUI(state) {
     renderDrawer(state);
 
     localStorage.setItem(CONFIG.CART_KEY, JSON.stringify(state.cart.items || []));
-  }
-
-
-  const { order, context } = state;
-  const isNewOrder = order.at !== prevState.order?.at;
-  const isStatusChange = order.status !== prevState.order?.status;
-
-  /* ---------- 1. LOGIC TỰ PHỤC HỒI (AUTO-RESUME) ---------- */
-  // Nếu lệnh đang chờ vị trí, mà nay context đã có vị trí -> Tự động kích hoạt
-  if (order.status === "place-selected" && context.active?.id) {
-    setState({ 
-      order: { status: "pending", at: isNewOrder } 
-    });
-    return;
-  }
-
-  /* ---------- 2. THỰC THI LỆNH (EXECUTION) ---------- */
-  // Chỉ thực thi khi trạng thái là 'pending'
-  if (order.status === "pending") {
-    
-    // Chuyển sang 'sending' để StatusBar hiện loading ngay lập tức
-    setState({ order: { status: "sending", msg: "Đang xử lý..." } });
-
-    try {
-      switch (order.type) {
-        case "cart":
-          addToCart(order.line);
-          setState({ order: { status: "success", msg: "Đã thêm vào giỏ" } });
-          break;
-        case "instant":
-          await buyNow(order.line);
-          setState({ order: { status: "success", msg: "Gửi yêu cầu thành công!" } });
-          break;
-        case "send_cart":
-          await sendCart();
-          setState({ order: { status: "success", msg: "Đơn hàng đã được gửi!" } });
-          break;
+    /* ---------- STEPPER SYNC ---------- */
+    // So sánh từng món trong giỏ hàng để cập nhật số lượng
+    state.cart.items.forEach(item => {
+      const prevItem = prevState.cart?.items.find(i => i.id === item.id);
+      if (!prevItem || prevItem.qty !== item.qty) {
+        updateStepperUI(item.id, item.qty);
       }
-    } catch (err) {
-      setState({ order: { status: "error", msg: err.message || "Có lỗi xảy ra" } });
-    }
+    });
   }
 
-  /* ---------- 3. PHẢN HỒI GIAO DIỆN (RENDERING) ---------- */
-  if (isStatusChange) {
-    renderStatusBar(state);
-    
-    // Tự động dọn dẹp thông báo thành công
-    if (order.status === "success") {
-      setTimeout(() => {
-        // Trở về idle và xóa type để sẵn sàng cho lệnh tiếp theo
-        setState({ order: { status: "idle", type: null, msg: "" } });
-      }, 3000);
-    }
-  }
-
-  /* ---------- RENDER DỰA TRÊN TRẠNG THÁI GIỎ ---------- */
-  if (state.cart.status !== prevState.cart?.status) {
-    renderStatusBar(state);
-    if (state.cart.status === 'success') {
-      // Wellness effect: Tự đóng drawer sau khi thành công
-      //renderStatusBar(state);
-      setTimeout(() => setState({ overlay: { view: null }, cart: { ...state.cart, status: 'idle' } }), 2500);
-    }
-  }
   /* ---------- LANGUAGE ---------- */
 
   if (state.lang.current !== prevState.lang?.current) {
@@ -150,14 +98,7 @@ async function syncUI(state) {
     syncLanguage(state);
   }
 
-  /* ---------- STEPPER SYNC ---------- */
-  // So sánh từng món trong giỏ hàng để cập nhật số lượng
-  state.cart.items.forEach(item => {
-    const prevItem = prevState.cart?.items.find(i => i.id === item.id);
-    if (!prevItem || prevItem.qty !== item.qty) {
-      updateStepperUI(item.id, item.qty);
-    }
-  });
+  
   
   // Xử lý trường hợp món bị xóa hoàn toàn khỏi giỏ
   prevState.cart?.items.forEach(prevItem => {
@@ -165,8 +106,7 @@ async function syncUI(state) {
     if (!stillExists) updateStepperUI(prevItem.id, 0);
   });
   
-
-  lastState = structuredClone(state);
+  lastState = state;
 }
 
 /* =======================================================
@@ -185,19 +125,20 @@ function syncLanguage(state) {
 
 async function syncOrderFlow(state) {
     const { type, line, at, status } = state.order;
-    
     // Chỉ chạy nếu có click mới (at thay đổi) và chưa ở trạng thái đang xử lý
     if (!at || at === lastState.order?.at || isProcessingOrder) return;
 
-    // KIỂM TRA VỊ TRÍ (Place Check)
-    if ((type === "instant" || type === "send_cart") && !state.context.active?.id) {
-        setState({ 
-            order: { ...state.order, status: "waiting_place", msg: translate("place.required") },
-            overlay: { view: "placePicker" } 
-        });
-        return;
+    
+    /* ---------- RENDER DỰA TRÊN TRẠNG THÁI GIỎ ---------- */
+    if (state.cart.status !== prevState.cart?.status) {
+      renderStatusBar(state);
+      if (state.cart.status === 'success') {
+        // Wellness effect: Tự đóng drawer sau khi thành công
+        //renderStatusBar(state);
+        setTimeout(() => setState({ overlay: { view: null }, cart: { ...state.cart, status: 'idle' } }), 2500);
+      }
     }
-
+  
     isProcessingOrder = true;
 
     try {
