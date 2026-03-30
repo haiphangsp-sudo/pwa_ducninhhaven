@@ -125,8 +125,15 @@ export function getVariantById(id) {
 /**
  * BIẾN ĐỔI GIỎ HÀNG: Từ mảng {id, qty} thành dữ liệu hiển thị Drawer
  */
-export function getCartExtended(state) {
-  const items = state.cart?.items || [];
+export function getCartExtendedCu(state, type) {
+  let items = [];
+
+  if (type === "cart") {
+    items = state.cart?.items || [];
+  } else {
+    items = state.order?.line ? [state.order?.line] : [];
+  }
+
   let totalP = 0;
   let totalQ = 0;
 
@@ -138,11 +145,11 @@ export function getCartExtended(state) {
     totalP += linePrice;
     totalQ += cartItem.qty;
 
-    return { 
-        ...cartItem, 
-        ...info, 
-        linePrice,
-        linePriceFormat: new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(linePrice)
+    return {
+      ...cartItem,
+      ...info,
+      linePrice,
+      linePriceFormat: new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(linePrice)
     };
   }).filter(Boolean);
 
@@ -152,5 +159,45 @@ export function getCartExtended(state) {
     itemUnique: `${detailedItems.length} ${translate("cart_bar.unique")}`,
     totalQty: totalQ,
     totalPrice: new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(totalP)
+  };
+}
+
+export function getCartExtended(state, type = "cart") {
+  const { line } = state.order;
+  const { items: cartItems } = state.cart;
+
+  // 1. Xác định danh sách món cần xử lý
+  // Nếu là instant: tạo mảng ảo từ state.order.line
+  // Nếu là cart: lấy từ giỏ hàng
+  const rawItems = (type === "instant" && line) 
+    ? [{ id: line, qty: 1 }] 
+    : (cartItems || []);
+
+  if (rawItems.length === 0) return null;
+
+  // 2. Chi tiết hóa dữ liệu từng món
+  let totalPrice = 0;
+  const detailedItems = rawItems.map(item => {
+    const info = getItemById(item.id); // Hàm Category > Item > Option của bạn
+    if (!info) return null;
+
+    totalPrice += info.price * item.qty;
+    return {
+      ...item,
+      label: `${translate(info.itemLabel)} - ${translate(info.optionLabel)}`,
+      price: info.price,
+      subtotal: info.price * item.qty
+    };
+  }).filter(Boolean);
+
+  // 3. Đóng gói Payload theo chuẩn GAS 
+  return {
+    id: `HNV-${Date.now()}-${Math.floor(Math.random() * 1000)}`, // Order ID cho GAS
+    place: state.context.active?.id || "",
+    type: type === "instant" ? "⚡ Mua ngay" : "🛒 Giỏ hàng",
+    items: detailedItems.map(i => `${i.qty}x ${i.label}`).join(", "),
+    total: totalPrice,
+    notes: state.order.notes || "",
+    lang: state.lang.current
   };
 }
