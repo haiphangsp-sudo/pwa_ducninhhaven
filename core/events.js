@@ -35,7 +35,7 @@ function buildPayload(state,action) {
 // core/events.js
 
 export function updateCartQuantity(itemId, delta) {
-  state = getState();
+  const state = getState();
   const items = [...(state.cart.items || [])]; // Clone mảng để đảm bảo tính bất biến
   const idx = items.findIndex(i => i.id === itemId);
 
