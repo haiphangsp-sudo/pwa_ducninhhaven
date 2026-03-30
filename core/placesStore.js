@@ -1,8 +1,11 @@
 // core/placesStore.js
+import { setState } from "./state.js";
+import { deepMerge } from "../data/helpers.js";
 
 export let PLACE_GROUPS = {};
 export let PLACE_INDEX = {};
 export let PLACES = {};
+
 
 export async function loadPlaces() {
   const base = await fetch("/data/places.json", { cache: "no-store" }).then(r => r.json());
@@ -16,6 +19,15 @@ export async function loadPlaces() {
       Object.fromEntries(group.items.map(item => [item.id, item]))
     ])
   );
+  PLACES = deepMerge(PLACES, base);
+
+  setState({ 
+    places: { 
+      data: PLACES, 
+      status: "ready",
+      updatedAt: Date.now() 
+    }
+  });
 }
 
 function normalizePlaceGroups(raw) {

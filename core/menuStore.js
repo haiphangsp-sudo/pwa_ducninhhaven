@@ -1,6 +1,7 @@
 
 import { validateMenu, normalizeMenu } from "./menuSchema.js";
 import { setState } from "./state.js";
+import { deepMerge } from "../data/helpers.js";
 
 
 export let MENU = {};
@@ -29,7 +30,7 @@ export async function loadMenu() {
   });
 }
 
-function deepMerge(base, patch) {
+function deepMergeOld(base, patch) {
   const out = structuredClone(base);
 
   for (const k in patch) {

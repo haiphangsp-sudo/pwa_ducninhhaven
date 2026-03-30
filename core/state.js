@@ -4,6 +4,7 @@
 // Single source of truth.
 import { getContext } from "./context.js";
 import { CONFIG } from "../config.js";
+import { deepMerge } from "../data/helpers.js";
 
 
 export const UI = {
@@ -11,7 +12,15 @@ export const UI = {
 
   menu: {
     data: {}, // Khởi tạo là object rỗng thay vì null để Object.entries không báo lỗi
-    status: "loading"
+    status: "loading",
+    updatedAt: Date.now() 
+  },
+  /* ---------------- PLACES ---------------- */
+
+  places: {
+    data: {},
+    status: "loading",
+    updatedAt: Date.now()
   },
   /* ---------------- LANGUAGE ---------------- */
 
@@ -126,9 +135,27 @@ export function setState(patch) {
   
 }
 
+function deepMergeMenu(base, patch) {
+  const out = structuredClone(base);
+
+  for (const k in patch) {
+    if (
+      typeof patch[k] === "object" &&
+      patch[k] !== null &&
+      !Array.isArray(patch[k]) &&
+      typeof out[k] === "object"
+    ) {
+      out[k] = deepMerge(out[k] || {}, patch[k]);
+    } else {
+      out[k] = patch[k];
+    }
+  }
+
+  return out;
+}
 /* ======================================================= */
 
-function deepMerge(target,source){
+function deepMergeSai(target,source){
   for(const key in source){
 
     const value=source[key];
