@@ -22,7 +22,7 @@ export async function loadMenu() {
 
   setState({ 
       menu: { 
-        data: rawMenu,
+        data: MENU,
         status: "ready" 
       } 
   });
