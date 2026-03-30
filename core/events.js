@@ -63,13 +63,14 @@ function buildPayload(state, action) {
       item: translate(info.productLabel), // Tên sản phẩm chính
       option: translate(info.variantLabel), // Loại (đá/nóng/tô lớn...)
       qty: Number(cartItem.qty),
+      type: info.ui,
       price: Number(info.price || 0)
     };
   }).filter(Boolean);
 
   return {
     id: `H-${Date.now()}-${Math.floor(Math.random() * 1000)}`, // ID chống trùng
-    type: action === "send-cart" ? "Cart" : "Instant",
+    type: action=== "send-cart" ? "cart" : "instant",
     timestamp: new Date().toISOString(),
     mode: state.context?.anchor?.type || "web",
     place: placeId,
