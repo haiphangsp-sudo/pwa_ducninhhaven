@@ -1,7 +1,6 @@
 // core/events.js
 
 import { getState, setState } from "./state.js";
-import { getCartExtended } from "./menuQuery.js";
 import { sendRequest } from "../services/api.js";
 
 
@@ -15,7 +14,7 @@ import { sendRequest } from "../services/api.js";
 function buildPayload(state, type) {
   const place = state?.context?.active?.type;
   const mode = state?.context?.anchor?.type;
-  const cat = getCartExtended (state, type)
+  const cat = getCart(state, type)
   return {
     id: cat.id,
     type: cat.type,
@@ -35,38 +34,7 @@ function normalizeLineId(line) {
   }
   return "";
 }
-function normalizeItems(items) {
-  return (Array.isArray(items) ? items : [])
-    .map((it, index) => {
-      const qty = Number(it?.qty || 1);
-      const price = Number(it?.price || 0);
 
-      return {
-        id:
-          String(
-            it?.id ||
-            `${it?.category || "unknown"}.${it?.item || index}.${it?.option || "default"}`
-          ),
-        category: String(it?.category || ""),
-        item: String(it?.item || ""),
-        option: String(it?.option || ""),
-        qty,
-        price,
-        subtotal: qty * price
-      };
-    })
-    .filter(it => it.id && it.qty > 0 && it.price >= 0);
-}
-
-function getHydratedItems(state, type) {
-
-  try {
-    const info = getCartExtended(state, type);
-    return normalizeItems(info?.items || []);
-  } catch {
-    return [];
-  }
-}
 /**
  * Cập nhật số lượng món trong giỏ (Dùng cho nút +/- trong Drawer)
  */
@@ -180,7 +148,7 @@ export function finalizeOrderSuccess(type) {
   setTimeout(() => setState({ ack: { state: "hidden" } }), 3000);
 }
 
-export function getCartExtended(state, type) {
+function getCart(state, type) {
   if (type !== "cart" && type !== "instant") return null;
 
   let rawItems = [];
