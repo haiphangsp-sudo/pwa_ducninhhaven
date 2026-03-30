@@ -12,24 +12,62 @@ import { sendRequest } from "../services/api.js";
 /**
  * Chuẩn hóa dữ liệu để gửi đi
  */
-function buildPayload( state, type) {
-  const orderId = `HNV-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
-  const info = getCartExtended(state, type);
+function buildPayload(state, type) {
+  const items = getHydratedItems(state, type);
+  const total = items.reduce((sum, it) => sum + it.subtotal, 0);
+  const place = state?.context?.active?.type;
+  const mode = state?.context?.anchor?.type;
   return {
-      id: orderId,
-      type: type,
-      ts: new Date().toISOString(),
-      mode: state.context?.mode,
-      place: state.context.active?.id,
-      items:info.items,
-      qty: 1
-    }
+    id: `V-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+    type: type,
+    timestamp: new Date().toISOString(),
+    mode: mode,
+    place: place,
+    total,
+    device: navigator.userAgent,
+    items
+  };
+}
+function normalizeLineId(line) {
+  if (typeof line === "string") return line;
+  if (line && typeof line === "object") {
+    if (line.id) return String(line.id);
+    if (line.item) return String(line.item);
+  }
+  return "";
+}
+function normalizeItems(items) {
+  return (Array.isArray(items) ? items : [])
+    .map((it, index) => {
+      const qty = Number(it?.qty || 1);
+      const price = Number(it?.price || 0);
+
+      return {
+        id:
+          String(
+            it?.id ||
+            `${it?.category || "unknown"}.${it?.item || index}.${it?.option || "default"}`
+          ),
+        category: String(it?.category || ""),
+        item: String(it?.item || ""),
+        option: String(it?.option || ""),
+        qty,
+        price,
+        subtotal: qty * price
+      };
+    })
+    .filter(it => it.id && it.qty > 0 && it.price >= 0);
 }
 
-/* ========================================================
-   PUBLIC ACTIONS (Export)
-   ======================================================== */
+function getHydratedItems(state, type) {
 
+  try {
+    const info = getCartExtended(state, type);
+    return normalizeItems(info?.items || []);
+  } catch {
+    return [];
+  }
+}
 /**
  * Cập nhật số lượng món trong giỏ (Dùng cho nút +/- trong Drawer)
  */
