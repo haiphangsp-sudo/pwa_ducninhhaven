@@ -165,14 +165,11 @@ function getCart(state, type) {
     if (!info) return null;
 
     const linePrice = info.price * cartItem.qty;
-    totalAmount += linePrice;
-    totalQty += cartItem.qty;
 
     return {
       ...cartItem,
-      label: `${translate(info.productLabel)} - ${translate(info.varianLabel)}`,
-      price: info.price,
-      linePrice
+      label: `${translate(info.productLabel)} - ${translate(info.variantLabel)}`,
+      price: info.price
     };
   }).filter(Boolean);
 
@@ -182,13 +179,10 @@ function getCart(state, type) {
     .join(", ");
 
   return {
-     
       id: `HNV-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
       mode: translate(state.context.anchor?.type) || "",
       place: translate(state.context.active?.type) || "",
       type: type,
-      items: itemsSummary, // Đây là chuỗi văn bản cho cột E
-      total: totalAmount,  // Đây là con số cho cột F
-    
-  };
+      items: itemsSummary // Đây là chuỗi văn bản cho cột E
+  }
 }
