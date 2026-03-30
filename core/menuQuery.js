@@ -34,7 +34,7 @@ return out;
 
 }
 
-export function getProducts(categoryKey) {
+export function getProductsOld(categoryKey) {
   if (!categoryKey) return [];
   const category = MENU[categoryKey];
   if (category?.active === false) return [];
@@ -47,6 +47,19 @@ export function getProducts(categoryKey) {
       ...product,
       key
     }));
+}
+export function getProducts(categoryKey) {
+  
+  // Dùng vòng lặp ổn định để tìm đúng Category
+  for (const [key, category] of Object.entries(MENU)) {
+    if (key === categoryKey) {
+      // Ở đây ta biết chắc chắn mình đang ở đúng chỗ
+      // menuSchema đã đổi items thành products, ta lấy nó ra
+      const products = category.products || {};
+      return Object.values(products); 
+    }
+  }
+  return [];
 }
 
 export function getVariants(categoryKey, productKey) {
