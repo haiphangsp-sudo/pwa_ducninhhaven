@@ -50,7 +50,7 @@ export let UI = {
   },
 
   order: {
-    type: null,     // cart, instant, send_cart
+    action: null,     // cart, instant, send_cart
     line: null,     // ID món ăn (nếu có)
     status: "idle", // idle, pending, sending, success, error, waiting_place
     msg: "",        // Thông báo phản hồi cho khách

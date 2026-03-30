@@ -97,13 +97,12 @@ function doGet(e) {
 
 function parseData(p) {
   return {
-    secret: p?.secret || "",
+    secret: p?.secret,
     id: p?.id || "",
     type: p?.type || "",
     timestamp: p?.timestamp || "",
     mode: p?.mode || "",
     place: p?.place || "",
-    total: Number(p?.total || 0),
     device: p?.device || "",
     items: Array.isArray(p?.items)
       ? p.items.map(item => ({
@@ -112,8 +111,7 @@ function parseData(p) {
           item: item?.item || "",
           option: item?.option || "",
           qty: Number(item?.qty || 0),
-          price: Number(item?.price || 0),
-          subtotal: Number(item?.subtotal || 0)
+          price: Number(item?.price || 0)
         }))
       : []
   };
@@ -130,8 +128,6 @@ function validate(data) {
     if (!item.id || typeof item.id !== "string") return false;
     if (!Number.isFinite(item.qty) || item.qty <= 0) return false;
     if (!Number.isFinite(item.price) || item.price < 0) return false;
-    if (!Number.isFinite(item.subtotal) || item.subtotal < 0) return false;
-    if (item.subtotal !== item.qty * item.price) return false;
   }
 
   return true;
@@ -148,6 +144,7 @@ function saveCart(data) {
   }
 
   const rows = items.map(it => [
+    data.
     data.id || "",                  // request_id
     now,                            // server_time
     data.timestamp || "",           // client_time
@@ -159,7 +156,6 @@ function saveCart(data) {
     it.option || "",
     Number(it.qty || 0),
     Number(it.price || 0),
-    Number(it.subtotal || 0),
     getPriority(it.category),
     "NEW",
     data.type || "",
