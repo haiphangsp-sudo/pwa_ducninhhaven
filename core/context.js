@@ -167,7 +167,7 @@ export function applyPlaceById(placeId) {
 export function returnToAnchor() {
   if (!context.anchor) return false;
 
-  context.mode = context.anchor;
+  context.anchor = context.anchor;
   saveContext();
   return true;
 }
@@ -180,8 +180,8 @@ export function setAnchor(place) {
   saveContext();
 }
 
-export function setActive(mode) {
-  context.mode = mode;
+export function setActive(active) {
+  context.active = active;
   saveContext();
 }
 export function getAnchor() {
