@@ -13,22 +13,21 @@ import { getVariantById } from "./menuQuery.js";
 /**
  * Chuẩn hóa dữ liệu để gửi đi
  */
-function buildPayload(state,action) {
-  const place = state?.context?.active?.type;
-  const mode = state?.context?.anchor?.type;
-  const cat = getCart(state,action);
+function buildPayload(state, action) {
+  const cart = getCart(state, action);
+  if (!cart) return null;
 
   return {
-    id: cat.id,
-    type: cat.type,
+    id: cart.id,
+    type: cart.type,
     timestamp: new Date().toISOString(),
-    mode: cat.mode,
-    place: cat.place,
+    mode: cart.mode,
+    place: cart.place,
+    placeType: cart.placeType,
     device: navigator.userAgent,
-    items: cat.items
+    items: cart.items
   };
 }
-
 /**
  * Cập nhật số lượng món trong giỏ (Dùng cho nút +/- trong Drawer)
  */
@@ -142,10 +141,12 @@ export function finalizeOrderSuccess(action) {
   setTimeout(() => setState({ ack: { state: "hidden" } }), 3000);
 }
 
-function getCart(state,action) {
+function getCart(state, action) {
   if (action !== "send-cart" && action !== "instant") return null;
+
   const line = state.order.line;
   const type = action === "send-cart" ? "cart" : action;
+
   let rawItems = [];
   if (action === "send-cart") rawItems = state.cart?.items || [];
   if (action === "instant") {
@@ -154,29 +155,33 @@ function getCart(state,action) {
 
   if (rawItems.length === 0) return null;
 
-  // 1. Chi tiết hóa từng món
   const detailedItems = rawItems.map(cartItem => {
     const info = getVariantById(cartItem.id);
     if (!info) return null;
+
     return {
       id: cartItem.id,
       category: info.categoryKey,
+      productKey: info.productKey,
+      variantKey: info.variantKey,
       item: info.productLabel,
       option: info.variantLabel,
       qty: cartItem.qty,
-      type:info.ui,
-      price: info.price===null? 0 : info.priceFormat
+      unit: info.unit || "item",
+      price: Number(info.price || 0)
     };
   }).filter(Boolean);
 
   return {
-      id: `H-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
-      mode: translate(state.context.anchor?.type) || "",
-      place: translate(state.context.active?.type) || "",
-      type: type,
-      items: detailedItems 
-  }
+    id: `H-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+    type,
+    mode: state.context.anchor?.type || "",
+    place: state.context.active?.id || "",
+    placeType: state.context.active?.type || "",
+    items: detailedItems
+  };
 }
+
 export function showAck(status, message, timeout = 1500) {
   setState({
     ack: {
