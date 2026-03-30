@@ -128,8 +128,7 @@ function syncLanguage(state) {
 async function syncOrderFlow(state,prevState) {
     const { action, line, at, status } = state.order;
     // Chỉ chạy nếu có click mới (at thay đổi) và chưa ở trạng thái đang xử lý
-    if (!at || at === prevState.order?.at || isProcessingOrder) return;
-
+if (!action || !at || at === prevState.order?.at || isProcessingOrder) return;
     isProcessingOrder = true;
 
     try {

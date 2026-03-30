@@ -141,7 +141,7 @@ export async function submitOrder(action) {
 export function finalizeOrderSuccess(action) {
   const patch = {
     overlay: { view: null },
-    order: { action: null, line: null, status: "idle", msg: "", at: Date.now() }
+    order: { action: null, line: null, status: "idle", msg: "", at: null }
   };
 
   if (action === "send-cart") {
