@@ -157,33 +157,28 @@ function getCart(type) {
 
   if (rawItems.length === 0) return null;
 
-  let totalAmount = 0;
-  let totalQty = 0;
-
   // 1. Chi tiết hóa từng món
   const detailedItems = rawItems.map(cartItem => {
     const info = getVariantById(cartItem.id);
     if (!info) return null;
-
-    const linePrice = info.price * cartItem.qty;
-
     return {
-      ...cartItem,
+      category: info.categoryKey,
+      product: translate(info.productKey),
+      item: translate(info.productLabel),
+      option: translate(info.variantLabel),
+      id: info.id,
+      qty: cartItem.qty,
+      type:info.ui,
       label: `${translate(info.productLabel)} - ${translate(info.variantLabel)}`,
-      price: info.price
+      price: info.priceFormat
     };
   }).filter(Boolean);
-
-  // 2. Tạo chuỗi tóm tắt cho Google Sheets (Ví dụ: "1x Phở bò - Tô lớn")
-  const itemsSummary = detailedItems
-    .map(i => `${i.qty}x ${i.label}`)
-    .join(", ");
 
   return {
       id: `HNV-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
       mode: translate(state.context.anchor?.type) || "",
       place: translate(state.context.active?.type) || "",
       type: type,
-      items: itemsSummary // Đây là chuỗi văn bản cho cột E
+      items: detailedItems // Đây là chuỗi văn bản cho cột E
   }
 }
