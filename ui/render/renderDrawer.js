@@ -1,6 +1,6 @@
 // ui/render/renderDrawer.js
 import { translate } from "../utils/translate.js";
-import { getCartExtended } from "../../core/menuQuery.js";
+import { getDrawerExtended } from "../../core/menuQuery.js";
 
 export function renderDrawer(state) {
   const drawer = document.getElementById("cartDrawer");
@@ -16,7 +16,7 @@ export function renderDrawer(state) {
   const sendBtn = document.getElementById("drawerSend");
   const type = state.order.type;
 
-  const cart = getCartExtended(state,"cart");
+  const cart = getDrawerExtended(state);
 
   if (cart.isEmpty) {
     if (summaryEl) summaryEl.classList.add("hidden");
