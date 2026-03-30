@@ -23,26 +23,6 @@ export function getCategory(key) {
   return menuData[key] || null;
 }
 
-export function getCategories() {
-  const menuData = getMenuData();
-    const place = getPlace();
-    const out = [];
-    for (const [key, cat] of Object.entries(menuData)) {
-        if (typeof cat!== "object") continue
-        if (cat.active === false) continue;
-        if (cat.allow&&!cat.allow.includes(place)) continue;
-        out.push({
-            key,
-            label: cat.label,
-            ui: cat.ui,
-            icon: cat.icon
-        });
-    
-    }
-return out;
-
-}
-
 
 export function getVariants(categoryKey, productKey) {
   const menuData = getMenuData();
