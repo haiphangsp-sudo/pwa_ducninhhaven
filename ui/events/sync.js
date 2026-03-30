@@ -3,7 +3,7 @@
 import { subscribe, getState } from "../../core/state.js";
 import { CONFIG } from "../../config.js";
 import { syncOverlay } from "../../ui/interactions/backdropManager.js"
-import { addToCart, buyNow, sendCart } from "../../core/events.js";
+import { addToCart, submitOrder } from "../../core/events.js";
 import { renderPlacePicker } from "../render/renderPlacePicker.js";
 import { renderDrawer } from "../render/renderDrawer.js";
 import { renderNavBar } from "../render/renderNavBar.js";
