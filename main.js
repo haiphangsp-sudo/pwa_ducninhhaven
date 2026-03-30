@@ -110,7 +110,13 @@ async function boot() {
       loadMenu().catch(e => console.error("Lỗi menu:", e)),
       loadPlaces().catch(e => console.error("Lỗi vị trí:", e))
     ]);
-
+    setState({ 
+      menu: { 
+        data: MENU, 
+        status: "ready",
+        updatedAt: Date.now() 
+      } 
+    });
     loadCart();
     normalizeContext();
     
