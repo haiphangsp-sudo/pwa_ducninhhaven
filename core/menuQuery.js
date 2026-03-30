@@ -178,7 +178,7 @@ export function getCartExtended(state, type = "cart") {
   // 2. Chi tiết hóa dữ liệu từng món
   let totalPrice = 0;
   const detailedItems = rawItems.map(item => {
-    const info = getItemById(item.id); // Hàm Category > Item > Option của bạn
+    const info = getVariantById(item.id); // Hàm Category > Item > Option của bạn
     if (!info) return null;
 
     totalPrice += info.price * item.qty;
