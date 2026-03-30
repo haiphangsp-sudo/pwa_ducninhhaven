@@ -2,7 +2,7 @@
 // Thanh giỏ dưới cùng (state-driven)
 
 import { translate } from "../utils/translate.js";
-import { getCartExtended } from "../../core/menuQuery.js";
+import { getDrawerExtended } from "../../core/menuQuery.js";
 
 
 /* =========================
@@ -11,7 +11,7 @@ import { getCartExtended } from "../../core/menuQuery.js";
 
 export function renderCartBar(state) {
 
-  const cart = getCartExtended(state);
+  const cart = getDrawerExtended(state);
   const bar = document.getElementById("cartBar");
   const btn = document.getElementById("cartOpen");
   const countEl = document.getElementById("cartCount");
