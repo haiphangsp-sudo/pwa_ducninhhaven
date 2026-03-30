@@ -163,7 +163,7 @@ export function getCartExtended(state, type) {
 
   return {
     items: detailedItems,
-    isEmpty: detailedItems.length === 0,
+    isEmpty: totalQ === 0,
     itemUnique: `${detailedItems.length} ${translate("cart_bar.unique")}`,
     totalQty: totalQ,
     totalPrice: new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(totalP)
