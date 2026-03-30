@@ -1,6 +1,6 @@
 // ui/sync.js
 
-import { subscribe, getState, setState } from "../../core/state.js";
+import { subscribe, getState } from "../../core/state.js";
 import { CONFIG } from "../../config.js";
 import { syncOverlay } from "../../ui/interactions/backdropManager.js"
 import { addToCart, buyNow, sendCart } from "../../core/events.js";
@@ -125,31 +125,18 @@ async function syncOrderFlow(state,prevState) {
     // Chỉ chạy nếu có click mới (at thay đổi) và chưa ở trạng thái đang xử lý
     if (!at || at === prevState.order?.at || isProcessingOrder) return;
 
-    
-    /* ---------- RENDER DỰA TRÊN TRẠNG THÁI GIỎ ---------- */
-    if (state.cart.status !== prevState.cart?.status) {
-      renderStatusBar(state);
-      if (state.cart.status === 'success') {
-        // Wellness effect: Tự đóng drawer sau khi thành công
-        //renderStatusBar(state);
-        setTimeout(() => setState({ overlay: { view: null }, cart: { ...state.cart, status: 'idle' } }), 2500);
-      }
-    }
-  
     isProcessingOrder = true;
 
     try {
         if (type === "add-cart") {
             addToCart(line);
         } else {
-            // Cập nhật trạng thái 'sending' để renderStatusBar hiện spinner
-            setState({ order: { ...state.order, status: "sending", msg: translate("order.sending") } });
             
             if (type === "send-instant") await buyNow(line);
             if (type === "send_cart") await sendCart();
         }
     } catch (error) {
-        setState({ order: { ...state.order, status: "error" } });
+
     } finally {
         isProcessingOrder = false;
     }

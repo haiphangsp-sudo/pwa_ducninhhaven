@@ -100,6 +100,7 @@ function handleGlobalClick(e) {
 function checkCart(cmd) {
   if (getActivePlaceId()!==null) {
     setOrder(cmd);
+
   }else{
     setState({
       overlay: { view: "placePicker" }
@@ -116,4 +117,5 @@ function setOrder(cmd) {
       at: Date.now()
     }
   });
+  // Cập nhật trạng thái 'sending' để renderStatusBar hiện spinner
 }
