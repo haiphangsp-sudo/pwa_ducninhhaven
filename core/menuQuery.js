@@ -1,12 +1,64 @@
 // core/menuQuery.js
 
-import { getState } from "./state.js";
+import { getContext } from "./context.js";
 import { translate } from "../ui/utils/translate.js";
+import { getState } from "../../core/state.js";
+
 
 /**
  * Helper: Luôn lấy dữ liệu mới nhất từ State mỗi khi hàm được gọi
  */
 const getMenuData = () => getState().menu.data || {};
+
+
+function getPlace() {
+    
+    const ctx = getContext();
+    const anchor=ctx?.anchor;
+    if(!anchor) return "table";
+    return anchor.type;
+}
+export function getCategory(key) {
+  const menuData = getMenuData();
+  return menuData[key] || null;
+}
+
+export function getCategories() {
+  const menuData = getMenuData();
+    const place = getPlace();
+    const out = [];
+    for (const [key, cat] of Object.entries(menuData)) {
+        if (typeof cat!== "object") continue
+        if (cat.active === false) continue;
+        if (cat.allow&&!cat.allow.includes(place)) continue;
+        out.push({
+            key,
+            label: cat.label,
+            ui: cat.ui,
+            icon: cat.icon
+        });
+    
+    }
+return out;
+
+}
+
+
+export function getVariants(categoryKey, productKey) {
+  const menuData = getMenuData();
+  const product = menuData[categoryKey].products?.[productKey];
+  if (product?.active===false) return [];
+
+  return Object.entries(product.variants || {})
+    .filter(([, variant]) => variant.active !== false)
+    .map(([key, variant]) => ({
+      key,
+      ...variant,
+      recommend: (product.recommend || []).includes(key)
+    }));
+}
+
+
 
 /**
  * Lấy danh mục (Categories) phù hợp với vị trí khách đang đứng
