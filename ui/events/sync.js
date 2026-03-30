@@ -134,11 +134,9 @@ async function syncOrderFlow(state,prevState) {
 
     try {
         if (action === "add-cart") {
-            addToCart(state,action);
+            addToCart(action);
         } else {
-            
-            if (action === "instant") await buyNow(state,action);
-            if (action === "send-cart") await sendCart(state,action);
+            submitOrder(action);
         }
     } catch (error) {
         console.error("Error processing order:", error);

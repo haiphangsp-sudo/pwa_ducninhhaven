@@ -63,8 +63,7 @@ function buildPayload(state, action) {
       item: translate(info.productLabel), // Tên sản phẩm chính
       option: translate(info.variantLabel), // Loại (đá/nóng/tô lớn...)
       qty: Number(cartItem.qty),
-      price: Number(info.price || 0),
-      subtotal: subtotal
+      price: Number(info.price || 0)
     };
   }).filter(Boolean);
 
@@ -74,7 +73,6 @@ function buildPayload(state, action) {
     timestamp: new Date().toISOString(),
     mode: state.context?.anchor?.type || "web",
     place: placeId,
-    total: totalAmount,
     device: navigator.userAgent,
     items: items
   };
@@ -116,7 +114,7 @@ export function addToCart() {
    4. SEND ACTIONS (Gửi đơn hàng)
    ======================================================== */
 
-async function submitOrder(action) {
+export async function submitOrder(action) {
   const state = getState();
   const payload = buildPayload(state, action);
   
@@ -159,5 +157,3 @@ export function finalizeOrderSuccess(action) {
   if (navigator.vibrate) navigator.vibrate(50);
 }
 
-export const buyNow = () => submitOrder("instant");
-export const sendCart = () => submitOrder("send-cart");
