@@ -5,6 +5,7 @@ import { getContext } from "./context.js";
 import { translate } from "../ui/utils/translate.js";
 import { getState } from "../../core/state.js";
 
+const menuData = getState().menu.data;
 
 function getPlace() {
     const ctx = getContext();
@@ -13,13 +14,13 @@ function getPlace() {
     return anchor.type;
 }
 export function getCategory(key) {
-  return MENU[key] || null;
+  return menuData[key] || null;
 }
 
 export function getCategories() {
     const place = getPlace();
     const out = [];
-    for (const [key, cat] of Object.entries(MENU)) {
+    for (const [key, cat] of Object.entries(menuData)) {
         if (typeof cat!== "object") continue
         if (cat.active === false) continue;
         if (cat.allow&&!cat.allow.includes(place)) continue;
@@ -37,7 +38,8 @@ return out;
 
 export function getProductsOLd(categoryKey) {
   if (!categoryKey) return [];
-  const category = MENU[categoryKey];
+  
+  const category = menuData[categoryKey];
   if (category?.active === false) return [];
 
   const products = category.products || category.items || {};
@@ -51,7 +53,7 @@ export function getProductsOLd(categoryKey) {
 }
 
 export function getProducts(categoryKey) {
-  const menuData = getState().menu.data;
+  
   const category = menuData[categoryKey];
   if (!category || category.active === false) return [];
   const products = category.products || category.items || {};
@@ -66,7 +68,8 @@ export function getProducts(categoryKey) {
 
 
 export function getVariants(categoryKey, productKey) {
-  const product = MENU[categoryKey]?.products?.[productKey];
+
+  const product = menuData[categoryKey].products?.[productKey];
   if (product?.active===false) return [];
 
   return Object.entries(product.variants || {})
@@ -84,7 +87,7 @@ export function getVariants(categoryKey, productKey) {
 export function getVariantById(id) {
   if (!id) return null;
 
-  for (const [categoryKey, category] of Object.entries(MENU)) {
+  for (const [categoryKey, category] of Object.entries(menuData)) {
     for (const [productKey, product] of Object.entries(category.products || {})) {
       for (const [variantKey, variant] of Object.entries(product.variants || {})) {
         if (variant.id === id) {
