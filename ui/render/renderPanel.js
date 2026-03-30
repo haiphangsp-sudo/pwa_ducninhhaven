@@ -14,7 +14,7 @@ export function renderPanel(state) {
   
   if (!container || !panel.view) return;
 
-  switch (panel.type) {
+  switch (panel.option) {
     case "article":
       container.innerHTML = renderArticle(panel.view);
       break;
