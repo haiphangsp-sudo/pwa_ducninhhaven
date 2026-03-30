@@ -66,10 +66,8 @@ async function syncUI(state) {
 
   /* ---------- PANEL ---------- */
 
-  if (state.panel.view !== prevState.panel?.view) {
+  if (state.panel !== prevState?.panel) {
     renderHub(state);
-  }
-  if (state.panel.option !== prevState.panel?.option) {
     renderPanel(state);
   }
 
