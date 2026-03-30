@@ -50,16 +50,18 @@ export function getProductsOld(categoryKey) {
 }
 
 export function getProducts(categoryKey) {
-  const menuData = getState().menu.data;
+  const menuData = MENU[categoryKey];
   
   // Dùng vòng lặp ổn định để tìm đúng Category
   for (const [key, category] of Object.entries(menuData)) {
-    if (key === categoryKey) {
+    if (key === categoryKey) continue;
+    if (category?.active === false) continue;
+
       // Ở đây ta biết chắc chắn mình đang ở đúng chỗ
       // menuSchema đã đổi items thành products, ta lấy nó ra
       const products = category.products || {};
       return Object.values(products); 
-    }
+    
   }
   return [];
 }
