@@ -5,19 +5,22 @@ import { getContext } from "./context.js";
 import { translate } from "../ui/utils/translate.js";
 import { getState } from "../../core/state.js";
 
-const menuData = getState().menu.data;
+
 
 function getPlace() {
+    
     const ctx = getContext();
     const anchor=ctx?.anchor;
     if(!anchor) return "table";
     return anchor.type;
 }
 export function getCategory(key) {
+  const menuData = getState().menu.data;
   return menuData[key] || null;
 }
 
 export function getCategories() {
+  const menuData = getState().menu.data;
     const place = getPlace();
     const out = [];
     for (const [key, cat] of Object.entries(menuData)) {
@@ -38,7 +41,7 @@ return out;
 
 export function getProducts(categoryKey) {
   if (!categoryKey) return [];
-  
+  const menuData = getState().menu.data;
   const category = menuData[categoryKey];
   if (category?.active === false) return [];
 
@@ -54,7 +57,7 @@ export function getProducts(categoryKey) {
 
 
 export function getVariants(categoryKey, productKey) {
-
+  const menuData = getState().menu.data;
   const product = menuData[categoryKey].products?.[productKey];
   if (product?.active===false) return [];
 
@@ -72,7 +75,7 @@ export function getVariants(categoryKey, productKey) {
  */
 export function getVariantById(id) {
   if (!id) return null;
-
+  const menuData = getState().menu.data;
   for (const [categoryKey, category] of Object.entries(menuData)) {
     for (const [productKey, product] of Object.entries(category.products || {})) {
       for (const [variantKey, variant] of Object.entries(product.variants || {})) {
