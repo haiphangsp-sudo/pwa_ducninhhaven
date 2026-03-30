@@ -128,12 +128,12 @@ async function syncOrderFlow(state,prevState) {
     isProcessingOrder = true;
 
     try {
-        if (type === "cart") {
-            addToCart(state,line);
+        if (type === "add-cart") {
+            addToCart(state,line,type);
         } else {
             
-            if (type === "instant") await buyNow(state,line);
-            if (type === "send-cart") await sendCart(state);
+            if (type === "instant") await buyNow(state,line,type);
+            if (type === "send-cart") await sendCart(state,type);
         }
     } catch (error) {
 

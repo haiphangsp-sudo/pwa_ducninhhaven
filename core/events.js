@@ -13,10 +13,10 @@ import { getVariantById } from "./menuQuery.js";
 /**
  * Chuẩn hóa dữ liệu để gửi đi
  */
-function buildPayload(state,type) {
+function buildPayload(state,line,t) {
   const place = state?.context?.active?.type;
   const mode = state?.context?.anchor?.type;
-  const cat = getCart(state, type);
+  const cat = getCart(state, line,t);
 
   return {
     id: cat.id,
@@ -54,7 +54,7 @@ export function updateCartQuantity(itemId, delta) {
 /**
  * Thêm món vào giỏ hàng
  */
-export function addToCart(state,itemId) {
+export function addToCart(state,itemId,type) {
   // Chỉ cần gọi hàm này, nó sẽ tự xử lý việc tăng qty hoặc push mới
   updateCartQuantity(itemId, 1);
 
@@ -67,15 +67,15 @@ export function addToCart(state,itemId) {
 /**
  * Xử lý Mua ngay (Gửi 1 món)
  */
-export async function buyNow(state,type) {
+export async function buyNow(state,line,type) {
   setState({ ack: { state: "show", status: "sending" } });
 
   try {
-    const payload = buildPayload(state, type);
+    const payload = buildPayload(state,line, type);
     const res = await sendRequest(payload);
 
     if (res.success) {
-      finalizeOrderSuccess("instant");
+      finalizeOrderSuccess(type);
     } else {
       throw new Error(res.message);
     }
@@ -87,7 +87,7 @@ export async function buyNow(state,type) {
 /**
  * Xử lý Gửi toàn bộ giỏ hàng
  */
-export async function sendCart(state) {
+export async function sendCart(state,no,type) {
   const cartItems = state.cart.items || [];
 
   if (cartItems.length === 0) return;
@@ -95,11 +95,11 @@ export async function sendCart(state) {
   setState({ ack: { state: "show", status: "sending" } });
 
   try {
-    const payload = buildPayload(state, "send-cart");
+    const payload = buildPayload(state,null, type);
     const res = await sendRequest(payload);
 
     if (res.success) {
-      finalizeOrderSuccess("send-cart");
+      finalizeOrderSuccess(type);
 
       setTimeout(() => setState({ ack: { state: "hidden" } }), 3000);
     } else {
@@ -141,15 +141,13 @@ export function finalizeOrderSuccess(type) {
   setTimeout(() => setState({ ack: { state: "hidden" } }), 3000);
 }
 
-function getCart(type) {
-  const state = getState();
+function getCart(state,line,type) {
   if (type !== "cart" && type !== "instant") return null;
 
   let rawItems = [];
   if (type === "cart") rawItems = state.cart?.items || [];
   if (type === "instant") {
-    const lineId = state.order?.line;
-    rawItems = lineId ? [{ id: lineId, qty: 1 }] : [];
+    rawItems = line ? [{ id: line, qty: 1 }] : [];
   }
 
   if (rawItems.length === 0) return null;
@@ -161,8 +159,8 @@ function getCart(type) {
     return {
       id: cartItem.id,
       category: info.categoryKey,
-      item: translate(info.productLabel),
-      option: translate(info.variantLabel),
+      item: info.productLabel,
+      option: info.variantLabel,
       qty: cartItem.qty,
       type:info.ui,
       price: info.priceFormat

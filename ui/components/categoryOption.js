@@ -30,7 +30,7 @@ export function categoryOpt(opt, categoryKey, productKey,ui) {
                     }
                 </div>
                 <button class="btn btn-primary"
-                    data-action="${ui}"
+                    data-action="${ui=== "cart" ? "add-cart" : ui}"
                     data-extra="${categoryKey}"
                     data-option="${ui}"
                     data-value="${opt.id}">

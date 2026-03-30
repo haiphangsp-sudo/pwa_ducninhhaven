@@ -33,8 +33,7 @@ function handleGlobalClick(e) {
     action: target.dataset.action,
     value: target.dataset.value,
     option: target.dataset.option,
-    extra: target.dataset.extra,
-    source: "global"
+    extra: target.dataset.extra
   };
   
 
@@ -71,7 +70,7 @@ function handleGlobalClick(e) {
 
 
     /* ---------- CART / ORDER ---------- */
-    case "cart":
+    case "add-cart":
       setOrder(cmd)
       break;
 
@@ -85,7 +84,7 @@ function handleGlobalClick(e) {
     
     case "update-qty":
       const delta = parseInt(cmd.option);
-      updateCartQuantity(cmd.value, delta); // Gọi hàm từ events.js
+      updateCartQuantity(cmd.value, delta);
       break;
     /* ---------- LANGUAGE ---------- */
 
