@@ -127,9 +127,9 @@ export function getVariantById(id) {
  */
 export function getCartExtended(state) {
   let items = [];
-  const type = state.order.type;
+  const mode = state.order.mode;
 
-  if (type === "cart"){
+  if (mode === "cart"){
     items = state.cart?.items || [];
   } else {
     items = state.order?.line ? [state.order?.line] : [];

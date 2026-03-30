@@ -112,6 +112,7 @@ function setOrder(cmd) {
   setState({
     order: {
       type: cmd.action,
+      mode: cmd.option,
       line: cmd.value,
       status: cmd.extra,
       at: Date.now()
