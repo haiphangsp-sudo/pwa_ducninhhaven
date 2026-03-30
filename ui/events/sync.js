@@ -100,12 +100,23 @@ async function syncUI(state) {
     syncLanguage(state);
   }
 
-  
-  
-  // Xử lý trường hợp món bị xóa hoàn toàn khỏi giỏ
-  prevState.cart?.items.forEach(prevItem => {
-    const stillExists = state.cart.items.find(i => i.id === prevItem.id);
-    if (!stillExists) updateStepperUI(prevItem.id, 0);
+  state.cart?.items?.forEach(item => {
+    if (!item) return; // Bỏ qua nếu item null
+    const prevItems = prevState.cart?.items || [];
+    const prevItem = prevItems.find(i => i?.id === item.id);
+    
+    if (!prevItem || prevItem.qty !== item.qty) {
+      updateStepperUI(item.id, item.qty);
+    }
+  });
+  prevState.cart?.items?.forEach(prevItem => {
+    if (!prevItem) return;
+    const currentItems = state.cart?.items || [];
+    const stillExists = currentItems.find(i => i?.id === prevItem.id);
+    
+    if (!stillExists) {
+      updateStepperUI(prevItem.id, 0);
+    }
   });
   
   lastState = state;

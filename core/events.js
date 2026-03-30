@@ -34,6 +34,7 @@ function showAck(status, message = "", timeout = 1800) {
 // core/events.js
 
 function buildPayload(state, action) {
+  
   // Sử dụng Optional Chaining (?.) để an toàn
   const activePlace = state.context?.active;
   const placeId = activePlace?.id?.toLowerCase();
@@ -52,6 +53,8 @@ function buildPayload(state, action) {
 
   // Lọc kỹ các món ăn
   const items = rawItems.map(cartItem => {
+    if (!cartItem || !cartItem.id) return null; // Bỏ qua các item không hợp lệ
+
     const info = getVariantById(cartItem.id);
     if (!info) return null; // Bỏ qua món không tìm thấy trong menu
 
