@@ -36,26 +36,12 @@ return out;
 
 }
 
-export function getProductsOLd(categoryKey) {
+export function getProducts(categoryKey) {
   if (!categoryKey) return [];
   
   const category = menuData[categoryKey];
   if (category?.active === false) return [];
 
-  const products = category.products || category.items || {};
-
-  return Object.entries(products)
-    .filter(([, product]) => product?.active !== false)
-    .map(([key, product]) => ({
-      ...product,
-      key
-    }));
-}
-
-export function getProducts(categoryKey) {
-  
-  const category = menuData[categoryKey];
-  if (!category || category.active === false) return [];
   const products = category.products || category.items || {};
 
   return Object.entries(products)
