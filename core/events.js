@@ -124,33 +124,35 @@ function buildItems(rawItems) {
 }
 
 function buildPayload(state, action) {
-  if (action !== "send-cart" && action !== "instant") return null;
+  const rawItems =
+    action === "send-cart"
+      ? (state.cart?.items || [])
+      : state.order?.line
+        ? [{ id: state.order.line, qty: 1 }]
+        : [];
 
-  const rawItems = getRawOrderItems(state, action);
   if (!rawItems.length) return null;
 
   const items = buildItems(rawItems);
   if (!items.length) return null;
 
   const ctx = getContext();
-  const anchor = ctx?.anchor || null;
-  const active = ctx?.active || null;
+  const anchor = ctx?.anchor;
+  const active = ctx?.active;
 
-  if (!anchor?.type || !active?.id) {
-    return null;
-  }
+  if (!anchor?.type || !active?.id) return null;
 
   return {
-    id: createOrderId(),
+    id: `H-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
     type: action === "send-cart" ? "cart" : "instant",
     timestamp: new Date().toISOString(),
     mode: anchor.type,
-    place: active.id,
-    placeType: active.type || "",
+    place: String(active.id).toLowerCase(),
     device: navigator.userAgent,
     items
   };
 }
+
 /* ========================================================
    ORDER SUCCESS / RESET
 ======================================================== */
