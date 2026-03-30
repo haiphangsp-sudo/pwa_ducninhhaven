@@ -1,38 +1,40 @@
-import { getCategory, getProducts } from "../../core/menuQuery.js";
 import { translate } from "../utils/translate.js";
+import { getProducts } from "../../core/menuQuery.js";
 
+/**
+ * Render giao diện bài viết giới thiệu (Article)
+ * @param {string} categoryKey - Key của category (ví dụ: 'intro')
+ */
 export function renderArticle(categoryKey) {
   if (!categoryKey) return "";
 
-  const category = getCategory(categoryKey);
-  if (!category || category.ui !== "article") return "";
-
+  // 1. Lấy danh sách sản phẩm (đã chuẩn hóa qua menuQuery)
   const products = getProducts(categoryKey);
 
-  if (!products.length) {
+  // 2. Nếu rỗng, trả về thông báo (đã dịch)
+  if (!products || products.length === 0) {
     return `
-      <div class="article-panel stack gap-l">
-        <div class="text-muted">
-          ${translate("article.empty") || "Chưa có nội dung"}
-        </div>
+      <div class="article-empty p-xl center text-muted">
+        ${translate("article.empty") || "Chưa có nội dung giới thiệu."}
       </div>
     `;
   }
 
+  // 3. Render danh sách các bài viết
   return `
-    <div class="article-panel stack gap-l">
+    <div class="article-container stack gap-xl">
       ${products.map(product => `
-        <article class="article-card stack gap-m">
-          <header class="stack gap-s">
-            <h2 class="article-card__title">${translate(product.label)}</h2>
-            ${product.description
-              ? `<p class="article-card__desc text-muted">${translate(product.description)}</p>`
+        <article class="article-card stack gap-m" id="${product.id}">
+          <header class="article-header stack gap-s">
+            <h2 class="article-title">${translate(product.label)}</h2>
+            ${product.description 
+              ? `<p class="article-subtitle text-muted">${translate(product.description)}</p>` 
               : ""
             }
           </header>
 
-          <div class="article-card__body stack gap-m">
-            ${renderArticleContent(product.content)}
+          <div class="article-body">
+            ${formatArticleBody(product.content)}
           </div>
         </article>
       `).join("")}
@@ -40,48 +42,21 @@ export function renderArticle(categoryKey) {
   `;
 }
 
-function renderArticleContent(content) {
-  if (!content) return "";
+/**
+ * Hàm phụ trợ: Chuyển đổi chuỗi có \n thành các đoạn văn <p>
+ * Đảm bảo nội dung hiển thị thoáng đãng và dễ đọc.
+ */
+function formatArticleBody(content) {
+  // Dùng hàm translate để lấy chuỗi theo ngôn ngữ hiện tại
+  const rawText = translate(content);
 
-  // 1) object đa ngôn ngữ: { vi, en }
-  if (!Array.isArray(content) && typeof content === "object") {
-    const text = translate(content);
-    return renderParagraphs(text);
-  }
+  if (!rawText || typeof rawText !== "string") return "";
 
-  // 2) string thường
-  if (typeof content === "string") {
-    return renderParagraphs(content);
-  }
-
-  // 3) mảng block
-  if (Array.isArray(content)) {
-    return content
-      .map(block => {
-        if (typeof block === "string") {
-          return renderParagraphs(block);
-        }
-
-        if (block && typeof block === "object") {
-          return renderParagraphs(translate(block));
-        }
-
-        return "";
-      })
-      .filter(Boolean)
-      .join("");
-  }
-
-  return "";
-}
-
-function renderParagraphs(text) {
-  if (!text || typeof text !== "string") return "";
-
-  return text
-    .split(/\n\s*\n/)
-    .map(p => p.trim())
-    .filter(Boolean)
-    .map(p => `<p>${p}</p>`)
+  // Tách dòng, dọn khoảng trắng và bọc vào thẻ <p>
+  return rawText
+    .split("\n")
+    .map(line => line.trim())
+    .filter(line => line.length > 0)
+    .map(line => `<p class="article-paragraph">${line}</p>`)
     .join("");
 }
