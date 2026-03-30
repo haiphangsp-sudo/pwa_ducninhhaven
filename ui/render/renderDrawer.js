@@ -25,7 +25,8 @@ export function renderDrawer(state) {
     sendBtn.disabled = true;
     return;
   }
-
+  sendBtn.disabled = false;
+  
   updateSendButton(state, sendBtn);
 
   drawerHeader.textContent = translate("cart_bar.cart_title");
