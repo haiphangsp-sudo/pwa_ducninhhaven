@@ -28,7 +28,7 @@ export let UI = {
     current: localStorage.getItem(CONFIG.LANG_KEY) || "vi"
   },
   meta: {
-    version: "2.0.0"
+    version: "2.0.1"
   },
   /* ---------------- SERVICE CONTEXT ---------------- */
 
@@ -48,7 +48,7 @@ export let UI = {
   overlay: {
     view: null  // close || placePicker || cartDrawer ....
   },
-  
+
   order: {
     type: null,     // cart, instant, send_cart
     line: null,     // ID món ăn (nếu có)
