@@ -7,6 +7,14 @@ import { CONFIG } from "../config.js";
 
 
 export const UI = {
+  /* ---------------- MENU ---------------- */
+
+  menu: {
+    data: {}, // Khởi tạo là object rỗng thay vì null để Object.entries không báo lỗi
+    status: "loading"
+  },
+  /* ---------------- LANGUAGE ---------------- */
+
   lang:{
     current: localStorage.getItem(CONFIG.LANG_KEY) || "vi"
   },

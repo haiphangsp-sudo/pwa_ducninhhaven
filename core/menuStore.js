@@ -12,9 +12,18 @@ export async function loadMenu() {
   let state = {};
   try {
     state = await fetch("/api/menu/state", { cache: "no-store" }).then(r => r.json());
-  } catch {}
+  } catch {
+    console.warn("Không thể tải trạng thái menu từ API");
+  }
 
   MENU = deepMerge(base, state);
+
+  setState({ 
+      menu: { 
+        data: rawMenu,
+        status: "ready" 
+      } 
+  });
 }
 
 function deepMerge(base, patch) {
