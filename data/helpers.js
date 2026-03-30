@@ -30,7 +30,7 @@ export function deepMergeCu(target, source) {
 /**
  * Hàm gộp sâu Bất biến: Trả về một Object hoàn toàn mới
  */
-function deepMerge(target, source) {
+export function deepMerge(target, source) {
   // Nếu source không phải object, lấy source
   if (typeof source !== "object" || source === null || Array.isArray(source)) {
     return source;
