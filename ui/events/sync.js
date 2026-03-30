@@ -139,13 +139,13 @@ async function syncOrderFlow(state) {
     isProcessingOrder = true;
 
     try {
-        if (type === "cart") {
+        if (type === "add-cart") {
             addToCart(line);
         } else {
             // Cập nhật trạng thái 'sending' để renderStatusBar hiện spinner
             setState({ order: { ...state.order, status: "sending", msg: translate("order.sending") } });
             
-            if (type === "instant") await buyNow(line);
+            if (type === "send-instant") await buyNow(line);
             if (type === "send_cart") await sendCart();
         }
     } catch (error) {
