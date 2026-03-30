@@ -3,6 +3,7 @@
 import { MENU } from "./menuStore.js";
 import { getContext } from "./context.js";
 import { translate } from "../ui/utils/translate.js";
+import { getState } from "../../core/state.js";
 
 
 function getPlace() {
@@ -34,7 +35,7 @@ return out;
 
 }
 
-export function getProducts(categoryKey) {
+export function getProductsOLd(categoryKey) {
   if (!categoryKey) return [];
   const category = MENU[categoryKey];
   if (category?.active === false) return [];
@@ -49,19 +50,20 @@ export function getProducts(categoryKey) {
     }));
 }
 
-export function getProductsTest(categoryKey) {
-  const menuData = MENU[categoryKey];
-  const out = [];
-  if (!menuData) return [];
-  for (const [key, products] of Object.entries(menuData)) {
-    if (products?.active === false) continue;
-      out.push({
-        key,
-        products: category.products
-      });
-  }
-  return out;
+export function getProducts(categoryKey) {
+  const menuData = getState().menu.data;
+  const category = menuData[categoryKey];
+  if (!category || category.active === false) return [];
+  const products = category.products || category.items || {};
+
+  return Object.entries(products)
+    .filter(([, product]) => product?.active !== false)
+    .map(([key, product]) => ({
+      ...product,
+      key
+    }));
 }
+
 
 export function getVariants(categoryKey, productKey) {
   const product = MENU[categoryKey]?.products?.[productKey];
