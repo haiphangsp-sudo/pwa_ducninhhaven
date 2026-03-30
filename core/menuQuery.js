@@ -125,8 +125,9 @@ export function getVariantById(id) {
 /**
  * BIẾN ĐỔI GIỎ HÀNG: Từ mảng {id, qty} thành dữ liệu hiển thị Drawer
  */
-export function getCartExtendedCu(state, type) {
+export function getCartExtended(state) {
   let items = [];
+  const type = state.order.type;
 
   if (type === "cart") {
     items = state.cart?.items || [];
@@ -162,7 +163,7 @@ export function getCartExtendedCu(state, type) {
   };
 }
 
-export function getCartExtended(state, type = "cart") {
+export function getCartExtendedNew(state, type) {
   const { line } = state.order;
   const { items: cartItems } = state.cart;
 

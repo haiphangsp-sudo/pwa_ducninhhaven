@@ -32,7 +32,7 @@ export function categoryOpt(opt, categoryKey, productKey,ui) {
                 <button class="btn btn-primary"
                     data-action="${(ui==="cart")?"add-cart":"send-instant"}"
                     data-extra="${categoryKey}"
-                    data-option="${productKey}"
+                    data-option="${ui}"
                     data-value="${opt.id}">
                     ${(ui === "cart")
                         ? "+ " + translate("cart_bar.add_to_order")
