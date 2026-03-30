@@ -107,15 +107,12 @@ export let UI = {
 /* ======================================================= */
 
 
-
-export function subscribe(fn){
-  
+export function subscribe(fn) {
   listeners.push(fn);
-  return ()=>{
-    listeners=listeners.filter(f=>f!==fn);
+  return () => {
+    listeners = listeners.filter(f => f !== fn);
   };
 }
-
 export function getState(){
   return { ...UI };
 }
@@ -130,45 +127,6 @@ export function setState(patch) {
   }
 }
 
-
-function deepMergeMenu(base, patch) {
-  const out = structuredClone(base);
-
-  for (const k in patch) {
-    if (
-      typeof patch[k] === "object" &&
-      patch[k] !== null &&
-      !Array.isArray(patch[k]) &&
-      typeof out[k] === "object"
-    ) {
-      out[k] = deepMerge(out[k] || {}, patch[k]);
-    } else {
-      out[k] = patch[k];
-    }
-  }
-
-  return out;
-}
-/* ======================================================= */
-
-function deepMergeCu(target,source){
-  for(const key in source){
-
-    const value=source[key];
-
-    if(
-      typeof value==="object" &&
-      value!==null &&
-      !Array.isArray(value)
-    ){
-      if(!target[key]) target[key]={};
-      deepMerge(target[key],value);
-
-    }else{
-      target[key]=value;
-    }
-  }
-}
 export function syncContextToState() {
   const ctx = getContext();
   if (!ctx) return;
