@@ -162,23 +162,21 @@ function getCart(type) {
     const info = getVariantById(cartItem.id);
     if (!info) return null;
     return {
+      id: cartItem.id,
       category: info.categoryKey,
-      product: translate(info.productKey),
       item: translate(info.productLabel),
       option: translate(info.variantLabel),
-      id: info.id,
       qty: cartItem.qty,
       type:info.ui,
-      label: `${translate(info.productLabel)} - ${translate(info.variantLabel)}`,
       price: info.priceFormat
     };
   }).filter(Boolean);
 
   return {
-      id: `HNV-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+      id: `H-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
       mode: translate(state.context.anchor?.type) || "",
       place: translate(state.context.active?.type) || "",
       type: type,
-      items: detailedItems // Đây là chuỗi văn bản cho cột E
+      items: detailedItems 
   }
 }
