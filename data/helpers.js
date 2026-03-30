@@ -6,33 +6,26 @@ import { getContext } from "../core/context.js";
 import { resolvePlace } from "../core/placesStore.js";
 import { translate } from "../ui/utils/translate.js"
 
-// Bản deepMerge tối ưu cho Duc Ninh Haven
-export function deepMerge(base, patch) {
-  // 1. Nếu không phải object, lấy giá trị của patch
-  if (typeof patch !== "object" || patch === null || Array.isArray(patch)) {
-    return patch;
-  }
+// core/utils.js
 
-  // 2. Tạo đối tượng mới để đảm bảo tính bất biến
-  const out = Array.isArray(base) ? [...base] : { ...base };
+export function deepMerge(target, source) {
+  // 1. Tạo bản sao của target để không làm hỏng dữ liệu gốc
+  // Nếu dùng cho setState, 'target' chính là 'state' hiện tại
+  const output = Array.isArray(target) ? [...target] : { ...target };
 
-  // 3. Gộp các thuộc tính
-  for (const key in patch) {
-    if (Object.prototype.hasOwnProperty.call(patch, key)) {
-      const baseVal = out[key];
-      const patchVal = patch[key];
+  for (const key in source) {
+    const value = source[key];
 
-      if (typeof patchVal === "object" && patchVal !== null && !Array.isArray(patchVal)) {
-        // Đệ quy để gộp sâu
-        out[key] = deepMerge(baseVal || {}, patchVal);
-      } else {
-        // Gán đè các giá trị đơn giản hoặc mảng
-        out[key] = patchVal;
-      }
+    if (typeof value === "object" && value !== null && !Array.isArray(value)) {
+      // Đệ quy: Nếu thuộc tính là object, ta gộp sâu tiếp
+      output[key] = deepMerge(target[key] || {}, value);
+    } else {
+      // Nếu là giá trị đơn giản (string, number) hoặc mảng, ta gán đè
+      output[key] = value;
     }
   }
 
-  return out;
+  return output; // Trả về bản sao đã được gộp
 }
 
 function getMode() {
