@@ -1,5 +1,7 @@
 
 import { validateMenu, normalizeMenu } from "./menuSchema.js";
+import { setState } from "./state.js";
+
 
 export let MENU = {};
 
