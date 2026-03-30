@@ -20,7 +20,7 @@ export function renderPanel(state) {
       break;
   
     default:
-      container.innerHTML = renderMenu( panel.view, panel.type );
+      container.innerHTML = renderMenu( panel.view, panel.option );
       break;
  
   }

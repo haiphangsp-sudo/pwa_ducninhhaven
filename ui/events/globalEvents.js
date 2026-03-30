@@ -40,7 +40,7 @@ function handleGlobalClick(e) {
       setState({
         panel: {
           view: cmd.value,
-          type: cmd.option
+          option: cmd.option
         }
       });
       break;

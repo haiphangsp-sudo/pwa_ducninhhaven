@@ -68,8 +68,11 @@ async function syncUI(state) {
 
   if (state.panel.view !== prevState.panel?.view) {
     renderPanel(state);
+  }
+  if (state.panel.option !== prevState.panel?.option) {
     renderHub(state);
   }
+
 
   /* ---------- CART ---------- */
 
