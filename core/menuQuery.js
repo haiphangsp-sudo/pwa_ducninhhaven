@@ -67,19 +67,24 @@ export function getCategories() {
 /**
  * Lấy danh sách sản phẩm trong một Category
  */
+
 export function getProducts(categoryKey) {
-  const category = getMenuData()[categoryKey];
+  if (!categoryKey) return [];
+  
+  const menuData = getMenuData(); // Gọi hàm helper để lấy data mới nhất
+  const category = menuData[categoryKey];
+  
   if (!category || category.active === false) return [];
 
-  const out = [];
-  // menuSchema đã đổi items -> products
+  // menuSchema đã chuẩn hóa items -> products
   const products = category.products || {};
 
-  for (const [key, product] of Object.entries(products)) {
-    if (product.active === false) continue;
-    out.push({ ...product, key });
-  }
-  return out;
+  return Object.entries(products)
+    .filter(([, product]) => product?.active !== false)
+    .map(([key, product]) => ({
+      ...product,
+      key
+    }));
 }
 
 /**
