@@ -23,31 +23,36 @@ export function applyURLContext() {
   const resolved = resolvePlace(placeId);
   if (!resolved) return false;
 
-  const ctx = getContext();
+  const clearURL = () => history.replaceState({}, "", location.pathname);
 
-  // CASE 1: có mode => entry gốc mới
-  if (modeId) {
+  const validModes = ["room", "area", "table"];
+  const hasMode = !!modeId;
+
+  if (hasMode && !validModes.includes(modeId)) return false;
+
+  // Entry mới từ QR đầy đủ
+  if (hasMode) {
     if (resolved.type !== modeId) return false;
 
-    applyEntryPlace(resolved);
-    history.replaceState({}, "", location.pathname);
-    return true;
+    const ok = applyEntryPlace(resolved);
+    if (ok) clearURL();
+    return ok;
   }
 
-  // CASE 2: không có mode
-  // chưa có local => khách vãng lai / entry mới
+  // Không có mode => suy theo context hiện tại
+  const ctx = getContext();
+
+  // Chưa có anchor => coi như entry mới
   if (!ctx?.anchor) {
-    applyEntryPlace(resolved);
-    history.replaceState({}, "", location.pathname);
-    return true;
+    const ok = applyEntryPlace(resolved);
+    if (ok) clearURL();
+    return ok;
   }
 
-  // đã có local => chỉ đổi active
+  // Đã có anchor => chỉ đổi active nếu hợp lệ
   const ok = applyResolvedPlace(resolved);
-  if (!ok) return false;
-
-  history.replaceState({}, "", location.pathname);
-  return true;
+  if (ok) clearURL();
+  return ok;
 }
 
 /* ---------- LOAD / SAVE ---------- */
@@ -179,4 +184,10 @@ export function setActive(mode) {
   context.mode = mode;
   saveContext();
 }
+export function getAnchor() {
+  return context?.anchor || null;
+}
 
+export function getActivePlace() {
+  return context?.active || null;
+}

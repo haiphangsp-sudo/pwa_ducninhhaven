@@ -12,6 +12,8 @@ export function attachAppEvents() {
 
 
   document.addEventListener("click", handleGlobalClick);
+
+  window.addEventListener("contextchange", () => {syncContextToState();});
   
 }
 
@@ -63,7 +65,7 @@ function handleGlobalClick(e) {
           type: cmd.option
         },
         context: {
-          anchor: "table",
+          anchor: context?.anchor,
           active: {id: cmd.value},
           updatedAt: Date.now()
         },
@@ -74,16 +76,15 @@ function handleGlobalClick(e) {
 
     /* ---------- CART / ORDER ---------- */
     case "add-cart":
+      setOrder(cmd)
+      break;
+
     case "send-instant":
+      checkCartPlace(cmd);
+      break;
+
     case "send_cart":
-      setState({
-        order: {
-          type: cmd.action,
-          line: cmd.value,
-          status: cmd.extra,
-          at: Date.now()
-        }
-      });
+      checkCartPlace(cmd);
       break;
     
     case "update-qty":
@@ -99,4 +100,25 @@ function handleGlobalClick(e) {
     default:
       break;
   }
+}
+function checkCartPlace(cmd) {
+  if (!state.context.active?.id) {
+    setState({
+      order: { ...state.order, status: "waiting_place", msg: translate("place.required") },
+      overlay: { view: "placePicker" }
+    });
+  }else{
+    setOrder(cmd);
+  }
+}
+
+function setOrder(cmd) {
+  setState({
+    order: {
+      type: cmd.action,
+      line: cmd.value,
+      status: cmd.extra,
+      at: Date.now()
+    }
+  });
 }

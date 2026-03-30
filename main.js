@@ -1,6 +1,4 @@
 // main.js
-// Ứng dụng chính, khởi tạo và kết nối các phần với nhau
-// entry point
 
 import { CONFIG } from "./config.js";
 import { loadMenu, MENU } from "./core/menuStore.js";
@@ -110,13 +108,9 @@ async function boot() {
       loadMenu().catch(e => console.error("Lỗi menu:", e)),
       loadPlaces().catch(e => console.error("Lỗi vị trí:", e))
     ]);
-    setState({ 
-      menu: { 
-        data: MENU, 
-        status: "ready",
-        updatedAt: Date.now() 
-      } 
-    });
+    
+    applyURLContext();
+  
     loadCart();
     normalizeContext();
     

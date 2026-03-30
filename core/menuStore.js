@@ -21,10 +21,11 @@ export async function loadMenu() {
   MENU = deepMerge(base, state);
 
   setState({ 
-      menu: { 
-        data: MENU,
-        status: "ready" 
-      } 
+    menu: { 
+      data: MENU, 
+      status: "ready",
+      updatedAt: Date.now() 
+    } 
   });
 }
 
