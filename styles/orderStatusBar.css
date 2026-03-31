@@ -227,10 +227,6 @@
     border: none;
 }
 
-/* Đổi chiều mũi tên khi thu nhỏ */
-.status-bar.is-collapsed .btn-toggle-status {
-    transform: rotate(180deg); /* ❯ thành ❮ */
-}
 
 /* Ẩn nội dung chữ khi thu nhỏ */
 .status-bar.is-collapsed .bar-expanded {
