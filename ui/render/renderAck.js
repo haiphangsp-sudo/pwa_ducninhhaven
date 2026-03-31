@@ -1,11 +1,12 @@
 
-// ui/render/renderAck.js
+
 export function renderAck(state) {
   const el = document.getElementById("ackOverlay");
   if (!el) return;
 
   const ack = state.ack;
-  if (!ack?.visible) {
+  // Sửa từ ack?.visible thành ack?.state === "show"
+  if (ack?.state !== "show") { 
     el.classList.add("hidden");
     el.textContent = "";
     return;
