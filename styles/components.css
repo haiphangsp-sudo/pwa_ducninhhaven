@@ -392,76 +392,65 @@
 .status-bar {
     position: fixed;
     bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 90%;
+    right: 5%; /* Neo cách lề phải 5% */
+    width: 90%; /* Chiều dài khi mở */
     max-width: 450px;
-    height: 60px; /* Cố định chiều cao */
+    height: 60px;
     background: white;
     border-radius: 30px;
     display: flex;
     align-items: center;
-    padding: 0 10px 0 20px; /* Padding trái rộng cho icon, phải hẹp cho nút > */
+    padding: 0 5px 0 20px; /* Padding phải hẹp để nút mũi tên sát lề */
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    /* Quan trọng: Chỉ transition width để thấy nó thu từ trái sang phải */
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s;
     z-index: 999;
 }
 
+/* Nội dung bên trong */
 .bar-content {
     display: flex;
     align-items: center;
-    flex-grow: 1; /* Chiếm hết không gian còn lại */
-    overflow: hidden; /* Chặn chữ tràn ra ngoài */
+    flex-grow: 1;
+    overflow: hidden; /* Chặn nội dung khi thanh co lại */
+    white-space: nowrap;
 }
 
-/* Nút mũi tên > */
-.btn-toggle-status {
-    width: 40px;
-    height: 40px;
+/* Nút mũi tên (Dấu >) */
+#btnToggleBar {
+    width: 50px;
+    height: 50px;
     border: none;
-    background: #f5f5f5;
-    border-radius: 50%;
+    background: transparent;
     cursor: pointer;
+    font-size: 18px;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: transform 0.4s;
-    flex-shrink: 0; /* Không cho phép nút này bị bóp méo */
+    transition: transform 0.4s ease; /* Hiệu ứng xoay mũi tên */
+    flex-shrink: 0;
 }
 
 /* --- TRẠNG THÁI THU NHỎ (is-collapsed) --- */
 .status-bar.is-collapsed {
-    width: 60px; /* Thu lại bằng đúng chiều cao để thành hình tròn */
-    padding: 0; /* Xóa padding để căn giữa tuyệt đối */
+    width: 60px; /* Thu lại thành hình tròn */
+    background: #6b8e23; /* Đổi sang màu xanh Sage cho "xịn" */
 }
 
-/* Ẩn phần nội dung mở rộng */
+/* Ẩn chữ khi co lại */
 .status-bar.is-collapsed .bar-expanded {
-    display: none;
+    opacity: 0;
+    pointer-events: none;
 }
 
-/* Căn giữa cụm icon chuông */
-.status-bar.is-collapsed .bar-content {
-    justify-content: center;
-    margin: 0;
+/* Đổi chiều mũi tên khi thu nhỏ */
+.status-bar.is-collapsed #btnToggleBar {
+    transform: rotate(180deg); /* Xoay ngược lại thành dấu < */
+    color: white;
 }
 
-/* XỬ LÝ NÚT MŨI TÊN KHI THU NHỎ */
-.status-bar.is-collapsed .btn-toggle-status {
-    position: absolute;
-    right: 0;
-    top: 0;
-    width: 100%; /* Phủ kín toàn bộ chấm tròn */
-    height: 100%;
-    background: transparent; /* Làm trong suốt để thấy chuông bên dưới */
-    transform: rotate(180deg); /* Xoay ngược mũi tên lại */
-}
-
-/* Chỉ hiện mũi tên mờ mờ trên nền chuông khi thu nhỏ */
-.status-bar.is-collapsed .btn-toggle-status:after {
-    content: '❯';
-    position: absolute;
-    bottom: 5px;
-    font-size: 10px;
-    color: #999;
+/* Giữ icon chuông ở vị trí cũ hoặc ẩn đi tùy bạn */
+.status-bar.is-collapsed .bar-mini {
+    display: none; /* Nếu muốn chỉ hiện mỗi mũi tên khi thu nhỏ */
 }
