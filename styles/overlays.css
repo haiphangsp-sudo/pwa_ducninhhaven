@@ -6,7 +6,44 @@
   animation:ack .5s ease;
   white-space: nowrap;
 }
+/* Khung nền chung cho thông báo */
+.overlay__ack {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999; /* Cao nhất để đè lên cả Drawer */
+  padding: 12px 24px;
+  border-radius: 8px;
+  color: white;
+  font-weight: 500;
+  font-size: 14px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  transition: all 0.3s ease;
+  pointer-events: none; /* Không cản trở người dùng click */
+  text-align: center;
+  min-width: 200px;
+}
 
+/* Các trạng thái màu sắc */
+.overlay__ack.success {
+  background-color: #2ecc71; /* Xanh lá cho thành công */
+}
+
+.overlay__ack.error {
+  background-color: #e74c3c; /* Đỏ cho lỗi */
+}
+
+.overlay__ack.sending {
+  background-color: #3498db; /* Xanh dương cho lúc đang gửi */
+}
+
+/* Trạng thái ẩn */
+.overlay__ack.hidden {
+  opacity: 0;
+  visibility: hidden;
+  top: 0px; /* Hiệu ứng trượt nhẹ từ trên xuống khi hiện */
+}
 
 .overlay__ack {
   position: fixed;
