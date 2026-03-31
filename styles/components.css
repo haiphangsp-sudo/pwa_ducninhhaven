@@ -152,7 +152,9 @@
 .bar-mini {
     display: flex;
     align-items: center;
-    position: relative;
+    position: absolute;
+    left: 15px; /* Hiện cái chuông nhỏ bên cạnh mũi tên */
+    transform: scale(0.8);
 }
 
 .bar-mini .icon {
