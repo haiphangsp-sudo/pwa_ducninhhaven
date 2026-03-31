@@ -121,9 +121,7 @@ async function syncUI(state) {
   const { visible, status, message } = state.ack;
 
   renderAck({ visible, status, message });
-  
 }
-
 /* =======================================================
    LANGUAGE
 ======================================================= */
@@ -137,7 +135,6 @@ function syncLanguage(state) {
   renderPanel(state);
   renderDrawer(state);
 }
-
 
 /* --- 1. Xử lý luồng Đặt hàng --- */
 async function handleOrderLogic(state, prevState) {
