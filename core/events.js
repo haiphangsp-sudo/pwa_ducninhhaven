@@ -31,18 +31,15 @@ function showAck(status, message = "", timeout = 1800) {
  * Tạo Payload gửi đi. Đã lược bỏ tổng tiền toàn đơn 
  * vì GAS sẽ xử lý ghi từng món thành một dòng riêng biệt.
  */
-// core/events.js
-
 function buildPayload(state, action) {
-  
-  // Sử dụng Optional Chaining (?.) để an toàn
+  // GỐC RỄ 4: Optional chaining toàn diện
   const activePlace = state.context?.active;
   const placeId = activePlace?.id?.toLowerCase();
 
-  // Nếu không có placeId, báo lỗi cho khách và dừng lại
   if (!placeId) {
-    showAck("error", translate("place.select"), 2000);
-    return null; 
+    // Thông báo cho khách chọn vị trí nếu chưa có
+    setState({ ack: { state: "show", status: "error", message: translate("place.select") } });
+    return null;
   }
 
   const rawItems = action === "send-cart" 
@@ -51,32 +48,40 @@ function buildPayload(state, action) {
 
   if (rawItems.length === 0) return null;
 
-  // Lọc kỹ các món ăn
   const items = rawItems.map(cartItem => {
-    if (!cartItem || !cartItem.id) return null; // Bỏ qua các item không hợp lệ
-
+    if (!cartItem?.id) return null;
     const info = getVariantById(cartItem.id);
-    if (!info) return null; // Bỏ qua món không tìm thấy trong menu
+    if (!info) return null;
 
+    const price = Number(info.price || 0);
     return {
       id: cartItem.id,
       category: info.categoryKey || "",
       item: translate(info.productLabel),
       option: translate(info.variantLabel),
-      qty: Number(cartItem.qty),
-      price: Number(info.price || 0),
-      subtotal: Number(info.price || 0) * cartItem.qty
+      qty: Number(cartItem.qty || 0),
+      price: price,
+      subtotal: price * Number(cartItem.qty || 0)
     };
-  }).filter(Boolean); // Xóa bỏ các item null
+  }).filter(Boolean);
+
+  if (items.length === 0) return null;
 
   return {
-    id: `H-${Date.now()}`,
+    id: `H-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
     type: action,
     place: placeId,
+    timestamp: new Date().toISOString(),
     items: items
-    // ... các thông tin khác
   };
 }
+
+/* ---------- CÁC HÀNH ĐỘNG ---------- */
+
+
+
+
+// ... các hàm updateCartQuantity và addToCart giữ nguyên logic an toàn
 
 /* ========================================================
    3. CART ACTIONS
@@ -113,41 +118,37 @@ export function addToCart() {
 /* ========================================================
    4. SEND ACTIONS
    ======================================================== */
-
 export async function submitOrder(action) {
   const state = getState();
   const payload = buildPayload(state, action);
-  
-  if (!payload) return false;
+  if (!payload) return;
 
   setState({ order: { ...state.order, status: "pending" } });
-  showAck("sending", translate("cart_bar.sending"), 0);
 
   try {
     const res = await sendRequest(payload);
-
     if (res?.success) {
       finalizeOrderSuccess(action);
-      return true;
+    } else {
+      throw new Error("send_failed");
     }
-    throw new Error(res?.message || "failed");
   } catch (err) {
     setState({ order: { ...getState().order, status: "error" } });
-    showAck("error", translate("cart_bar.error"), 2500);
-    return false;
   }
 }
 
-// core/events.js
+
 export function finalizeOrderSuccess(action) {
+  // GỐC RỄ 5: Reset 'at' về null và dọn dẹp action
   const patch = {
     overlay: { view: null },
     order: { 
       action: null, 
       line: null, 
       status: "idle", 
-      at: null // ĐƯA VỀ NULL để reset hoàn toàn
-    }
+      at: null // Vô hiệu hóa 'at' cũ
+    },
+    ack: { state: "show", status: "success" }
   };
 
   if (action === "send-cart") {
@@ -155,5 +156,9 @@ export function finalizeOrderSuccess(action) {
   }
 
   setState(patch);
-  showAck("success", translate("cart_bar.success"), 2500);
+  
+  // Tự động ẩn thông báo sau 2.5s
+  setTimeout(() => {
+    setState({ ack: { state: "hidden", status: null } });
+  }, 2500);
 }
