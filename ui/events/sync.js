@@ -77,8 +77,9 @@ async function syncUI(state) {
   }
   /* ---------- ACK ---------- */
 
-  if (state.ack !== prevState.ack) {
-    renderAck(state);
+  
+  if (state.ack?.state !== prevState.ack?.state || state.ack?.message !== prevState.ack?.message) {
+    renderAck(state); 
   }
   /* ---------- CART ---------- */
 
