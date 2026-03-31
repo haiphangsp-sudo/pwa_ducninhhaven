@@ -118,7 +118,6 @@ async function syncUI(state) {
     if (!exists) updateStepperUI(pItem.id, 0);
   });
   
-  lastState = state;
 }
 
 /* =======================================================

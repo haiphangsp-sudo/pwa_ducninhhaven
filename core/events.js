@@ -129,24 +129,38 @@ export async function submitOrder(action) {
   }
 }
 
-
 // core/events.js
 
 export function finalizeOrderSuccess(action) {
+  // 1. Chuẩn bị thông báo
+  const isCart = action === "send-cart";
+  const message = isCart ? "Đơn hàng đã được gửi" : "Yêu cầu đã được gửi";
+
+  // 2. Gộp tất cả thay đổi vào MỘT lần setState duy nhất
   const patch = {
     overlay: { view: null },
     order: { 
       action: null, 
       line: null, 
       status: "idle", 
-      at: null // ĐƯA VỀ NULL: Kết thúc vòng đời của Action này
+      at: null 
+    },
+    // Gộp luôn phần hiển thị thông báo (Ack) vào đây
+    ack: { 
+      state: "show", 
+      status: "success", 
+      message: message 
     }
   };
 
-  if (action === "send-cart") {
+  if (isCart) {
     patch.cart = { items: [] };
   }
 
   setState(patch);
-  showAck("success", translate("cart_bar.success"), 2500);
+
+  // 3. Chỉ dùng setTimeout để ẩn thông báo sau vài giây
+  setTimeout(() => {
+    setState({ ack: { state: "hidden", status: null, message: "" } });
+  }, 2500);
 }
