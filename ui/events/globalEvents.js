@@ -6,6 +6,8 @@ import { applyPlaceById, getActivePlaceId } from "../../core/context.js";
 import { syncContextToState } from "../../core/state.js";
 import { translate } from "../utils/translate.js";
 import { statutBarEvent } from "../render/renderStatusBar.js";
+import { toggleStatusBar } from "../../ui/components/statusBar.js";
+
 
 
 
@@ -19,6 +21,7 @@ export function attachAppEvents() {
   document.addEventListener("click", handleGlobalClick);
   window.addEventListener("contextchange", () => { syncContextToState(); });
   statutBarEvent();
+  toggleStatusBar();
 }
 
 /* =========================
