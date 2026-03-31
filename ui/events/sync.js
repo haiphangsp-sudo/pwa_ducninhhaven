@@ -15,7 +15,7 @@ import { updateStepperUI } from "../render/renderStepper.js";
 import { renderAck } from "../render/renderAck.js";
 
 
-let lastState = {};
+let lastState = null; 
 let isProcessingOrder = false;
 
 /* =======================================================
@@ -33,7 +33,7 @@ export function attachUI() {
 
 async function syncUI(state) {
 
-  const prevState = lastState ? JSON.parse(JSON.stringify(lastState)) : {};
+  const prevState = lastState ? JSON.parse(JSON.stringify(lastState)) : { order: {}, cart: { items: [] } };
   lastState = JSON.parse(JSON.stringify(state));
 
   syncOrderFlow(state,prevState);
@@ -100,23 +100,22 @@ async function syncUI(state) {
     syncLanguage(state);
   }
 
-  state.cart?.items?.forEach(item => {
-    if (!item) return; // Bỏ qua nếu item null
-    const prevItems = prevState.cart?.items || [];
-    const prevItem = prevItems.find(i => i?.id === item.id);
-    
-    if (!prevItem || prevItem.qty !== item.qty) {
+  const currentItems = state.cart?.items || [];
+  const prevItems = prevState.cart?.items || [];
+  // Cập nhật hoặc thêm mới món vào UI
+  currentItems.forEach(item => {
+    if (!item?.id) return; // Bảo vệ khỏi undefined
+    const pItem = prevItems.find(i => i?.id === item.id);
+    if (!pItem || pItem.qty !== item.qty) {
       updateStepperUI(item.id, item.qty);
     }
   });
-  prevState.cart?.items?.forEach(prevItem => {
-    if (!prevItem) return;
-    const currentItems = state.cart?.items || [];
-    const stillExists = currentItems.find(i => i?.id === prevItem.id);
-    
-    if (!stillExists) {
-      updateStepperUI(prevItem.id, 0);
-    }
+
+  // Xử lý món bị xóa khỏi giỏ
+  prevItems.forEach(pItem => {
+    if (!pItem?.id) return;
+    const exists = currentItems.find(i => i?.id === pItem.id);
+    if (!exists) updateStepperUI(pItem.id, 0);
   });
   
   lastState = state;
@@ -136,21 +135,26 @@ function syncLanguage(state) {
   renderDrawer(state);
 }
 
-async function syncOrderFlow(state,prevState) {
-    const { action, line, at, status } = state.order;
-    // Chỉ chạy nếu có click mới (at thay đổi) và chưa ở trạng thái đang xử lý
-if (!action || !at || at === prevState.order?.at || isProcessingOrder) return;
-    isProcessingOrder = true;
+async function syncOrderFlow(state, prevState) {
+  const { action, line, at } = state.order || {};
+  const prevAt = prevState.order?.at;
 
-    try {
-        if (action === "add-cart") {
-            addToCart(action);
-        } else {
-            submitOrder(action);
-        }
-    } catch (error) {
-        console.error("Error processing order:", error);
-    } finally {
-        isProcessingOrder = false;
+  // GỐC RỄ 3: So sánh at trên hai vùng nhớ độc lập
+  if (!action || !at || at === prevAt || isProcessingOrder) return;
+
+  isProcessingOrder = true;
+
+  try {
+    if (action === "add-cart") {
+      addToCart(); 
+    } else if (action === "buy-now") {
+      await submitOrder("instant");
+    } else if (action === "send-cart") {
+      await submitOrder("send-cart");
     }
+  } catch (err) {
+    console.error("Sync Flow Error:", err);
+  } finally {
+    isProcessingOrder = false; 
+  }
 }
