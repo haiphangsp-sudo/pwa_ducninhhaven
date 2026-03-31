@@ -136,7 +136,7 @@ function syncLanguage(state) {
 // ui/sync.js
 
 async function syncOrderFlow(state, prevState) {
-  const { action, line, at } = state.order || {};
+  const { action, at } = state.order || {};
   const prevAt = prevState.order?.at;
 
   // CHUẨN HÓA ĐIỀU KIỆN:
@@ -161,5 +161,6 @@ async function syncOrderFlow(state, prevState) {
     }
   } finally {
     isProcessingOrder = false;
+    console.log(`Đã mở khóa`);
   }
 }
