@@ -125,7 +125,8 @@ function buildPayload(state, action) {
     id: `H-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
     type: action,
     timestamp: new Date().toISOString(),
-    place: getLocationLabel(getContext()),
+    place: placeId,
+    placeLabel: getLocationLabel(getContext()),
     mode: placeType,
     items: formattedItems,
     device: navigator.userAgent
