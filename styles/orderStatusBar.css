@@ -157,6 +157,7 @@
 }
 
 .is-collapsed .bar-expanded { display: none; }
+
 .btn-clear-all {
     background: transparent;
     color: #a88a64; /* Màu thương hiệu Haven */
@@ -279,4 +280,10 @@
 .status-bar.is-collapsed #btnToggleBar {
     transform: rotate(180deg); /* Xoay ngược lại thành dấu < */
     color: white;
+}
+.bar-expanded {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: opacity 0.3s;
 }

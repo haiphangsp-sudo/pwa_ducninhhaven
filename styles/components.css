@@ -176,13 +176,6 @@
 }
 
 /* Phần chi tiết (Text & Button) */
-.bar-expanded {
-    flex-grow: 1;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    transition: opacity 0.3s;
-}
 
 .status-text {
     font-size: 14px;
