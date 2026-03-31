@@ -237,3 +237,44 @@
     opacity: 0;
     pointer-events: none;
 }
+/* --- TRẠNG THÁI THU NHỎ --- */
+.status-bar.is-collapsed {
+    width: 60px;
+    height: 60px;
+    border-radius: 30px;
+    padding: 0;
+    justify-content: center;
+    cursor: pointer;
+    background: #6b8e23; /* Đổi sang màu xanh Sage của resort để không bị "trắng xóa" */
+}
+
+/* Ẩn nội dung chữ */
+.status-bar.is-collapsed .bar-expanded {
+    display: none;
+}
+
+/* Căn giữa icon chuông */
+.status-bar.is-collapsed .bar-content {
+    margin: 0;
+    gap: 0;
+}
+
+.status-bar.is-collapsed .icon {
+    color: white; /* Chuông màu trắng trên nền xanh */
+}
+
+/* Xử lý nút bấm (Dấu <) */
+#btnToggleBar {
+    transition: all 0.3s ease;
+}
+
+.status-bar.is-collapsed #btnToggleBar {
+    position: absolute;
+    right: 50%;
+    bottom: 5px; /* Đẩy xuống dưới một chút */
+    transform: translateX(50%) rotate(90deg); /* Xoay mũi tên chỉ lên trên */
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.8);
+    background: none;
+    border: none;
+}
