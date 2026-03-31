@@ -144,7 +144,50 @@
     transform: translate(-50%, 150%);
     opacity: 0;
 }
+/* --- TRẠNG THÁI BÌNH THƯỜNG --- */
+.status-bar {
+    /* Giữ nguyên các thuộc tính cũ của bạn */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 15px;
+    height: 56px; /* Nên fix chiều cao để khi thu nhỏ thành hình tròn */
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
 
+/* --- TRẠNG THÁI THU NHỎ (is-collapsed) --- */
+.status-bar.is-collapsed {
+    width: 56px; /* Bằng với height để tạo thành hình tròn hoàn hảo */
+    padding: 0;
+    border-radius: 28px; /* Bo tròn tuyệt đối */
+    justify-content: center; /* Đưa nội dung vào giữa */
+}
+
+/* Ẩn phần chữ và nút kiểm tra */
+.status-bar.is-collapsed .bar-expanded {
+    display: none; 
+}
+
+/* Đảm bảo bar-content không có gap khi thu nhỏ */
+.status-bar.is-collapsed .bar-content {
+    gap: 0;
+    justify-content: center;
+}
+
+/* Căn chỉnh lại icon chuông */
+.status-bar.is-collapsed .bar-mini {
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Xử lý nút mũi tên khi thu nhỏ */
+.status-bar.is-collapsed .btn-toggle-status {
+    position: absolute;
+    opacity: 0; /* Ẩn nút mũi tên đi để không đè lên icon chuông */
+    pointer-events: none;
+}
 /* Nội dung bên trong */
 .bar-content {
     display: flex;
