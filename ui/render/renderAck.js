@@ -1,18 +1,34 @@
 
+// ui/render/renderAck.js
+
+import { translate } from "../utils/translate.js";
+
+
+/* =========================
+   PUBLIC
+========================= */
+
 
 export function renderAck(state) {
-  const el = document.getElementById("ackOverlay");
-  if (!el) return;
+  const container = document.getElementById("ackContainer");
+  const box = document.getElementById("ackOverlay");
+  
+  if (!container || !box) return;
 
   const ack = state.ack;
-  // Sửa từ ack?.visible thành ack?.state === "show"
-  if (ack?.state !== "show") { 
-    el.classList.add("hidden");
-    el.textContent = "";
+
+  // Nếu trạng thái không phải là "show", ẩn toàn bộ container
+  if (ack?.state !== "show") {
+    container.classList.add("hidden");
     return;
   }
 
-  el.textContent = ack.message || "";
-  el.className = `overlay__ack ${ack.status || ""}`;
-  el.classList.remove("hidden");
+  // 1. Cập nhật nội dung văn bản
+  box.textContent = ack.message || "";
+
+  // 2. Cập nhật màu sắc dựa trên status (success, error, sending)
+  box.className = `overlay__ack ${ack.status || ""}`;
+
+  // 3. Hiển thị container (Vùng màu xám sẽ phủ full màn hình)
+  container.classList.remove("hidden");
 }

@@ -56,7 +56,37 @@
   font-size:20px;
   z-index:1200;
 }
+/* Lớp nền xám bao phủ toàn bộ */
+.overlay__ack-container {
+  position: fixed;      /* Cố định theo khung hình trình duyệt */
+  top: 0;
+  left: 0;
+  width: 100vw;         /* 100% chiều ngang thiết bị */
+  height: 100vh;        /* 100% chiều dọc thiết bị */
+  background: rgba(0, 0, 0, 0.4); /* Màu xám mờ */
+  z-index: 9998;        /* Nằm dưới hộp chữ nhưng trên mọi thứ khác */
+  display: flex;
+  justify-content: center;
+  align-items: center;  /* Căn hộp chữ vào chính giữa màn hình */
+  transition: opacity 0.3s ease;
+}
 
+/* Hộp chữ thông báo bên trong */
+.overlay__ack {
+  position: relative;   /* Không dùng fixed ở đây nữa vì đã có container bọc ngoài */
+  z-index: 9999;
+  padding: 16px 32px;
+  border-radius: 12px;
+  background: #333;     /* Màu nền của hộp chữ */
+  color: white;
+  /* ... các style khác ... */
+}
+
+/* Khi ẩn */
+.hidden {
+  display: none !important;
+  opacity: 0;
+}
  .overlay__panel{
   position:fixed;
   z-index:1000;
