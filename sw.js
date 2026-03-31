@@ -3,7 +3,7 @@
 
 import { CONFIG } from "./config.js";
 
-const CACHE_NAME = `haven-${CONFIG.VERSION}`;
+const CACHE_NAME = `haven-v${CONFIG.VERSION}`;
 
 const STATIC_ASSETS = [
   "./",
