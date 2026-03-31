@@ -5,6 +5,8 @@ import { updateCartQuantity } from "../../core/events.js";
 import { applyPlaceById, getActivePlaceId } from "../../core/context.js";
 import { syncContextToState } from "../../core/state.js";
 import { translate } from "../utils/translate.js";
+import { statutBarEvent } from "../render/renderStatusBar.js";
+
 
 
 
@@ -14,11 +16,9 @@ import { translate } from "../utils/translate.js";
 
 export function attachAppEvents() {
 
-  statutBarEvent();
   document.addEventListener("click", handleGlobalClick);
-
   window.addEventListener("contextchange", () => { syncContextToState(); });
-  
+  statutBarEvent();
 }
 
 /* =========================
