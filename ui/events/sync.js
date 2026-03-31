@@ -120,7 +120,9 @@ async function syncUI(state) {
   
   const { visible, status, message } = state.ack;
 
-  renderAck({ visible, status, message });
+  if (visible !== prevState.ack?.visible) {
+    renderAck({ visible, status, message });
+  }
 }
 /* =======================================================
    LANGUAGE
