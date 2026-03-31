@@ -80,7 +80,13 @@ export function finalizeOrderSuccess(action) {
     }
   };
    showAck("success", message);
-
+  setState({
+    order: {
+      status: "success",
+      at: Date.now()
+    }
+  });
+  
   if (isCart) {
     patch.cart = { items: [] };
   }
@@ -142,13 +148,13 @@ export async function submitOrder(action) {
     const res = await sendRequest(payload);
     if (res?.success) {
       finalizeOrderSuccess(action);
-      showAck("success", "cart_bar.success", 3000); 
+      showAck("success", translate("cart_bar.success"), 3000); 
       return true;
     }
     throw new Error("API_FAIL");
   } catch (err) {
     setState({ order: { ...getState().order, status: "error" } });
-    showAck("error", translate("cart_bar.error"), 2500);
+    showAck("error", translate("cart.error"), 2500);
     return false;
   }
 }

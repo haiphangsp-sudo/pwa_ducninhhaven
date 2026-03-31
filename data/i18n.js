@@ -30,7 +30,10 @@ export const STRINGS = {
     send_order: { vi: "GỬI YÊU CẦU NGAY", en: "SEND ORDER NOW" },
     close: { vi: "Đóng", en: "Close" },
     place_prompt: { vi: "Chọn vị trí", en: "Select a place" },
-    sending: { vi: "Đang gửi...", en: "Sending..." }
+    sending: { vi: "Đang gửi...", en: "Sending..." },
+    success: { vi: "Đã gửi thành công", en: "Sent successfully" },
+    added: { vi: "Đã thêm vào giỏ hàng", en: "Added to cart" }
+
   },
 
   order: {
@@ -74,10 +77,7 @@ export const STRINGS = {
     table_guest: { vi: "Khách bàn", en: "Table guest" },
     area_guest: { vi: "Khách khu vực", en: "Area guest" }
   },
-    sending: {
-      vi: "Đang gửi yêu cầu…",
-      en: "Sending request…"
-    },
+  
     received: {
       vi: "Chúng tôi đã nhận yêu cầu",
       en: "We’ve received your request"

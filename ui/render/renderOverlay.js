@@ -11,7 +11,7 @@ export function renderAck({ visible, status, message }) {
   el.className = "overlay__ack"; 
 
   if (visible) {
-    el.textContent = translate(message) || message; // Hỗ trợ cả key translate và string thô
+    el.textContent = message; // Hỗ trợ cả key translate và string thô
     el.classList.add("show");
     if (status) el.classList.add(status);
   } else {

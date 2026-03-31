@@ -1,6 +1,7 @@
 // ui/render/renderDrawer.js
 import { translate } from "../utils/translate.js";
 import { getDrawerExtended } from "../../core/menuQuery.js";
+import { getActivePlaceId } from "../../core/context.js";
 
 export function renderDrawer(state) {
   const drawer = document.getElementById("cartDrawer");
@@ -61,7 +62,7 @@ export function renderDrawer(state) {
 function updateSendButton(state, sendBtn) {
   const { order, context} = state;
   const isSending = order.status === "pending";
-  const hasPlace = !!context.active?.id;
+  const hasPlace = getActivePlaceId();
 
   // 1. Cập nhật Text dựa trên trạng thái
   if (isSending) {
