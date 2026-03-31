@@ -148,41 +148,6 @@
     gap: 15px;
 }
 
-.bar-mini .icon {
-    font-size: 20px;
-}
-
-.bar-mini .count {
-    position: absolute;
-    top: -8px;
-    right: -10px;
-    background: #6b8e23; /* Sage Green đậm */
-    color: white;
-    font-size: 10px;
-    padding: 2px 6px;
-    border-radius: 10px;
-    font-weight: bold;
-    min-width: 18px;
-    text-align: center;
-}
-
-/* Phần chi tiết (Text & Button) */
-
-.status-text {
-    font-size: 14px;
-    color: #444;
-    font-weight: 500;
-}
-
-.btn-check-order {
-    background: none;
-    border: none;
-    color: #6b8e23;
-    font-weight: bold;
-    font-size: 12px;
-    cursor: pointer;
-    padding: 5px;
-}
 .stepper {
     display: flex;
     justify-content: space-between;
