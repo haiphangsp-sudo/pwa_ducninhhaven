@@ -190,7 +190,7 @@
 /* --- TRẠNG THÁI MỞ (Mặc định) --- */
 .status-bar {
     position: fixed;
-    bottom: 20px;
+    top: 155px;
     right: 20px; /* Neo cố định ở lề phải */
     width: calc(100% - 40px);
     max-width: 420px;
@@ -286,4 +286,66 @@
     justify-content: space-between;
     align-items: center;
     transition: opacity 0.3s;
+}
+
+.status-bar.hidden {
+    transform: translate(-50%, 150%);
+    opacity: 0;
+}
+
+/* Nội dung bên trong */
+.bar-content {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    gap: 15px;
+}
+
+/* Phần Mini (Icon & Badge) */
+.bar-mini {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.bar-mini .icon {
+    font-size: 20px;
+}
+
+.bar-mini .count {
+    position: absolute;
+    top: -8px;
+    right: -10px;
+    background: #6b8e23; /* Sage Green đậm */
+    color: white;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-weight: bold;
+    min-width: 18px;
+    text-align: center;
+}
+
+/* Phần chi tiết (Text & Button) */
+.bar-expanded {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: opacity 0.3s;
+}
+
+.status-text {
+    font-size: 14px;
+    color: #444;
+    font-weight: 500;
+}
+
+.btn-check-order {
+    background: none;
+    border: none;
+    color: #6b8e23;
+    font-weight: bold;
+    font-size: 12px;
+    cursor: pointer;
+    padding: 5px;
 }
