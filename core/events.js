@@ -11,14 +11,26 @@ import { getActivePlaceId, getActivePlaceType } from "../core/context.js";
 /* ========================================================
    1. UI FEEDBACK HELPERS
    ======================================================== */
+let ackTimer = null; // Biến để quản lý timer, tránh chồng chéo
 
-function showAck(status, message = "") {
+function showAck(status, message = "", timeout = 2500) {
+  // Xóa timer cũ nếu có (tránh việc thông báo mới bị đóng bởi lệnh của thông báo cũ)
+  if (ackTimer) clearTimeout(ackTimer);
+
   setState({
-    ack: { visible: true, status: status, message: message, at: Date.now()}
+    ack: { visible: true, status, message, at: Date.now() }
   });
-}
 
- 
+  // Nếu có set timeout, tự động đóng sau x giây
+  if (timeout > 0) {
+    ackTimer = setTimeout(() => {
+      setState({
+        ack: { visible: false, status: null, message: "", at: Date.now() }
+      });
+      ackTimer = null;
+    }, timeout);
+  }
+}
 /* ========================================================
    3. CART ACTIONS
    ======================================================== */
