@@ -4,6 +4,9 @@ import { getState, setState } from "./state.js";
 import { sendRequest } from "../services/api.js";
 import { getVariantById } from "./menuQuery.js";
 import { translate } from "../ui/utils/translate.js";
+import { getActivePlaceId, getActivePlaceType } from "../core/context.js";
+
+
 
 /* ========================================================
    1. UI FEEDBACK HELPERS
@@ -94,7 +97,8 @@ export function finalizeOrderSuccess(action) {
 
 
 const getValidPlaceId = (state) => {
-  const id = state.context?.active?.id;
+  const id=getActivePlaceId();
+  //const id = state.context?.active?.id;
   if (!id) console.error("❌ Thiếu Place ID");
   return id ? id.toLowerCase() : null;
 };
@@ -122,6 +126,7 @@ const formatItemsForGAS = (rawItems) => {
 };
 function buildPayload(state, action) {
   const placeId = getValidPlaceId(state);
+  const placeType = getActivePlaceType()
   if (!placeId) return null;
 
   const rawItems = getSourceItems(state, action);
@@ -135,6 +140,7 @@ function buildPayload(state, action) {
     type: action,
     timestamp: new Date().toISOString(),
     place: placeId,
+    mode: placeType,
     items: formattedItems,
     device: navigator.userAgent
   };
