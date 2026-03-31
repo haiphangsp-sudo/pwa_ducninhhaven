@@ -110,6 +110,12 @@
     <div id="ackOverlay" class="overlay__ack hidden"></div>
     <div id="deliveryStatus" class="delivery-banner hidden"></div>
     <div id="recoveryBanner" class="recovery-banner hidden"></div>
-    <script type="module" src="main.js?v=2.1.1"></script>
+    <script type="module">
+        import { CONFIG } from "./config.js";
+        const s = document.createElement("script");
+        s.type = "module";
+        s.src = `/main.js?v=${encodeURIComponent(CONFIG.VERSION)}`;
+        document.body.appendChild(s);
+    </script>
 </body>
 </html>

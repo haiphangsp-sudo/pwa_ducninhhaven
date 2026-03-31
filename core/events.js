@@ -14,7 +14,7 @@ import { getLocationLabel } from "../data/helpers.js";
    ======================================================== */
 let ackTimer = null; // Biến để quản lý timer, tránh chồng chéo
 
-function showAck(status, message = "", timeout = 2500) {
+function showAck(status, message = "", timeout = 1500) {
   // Xóa timer cũ nếu có (tránh việc thông báo mới bị đóng bởi lệnh của thông báo cũ)
   if (ackTimer) clearTimeout(ackTimer);
 
