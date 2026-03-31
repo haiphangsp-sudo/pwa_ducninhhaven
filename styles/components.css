@@ -369,7 +369,7 @@
 /* --- TRẠNG THÁI MỞ (isBarExpanded: true) --- */
 .status-bar {
     position: fixed;
-    bottom: 20px;
+    top: 150px;
     right: 20px; /* Cố định mép phải cách lề 20px */
     width: calc(100% - 40px); /* Co dãn theo màn hình */
     max-width: 400px;
