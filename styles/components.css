@@ -341,7 +341,6 @@
     margin-right: 0;
 }
 
-
 /* Nội dung bên trong */
 .bar-content {
     display: flex;
@@ -350,7 +349,6 @@
     overflow: hidden; /* Chặn nội dung khi thanh co lại */
     white-space: nowrap;
 }
-
 
 /* --- TRẠNG THÁI THU NHỎ (is-collapsed) --- */
 .status-bar.is-collapsed {
