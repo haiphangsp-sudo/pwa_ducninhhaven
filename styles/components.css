@@ -139,12 +139,6 @@
     align-items: center;
 }
 
-/* Xử lý nút mũi tên khi thu nhỏ */
-.status-bar.is-collapsed .btn-toggle-status {
-    position: absolute;
-    opacity: 0; /* Ẩn nút mũi tên đi để không đè lên icon chuông */
-    pointer-events: none;
-}
 /* Nội dung bên trong */
 .bar-content {
     display: flex;
