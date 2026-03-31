@@ -1,8 +1,4 @@
 
-// ui/render/renderStatusBar.js
-import { translate } from '../utils/translate.js';
-import { renderStepper } from './renderStepper.js';
-
 
 // ui/render/renderStatusBar.js
 import { translate } from '../utils/translate.js';
