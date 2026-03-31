@@ -56,20 +56,6 @@
   font-size:20px;
   z-index:1200;
 }
-/* Lớp nền xám bao phủ toàn bộ */
-.overlay__ack-container {
-  position: fixed;      /* Cố định theo khung hình trình duyệt */
-  top: 0;
-  left: 0;
-  width: 100vw;         /* 100% chiều ngang thiết bị */
-  height: 100vh;        /* 100% chiều dọc thiết bị */
-  background: rgba(0, 0, 0, 0.4); /* Màu xám mờ */
-  z-index: 9998;        /* Nằm dưới hộp chữ nhưng trên mọi thứ khác */
-  display: flex;
-  justify-content: center;
-  align-items: center;  /* Căn hộp chữ vào chính giữa màn hình */
-  transition: opacity 0.3s ease;
-}
 
 /* Hộp chữ thông báo bên trong */
 .overlay__ack {
@@ -270,86 +256,4 @@
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
-}
-/* ========================================================
-   ACK OVERLAY - CẤU TRÚC LỒNG NHAU ĐỂ PHỦ FULL MÀN HÌNH
-======================================================== */
-
-/* Lớp cha: Vùng màu xám bao phủ toàn bộ thiết bị */
-.overlay__ack-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.5); /* Màu xám mờ */
-    z-index: 9998; /* Dưới hộp chữ, trên mọi thành phần khác */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: opacity 0.3s ease;
-    pointer-events: auto; /* Ngăn người dùng bấm trúng Menu khi đang hiện */
-}
-
-/* Hộp thông báo (Toast/Box) */
-.overlay__ack {
-    padding: 16px 32px;
-    border-radius: 12px;
-    min-width: 260px;
-    max-width: 80%;
-    text-align: center;
-    color: white;
-    font-weight: 500;
-    font-size: 15px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    z-index: 9999;
-    animation: bounceIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-/* Các trạng thái màu sắc */
-.overlay__ack.success {
-    background-color: #2ecc71; /* Xanh lá */
-}
-
-.overlay__ack.error {
-    background-color: #e74c3c; /* Đỏ */
-}
-
-.overlay__ack.sending {
-    background-color: #3498db; /* Xanh dương */
-}
-
-/* Trạng thái ẩn cho toàn bộ cụm */
-.overlay__ack-container.hidden {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-}
-
-/* Hiệu ứng xuất hiện cho hộp thông báo */
-@keyframes bounceIn {
-    0% { transform: scale(0.8); opacity: 0; }
-    70% { transform: scale(1.05); }
-    100% { transform: scale(1); opacity: 1; }
-}
-
-/* ========================================================
-   LOADING SPINNER & ICONS (Giữ lại những gì cần thiết)
-======================================================== */
-
-.loader {
-    width: 24px;
-    height: 24px;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    border-top: 2px solid #fff;
-    border-radius: 50%;
-    display: inline-block;
-    animation: rotation 0.8s linear infinite;
-    margin-right: 10px;
-    vertical-align: middle;
-}
-
-@keyframes rotation {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
 }
