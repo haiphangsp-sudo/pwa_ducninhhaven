@@ -79,7 +79,7 @@ export function finalizeOrderSuccess(action) {
       at: null
     }
   };
-  
+
   showAck("success", message);
   
   if(isCart) {
@@ -111,7 +111,7 @@ const formatItemsForGAS = (rawItems) => {
 };
 function buildPayload(state, action) {
   const placeId = getActivePlaceId();
-  const placeType = getActivePlaceType()
+  const placeType = getActivePlaceType();
   if (!placeId) return null;
 
   const rawItems = getSourceItems(state, action);
@@ -124,7 +124,7 @@ function buildPayload(state, action) {
     id: `H-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
     type: action,
     timestamp: new Date().toISOString(),
-    place: placeId,
+    place: translate(placeId.label) || placeId,
     mode: placeType,
     items: formattedItems,
     device: navigator.userAgent

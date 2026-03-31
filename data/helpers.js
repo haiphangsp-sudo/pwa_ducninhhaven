@@ -68,10 +68,10 @@ export function getLocationLabel(ctx) {
     const { type, id } = ctx.active;
     const anchor = ctx.anchor;
     const placeData = resolvePlace(id);
-    const placeName = translate(placeData?.label || id);
+    const placeName = translate(placeData?.label) || id;
 
     if (type === "room" && anchor?.id === id) {
-      return `${translate("place.my_room")} (${placeName})`;
+      return `${placeName}`;
     }
 
     return placeName;
