@@ -29,21 +29,37 @@ function checkVersion(){
 
 /* ---------- SW ---------- */
 // - Đăng ký Service Worker để hỗ trợ offline và background sync
-function registerSW(){
+function registerSW() {
   if (!("serviceWorker" in navigator)) return;
-    navigator.serviceWorker.register("/sw.js?v="+CONFIG.VERSION).then(reg=>{
-      reg.addEventListener("updatefound", ()=>{
-        const newSW = reg.installing;
-        newSW.addEventListener("statechange", ()=>{
-          if(newSW.state === "installed" && navigator.serviceWorker.controller){
-            // Có SW mới, reload để cập nhật
-            location.reload();
-          }
-        });
-      });
-    }).catch(err=>{
-      console.error("SW registration failed:", err);
+
+  navigator.serviceWorker.register(`/sw.js?v=${CONFIG.VERSION}`, {
+    type: "module",
+    updateViaCache: "none"
+  }).then(reg => {
+    let refreshing = false;
+
+    navigator.serviceWorker.addEventListener("controllerchange", () => {
+      if (refreshing) return;
+      refreshing = true;
+      location.reload();
     });
+
+    reg.addEventListener("updatefound", () => {
+      const newSW = reg.installing;
+      if (!newSW) return;
+
+      newSW.addEventListener("statechange", () => {
+        if (
+          newSW.state === "installed" &&
+          navigator.serviceWorker.controller
+        ) {
+          newSW.postMessage({ type: "SKIP_WAITING" });
+        }
+      });
+    });
+  }).catch(err => {
+    console.error("SW registration failed:", err);
+  });
 }
 function loadCart() {
   try {
