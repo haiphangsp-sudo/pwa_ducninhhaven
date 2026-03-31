@@ -14,15 +14,10 @@ import { translate } from "../utils/translate.js";
 
 export function attachAppEvents() {
 
-
+  statutBarEvent();
   document.addEventListener("click", handleGlobalClick);
 
   window.addEventListener("contextchange", () => { syncContextToState(); });
-
-  document.getElementById('btnToggleBar')?.addEventListener('click', () => {
-    const bar = document.getElementById('orderStatusBar');
-    bar.classList.toggle('is-collapsed');
-});
   
 }
 

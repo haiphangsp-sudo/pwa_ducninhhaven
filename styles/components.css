@@ -149,6 +149,7 @@
 .bar-content {
     display: flex;
     align-items: center;
+    justify-content: center;
     flex-grow: 1;
     gap: 15px;
 }
@@ -307,4 +308,39 @@
 .status-bar.is-collapsed .bar-expanded,
 .status-bar.is-collapsed .btn-toggle-status {
     display: none;
+}
+/* --- TRẠNG THÁI THU NHỎ (is-collapsed) --- */
+.status-bar.is-collapsed {
+    width: 60px; /* Thu gọn thành hình tròn hoặc bo tròn ngắn */
+    padding: 12px 0; /* Thu hẹp padding ngang */
+    cursor: pointer; /* Cho phép bấm vào bất cứ đâu trên thanh để mở */
+}
+
+/* Ẩn nội dung chữ nhưng KHÔNG ẩn nút toggle */
+.status-bar.is-collapsed .bar-expanded {
+    display: none;
+}
+
+/* Căn giữa lại icon chuông khi thu nhỏ */
+.status-bar.is-collapsed .bar-content {
+    justify-content: center;
+    gap: 0;
+}
+
+/* Xử lý nút bấm Toggle */
+.btn-toggle-status {
+    transition: transform 0.4s ease;
+}
+
+/* Khi thu nhỏ: Xoay nút 180 độ và để nó mờ đi một chút hoặc nằm đè lên */
+.status-bar.is-collapsed .btn-toggle-status {
+    transform: rotate(180deg);
+    position: absolute;
+    right: 5px;
+    opacity: 0.5;
+}
+
+/* Đảm bảo icon chuông không bị lệch */
+.status-bar.is-collapsed .bar-mini {
+    margin-right: 0;
 }

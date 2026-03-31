@@ -51,3 +51,24 @@ export function renderStatusBar(state) {
         if (btnCheck) btnCheck.style.display = "none";
     }
 }
+export function statutBarEvent(){
+    // Thêm logic này vào phần khởi tạo UI của bạn
+    const bar = document.getElementById('orderStatusBar');
+    const btnToggle = document.getElementById('btnToggleBar');
+
+    const toggleBar = (e) => {
+        // Ngăn chặn sự kiện nổi bọt nếu bấm vào nút con
+        e?.stopPropagation();
+        bar.classList.toggle('is-collapsed');
+    };
+
+    // 1. Bấm vào nút mũi tên để đóng/mở
+    btnToggle?.addEventListener('click', toggleBar);
+
+    // 2. Bấm vào toàn bộ thanh bar (chỉ khi nó đang thu nhỏ) để mở ra
+    bar?.addEventListener('click', (e) => {
+        if (bar.classList.contains('is-collapsed')) {
+            toggleBar(e);
+        }
+    });
+}
