@@ -133,34 +133,37 @@ function syncLanguage(state) {
   renderPanel(state);
   renderDrawer(state);
 }
-// ui/sync.js
 
 async function syncOrderFlow(state, prevState) {
   const { action, at } = state.order || {};
   const prevAt = prevState.order?.at;
 
-  // CHUẨN HÓA ĐIỀU KIỆN:
-  // 1. Phải có action (add-cart, send-cart, buy-now)
-  // 2. at phải tồn tại và phải KHÁC với at trước đó
-  // 3. Không được đang bận (isProcessingOrder)
-  if (!action || !at || at === prevAt || isProcessingOrder) {
+  // Nếu không có hành động hoặc người dùng chưa bấm (at không đổi) -> Thoát im lặng
+  if (!action || !at || at === prevAt) return;
+
+  // Nếu đang xử lý đơn cũ mà khách bấm tiếp -> Chặn lại
+  if (isProcessingOrder) {
+    console.warn("⏳ Hệ thống đang bận xử lý đơn trước...");
     return;
   }
 
-  isProcessingOrder = true;
+  isProcessingOrder = true; // ĐÓNG KHÓA
 
   try {
-    console.log(`🚀 Thực thi lệnh: ${action} tại thời điểm ${at}`);
-    
+    console.log(`🚀 [Haven Sync] Bắt đầu xử lý: ${action} (at: ${at})`);
+
     if (action === "add-cart") {
       addToCart(); 
-    } else if (action === "buy-now") {
-      await submitOrder("instant");
-    } else if (action === "send-cart") {
-      await submitOrder("send-cart");
+    } else {
+      // Gọi submitOrder (Hàm này sẽ gọi buildPayload bên trong)
+      const success = await submitOrder(action);
+      console.log(`🏁 Kết quả xử lý ${action}:`, success ? "Thành công" : "Thất bại");
     }
+  } catch (err) {
+    console.error("🔥 Lỗi nghiêm trọng trong luồng Sync:", err);
   } finally {
-    isProcessingOrder = false;
-    console.log(`Đã mở khóa`);
+    // QUAN TRỌNG NHẤT: Luôn mở khóa dù thành công hay lỗi
+    isProcessingOrder = false; 
+    console.log("🔓 Đã mở khóa luồng cho lệnh tiếp theo");
   }
 }
