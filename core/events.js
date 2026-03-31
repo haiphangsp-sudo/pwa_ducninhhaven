@@ -4,7 +4,7 @@ import { getState, setState } from "./state.js";
 import { sendRequest } from "../services/api.js";
 import { getVariantById } from "./menuQuery.js";
 import { translate } from "../ui/utils/translate.js";
-import { getActivePlaceId, getActivePlaceType } from "../core/context.js";
+import { getActivePlaceId, getActivePlaceType, getLocationLabel, getContext} from "../core/context.js";
 
 
 
@@ -124,7 +124,7 @@ function buildPayload(state, action) {
     id: `H-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
     type: action,
     timestamp: new Date().toISOString(),
-    place: translate(placeId.label) || placeId,
+    place: getLocationLabel(getContext()),
     mode: placeType,
     items: formattedItems,
     device: navigator.userAgent
