@@ -106,10 +106,9 @@
 ========================= */
 
 .hub-btn.is-active {
-  background: beige;
+  background: var(--bg-main);
   color: var(--text-invert);
   transform: translateY(-2px);
-  box-shadow: var(--shadow);
 }
 
 .hub-btn:not(.is-active){
