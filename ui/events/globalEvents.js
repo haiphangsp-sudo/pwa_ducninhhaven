@@ -57,7 +57,7 @@ function handleGlobalClick(e) {
     case "close-overlay":
       setState({
         overlay: { view: null },
-        ack: { state: "hidden" }
+        ack: { visible: false, status: null, message: "", at: null }
       });
       break;
     

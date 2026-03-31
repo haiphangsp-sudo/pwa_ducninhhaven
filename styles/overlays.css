@@ -9,10 +9,6 @@
 /* Khung nền chung cho thông báo */
 .overlay__ack {
   position: fixed;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 9999; /* Cao nhất để đè lên cả Drawer */
   padding: 12px 24px;
   border-radius: 8px;
   color: white;
@@ -21,8 +17,16 @@
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
   transition: all 0.3s ease;
   pointer-events: none; /* Không cản trở người dùng click */
-  text-align: center;
   min-width: 200px;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.6); /* Màu xám mờ sang trọng */
+    z-index: 10000; /* Cao nhất để đè lên cả Drawer và Picker */
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 /* Các trạng thái màu sắc */
