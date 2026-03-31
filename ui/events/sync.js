@@ -75,10 +75,6 @@ async function syncUI(state) {
     renderHub(state);
     renderPanel(state);
   }
-  /* ---------- ACK ---------- */
-
-  
-    renderAck( state.ack ) 
   
   /* ---------- CART ---------- */
 
@@ -122,6 +118,10 @@ async function syncUI(state) {
     if (!exists) updateStepperUI(pItem.id, 0);
   });
   
+  const { visible, status, message } = state.ack;
+
+  renderAck({ visible, status, message });
+  
 }
 
 /* =======================================================
@@ -138,40 +138,6 @@ function syncLanguage(state) {
   renderDrawer(state);
 }
 
-async function syncOrderFlow(state, prevState) {
-  const { action, at } = state.order || {};
-  const prevAt = prevState.order?.at;
-
-  // Nếu không có hành động hoặc người dùng chưa bấm (at không đổi) -> Thoát im lặng
-  if (!action || !at || at === prevAt) return;
-
-  // Nếu đang xử lý đơn cũ mà khách bấm tiếp -> Chặn lại
-  if (isProcessingOrder) {
-    console.warn("⏳ Hệ thống đang bận xử lý đơn trước...");
-    return;
-  }
-
-  isProcessingOrder = true; // ĐÓNG KHÓA
-
-  try {
-    console.log(`🚀 [Haven Sync] Bắt đầu xử lý: ${action} (at: ${at})`);
-
-    if (action === "add-cart") {
-      addToCart(); 
-    } else {
-      // Gọi submitOrder (Hàm này sẽ gọi buildPayload bên trong)
-      const success = await submitOrder(action);
-      console.log(`🏁 Kết quả xử lý ${action}:`, success ? "Thành công" : "Thất bại");
-    }
-  } catch (err) {
-    console.error("🔥 Lỗi nghiêm trọng trong luồng Sync:", err);
-  } finally {
-    // QUAN TRỌNG NHẤT: Luôn mở khóa dù thành công hay lỗi
-    isProcessingOrder = false; 
-    console.log("🔓 Đã mở khóa luồng cho lệnh tiếp theo");
-  }
-}
-// ui/sync.js
 
 /* --- 1. Xử lý luồng Đặt hàng --- */
 async function handleOrderLogic(state, prevState) {
