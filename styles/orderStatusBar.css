@@ -278,3 +278,9 @@
     opacity: 0;
     pointer-events: none;
 }
+
+/* Đổi chiều mũi tên khi thu nhỏ */
+.status-bar.is-collapsed #btnToggleBar {
+    transform: rotate(180deg); /* Xoay ngược lại thành dấu < */
+    color: white;
+}
