@@ -32,7 +32,8 @@ export const STRINGS = {
     place_prompt: { vi: "Chọn vị trí", en: "Select a place" },
     sending: { vi: "Đang gửi...", en: "Sending..." },
     success: { vi: "Đã gửi thành công", en: "Sent successfully" },
-    added: { vi: "Đã thêm vào giỏ hàng", en: "Added to cart" }
+    added: { vi: "Đã thêm vào giỏ hàng", en: "Added to cart" },
+    error: { vi: "Chưa gửi được", en: "Failed to send"}
 
   },
 

@@ -154,7 +154,7 @@ export async function submitOrder(action) {
     throw new Error("API_FAIL");
   } catch (err) {
     setState({ order: { ...getState().order, status: "error" } });
-    showAck("error", translate("cart.error"), 2500);
+    showAck("error", translate("cart_bar.error"), 2500);
     return false;
   }
 }
