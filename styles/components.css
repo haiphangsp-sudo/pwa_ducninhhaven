@@ -387,3 +387,81 @@
 .status-bar.is-collapsed .bar-mini {
     margin-right: 0;
 }
+
+/* --- TRẠNG THÁI MỞ (Mặc định) --- */
+.status-bar {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 450px;
+    height: 60px; /* Cố định chiều cao */
+    background: white;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px 0 20px; /* Padding trái rộng cho icon, phải hẹp cho nút > */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 999;
+}
+
+.bar-content {
+    display: flex;
+    align-items: center;
+    flex-grow: 1; /* Chiếm hết không gian còn lại */
+    overflow: hidden; /* Chặn chữ tràn ra ngoài */
+}
+
+/* Nút mũi tên > */
+.btn-toggle-status {
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: #f5f5f5;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.4s;
+    flex-shrink: 0; /* Không cho phép nút này bị bóp méo */
+}
+
+/* --- TRẠNG THÁI THU NHỎ (is-collapsed) --- */
+.status-bar.is-collapsed {
+    width: 60px; /* Thu lại bằng đúng chiều cao để thành hình tròn */
+    padding: 0; /* Xóa padding để căn giữa tuyệt đối */
+}
+
+/* Ẩn phần nội dung mở rộng */
+.status-bar.is-collapsed .bar-expanded {
+    display: none;
+}
+
+/* Căn giữa cụm icon chuông */
+.status-bar.is-collapsed .bar-content {
+    justify-content: center;
+    margin: 0;
+}
+
+/* XỬ LÝ NÚT MŨI TÊN KHI THU NHỎ */
+.status-bar.is-collapsed .btn-toggle-status {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 100%; /* Phủ kín toàn bộ chấm tròn */
+    height: 100%;
+    background: transparent; /* Làm trong suốt để thấy chuông bên dưới */
+    transform: rotate(180deg); /* Xoay ngược mũi tên lại */
+}
+
+/* Chỉ hiện mũi tên mờ mờ trên nền chuông khi thu nhỏ */
+.status-bar.is-collapsed .btn-toggle-status:after {
+    content: '❯';
+    position: absolute;
+    bottom: 5px;
+    font-size: 10px;
+    color: #999;
+}
