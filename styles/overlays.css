@@ -1,3 +1,276 @@
+.ack-dot{
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  background:#2f4f3e;
+  animation:ack .5s ease;
+  white-space: nowrap;
+}
+/* Khung nền chung cho thông báo */
+.overlay__ack {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999; /* Cao nhất để đè lên cả Drawer */
+  padding: 12px 24px;
+  border-radius: 8px;
+  color: white;
+  font-weight: 500;
+  font-size: 14px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  transition: all 0.3s ease;
+  pointer-events: none; /* Không cản trở người dùng click */
+  text-align: center;
+  min-width: 200px;
+}
+
+/* Các trạng thái màu sắc */
+.overlay__ack.success {
+  background-color: #2ecc71; /* Xanh lá cho thành công */
+}
+
+.overlay__ack.error {
+  background-color: #e74c3c; /* Đỏ cho lỗi */
+}
+
+.overlay__ack.sending {
+  background-color: #3498db; /* Xanh dương cho lúc đang gửi */
+}
+
+/* Trạng thái ẩn */
+.overlay__ack.hidden {
+  opacity: 0;
+  visibility: hidden;
+  top: 0px; /* Hiệu ứng trượt nhẹ từ trên xuống khi hiện */
+}
+
+.overlay__ack {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.6);
+  color: white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:20px;
+  z-index:1200;
+}
+/* Lớp nền xám bao phủ toàn bộ */
+.overlay__ack-container {
+  position: fixed;      /* Cố định theo khung hình trình duyệt */
+  top: 0;
+  left: 0;
+  width: 100vw;         /* 100% chiều ngang thiết bị */
+  height: 100vh;        /* 100% chiều dọc thiết bị */
+  background: rgba(0, 0, 0, 0.4); /* Màu xám mờ */
+  z-index: 9998;        /* Nằm dưới hộp chữ nhưng trên mọi thứ khác */
+  display: flex;
+  justify-content: center;
+  align-items: center;  /* Căn hộp chữ vào chính giữa màn hình */
+  transition: opacity 0.3s ease;
+}
+
+/* Hộp chữ thông báo bên trong */
+.overlay__ack {
+  position: relative;   /* Không dùng fixed ở đây nữa vì đã có container bọc ngoài */
+  z-index: 9999;
+  padding: 16px 32px;
+  border-radius: 12px;
+  background: #333;     /* Màu nền của hộp chữ */
+  color: white;
+  /* ... các style khác ... */
+}
+
+/* Khi ẩn */
+.hidden {
+  display: none !important;
+  opacity: 0;
+}
+ .overlay__panel{
+  position:fixed;
+  z-index:1000;
+ }
+
+.overlay__panel--bottom{
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.overlay__panel--center{
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.overlay-picker{
+  display:flex; 
+  align-items:center; 
+  justify-content:center;
+  max-width: 90vw;
+  width: 480px;
+}
+.overlay-drawer{
+  max-height: 70vh;
+}
+
+/* =====================
+   BANNERS (Delivery & Recovery)
+===================== */
+
+.delivery-banner, 
+.recovery-banner {
+    position: fixed;
+    top: 160px;
+    left: 0;
+    width: 100%;
+    z-index: 9999;
+    padding: 12px 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-invert);
+    box-shadow: var(--shadow);
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    transform: translateY(0);
+}
+
+.delivery-banner.hidden, 
+.recovery-banner.hidden {
+    transform: translateY(-100%);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.banner-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.banner-icon {
+    font-size: 18px;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Themes dựa trên Tokens */
+.banner-info {
+    background-color: var(--brand); /* Màu xanh rừng của Haven */
+}
+
+.banner-success {
+    background-color: var(--success); /* Xanh lá cây phục vụ */
+}
+
+.banner-error {
+    background-color: var(--error); /* Đỏ báo lỗi */
+}
+
+.banner-warning {
+    background-color: var(--warning); /* Cam nhắc nhở recovery */
+}
+
+/* Hiệu ứng nhấp nháy nhẹ cho trạng thái "Sending" */
+.banner-info .banner-icon {
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+/* =====================
+   ACK OVERLAY (Haptic Visual)
+===================== */
+
+#ackOverlay {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10000;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px); /* Hiệu ứng kính mờ sang trọng */
+    color: white;
+    padding: 20px 30px;
+    border-radius: var(--radius-l, 16px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+}
+
+#ackOverlay.hidden {
+    opacity: 0;
+}
+
+.ack-icon {
+    font-size: 32px;
+    color: var(--success);
+    animation: bounceIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes bounceIn {
+    0% { transform: scale(0.3); opacity: 0; }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); opacity: 1; }
+}
+/* =====================
+   LOADING SPINNER (Premium Style)
+===================== */
+
+.loader {
+    width: 24px;
+    height: 24px;
+    border: 1.5px solid var(--border-soft); /* Đường viền mờ phía dưới */
+    border-top: 1.5px solid var(--brand);   /* Đường viền đậm màu thương hiệu */
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 0.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+/* Spinner cỡ lớn cho các màn hình chờ hoặc Overlay */
+.loader-l {
+    width: 40px;
+    height: 40px;
+    border-width: 2px;
+}
+
+/* Spinner trắng khi nằm trên nền đậm (như Banner) */
+.loader-invert {
+    border-color: rgba(255, 255, 255, 0.2);
+    border-top-color: var(--text-invert);
+}
+
+@keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Hiệu ứng mờ dần khi xuất hiện */
+.loader-fade-in {
+    animation: rotation 0.8s infinite, fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
 /* ========================================================
    ACK OVERLAY - CẤU TRÚC LỒNG NHAU ĐỂ PHỦ FULL MÀN HÌNH
 ======================================================== */
