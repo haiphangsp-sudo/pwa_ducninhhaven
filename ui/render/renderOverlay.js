@@ -22,4 +22,7 @@ export  function renderAck({ visible, status, message }) {
     el.classList.add("hidden");
     el.textContent = "";
   }
+    setTimeout(() => {
+        setState({ ack: { visible: false, status: null, message: "", at: Date.now() } });
+    }, 2500);
 }
