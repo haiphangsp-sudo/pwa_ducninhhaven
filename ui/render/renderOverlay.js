@@ -1,28 +1,17 @@
-// ui/render/renderAckOverlay.js
+// ui/render/renderOverlay.js
 
-import { setState } from "../../core/state.js";
-import { translate } from "../utils/translate.js";
-
-
-export  function renderAck({ visible, status, message }) {
+export function renderAck({ visible, status, message }) {
   const el = document.getElementById("ackOverlay");
   if (!el) return;
 
-  el.className = "overlay__ack";
+  // Reset class về mặc định mỗi lần render
+  el.className = "overlay__ack"; 
 
   if (visible) {
-    el.textContent = translate(message) || "";
-
+    el.textContent = translate(message) || message; // Hỗ trợ cả key translate và string thô
     el.classList.add("show");
-
-    if (status) {
-      el.classList.add(status); // success | error | sending
-    }
+    if (status) el.classList.add(status);
   } else {
     el.classList.add("hidden");
-    el.textContent = "";
   }
-    setTimeout(() => {
-        setState({ ack: { visible: false, status: null, message: "", at: Date.now() } });
-    }, 2500);
 }
