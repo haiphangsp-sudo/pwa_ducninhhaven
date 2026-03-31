@@ -148,15 +148,6 @@
     gap: 15px;
 }
 
-/* Phần Mini (Icon & Badge) */
-.bar-mini {
-    display: flex;
-    align-items: center;
-    position: absolute;
-    left: 15px; /* Hiện cái chuông nhỏ bên cạnh mũi tên */
-    transform: scale(0.8);
-}
-
 .bar-mini .icon {
     font-size: 20px;
 }
