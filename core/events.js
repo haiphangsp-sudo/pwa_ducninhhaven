@@ -34,41 +34,40 @@ function showAck(status, message = "", timeout = 1800) {
 // core/events.js
 
 function buildPayload(state, action) {
+  // 1. Kiểm tra Vị trí (Bắt buộc)
   const activePlace = state.context?.active;
   const placeId = activePlace?.id?.toLowerCase();
 
-  // CHẶN 1: Thiếu vị trí (Phòng/Bàn)
   if (!placeId) {
-    console.error("❌ [Payload Error] Thiếu placeId. activePlace hiện tại:", activePlace);
-    showAck("error", translate("place.select"), 2000);
+    console.error("❌ [BuildPayload] Lỗi: Chưa chọn Phòng/Bàn");
+    showAck("error", "Vui lòng chọn số phòng", 2000);
     return null; 
   }
 
-  // Xác định danh sách món dựa trên action
+  // 2. Xác định nguồn món ăn
   let rawItems = [];
+  
   if (action === "send-cart") {
     rawItems = state.cart?.items || [];
-  } else if (action === "buy-now" || action === "instant") {
-    // CHẶN 2: "Mua ngay" cần có ID món ở state.order.line
+    if (rawItems.length === 0) {
+      console.error("❌ [BuildPayload] Lỗi: Giỏ hàng đang trống");
+      return null;
+    }
+  } else if (action === "buy-now") {
+    // Lấy món trực tiếp từ line mà người dùng vừa bấm
     const lineId = state.order?.line;
     if (!lineId) {
-      console.error("❌ [Payload Error] Mua ngay nhưng state.order.line bị rỗng");
+      console.error("❌ [BuildPayload] Lỗi: Mua ngay nhưng không có ID món (line)");
       return null;
     }
     rawItems = [{ id: lineId, qty: 1 }];
   }
 
-  // CHẶN 3: Giỏ hàng trống
-  if (rawItems.length === 0) {
-    console.error("❌ [Payload Error] Không có món nào để gửi. Action:", action);
-    return null;
-  }
-
-  // Chuyển đổi sang định dạng GAS
+  // 3. Chuyển đổi sang định dạng gửi cho GAS
   const items = rawItems.map(cartItem => {
     const info = getVariantById(cartItem.id);
     if (!info) {
-      console.warn("⚠️ Bỏ qua món không tìm thấy trong menu ID:", cartItem.id);
+      console.warn(`⚠️ Bỏ qua món ID ${cartItem.id} không tìm thấy trong menu`);
       return null;
     }
     return {
@@ -76,12 +75,18 @@ function buildPayload(state, action) {
       category: info.categoryKey || "",
       item: translate(info.productLabel),
       option: translate(info.variantLabel),
-      qty: Number(cartItem.qty || 0),
+      qty: Number(cartItem.qty || 1),
       price: Number(info.price || 0),
-      subtotal: Number(info.price || 0) * Number(cartItem.qty || 0)
+      subtotal: Number(info.price || 0) * Number(cartItem.qty || 1)
     };
   }).filter(Boolean);
 
+  if (items.length === 0) {
+    console.error("❌ [BuildPayload] Lỗi: Không có dữ liệu món ăn hợp lệ");
+    return null;
+  }
+
+  // 4. Trả về payload chuẩn cho GAS
   return {
     id: `H-${Date.now()}`,
     type: action,
@@ -90,6 +95,34 @@ function buildPayload(state, action) {
     items: items,
     device: navigator.userAgent
   };
+}
+
+// Sửa lại submitOrder để trả về kết quả rõ ràng
+export async function submitOrder(action) {
+  const state = getState();
+  const payload = buildPayload(state, action);
+  
+  if (!payload) {
+    console.log("🚫 Hủy gửi đơn do dữ liệu null");
+    return false; // Trả về false để sync.js biết mà mở khóa
+  }
+
+  setState({ order: { ...state.order, status: "pending" } });
+  showAck("sending", "Đang gửi đơn...", 0);
+
+  try {
+    const res = await sendRequest(payload);
+    if (res?.success) {
+      finalizeOrderSuccess(action);
+      return true;
+    }
+    throw new Error(res?.message || "GAS_Error");
+  } catch (err) {
+    console.error("🔥 Lỗi API:", err);
+    setState({ order: { ...getState().order, status: "error" } });
+    showAck("error", "Gửi đơn thất bại", 2500);
+    return false;
+  }
 }
 /* ========================================================
    3. CART ACTIONS
@@ -123,30 +156,6 @@ export function addToCart() {
   showAck("success", translate("cart_bar.added"), 1200);
 }
 
-/* ========================================================
-   4. SEND ACTIONS
-   ======================================================== */
-export async function submitOrder(action) {
-  const state = getState();
-  const payload = buildPayload(state, action);
-  console.log("📦 Dữ liệu gửi đi:", JSON.stringify(payload, null, 2)); // Thêm dòng này
-  if (!payload) return;
-
-  setState({ order: { ...state.order, status: "pending" } });
-
-  try {
-    const res = await sendRequest(payload);
-    if (res?.success) {
-      finalizeOrderSuccess(action);
-    } else {
-      throw new Error("send_failed");
-    }
-  } catch (err) {
-    setState({ order: { ...getState().order, status: "error" } });
-  }
-}
-
-// core/events.js
 
 export function finalizeOrderSuccess(action) {
   // 1. Chuẩn bị thông báo
