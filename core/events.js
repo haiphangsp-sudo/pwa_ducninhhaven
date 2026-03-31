@@ -113,6 +113,7 @@ export function addToCart() {
 export async function submitOrder(action) {
   const state = getState();
   const payload = buildPayload(state, action);
+  console.log("📦 Dữ liệu gửi đi:", JSON.stringify(payload, null, 2)); // Thêm dòng này
   if (!payload) return;
 
   setState({ order: { ...state.order, status: "pending" } });
