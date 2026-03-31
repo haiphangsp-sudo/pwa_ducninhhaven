@@ -14,13 +14,13 @@ import { getActivePlaceId, getActivePlaceType } from "../core/context.js";
 
 function showAck(status, message = "", timeout = 1800) {
   setState({
-    ack: { state: "show", status, message }
+    ack: { visible: true, status, message , at: Date.now()}
   });
 
   if (timeout > 0) {
     setTimeout(() => {
       setState({
-        ack: { state: "hidden", status: null, message: "" }
+        ack: { visible: false, status: null, message: "" , at: null}
       });
     }, timeout);
   }
@@ -76,7 +76,7 @@ export function finalizeOrderSuccess(action) {
     },
     // Gộp luôn phần hiển thị thông báo (Ack) vào đây
     ack: { 
-      state: "show", 
+      visible: true, 
       status: "success", 
       message: message 
     }
@@ -90,14 +90,13 @@ export function finalizeOrderSuccess(action) {
 
   // 3. Chỉ dùng setTimeout để ẩn thông báo sau vài giây
   setTimeout(() => {
-    setState({ ack: { state: "hidden", status: null, message: "" } });
+    setState({ ack: { visible: false, status: null, message: "" , at: null} });
   }, 2500);
 }
 
 const getSourceItems = (state, action) => {
   if (action === "send-cart") return state.cart?.items || [];
   if (state.order?.line) return [{ id: state.order.line, qty: 1 }];
-  console.error("❌ Không tìm thấy nguồn món ăn cho action:", action);
   return [];
 };
 const formatItemsForGAS = (rawItems) => {

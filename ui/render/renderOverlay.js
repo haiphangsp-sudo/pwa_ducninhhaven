@@ -1,23 +1,26 @@
 // ui/render/renderAckOverlay.js
 
-export function renderAckOverlay(ackState) {
+import { setState } from "../../core/state.js";
+
+
+export function renderAckOverlay(state) {
     const overlay = document.getElementById("ackOverlay");
     if (!overlay) return;
 
-    if (ackState.state === "show") {
+    if (state.ack.visible === true) {
         // 1. Hiện overlay bằng cách bỏ class hidden
         overlay.classList.remove("hidden");
         
         // 2. Cập nhật icon/màu sắc dựa trên status (success/error)
         const iconEl = overlay.querySelector(".ack-icon");
         if (iconEl) {
-            iconEl.textContent = ackState.status === "success" ? "✓" : "✕";
-            iconEl.style.color = ackState.status === "success" ? "var(--success)" : "var(--error)";
+            iconEl.textContent = state.ack.status === "success" ? "✓" : "✕";
+            iconEl.style.color = state.ack.status === "success" ? "var(--success)" : "var(--error)";
         }
 
         // 3. Tự động tắt sau 2.5 giây (nếu bạn muốn)
         setTimeout(() => {
-            setState({ ack: { state: "hide", status: "" } });
+            setState({ ack: { visible: false, status: null, message: "", at: null } });
         }, 2500);
         
     } else {
