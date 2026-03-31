@@ -138,11 +138,11 @@ export async function submitOrder(action) {
   // Cập nhật UI sang trạng thái gửi
   setState({ order: { ...state.order, status: "pending" } });
   showAck("sending", translate("cart_bar.sending"), 0);
-
   try {
     const res = await sendRequest(payload);
     if (res?.success) {
       finalizeOrderSuccess(action);
+      showAck("success", "cart_bar.success", 3000); 
       return true;
     }
     throw new Error("API_FAIL");
