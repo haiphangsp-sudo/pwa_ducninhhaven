@@ -135,7 +135,7 @@ function syncLanguage(state) {
   renderDrawer(state);
 }
 
-async function syncOrderFlow(state, prevState) {
+async function syncOrderFlowOld(state, prevState) {
   const { action, line, at } = state.order || {};
   const prevAt = prevState.order?.at;
 
@@ -156,5 +156,41 @@ async function syncOrderFlow(state, prevState) {
     console.error("Sync Flow Error:", err);
   } finally {
     isProcessingOrder = false; 
+  }
+}
+// ui/sync.js
+async function syncOrderFlow(state, prevState) {
+  const { action, at } = state.order || {};
+  const prevAt = prevState.order?.at;
+
+  // LOG 1: Kiểm tra xem hàm có được gọi không?
+  console.log("%c[Sync Heartbeat]", "color: blue", { action, at, prevAt, isProcessingOrder });
+
+  if (!action || !at) return; // Không có hành động thì thoát im lặng (bình thường)
+
+  if (at === prevAt) {
+    // LOG 2: Tại sao thoát? Vì trùng timestamp
+    return;
+  }
+
+  if (isProcessingOrder) {
+    console.warn("[Sync] Đang xử lý đơn cũ, chặn đơn mới!");
+    return;
+  }
+
+  console.log("%c[Sync] BẮT ĐẦU THỰC THI:", "color: green; font-weight: bold", action);
+  isProcessingOrder = true;
+
+  try {
+    if (action === "add-cart") {
+      addToCart(); 
+    } else if (action === "buy-now" || action === "send-cart") {
+      await submitOrder(action);
+    }
+  } catch (err) {
+    console.error("[Sync] LỖI THỰC THI:", err);
+  } finally {
+    console.log("[Sync] Mở khóa isProcessingOrder");
+    isProcessingOrder = false;
   }
 }

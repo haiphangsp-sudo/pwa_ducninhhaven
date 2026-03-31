@@ -32,7 +32,6 @@ function showAck(status, message = "", timeout = 1800) {
  * vì GAS sẽ xử lý ghi từng món thành một dòng riêng biệt.
  */
 function buildPayload(state, action) {
-  // GỐC RỄ 4: Optional chaining toàn diện
   const activePlace = state.context?.active;
   const placeId = activePlace?.id?.toLowerCase();
 
@@ -75,13 +74,6 @@ function buildPayload(state, action) {
     items: items
   };
 }
-
-/* ---------- CÁC HÀNH ĐỘNG ---------- */
-
-
-
-
-// ... các hàm updateCartQuantity và addToCart giữ nguyên logic an toàn
 
 /* ========================================================
    3. CART ACTIONS
@@ -136,6 +128,7 @@ export async function submitOrder(action) {
     setState({ order: { ...getState().order, status: "error" } });
   }
 }
+
 
 
 export function finalizeOrderSuccess(action) {
