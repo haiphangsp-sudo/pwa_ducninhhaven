@@ -94,15 +94,6 @@ export function finalizeOrderSuccess(action) {
   }, 2500);
 }
 
-
-
-const getValidPlaceId = (state) => {
-  const id=getActivePlaceId();
-  //const id = state.context?.active?.id;
-  if (!id) console.error("❌ Thiếu Place ID");
-  return id ? id.toLowerCase() : null;
-};
-
 const getSourceItems = (state, action) => {
   if (action === "send-cart") return state.cart?.items || [];
   if (state.order?.line) return [{ id: state.order.line, qty: 1 }];
@@ -116,8 +107,8 @@ const formatItemsForGAS = (rawItems) => {
     return {
       id: cartItem.id,
       category: info.categoryKey || "",
-      item: translate(info.productLabel),
-      option: translate(info.variantLabel),
+      item: info.productLabel,
+      option: info.variantLabel,
       qty: Number(cartItem.qty || 1),
       price: Number(info.price || 0),
       subtotal: Number(info.price || 0) * Number(cartItem.qty || 1)
@@ -125,7 +116,7 @@ const formatItemsForGAS = (rawItems) => {
   }).filter(Boolean);
 };
 function buildPayload(state, action) {
-  const placeId = getValidPlaceId(state);
+  const placeId = getActivePlaceId();
   const placeType = getActivePlaceType()
   if (!placeId) return null;
 
