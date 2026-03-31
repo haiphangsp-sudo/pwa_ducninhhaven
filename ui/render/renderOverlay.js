@@ -13,8 +13,11 @@ export function renderAck({ visible, status, message }) {
   if (visible) {
     el.textContent = message; // Hỗ trợ cả key translate và string thô
     el.classList.add("show");
+    el.classList.remove("hidden");
+
     if (status) el.classList.add(status);
   } else {
+    el.classList.remove("show");
     el.classList.add("hidden");
   }
 }
