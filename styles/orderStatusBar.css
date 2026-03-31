@@ -186,69 +186,54 @@
     color: #2f5d46; /* Màu xanh đặc trưng của Duc Ninh Haven */
 }
 
-/* new--- TRẠNG THÁI MỞ (Mặc định) --- */
+/* --- TRẠNG THÁI MỞ (Mặc định) --- */
 .status-bar {
     position: fixed;
     bottom: 20px;
-    right: 5%; /* Neo cách lề phải 5% */
-    width: 90%; /* Chiều dài khi mở */
-    max-width: 450px;
+    right: 20px; /* Neo cố định ở lề phải */
+    width: calc(100% - 40px);
+    max-width: 420px;
     height: 60px;
     background: white;
     border-radius: 30px;
     display: flex;
     align-items: center;
-    padding: 0 5px 0 20px; /* Padding phải hẹp để nút mũi tên sát lề */
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    padding: 0 5px 0 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    z-index: 1000;
     
-    /* Quan trọng: Chỉ transition width để thấy nó thu từ trái sang phải */
-    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s;
-    z-index: 999;
+    /* Hiệu ứng thu từ trái sang phải: Chỉ thay đổi width */
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
 }
 
-/* Nội dung bên trong */
-.bar-content {
-    display: flex;
-    align-items: center;
-    flex-grow: 1;
-    overflow: hidden; /* Chặn nội dung khi thanh co lại */
-    white-space: nowrap;
+/* Khi thu nhỏ: Mép trái sẽ chạy về phía bên phải */
+.status-bar.is-collapsed {
+    width: 60px; /* Thu lại thành hình tròn */
 }
 
-/* Nút mũi tên (Dấu >) */
-#btnToggleBar {
+/* Nút mũi tên đứng yên ở lề phải */
+.btn-toggle-status {
     width: 50px;
     height: 50px;
-    border: none;
-    background: transparent;
-    cursor: pointer;
-    font-size: 18px;
+    flex-shrink: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: transform 0.4s ease; /* Hiệu ứng xoay mũi tên */
-    flex-shrink: 0;
-}
-
-/* --- TRẠNG THÁI THU NHỎ (is-collapsed) --- */
-.status-bar.is-collapsed {
-    width: 60px; /* Thu lại thành hình tròn */
-    background: #6b8e23; /* Đổi sang màu xanh Sage cho "xịn" */
-}
-
-/* Ẩn chữ khi co lại */
-.status-bar.is-collapsed .bar-expanded {
-    opacity: 0;
-    pointer-events: none;
+    font-size: 20px;
+    transition: transform 0.4s; /* Để xoay mũi tên */
+    cursor: pointer;
+    background: transparent;
+    border: none;
 }
 
 /* Đổi chiều mũi tên khi thu nhỏ */
-.status-bar.is-collapsed #btnToggleBar {
-    transform: rotate(180deg); /* Xoay ngược lại thành dấu < */
-    color: white;
+.status-bar.is-collapsed .btn-toggle-status {
+    transform: rotate(180deg); /* ❯ thành ❮ */
 }
 
-/* Giữ icon chuông ở vị trí cũ hoặc ẩn đi tùy bạn */
-.status-bar.is-collapsed .bar-mini {
-    display: none; /* Nếu muốn chỉ hiện mỗi mũi tên khi thu nhỏ */
+/* Ẩn nội dung chữ khi thu nhỏ */
+.status-bar.is-collapsed .bar-expanded {
+    opacity: 0;
+    pointer-events: none;
 }

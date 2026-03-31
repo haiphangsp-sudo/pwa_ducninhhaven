@@ -3,35 +3,55 @@
 import { translate } from '../utils/translate.js';
 import { renderStepper } from './renderStepper.js';
 
+
 // ui/render/renderStatusBar.js
+import { translate } from '../utils/translate.js';
+import { renderStepper } from './renderStepper.js';
+
 export function renderStatusBar(state) {
     const bar = document.getElementById("orderStatusBar");
-    if (!bar) return;
+    const countEl = document.getElementById("orderActiveCount");
+    const textEl = document.getElementById("orderStatusText");
+    const btnCheck = document.getElementById("btnCheckOrders");
+    
+    if (!bar || !textEl || !countEl) return;
 
-    // 1. Đồng bộ trạng thái Thu nhỏ/Mở rộng
-    const { isBarExpanded } = state.orders;
+    const { active, isBarExpanded } = state.orders;
+    const cartItems = state.cart?.items || [];
+    const totalCartQty = cartItems.reduce((s, i) => s + (Number(i.qty) || 0), 0);
+
+    // 1. QUẢN LÝ ĐÓNG/MỞ (is-collapsed)
     if (isBarExpanded) {
         bar.classList.remove("is-collapsed");
     } else {
         bar.classList.add("is-collapsed");
     }
 
-    // 2. Logic hiển thị nội dung đơn hàng (active orders)
-    const activeOrders = state.orders.active || [];
-    const countEl = document.getElementById("orderActiveCount");
-    const textEl = document.getElementById("orderStatusText");
+    // 2. CHỐT CHẶN HIỂN THỊ (Ẩn toàn bộ nếu không có gì)
+    if (active.length === 0 && totalCartQty === 0) {
+        bar.classList.add("hidden");
+        return;
+    }
+    bar.classList.remove("hidden");
 
-    if (activeOrders.length > 0) {
-        // Nếu có đơn hàng đang xử lý
-        countEl.textContent = activeOrders.length;
-        // Lấy trạng thái của đơn hàng mới nhất để hiện Stepper
-        const latestStatus = activeOrders[0].status; 
-        // ... renderStepper(latestStatus) ...
-    } else {
-        // Nếu không có đơn, hiện thông tin giỏ hàng như cũ
-        const cartQty = state.cart.items.reduce((s, i) => s + i.qty, 0);
-        countEl.textContent = cartQty;
-        textEl.textContent = `🛒 Giỏ hàng có ${cartQty} món`;
+    // 3. LOGIC NỘI DUNG (Ưu tiên Đơn hàng > Giỏ hàng)
+    if (active.length > 0) {
+        // TRƯỜNG HỢP: Đang có đơn hàng (Hiển thị Stepper)
+        const latestOrder = active[active.length - 1]; // Lấy đơn mới nhất
+        countEl.textContent = active.length; // Số lượng đơn đang chạy
+        textEl.innerHTML = renderStepper(latestOrder.status);
+        if (btnCheck) btnCheck.style.display = "block";
+        bar.className = `status-bar is-${latestOrder.status} ${!isBarExpanded ? 'is-collapsed' : ''}`;
+    } 
+    else {
+        // TRƯỜNG HỢP: Chỉ có giỏ hàng
+        countEl.textContent = totalCartQty;
+        const locationName = state.context?.active?.name || "";
+        textEl.textContent = locationName 
+            ? `${locationName} • ${totalCartQty} món`
+            : `🛒 Giỏ hàng có ${totalCartQty} món`;
+        if (btnCheck) btnCheck.style.display = "none";
+        bar.className = `status-bar is-idle ${!isBarExpanded ? 'is-collapsed' : ''}`;
     }
 }
 export function statutBarEvent() {

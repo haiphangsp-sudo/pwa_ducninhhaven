@@ -353,44 +353,4 @@
 .status-bar.is-collapsed .bar-mini {
     display: none; /* Nếu muốn chỉ hiện mỗi mũi tên khi thu nhỏ */
 }
-/* --- TRẠNG THÁI MỞ (isBarExpanded: true) --- */
-.status-bar {
-    position: fixed;
-    top: 150px;
-    right: 20px; /* Cố định mép phải cách lề 20px */
-    width: calc(100% - 40px); /* Co dãn theo màn hình */
-    max-width: 400px;
-    height: 60px;
-    background: white;
-    border-radius: 30px;
-    display: flex;
-    align-items: center;
-    padding: 0 5px 0 20px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-    z-index: 1000;
-    
-    /* Hiệu ứng: Chỉ thay đổi chiều rộng */
-    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
-    overflow: hidden;
-}
 
-/* --- TRẠNG THÁI THU NHỎ (isBarExpanded: false) --- */
-.status-bar.is-collapsed {
-    /* Khi width giảm, mép trái sẽ tự động bị kéo về phía lề phải (điểm neo) */
-    width: 60px; 
-    color: white;
-    background: #6b8e23;
-    cursor: pointer;
-}
-
-/* Xoay mũi tên khi thu nhỏ */
-.status-bar.is-collapsed .btn-toggle-status {
-    transform: rotate(180deg); /* Xoay ngược lại thành < */
-}
-
-/* Ẩn nội dung chữ khi thu nhỏ để không bị đè lên icon */
-.status-bar.is-collapsed .bar-expanded {
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.2s;
-}

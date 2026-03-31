@@ -14,5 +14,5 @@ import { renderStatusBar } from "../render/renderStatusBar.js";
 export function toggleStatusBar() {
     const isExpanded = getState().orders.isBarExpanded;
     setState({ orders: { isBarExpanded: !isExpanded } });
-    renderStatusBar();
+    renderStatusBar(getState());
 }
