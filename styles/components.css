@@ -276,15 +276,6 @@
     margin-right: 0;
 }
 
-/* Nội dung bên trong */
-.bar-content {
-    display: flex;
-    align-items: center;
-    flex-grow: 1;
-    overflow: hidden; /* Chặn nội dung khi thanh co lại */
-    white-space: nowrap;
-}
-
 
 /* Ẩn chữ khi co lại */
 .status-bar.is-collapsed .bar-expanded {
@@ -292,11 +283,6 @@
     pointer-events: none;
 }
 
-/* Đổi chiều mũi tên khi thu nhỏ */
-.status-bar.is-collapsed #btnToggleBar {
-    transform: rotate(180deg); /* Xoay ngược lại thành dấu < */
-    color: white;
-}
 
 /* Giữ icon chuông ở vị trí cũ hoặc ẩn đi tùy bạn */
 .status-bar.is-collapsed .bar-mini {

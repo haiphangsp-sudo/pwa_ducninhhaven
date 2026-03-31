@@ -238,15 +238,6 @@
     z-index: 999;
 }
 
-/* Nội dung bên trong */
-.bar-content {
-    display: flex;
-    align-items: center;
-    flex-grow: 1;
-    overflow: hidden; /* Chặn nội dung khi thanh co lại */
-    white-space: nowrap;
-}
-
 
 /* --- TRẠNG THÁI THU NHỎ (is-collapsed) --- */
 .status-bar.is-collapsed {
