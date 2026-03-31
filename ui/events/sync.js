@@ -78,7 +78,7 @@ async function syncUI(state) {
   /* ---------- ACK ---------- */
 
   
-  if (state.ack?.visible === true) {
+  if (state.ack?.visible) {
     renderAckOverlay(state); 
   }
   /* ---------- CART ---------- */

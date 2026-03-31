@@ -12,18 +12,10 @@ import { getActivePlaceId, getActivePlaceType } from "../core/context.js";
    1. UI FEEDBACK HELPERS
    ======================================================== */
 
-function showAck(status, message = "", timeout = 1800) {
+function showAck(status, message = "") {
   setState({
     ack: { visible: true, status: status, message: message, at: Date.now()}
   });
-
-  if (timeout > 0) {
-    setTimeout(() => {
-      setState({
-        ack: { visible: false, status: null, message: "" , at: null}
-      });
-    }, timeout);
-  }
 }
 
  
@@ -56,7 +48,7 @@ export function addToCart() {
   if (!itemId) return;
 
   updateCartQuantity(itemId, 1);
-  showAck("success", translate("cart_bar.added"), 1200);
+  showAck("success", translate("cart_bar.added"));
 }
 
 
@@ -68,31 +60,20 @@ export function finalizeOrderSuccess(action) {
   // 2. Gộp tất cả thay đổi vào MỘT lần setState duy nhất
   const patch = {
     overlay: { view: null },
-    order: { 
-      action: null, 
-      line: null, 
-      status: "idle", 
-      at: null 
-    },
-    // Gộp luôn phần hiển thị thông báo (Ack) vào đây
-    ack: { 
-      visible: true, 
-      status: "success", 
-      message: message,
-      at: Date.now()
+    order: {
+      action: null,
+      line: null,
+      status: "idle",
+      at: null
     }
   };
+   showAck("success", message);
 
   if (isCart) {
     patch.cart = { items: [] };
   }
 
   setState(patch);
-
-  // 3. Chỉ dùng setTimeout để ẩn thông báo sau vài giây
-  setTimeout(() => {
-    setState({ ack: { visible: false, status: null, message: "" , at: null} });
-  }, 2500);
 }
 
 const getSourceItems = (state, action) => {

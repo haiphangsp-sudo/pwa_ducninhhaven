@@ -7,7 +7,6 @@ export function renderAckOverlay(state) {
     const overlay = document.getElementById("ackOverlay");
     if (!overlay) return;
 
-    if (state.ack.visible === true) {
         // 1. Hiện overlay bằng cách bỏ class hidden
         overlay.classList.remove("hidden");
         
@@ -21,10 +20,8 @@ export function renderAckOverlay(state) {
         // 3. Tự động tắt sau 2.5 giây (nếu bạn muốn)
         setTimeout(() => {
             setState({ ack: { visible: false, status: null, message: "", at: null } });
+            overlay.classList.add("hidden");
         }, 2500);
         
-    } else {
-        // Ẩn overlay
-        overlay.classList.add("hidden");
-    }
+    
 }
