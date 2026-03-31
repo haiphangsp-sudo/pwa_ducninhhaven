@@ -190,6 +190,7 @@ async function syncOrderFlow(state, prevState) {
   } catch (err) {
     console.error("[Sync] LỖI THỰC THI:", err);
   } finally {
+    closeOverlay();
     console.log("[Sync] Mở khóa isProcessingOrder");
     isProcessingOrder = false;
   }
