@@ -21,7 +21,7 @@ export function attachAppEvents() {
   document.addEventListener("click", handleGlobalClick);
   window.addEventListener("contextchange", () => { syncContextToState(); });
   statutBarEvent();
-  //toggleStatusBar();
+  toggleStatusBar();
 }
 
 /* =========================
