@@ -15,6 +15,7 @@ export const STRINGS = {
     delivered: { vi: "Đã hoàn tất", en: "Completed" },
     failed: { vi: "Không gửi được — sẽ thử lại", en: "Failed — will retry" }
   },
+  
   cart_bar: {
     cart_title: { vi: "Giỏ hàng", en: "View cart" },
     unique: { vi: "món", en: "dishes" },
@@ -33,7 +34,11 @@ export const STRINGS = {
     sending: { vi: "Đang gửi...", en: "Sending..." },
     success: { vi: "Đã gửi thành công", en: "Sent successfully" },
     added: { vi: "Đã thêm vào giỏ hàng", en: "Added to cart" },
-    error: { vi: "Chưa gửi được", en: "Failed to send"}
+    error: { vi: "Chưa gửi được", en: "Failed to send" },
+    success_cart: { vi: "Đơn hàng đã được gửi", en: "The order has been shipped." },
+    success_instant: { vi: "Yêu cầu đã được gửi", en: "The request has been submitted." },
+    added_cart: { vi: "Đã thêm vào giỏ hàng", en: "Added to cart" },
+    error_cart: { vi: "Chưa gửi được", en: "Failed to send" }
 
   },
 

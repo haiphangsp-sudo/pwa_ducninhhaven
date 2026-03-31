@@ -25,7 +25,7 @@ function showAck(status, message = "", timeout = 2500) {
   if (timeout > 0) {
     ackTimer = setTimeout(() => {
       setState({
-        ack: { visible: false, status: null, message: "", at: Date.now() }
+        ack: { visible: false, status: null, message: "", at: null }
       });
       ackTimer = null;
     }, timeout);
@@ -67,7 +67,7 @@ export function addToCart() {
 export function finalizeOrderSuccess(action) {
   // 1. Chuẩn bị thông báo
   const isCart = action === "send-cart";
-  const message = isCart ? "Đơn hàng đã được gửi" : "Yêu cầu đã được gửi";
+  const message = isCart ? translate("cart_bar.success_cart") : translate("cart_bar.success_instant");
 
   // 2. Gộp tất cả thay đổi vào MỘT lần setState duy nhất
   const patch = {
@@ -79,18 +79,13 @@ export function finalizeOrderSuccess(action) {
       at: null
     }
   };
-   showAck("success", message);
-  setState({
-    order: {
-      status: "success",
-      at: Date.now()
-    }
-  });
   
-  if (isCart) {
-    patch.cart = { items: [] };
-  }
-
+  showAck("success", message);
+  
+  if(isCart) {
+      patch.cart = { items: [] };
+    }
+  
   setState(patch);
 }
 
