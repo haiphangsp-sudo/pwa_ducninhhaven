@@ -33,10 +33,14 @@ export function attachUI() {
 
 async function syncUI(state) {
 
+
+   // Deep copy để so sánh
   const prevState = lastState ? JSON.parse(JSON.stringify(lastState)) : { order: {}, cart: { items: [] } };
   lastState = JSON.parse(JSON.stringify(state));
 
-  syncOrderFlow(state,prevState);
+  handleOrderLogic(state, prevState);
+  syncStepperStates(state, prevState);
+  
 
   /* ---------- OVERLAY ---------- */
     const activeId = state.overlay.view;
@@ -166,4 +170,42 @@ async function syncOrderFlow(state, prevState) {
     isProcessingOrder = false; 
     console.log("🔓 Đã mở khóa luồng cho lệnh tiếp theo");
   }
+}
+// ui/sync.js
+
+/* --- 1. Xử lý luồng Đặt hàng --- */
+async function handleOrderLogic(state, prevState) {
+  const { action, at } = state.order || {};
+  if (!action || !at || at === prevState.order?.at || isProcessingOrder) return;
+
+  isProcessingOrder = true;
+  try {
+    if (action === "add-cart") {
+      addToCart(); 
+    } else {
+      await submitOrder(action);
+    }
+  } finally {
+    isProcessingOrder = false;
+  }
+}
+
+/* --- 2. Xử lý đồng bộ nút Stepper (Cộng/Trừ) --- */
+function syncStepperStates(state, prevState) {
+  const currentItems = state.cart?.items || [];
+  const prevItems = prevState.cart?.items || [];
+
+  // Cập nhật các món mới hoặc thay đổi số lượng
+  currentItems.forEach(item => {
+    const prev = prevItems.find(i => i.id === item.id);
+    if (!prev || prev.qty !== item.qty) {
+      updateStepperUI(item.id, item.qty);
+    }
+  });
+
+  // Reset các món vừa bị xóa khỏi giỏ
+  prevItems.forEach(prevItem => {
+    const stillInCart = currentItems.find(i => i.id === prevItem.id);
+    if (!stillInCart) updateStepperUI(prevItem.id, 0);
+  });
 }
