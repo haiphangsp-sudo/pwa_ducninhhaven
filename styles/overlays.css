@@ -48,7 +48,21 @@
   visibility: hidden;
   top: 0px; /* Hiệu ứng trượt nhẹ từ trên xuống khi hiện */
 }
+.overlay__ack::before {
+  margin-right: 6px;
+}
 
+.overlay__ack.success::before {
+  content: "✓";
+}
+
+.overlay__ack.error::before {
+  content: "!";
+}
+
+.overlay__ack.sending::before {
+  content: "…";
+}
 .overlay__ack {
   position: fixed;
   inset: 0;
