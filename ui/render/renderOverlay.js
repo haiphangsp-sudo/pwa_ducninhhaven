@@ -1,5 +1,6 @@
 // ui/render/renderOverlay.js
 
+import { translate } from "../utils/translate.js";
 export function renderAck({ visible, status, message }) {
   const el = document.getElementById("ackOverlay");
   if (!el) return;
