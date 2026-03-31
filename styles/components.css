@@ -119,49 +119,6 @@
 }
 
 
-/* Container chính */
-.status-bar {
-    position: fixed;
-    bottom: 150px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 90%;
-    max-width: 500px;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    padding: 12px 16px;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-.status-bar.hidden {
-    transform: translate(-50%, 150%);
-    opacity: 0;
-}
-/* --- TRẠNG THÁI BÌNH THƯỜNG --- */
-.status-bar {
-    /* Giữ nguyên các thuộc tính cũ của bạn */
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 15px;
-    height: 56px; /* Nên fix chiều cao để khi thu nhỏ thành hình tròn */
-    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-/* --- TRẠNG THÁI THU NHỎ (is-collapsed) --- */
-.status-bar.is-collapsed {
-    width: 56px; /* Bằng với height để tạo thành hình tròn hoàn hảo */
-    padding: 0;
-    border-radius: 28px; /* Bo tròn tuyệt đối */
-    justify-content: center; /* Đưa nội dung vào giữa */
-}
 
 /* Ẩn phần chữ và nút kiểm tra */
 .status-bar.is-collapsed .bar-expanded {
@@ -348,10 +305,6 @@
     border-radius: 30px;
 }
 
-.status-bar.is-collapsed .bar-expanded,
-.status-bar.is-collapsed .btn-toggle-status {
-    display: none;
-}
 /* --- TRẠNG THÁI THU NHỎ (is-collapsed) --- */
 .status-bar.is-collapsed {
     width: 60px; /* Thu gọn thành hình tròn hoặc bo tròn ngắn */
