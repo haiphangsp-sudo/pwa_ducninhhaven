@@ -101,8 +101,8 @@ function parseData(p) {
     id: p?.id || "",
     type: p?.type || "",
     timestamp: p?.timestamp || "",
-    mode: p?.mode || "",
-    place: p?.place || "",
+    mode: (p?.mode || "").toLowerCase(),
+    place: (p?.place || "").toLowerCase(),
     device: p?.device || "",
     items: Array.isArray(p?.items)
       ? p.items.map(item => ({
@@ -126,8 +126,6 @@ function validate(data) {
   for (const item of data.items) {
     if (!item || typeof item !== "object") return false;
     if (!item.id || typeof item.id !== "string") return false;
-    if (!Number.isFinite(item.qty) || item.qty <= 0) return false;
-    if (!Number.isFinite(item.price) || item.price < 0) return false;
   }
 
   return true;

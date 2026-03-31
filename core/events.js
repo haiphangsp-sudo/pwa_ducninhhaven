@@ -23,107 +23,7 @@ function showAck(status, message = "", timeout = 1800) {
   }
 }
 
-/* ========================================================
-   2. DATA NORMALIZATION (Chuẩn hóa dữ liệu cho GAS)
-   ======================================================== */
-
-/**
- * Tạo Payload gửi đi. Đã lược bỏ tổng tiền toàn đơn 
- * vì GAS sẽ xử lý ghi từng món thành một dòng riêng biệt.
- */
-// core/events.js
-
-function buildPayload(state, action) {
-  // 1. Kiểm tra Vị trí (Bắt buộc)
-  const activePlace = state.context?.active;
-  const placeId = activePlace?.id?.toLowerCase();
-
-  if (!placeId) {
-    console.error("❌ [BuildPayload] Lỗi: Chưa chọn Phòng/Bàn");
-    showAck("error", "Vui lòng chọn số phòng", 2000);
-    return null; 
-  }
-
-  // 2. Xác định nguồn món ăn
-  let rawItems = [];
-  
-  if (action === "send-cart") {
-    rawItems = state.cart?.items || [];
-    if (rawItems.length === 0) {
-      console.error("❌ [BuildPayload] Lỗi: Giỏ hàng đang trống");
-      return null;
-    }
-  } else if (action === "buy-now") {
-    // Lấy món trực tiếp từ line mà người dùng vừa bấm
-    const lineId = state.order?.line;
-    if (!lineId) {
-      console.error("❌ [BuildPayload] Lỗi: Mua ngay nhưng không có ID món (line)");
-      return null;
-    }
-    rawItems = [{ id: lineId, qty: 1 }];
-  }
-
-  // 3. Chuyển đổi sang định dạng gửi cho GAS
-  const items = rawItems.map(cartItem => {
-    const info = getVariantById(cartItem.id);
-    if (!info) {
-      console.warn(`⚠️ Bỏ qua món ID ${cartItem.id} không tìm thấy trong menu`);
-      return null;
-    }
-    return {
-      id: cartItem.id,
-      category: info.categoryKey || "",
-      item: translate(info.productLabel),
-      option: translate(info.variantLabel),
-      qty: Number(cartItem.qty || 1),
-      price: Number(info.price || 0),
-      subtotal: Number(info.price || 0) * Number(cartItem.qty || 1)
-    };
-  }).filter(Boolean);
-
-  if (items.length === 0) {
-    console.error("❌ [BuildPayload] Lỗi: Không có dữ liệu món ăn hợp lệ");
-    return null;
-  }
-
-  // 4. Trả về payload chuẩn cho GAS
-  return {
-    id: `H-${Date.now()}`,
-    type: action,
-    timestamp: new Date().toISOString(),
-    place: placeId,
-    items: items,
-    device: navigator.userAgent
-  };
-}
-
-// Sửa lại submitOrder để trả về kết quả rõ ràng
-export async function submitOrder(action) {
-  const state = getState();
-  const payload = buildPayload(state, action);
-  
-  if (!payload) {
-    console.log("🚫 Hủy gửi đơn do dữ liệu null");
-    return false; // Trả về false để sync.js biết mà mở khóa
-  }
-
-  setState({ order: { ...state.order, status: "pending" } });
-  showAck("sending", "Đang gửi đơn...", 0);
-
-  try {
-    const res = await sendRequest(payload);
-    if (res?.success) {
-      finalizeOrderSuccess(action);
-      return true;
-    }
-    throw new Error(res?.message || "GAS_Error");
-  } catch (err) {
-    console.error("🔥 Lỗi API:", err);
-    setState({ order: { ...getState().order, status: "error" } });
-    showAck("error", "Gửi đơn thất bại", 2500);
-    return false;
-  }
-}
+ 
 /* ========================================================
    3. CART ACTIONS
    ======================================================== */
@@ -190,3 +90,76 @@ export function finalizeOrderSuccess(action) {
     setState({ ack: { state: "hidden", status: null, message: "" } });
   }, 2500);
 }
+
+
+
+const getValidPlaceId = (state) => {
+  const id = state.context?.active?.id;
+  if (!id) console.error("❌ Thiếu Place ID");
+  return id ? id.toLowerCase() : null;
+};
+
+const getSourceItems = (state, action) => {
+  if (action === "send-cart") return state.cart?.items || [];
+  if (state.order?.line) return [{ id: state.order.line, qty: 1 }];
+  console.error("❌ Không tìm thấy nguồn món ăn cho action:", action);
+  return [];
+};
+const formatItemsForGAS = (rawItems) => {
+  return rawItems.map(cartItem => {
+    const info = getVariantById(cartItem.id);
+    if (!info) return null;
+    return {
+      id: cartItem.id,
+      category: info.categoryKey || "",
+      item: translate(info.productLabel),
+      option: translate(info.variantLabel),
+      qty: Number(cartItem.qty || 1),
+      price: Number(info.price || 0),
+      subtotal: Number(info.price || 0) * Number(cartItem.qty || 1)
+    };
+  }).filter(Boolean);
+};
+function buildPayload(state, action) {
+  const placeId = getValidPlaceId(state);
+  if (!placeId) return null;
+
+  const rawItems = getSourceItems(state, action);
+  if (rawItems.length === 0) return null;
+
+  const formattedItems = formatItemsForGAS(rawItems);
+  if (formattedItems.length === 0) return null;
+
+  return {
+    id: `H-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+    type: action,
+    timestamp: new Date().toISOString(),
+    place: placeId,
+    items: formattedItems,
+    device: navigator.userAgent
+  };
+}
+export async function submitOrder(action) {
+  const state = getState();
+  const payload = buildPayload(state, action);
+  
+  if (!payload) return false;
+
+  // Cập nhật UI sang trạng thái gửi
+  setState({ order: { ...state.order, status: "pending" } });
+  showAck("sending", translate("cart_bar.sending"), 0);
+
+  try {
+    const res = await sendRequest(payload);
+    if (res?.success) {
+      finalizeOrderSuccess(action);
+      return true;
+    }
+    throw new Error("API_FAIL");
+  } catch (err) {
+    setState({ order: { ...getState().order, status: "error" } });
+    showAck("error", translate("cart_bar.error"), 2500);
+    return false;
+  }
+}
+
