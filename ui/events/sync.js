@@ -37,9 +37,6 @@ async function syncUI(state) {
    // Deep copy để so sánh
   const prevState = lastState ? JSON.parse(JSON.stringify(lastState)) : { order: {}, cart: { items: [] } };
   lastState = JSON.parse(JSON.stringify(state));
-
-  handleOrderLogic(state, prevState);
-  syncStepperStates(state, prevState);
   
 
   /* ---------- OVERLAY ---------- */
@@ -83,14 +80,6 @@ async function syncUI(state) {
     renderDrawer(state);
     renderStatusBar(state);
     localStorage.setItem(CONFIG.CART_KEY, JSON.stringify(state.cart.items || []));
-    /* ---------- STEPPER SYNC ---------- */
-    // So sánh từng món trong giỏ hàng để cập nhật số lượng
-    state.cart.items.forEach(item => {
-      const prevItem = prevState.cart?.items.find(i => i.id === item.id);
-      if (!prevItem || prevItem.qty !== item.qty) {
-        updateStepperUI(item.id, item.qty);
-      }
-    });
   }
 
   /* ---------- LANGUAGE ---------- */
@@ -99,34 +88,17 @@ async function syncUI(state) {
     localStorage.setItem(CONFIG.LANG_KEY, state.lang.current);
     syncLanguage(state);
   }
-
-  const currentItems = state.cart?.items || [];
-  const prevItems = prevState.cart?.items || [];
-  // Cập nhật hoặc thêm mới món vào UI
-  currentItems.forEach(item => {
-    if (!item?.id) return; // Bảo vệ khỏi undefined
-    const pItem = prevItems.find(i => i?.id === item.id);
-    if (!pItem || pItem.qty !== item.qty) {
-      updateStepperUI(item.id, item.qty);
-    }
-  });
-
-  // Xử lý món bị xóa khỏi giỏ
-  prevItems.forEach(pItem => {
-    if (!pItem?.id) return;
-    const exists = currentItems.find(i => i?.id === pItem.id);
-    if (!exists) updateStepperUI(pItem.id, 0);
-  });
   
   const { visible, status, message } = state.ack;
 
   if (visible !== prevState.ack?.visible) {
     renderAck({ visible, status, message });
   }
+
+  handleOrderLogic(state, prevState);
+  syncStepperStates(state, prevState);
+
 }
-/* =======================================================
-   LANGUAGE
-======================================================= */
 
 function syncLanguage(state) {
 
