@@ -81,7 +81,7 @@ async function syncUI(state) {
   if (state.cart.items !== prevState.cart?.items) {
     renderCartBar(state);
     renderDrawer(state);
-
+    renderStatusBar(state);
     localStorage.setItem(CONFIG.CART_KEY, JSON.stringify(state.cart.items || []));
     /* ---------- STEPPER SYNC ---------- */
     // So sánh từng món trong giỏ hàng để cập nhật số lượng
