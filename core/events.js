@@ -14,7 +14,7 @@ import { getActivePlaceId, getActivePlaceType } from "../core/context.js";
 
 function showAck(status, message = "", timeout = 1800) {
   setState({
-    ack: { visible: true, status, message , at: Date.now()}
+    ack: { visible: true, status: status, message: message, at: Date.now()}
   });
 
   if (timeout > 0) {
@@ -78,7 +78,8 @@ export function finalizeOrderSuccess(action) {
     ack: { 
       visible: true, 
       status: "success", 
-      message: message 
+      message: message,
+      at: Date.now()
     }
   };
 
