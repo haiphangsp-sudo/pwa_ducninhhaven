@@ -134,17 +134,25 @@ function syncLanguage(state) {
   renderPanel(state);
   renderDrawer(state);
 }
+// ui/sync.js
 
-async function syncOrderFlowOld(state, prevState) {
+async function syncOrderFlow(state, prevState) {
   const { action, line, at } = state.order || {};
   const prevAt = prevState.order?.at;
 
-  // GỐC RỄ 3: So sánh at trên hai vùng nhớ độc lập
-  if (!action || !at || at === prevAt || isProcessingOrder) return;
+  // CHUẨN HÓA ĐIỀU KIỆN:
+  // 1. Phải có action (add-cart, send-cart, buy-now)
+  // 2. at phải tồn tại và phải KHÁC với at trước đó
+  // 3. Không được đang bận (isProcessingOrder)
+  if (!action || !at || at === prevAt || isProcessingOrder) {
+    return;
+  }
 
   isProcessingOrder = true;
 
   try {
+    console.log(`🚀 Thực thi lệnh: ${action} tại thời điểm ${at}`);
+    
     if (action === "add-cart") {
       addToCart(); 
     } else if (action === "buy-now") {
@@ -152,46 +160,7 @@ async function syncOrderFlowOld(state, prevState) {
     } else if (action === "send-cart") {
       await submitOrder("send-cart");
     }
-  } catch (err) {
-    console.error("Sync Flow Error:", err);
   } finally {
-    isProcessingOrder = false; 
-  }
-}
-// ui/sync.js
-async function syncOrderFlow(state, prevState) {
-  const { action, at } = state.order || {};
-  const prevAt = prevState.order?.at;
-
-  // LOG 1: Kiểm tra xem hàm có được gọi không?
-  console.log("%c[Sync Heartbeat]", "color: blue", { action, at, prevAt, isProcessingOrder });
-
-  if (!action || !at) return; // Không có hành động thì thoát im lặng (bình thường)
-
-  if (at === prevAt) {
-    // LOG 2: Tại sao thoát? Vì trùng timestamp
-    return;
-  }
-
-  if (isProcessingOrder) {
-    console.warn("[Sync] Đang xử lý đơn cũ, chặn đơn mới!");
-    return;
-  }
-
-  console.log("%c[Sync] BẮT ĐẦU THỰC THI:", "color: green; font-weight: bold", action);
-  isProcessingOrder = true;
-
-  try {
-    if (action === "add-cart") {
-      addToCart(); 
-    } else if (action === "buy-now" || action === "send-cart") {
-      await submitOrder(action);
-    }
-  } catch (err) {
-    console.error("[Sync] LỖI THỰC THI:", err);
-  } finally {
-    closeOverlay();
-    console.log("[Sync] Mở khóa isProcessingOrder");
     isProcessingOrder = false;
   }
 }

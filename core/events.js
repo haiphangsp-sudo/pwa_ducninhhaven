@@ -130,18 +130,17 @@ export async function submitOrder(action) {
 }
 
 
+// core/events.js
 
 export function finalizeOrderSuccess(action) {
-  // GỐC RỄ 5: Reset 'at' về null và dọn dẹp action
   const patch = {
     overlay: { view: null },
     order: { 
       action: null, 
       line: null, 
       status: "idle", 
-      at: null // Vô hiệu hóa 'at' cũ
-    },
-    ack: { state: "show", status: "success" }
+      at: null // ĐƯA VỀ NULL: Kết thúc vòng đời của Action này
+    }
   };
 
   if (action === "send-cart") {
@@ -149,9 +148,5 @@ export function finalizeOrderSuccess(action) {
   }
 
   setState(patch);
-  
-  // Tự động ẩn thông báo sau 2.5s
-  setTimeout(() => {
-    setState({ ack: { state: "hidden", status: null } });
-  }, 2500);
+  showAck("success", translate("cart_bar.success"), 2500);
 }
