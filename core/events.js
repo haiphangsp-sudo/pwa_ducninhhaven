@@ -31,50 +31,66 @@ function showAck(status, message = "", timeout = 1800) {
  * Tạo Payload gửi đi. Đã lược bỏ tổng tiền toàn đơn 
  * vì GAS sẽ xử lý ghi từng món thành một dòng riêng biệt.
  */
+// core/events.js
+
 function buildPayload(state, action) {
   const activePlace = state.context?.active;
   const placeId = activePlace?.id?.toLowerCase();
 
+  // CHẶN 1: Thiếu vị trí (Phòng/Bàn)
   if (!placeId) {
-    // Thông báo cho khách chọn vị trí nếu chưa có
-    setState({ ack: { state: "show", status: "error", message: translate("place.select") } });
+    console.error("❌ [Payload Error] Thiếu placeId. activePlace hiện tại:", activePlace);
+    showAck("error", translate("place.select"), 2000);
+    return null; 
+  }
+
+  // Xác định danh sách món dựa trên action
+  let rawItems = [];
+  if (action === "send-cart") {
+    rawItems = state.cart?.items || [];
+  } else if (action === "buy-now" || action === "instant") {
+    // CHẶN 2: "Mua ngay" cần có ID món ở state.order.line
+    const lineId = state.order?.line;
+    if (!lineId) {
+      console.error("❌ [Payload Error] Mua ngay nhưng state.order.line bị rỗng");
+      return null;
+    }
+    rawItems = [{ id: lineId, qty: 1 }];
+  }
+
+  // CHẶN 3: Giỏ hàng trống
+  if (rawItems.length === 0) {
+    console.error("❌ [Payload Error] Không có món nào để gửi. Action:", action);
     return null;
   }
 
-  const rawItems = action === "send-cart" 
-    ? (state.cart?.items || []) 
-    : (state.order?.line ? [{ id: state.order.line, qty: 1 }] : []);
-
-  if (rawItems.length === 0) return null;
-
+  // Chuyển đổi sang định dạng GAS
   const items = rawItems.map(cartItem => {
-    if (!cartItem?.id) return null;
     const info = getVariantById(cartItem.id);
-    if (!info) return null;
-
-    const price = Number(info.price || 0);
+    if (!info) {
+      console.warn("⚠️ Bỏ qua món không tìm thấy trong menu ID:", cartItem.id);
+      return null;
+    }
     return {
       id: cartItem.id,
       category: info.categoryKey || "",
       item: translate(info.productLabel),
       option: translate(info.variantLabel),
       qty: Number(cartItem.qty || 0),
-      price: price,
-      subtotal: price * Number(cartItem.qty || 0)
+      price: Number(info.price || 0),
+      subtotal: Number(info.price || 0) * Number(cartItem.qty || 0)
     };
   }).filter(Boolean);
 
-  if (items.length === 0) return null;
-
   return {
-    id: `H-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+    id: `H-${Date.now()}`,
     type: action,
-    place: placeId,
     timestamp: new Date().toISOString(),
-    items: items
+    place: placeId,
+    items: items,
+    device: navigator.userAgent
   };
 }
-
 /* ========================================================
    3. CART ACTIONS
    ======================================================== */
