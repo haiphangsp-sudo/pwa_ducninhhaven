@@ -11,12 +11,8 @@ import { getLocationLabel } from "../data/helpers.js";
 /* ========================================================
    1. UI FEEDBACK HELPERS
    ======================================================== */
-let ackTimer = null; // Biến để quản lý timer, tránh chồng chéo
 
 function showAck(status, message = "", timeout = 1500) {
-  // Xóa timer cũ nếu có (tránh việc thông báo mới bị đóng bởi lệnh của thông báo cũ)
-  if (ackTimer) clearTimeout(ackTimer);
-
   setState({
     ack: { visible: true, status, message, at: Date.now() }
   });
@@ -27,7 +23,6 @@ function showAck(status, message = "", timeout = 1500) {
       setState({
         ack: { visible: false, status: null, message: "", at: null }
       });
-      ackTimer = null;
     }, timeout);
   }
 }

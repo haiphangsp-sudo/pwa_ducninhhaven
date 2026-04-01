@@ -26,13 +26,17 @@ function updateNavBar(state) {
   if (refs.identityIcon) refs.identityIcon.textContent = getPlaceIcon(anchor?.type);
   if (refs.identityLabel) refs.identityLabel.textContent = getIdentityLabel(anchor);
   if (refs.locLabel) refs.locLabel.textContent = getLocationLabel(ctx);
-  if (refs.langButtons) { 
+  if (refs.langButtons) {
     refs.langButtons.querySelectorAll("button").forEach(btn => {
       btn.classList.toggle("is-active", btn.dataset.value === currentLang);
     });
   }
-}
 
+  if (!document.body.classList.contains(currentLang)) {
+    document.body.classList.remove('vi', 'en');
+    document.body.classList.add(currentLang);
+  }
+}
 function cacheElements() {
   refs.identityIcon = document.querySelector(".identity-icon");
   refs.identityLabel = document.querySelector(".identity-label");

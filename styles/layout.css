@@ -9,6 +9,14 @@ body.app{
   height:100%;
   overflow:hidden;
 }
+
+body.vi {
+  font-family: 'Inter', sans-serif;
+}
+body.en {
+  font-family: 'Playfair Display', serif;
+}
+
 #app {
   height: 100%;
   display: flex;
