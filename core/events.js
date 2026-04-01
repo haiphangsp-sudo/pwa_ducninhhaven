@@ -6,7 +6,7 @@ import { getVariantById } from "./menuQuery.js";
 import { getActivePlaceId, getActivePlaceType, getContext} from "../core/context.js";
 import { getLocationLabel } from "../data/helpers.js";
 import { notifyResponse } from "./action.js"
-import { renderStatusBar } from "../ui/render/renderStatusBar.js"
+import { renderStatusBar, animateFlyToCart } from "../ui/render/renderStatusBar.js"
 
 
 /* ========================================================
@@ -20,7 +20,7 @@ function showAck(status, message = "", timeout = 1500) {
 
   // Nếu có set timeout, tự động đóng sau x giây
   if (timeout > 0) {
-    ackTimer = setTimeout(() => {
+    setTimeout(() => {
       setState({
         ack: { visible: false, status: null, message: "", at: null }
       });
@@ -73,12 +73,16 @@ export async function updateCartQuantity(itemId, delta) {
   });
 }
 
-export function addToCart() {
+export function addToCart(e) {
   const state = getState();
   const itemId = state.order?.line;
   if (!itemId) return;
 
+  if (e && e.target) {
+    animateFlyToCart(e.target);
+  }
   updateCartQuantity(itemId, 1);
+
   //showAck("success", "cart_bar.added");
 }
 
