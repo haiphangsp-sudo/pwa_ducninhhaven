@@ -79,7 +79,7 @@ export function addToCart(e) {
   if (!itemId) return;
 
   if (e && e.target) {
-    animateFlyToCart(e.target);
+    animateFlyToCart(Event.target);
   }
   updateCartQuantity(itemId, 1);
 
