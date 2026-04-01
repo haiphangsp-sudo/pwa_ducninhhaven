@@ -10,7 +10,6 @@ export function renderHub(state) {
   const menuEl = document.getElementById("hubMenu");
   if (!menuEl) return;
   const currentPanel = state.panel.view;
-  hubEvents(currentPanel);
   menuEl.innerHTML = panels.map(cat => {
     const isActive = cat.key === currentPanel ? "is-active" : "";
     return `
@@ -26,6 +25,9 @@ export function renderHub(state) {
       </span>
     </button>
   `}).join("");
+  menuEl.querySelectorAll("button").forEach(btn => {  
+        btn.classList.toggle("is-active");
+    });
 }
 
 function hubEvents(viewNew) {
@@ -36,7 +38,7 @@ function hubEvents(viewNew) {
     
     menuEl.querySelectorAll("button").forEach(btn => {  
       btn.classList.remove("is-active");
-      if ((btn.getAttribute("data-value") !== viewNew)) {
+      if ((btn.getAttribute("data-value") === viewNew)) {
         btn.classList.add("is-active");
       }
     });
