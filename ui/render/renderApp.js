@@ -8,7 +8,8 @@ import { renderNavBar } from "../../ui/render/renderNavBar.js";
 
 export function renderApp() {
     const s = getState();
-
-    renderHub(s);
+    
     renderNavBar(s);
+    renderHub(s);
+    
 }
