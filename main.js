@@ -8,6 +8,7 @@ import { attachAppEvents } from "./ui/events/globalEvents.js";
 import { attachUI } from "./ui/events/sync.js";
 import { loadPlaces } from "./core/placesStore.js";
 import { setState } from "./core/state.js";
+import { renderApp } from "./ui/render/renderApp.js";
 
 boot();
 /* ---------- VERSION ---------- */
@@ -129,7 +130,7 @@ async function boot() {
     loadCart();
     normalizeContext();
     applyURLContext();
-    
+    renderApp();
     attachUI(); // Gắn các listener cho state
     attachAppEvents();
     
