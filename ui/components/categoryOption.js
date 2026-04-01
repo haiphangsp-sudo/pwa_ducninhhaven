@@ -29,7 +29,7 @@ export function categoryOpt(opt, categoryKey,ui) {
                         : translate("cart_bar.instant")
                     }
                 </div>
-                <button class="btn btn-primary"
+                <button class="btn btn-primary btn-add"
                     data-action="${ui=== "cart" ? "add_cart" : "buy_now"}"
                     data-extra="${categoryKey}"
                     data-option="${ui}"
