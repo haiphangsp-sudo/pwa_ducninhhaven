@@ -36,7 +36,10 @@ async function syncUI(state) {
 
 
    // Deep copy để so sánh
-  const prevState = lastState ? JSON.parse(JSON.stringify(lastState)) : { order: {}, cart: { items: [] } };
+  const prevState = lastState
+    ? JSON.parse(JSON.stringify(lastState))
+    : { order: {}, cart: { items: [] } };
+  
   lastState = JSON.parse(JSON.stringify(state));
   
 
@@ -72,7 +75,7 @@ async function syncUI(state) {
   if (state.panel.view !== prevState.panel?.view) {
     
     renderPanel(state);
-    eventHub(state);
+    eventHub(state,prevState);
 
   }
   
