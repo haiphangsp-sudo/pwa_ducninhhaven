@@ -123,7 +123,7 @@ async function handleOrderLogic(state, prevState) {
   isProcessingOrder = true;
   try {
     if (action === "add_cart") {
-      bounceCartBar();
+      //bounceCartBar();
       addToCart(); 
     } else {
       await submitOrder(action);
