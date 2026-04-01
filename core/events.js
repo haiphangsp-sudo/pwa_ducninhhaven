@@ -6,7 +6,7 @@ import { getVariantById } from "./menuQuery.js";
 import { getActivePlaceId, getActivePlaceType, getContext} from "../core/context.js";
 import { getLocationLabel } from "../data/helpers.js";
 import { notifyResponse } from "./action.js"
-import { renderStatusBar, animateFlyToCart } from "../ui/render/renderStatusBar.js"
+import { renderStatusBar } from "../ui/render/renderStatusBar.js"
 
 
 /* ========================================================
