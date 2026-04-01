@@ -29,7 +29,7 @@ export function renderHub(state) {
 export function eventHub(state, prevState) {
   const menuEl = document.getElementById("hubMenu");
   const newView = state.panel.view;
-  const lastView = prevState.panel.view;
+  const lastView = prevState.panel?.view;
 
   menuEl.querySelector(`data-value=${lastView}`).classList.remove("is-active");
   menuEl.querySelector(`data-value=${newView}`).classList.add("is-active");
