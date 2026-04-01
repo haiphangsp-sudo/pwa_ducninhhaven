@@ -62,7 +62,7 @@ export function statutBarEvent() {
 }
 
 export function animateFlyToCart(startElement) {
-    const target = document.querySelector('#orderStatusBar .bar-mini');
+    const target = document.querySelector('#cartBar .cart-bar__icon');
     if (!startElement || !target) return;
 
     // 1. Lấy tọa độ điểm đầu và điểm cuối
