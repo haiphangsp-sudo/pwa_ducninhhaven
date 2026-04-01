@@ -13,6 +13,7 @@ import { renderHub } from "../render/renderHub.js";
 import { renderPanel } from "../render/renderPanel.js";
 import { updateStepperUI } from "../render/renderStepper.js";
 import { renderAck } from "../render/renderOverlay.js";
+import { bounceCartBar } from "../render/renderCartBar.js";
 
 
 let lastState = null; 
@@ -117,6 +118,7 @@ async function handleOrderLogic(state, prevState) {
   isProcessingOrder = true;
   try {
     if (action === "add-cart") {
+      bounceCartBar();
       addToCart(); 
     } else {
       await submitOrder(action);

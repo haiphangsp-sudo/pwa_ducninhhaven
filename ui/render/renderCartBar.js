@@ -26,7 +26,7 @@ export function renderCartBar(state) {
     countEl.textContent = cart.totalQty > 1
       ? `${cart.totalQty} ${translate("cart_bar.items")}`
       : `${cart.totalQty} ${translate("cart_bar.item")}`;
-    bounceCartBar();
+    
   }
 }
 
