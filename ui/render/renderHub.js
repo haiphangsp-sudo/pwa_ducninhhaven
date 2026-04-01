@@ -3,9 +3,10 @@
 
 import { translate } from "../utils/translate.js";
 import { getCategories } from "../../core/menuQuery.js";
+import { getCategoriesForMode } from "../../data/helpers.js";
 
 export function renderHub(state) {
-  const panels = getCategories();
+  const panels = getCategoriesForMode();
   const menuEl = document.getElementById("hubMenu");
   if (!menuEl) return;
   const currentPanel = state.panel.view;
