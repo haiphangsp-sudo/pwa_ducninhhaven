@@ -1,7 +1,7 @@
 
-import { getState } from "../../core/state";
-import { renderHub } from "../../ui/render/renderHub";
-import { renderNavBar } from "../../ui/render/renderNavBar";
+import { getState } from "../../core/state.js";
+import { renderHub } from "../../ui/render/renderHub.js";
+import { renderNavBar } from "../../ui/render/renderNavBar.js";
 
 
 
