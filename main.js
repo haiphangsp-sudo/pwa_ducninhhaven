@@ -144,9 +144,3 @@ async function boot() {
     //document.body.innerHTML = `<div class="p-xl center">Xin lỗi, ứng dụng Haven đang gặp sự cố kết nối. Vui lòng tải lại trang.</div>`;
   }
 }
-
-document.querySelectorAll('.btn-add').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-        addToCart(e); // Gọi hàm bình thường vì cùng nằm trong module
-    });
-});

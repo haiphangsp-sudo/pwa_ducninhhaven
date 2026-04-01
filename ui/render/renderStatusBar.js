@@ -60,38 +60,3 @@ export function statutBarEvent() {
 
     
 }
-
- function animateFlyToCart(startElement) {
-    const target = document.querySelector('#cartBar .cart-bar__icon');
-    if (!startElement || !target) return;
-
-    // 1. Lấy tọa độ điểm đầu và điểm cuối
-    const startRect = startElement.getBoundingClientRect();
-    const targetRect = target.getBoundingClientRect();
-
-    // 2. Tạo phần tử bay (hạt nhân)
-    const flyer = document.createElement('div');
-    flyer.className = 'fly-item';
-    flyer.textContent = '+1'; // Hoặc để trống nếu chỉ muốn vòng tròn màu
-    
-    // Đặt vị trí ban đầu tại nút bấm
-    flyer.style.left = `${startRect.left + startRect.width / 2 - 15}px`;
-    flyer.style.top = `${startRect.top + startRect.height / 2 - 15}px`;
-    
-    document.body.appendChild(flyer);
-
-    // 3. Thực hiện bay sau 1 frame (để CSS kịp nhận vị trí đầu)
-    requestAnimationFrame(() => {
-        flyer.style.left = `${targetRect.left + targetRect.width / 2 - 15}px`;
-        flyer.style.top = `${targetRect.top + targetRect.height / 2 - 15}px`;
-        flyer.style.transform = 'scale(0.2)';
-        flyer.style.opacity = '0.5';
-    });
-
-    // 4. Dọn dẹp và tạo hiệu ứng rung cho giỏ hàng
-    flyer.addEventListener('transitionend', () => {
-        flyer.remove();
-        target.classList.add('cart-bounce');
-        setTimeout(() => target.classList.remove('cart-bounce'), 400);
-    });
-}
