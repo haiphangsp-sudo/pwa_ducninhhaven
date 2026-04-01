@@ -3,7 +3,6 @@
 import { getState, setState } from "./state.js";
 import { sendRequest } from "../services/api.js";
 import { getVariantById } from "./menuQuery.js";
-import { translate } from "../ui/utils/translate.js";
 import { getActivePlaceId, getActivePlaceType, getContext} from "../core/context.js";
 import { getLocationLabel } from "../data/helpers.js";
 

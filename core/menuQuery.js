@@ -10,13 +10,13 @@ import { getState } from "../core/state.js";
 const getMenuData = () => getState().menu.data || {};
 
 
-function getPlace() {
-    
+function getPlace() {  
     const ctx = getContext();
     const anchor=ctx?.anchor;
     if(!anchor) return "table";
     return anchor.type;
 }
+
 export function getCategory(key) {
   const menuData = getMenuData();
   return menuData[key] || null;
@@ -37,14 +37,13 @@ export function getVariants(categoryKey, productKey) {
     }));
 }
 
-
-
 /**
  * Lấy danh mục (Categories) phù hợp với vị trí khách đang đứng
  */
 export function getCategories() {
   const menuData = getMenuData();
-  const currentPlaceType = getState().context.active?.type; 
+  const currentPlaceType = getPlace();
+  //const currentPlaceType = getState().context.active?.type; 
   const out = [];
 
   for (const [key, cat] of Object.entries(menuData)) {
