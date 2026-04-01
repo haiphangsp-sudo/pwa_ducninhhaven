@@ -89,10 +89,9 @@ async function syncUI(state) {
     syncLanguage(state);
   }
   
-  const { visible, status, message } = state.ack;
 
-  if (visible !== prevState.ack?.visible) {
-    renderAck({ visible, status, message });
+  if (state.ack.visible !== prevState.ack?.visible) {
+    renderAck(state);
   }
 
   handleOrderLogic(state, prevState);

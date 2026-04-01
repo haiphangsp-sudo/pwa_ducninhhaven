@@ -61,13 +61,15 @@ export function renderDrawer(state) {
 
 function updateSendButton(state, sendBtn) {
   const { order, context} = state;
-  const isSending = order.status === "pending";
+  const isSending = order.status === "sending";
   const hasPlace = getActivePlaceId();
 
   // 1. Cập nhật Text dựa trên trạng thái
   if (isSending) {
+    loadingCartBar();
     sendBtn.disabled = true;
     sendBtn.textContent = translate("cart_bar.sending");
+    setTimeout(() => target.classList.remove("is-loading"), 500);
   } else {
     sendBtn.disabled = false;
     sendBtn.textContent = translate("cart_bar.send_request");
@@ -76,4 +78,3 @@ function updateSendButton(state, sendBtn) {
   // Wellness touch: Nếu chưa có chỗ ngồi, nút có thể mờ đi một chút
   sendBtn.style.opacity = hasPlace ? "1" : "0.6";
 }
- 

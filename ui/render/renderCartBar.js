@@ -25,7 +25,8 @@ export function renderCartBar(state) {
     btn.textContent = translate("cart_bar.cart_title");
     countEl.textContent = cart.totalQty > 1
       ? `${cart.totalQty} ${translate("cart_bar.items")}`
-      : `${cart.totalQty} ${translate("cart_bar.item")}`
+      : `${cart.totalQty} ${translate("cart_bar.item")}`;
+    bounceCartBar();
   }
 }
 
@@ -44,8 +45,3 @@ export function bounceCartBar() {
   }, 400);
 }
 
-export function loadingCartBar() {
-  const target = document.getElementById("cartBar");
-  target.classList.add("is-loading");
-  setTimeout(() => target.classList.remove("is-loading"), 500);
-}
