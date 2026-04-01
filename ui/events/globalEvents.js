@@ -53,33 +53,32 @@ function handleGlobalClick(e) {
       break;
 
     case "open-overlay":
-      setState({ overlay: { view: cmd.value } });
+      setState({ overlay: { view: cmd.value , source: cmd.action} });
       break;
 
     case "close-overlay":
       setState({
-        overlay: { view: null },
+        overlay: { view: null }
       });
       break;
     
     case "select-place":
       setState({
-        overlay: { view: null }
+        overlay: { view: null,source: "" }
       });
       applyPlaceById(cmd.value);
       break;
 
-
     /* ---------- CART / ORDER ---------- */
-    case "add-cart":
-      setOrder(cmd)
+    case "add_cart":
+      setOrder(cmd,cmd.action)
       break;
 
-    case "instant":
-      checkCart(cmd);
+    case "buy_now":
+      checkCart(cmd,cmd.action);
       break;
 
-    case "send-cart":
+    case "send_cart":
       checkCart(cmd);
       break;
     
@@ -87,6 +86,7 @@ function handleGlobalClick(e) {
       const delta = parseInt(cmd.option);
       updateCartQuantity(cmd.value, delta);
       break;
+    
     /* ---------- LANGUAGE ---------- */
 
     case "change-lang":
@@ -97,13 +97,13 @@ function handleGlobalClick(e) {
       break;
   }
 }
-function checkCart(cmd) {
+function checkCart(cmd,s) {
   if (getActivePlaceId()!==null) {
     setOrder(cmd);
 
   }else{
     setState({
-      overlay: { view: "placePicker" }
+      overlay: { view: "placePicker",source:s }
     });
   }
 }

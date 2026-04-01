@@ -46,11 +46,12 @@ export let UI = {
   },
   /* ---------------- OVERLAY ---------------- */
   overlay: {
-    view: null  // close || placePicker || cartDrawer ....
+    view: null, // close || placePicker || cartDrawer ....
+    source: "",
   },
 
   order: {
-    action: null,     // cart, instant, send_cart
+    action: null,     // add_cart, buy_now, send_cart
     line: null,     // ID món ăn (nếu có)
     status: "idle", // idle, pending, sending, success, error, waiting_place
     msg: "",        // Thông báo phản hồi cho khách
@@ -64,10 +65,11 @@ export let UI = {
   /* ---------------- ACK (tap feedback) ---------------- */
 
   ack: {
-  visible: false,
-  status: null,
-  message: "",
-  at: null
+    visible: false,
+    status: null,
+    title: "",
+    message: "",
+    at: null
 },
 
   /* ---------------- ORDERS ---------------- */

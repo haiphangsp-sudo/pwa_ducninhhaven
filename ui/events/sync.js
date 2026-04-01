@@ -122,7 +122,7 @@ async function handleOrderLogic(state, prevState) {
 
   isProcessingOrder = true;
   try {
-    if (action === "add-cart") {
+    if (action === "add_cart") {
       bounceCartBar();
       addToCart(); 
     } else {

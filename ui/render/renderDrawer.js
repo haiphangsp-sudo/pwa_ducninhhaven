@@ -28,8 +28,8 @@ export function renderDrawer(state) {
     return;
   }
   sendBtn.disabled = false;
-  sendBtn.dataset.action = "send-cart";
-  sendBtn.dataset.option = "cart";
+  sendBtn.dataset.action = "send_cart";
+  sendBtn.dataset.option = "send";
   sendBtn.dataset.extra = "sending";
   
   updateSendButton(state, sendBtn);

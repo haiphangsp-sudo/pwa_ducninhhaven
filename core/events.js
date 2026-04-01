@@ -46,7 +46,7 @@ export function updateCartQuantity(itemId, delta) {
     items.push({ id: itemId, qty: delta });
   }
 
-  setState({ cart: { items } });
+  setState({ cart: { items, status: "modified" }});
 }
 
 export function addToCart() {
@@ -59,33 +59,8 @@ export function addToCart() {
 }
 
 
-export function finalizeOrderSuccess(action) {
-  // 1. Chuẩn bị thông báo
-  const isCart = action === "send-cart";
-  const message = isCart ? "cart_bar.success_cart" : "cart_bar.success_instant";
-
-  // 2. Gộp tất cả thay đổi vào MỘT lần setState duy nhất
-  const patch = {
-    overlay: { view: null },
-    order: {
-      action: null,
-      line: null,
-      status: "idle",
-      at: null
-    }
-  };
-
-  showAck("success", message);
-  
-  if(isCart) {
-      patch.cart = { items: [] };
-    }
-  
-  setState(patch);
-}
-
 const getSourceItems = (state, action) => {
-  if (action === "send-cart") return state.cart?.items || [];
+  if (action === "send_cart") return state.cart?.items || [];
   if (state.order?.line) return [{ id: state.order.line, qty: 1 }];
   return [];
 };
@@ -149,4 +124,57 @@ export async function submitOrder(action) {
     return false;
   }
 }
+export function onOrderSuccess(orderId, items) {
+  // Chỉ xóa giỏ hàng nếu đó là đơn hàng gửi từ giỏ (CART)
+  // Bạn có thể thêm logic check type ở đây nếu cần
+  
+  // Cập nhật StatusBar
+  const newOrder = {
+    id: orderId,
+    status: 'pending',
+    items: items,
+    time: new Date().toISOString()
+  };
+  
+  const currentOrders = getState().orders?.active || [];
+  setState({ orders: { active: [newOrder, ...currentOrders] } });
+}
 
+/**
+ * FINAL ACTION: Dọn dẹp và thông báo sau khi đơn hàng thành công
+ * @param {string} type - Loại đơn ('cart', 'instant', 'recovery')
+ */
+export function finalizeOrderSuccess(type) {
+  // 1. Bản đồ thông báo theo loại đơn hàng
+  const feedbackMap = {
+    send_cart: { title: "Thành công", msg: "Giỏ hàng của bạn đã được gửi tới bếp!" },
+    buy_now: { title: "Đã gửi đơn", msg: "Món ăn đang được chuẩn bị, xin chờ giây lát!" },
+    recovery: { title: "Đã phục hồi", msg: "Các đơn hàng cũ đã được gửi bù thành công!" }
+  };
+
+  const feedback = feedbackMap[type] || feedbackMap.cart;
+
+  // 2. Chuẩn bị bản cập nhật State
+  const patch = {
+    ack: { 
+      visible: true, 
+      status: "success",
+      title: feedback.title,
+      message: feedback.msg
+    },
+    overlay: { view: null } // Đóng mọi cửa sổ (Drawer/Picker)
+  };
+
+  // 3. Chỉ xóa giỏ hàng nếu là đơn từ giỏ
+  if (type === "send_cart") {
+    patch.cart = { items: [], status: 'idle' };
+  }
+
+  // Thực thi cập nhật State
+  setState(patch);
+
+  // 4. Tự động ẩn thông báo sau 3.5 giây
+  setTimeout(() => {
+    setState({ ack: { state: "hidden" } });
+  }, 3500);
+}
