@@ -141,6 +141,6 @@ async function boot() {
     
   } catch (criticalError) {
     // Nếu có lỗi cực nặng, hiển thị thông báo cho khách
-    document.body.innerHTML = `<div class="p-xl center">Xin lỗi, ứng dụng Haven đang gặp sự cố kết nối. Vui lòng tải lại trang.</div>`;
+    //document.body.innerHTML = `<div class="p-xl center">Xin lỗi, ứng dụng Haven đang gặp sự cố kết nối. Vui lòng tải lại trang.</div>`;
   }
 }
