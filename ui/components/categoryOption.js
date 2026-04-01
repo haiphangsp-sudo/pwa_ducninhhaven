@@ -33,7 +33,7 @@ export function categoryOpt(opt, categoryKey,ui) {
                     data-action="${ui=== "cart" ? "add_cart" : "buy_now"}"
                     data-extra="${categoryKey}"
                     data-option="${ui}"
-                    data-value="${opt.id}" onclick="addToCart(event)">
+                    data-value="${opt.id}">
                     ${(ui === "cart")
                         ? "+ " + translate("cart_bar.add_to_order")
                         : "⚡ " + translate("cart_bar.send_request")
