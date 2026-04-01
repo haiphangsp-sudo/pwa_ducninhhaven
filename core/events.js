@@ -77,9 +77,9 @@ export function addToCart(e) {
   const state = getState();
   const itemId = state.order?.line;
   if (!itemId) return;
-
+  console.log(e.target.dataset.id);
   if (e && e.target) {
-    animateFlyToCart(Event.target);
+    animateFlyToCart(e.target);
   }
   updateCartQuantity(itemId, 1);
 
