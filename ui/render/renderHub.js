@@ -25,21 +25,12 @@ export function renderHub(state) {
       </span>
     </button>
   `}).join("");
-  menuEl.querySelectorAll("button").forEach(btn => {  
-        btn.classList.toggle("is-active");
-    });
 }
-
-function hubEvents(viewNew) {
-
+export function eventHub(state) {
   const menuEl = document.getElementById("hubMenu");
-  const viewOld = menuEl.querySelector(`.is-active`).getAttribute("data-value");
-  if (viewNew === viewOld) return;
-    
-    menuEl.querySelectorAll("button").forEach(btn => {  
-      btn.classList.remove("is-active");
-      if ((btn.getAttribute("data-value") === viewNew)) {
-        btn.classList.add("is-active");
-      }
-    });
+  const currentView = state.panel.view;
+
+  menuEl.querySelectorAll("button").forEach(btn => {
+    btn.classList.toggle("is-active", btn.getAttribute("data-value") === currentView);
+  });
 }

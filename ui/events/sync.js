@@ -9,7 +9,7 @@ import { renderDrawer } from "../render/renderDrawer.js";
 import { renderNavBar } from "../render/renderNavBar.js";
 import { renderCartBar } from "../render/renderCartBar.js";
 import { renderStatusBar } from "../render/renderStatusBar.js";
-import { renderHub } from "../render/renderHub.js";
+import { renderHub, eventHub } from "../render/renderHub.js";
 import { renderPanel } from "../render/renderPanel.js";
 import { updateStepperUI } from "../render/renderStepper.js";
 import { renderAck } from "../render/renderOverlay.js";
@@ -70,7 +70,10 @@ async function syncUI(state) {
   /* ---------- PANEL ---------- */
 
   if (state.panel.view !== prevState.panel?.view) {
+    
     renderPanel(state);
+    eventHub(state);
+
   }
   
   /* ---------- CART ---------- */
