@@ -125,7 +125,7 @@ function buildPayload(state, action) {
     type: action,
     timestamp: new Date().toISOString(),
     place: placeId,
-    placeLabel: getLocationLabel(getContext()),
+    placeLabel: getLocationLabel(),
     mode: placeType,
     items: formattedItems,
     device: navigator.userAgent

@@ -40,6 +40,8 @@ function getMode() {
     if(!anchor) return "table";
     return anchor.type;
 }
+
+  
 export function getCategoriesForMode(){
   const placeType = getMode();
   const MENUDTATA = getState().menu.data || {};
@@ -56,26 +58,23 @@ export function getCategoriesForMode(){
     }));
 
 }
-export function getPlaceIcon(type) {
-  if (type === "room") return "🛏";
-  if (type === "table") return "☕";
-  if (type === "area") return "🌿";
+export function getPlaceIcon() {
+  const mode = getMode();
+
+  if (mode === "room") return "🛏";
+  if (mode === "table") return "☕";
+  if (mode === "area") return "🌿";
   return "📍";
 }
 
-export function getLocationLabel(ctx) {
+export function getLocationLabel() {
+  const ctx = getContext();
   if (!ctx?.active) {
     return translate("place.select");
   } else {
-    const { type, id } = ctx.active;
-    const anchor = ctx.anchor;
+    const id = ctx.active.id;
     const placeData = resolvePlace(id);
     const placeName = translate(placeData?.label) || id;
-
-    if (type === "room" && anchor?.id === id) {
-      return `${placeName}`;
-    }
-
     return placeName;
   }
 }
