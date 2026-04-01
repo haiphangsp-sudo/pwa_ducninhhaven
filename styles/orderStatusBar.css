@@ -208,11 +208,6 @@
     overflow: hidden;
 }
 
-/* Khi thu nhỏ: Mép trái sẽ chạy về phía bên phải */
-.status-bar.is-collapsed {
-    width: 60px; /* Thu lại thành hình tròn */
-}
-
 /* Ẩn nội dung chữ khi thu nhỏ */
 .status-bar.is-collapsed .bar-expanded {
     opacity: 0;
@@ -281,7 +276,6 @@
     display: flex;
     align-items: center;
     position: relative;
-    transform: scale(0.8);
 }
 
 .bar-mini .icon {
