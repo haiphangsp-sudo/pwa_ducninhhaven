@@ -2,8 +2,7 @@
 
 import { getContext } from "./context.js";
 import { translate } from "../ui/utils/translate.js";
-import { getState } from "../../core/state.js";
-
+import { getState } from "../core/state.js";
 
 /**
  * Helper: Luôn lấy dữ liệu mới nhất từ State mỗi khi hàm được gọi

@@ -6,7 +6,7 @@ import { getCategories } from "../../core/menuQuery.js";
 import { getCategoriesForMode } from "../../data/helpers.js";
 
 export function renderHub(state) {
-  const panels = getCategoriesForMode();
+  const panels = getCategories();
   const menuEl = document.getElementById("hubMenu");
   if (!menuEl) return;
   const currentPanel = state.panel.view;

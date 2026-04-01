@@ -13,7 +13,7 @@ export function renderMenu(categoryKey,ui) {
     const productKey = product.key;
     const variants = getVariants(categoryKey, productKey);
     const cards = variants.map(variant => {
-      return categoryOpt({ ...variant },categoryKey, productKey,ui);
+      return categoryOpt({ ...variant },categoryKey,ui);
       }).join("");
     return `
         <section class="menu-group">
