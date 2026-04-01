@@ -309,13 +309,3 @@
     color: #444;
     font-weight: 500;
 }
-
-.btn-check-order {
-    background: none;
-    border: none;
-    color: #6b8e23;
-    font-weight: bold;
-    font-size: 12px;
-    cursor: pointer;
-    padding: 5px;
-}
