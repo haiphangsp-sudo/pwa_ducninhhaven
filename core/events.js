@@ -30,24 +30,47 @@ function showAck(status, message = "", timeout = 1500) {
 /* ========================================================
    3. CART ACTIONS
    ======================================================== */
-
-export function updateCartQuantity(itemId, delta) {
+export async function updateCartQuantity(itemId, delta) {
   const state = getState();
   const items = [...(state.cart?.items || [])];
   const idx = items.findIndex(i => i.id === itemId);
 
+  // Nếu không tìm thấy và delta <= 0 thì thoát luôn
+  if (idx === -1 && delta <= 0) return;
+
+  let nextItems = items;
+
   if (idx > -1) {
     const nextQty = (Number(items[idx].qty) || 0) + delta;
+
     if (nextQty <= 0) {
-      items.splice(idx, 1);
+      // XỬ LÝ ANIMATION KHI XÓA MÓN
+      const element = document.querySelector(`.drawer__item[data-id="${itemId}"]`);
+      if (element) {
+        element.classList.add("item-exit");
+        // Đợi animation (ví dụ 400ms) để khách thấy món ăn biến mất mượt mà
+        await new Promise(res => setTimeout(res, 400));
+      }
+      // Lọc bỏ món ăn ra khỏi danh sách
+      nextItems = items.filter((_, i) => i !== idx);
     } else {
-      items[idx] = { ...items[idx], qty: nextQty };
+      // Cập nhật số lượng
+      nextItems[idx] = { ...items[idx], qty: nextQty };
     }
-  } else if (delta > 0) {
-    items.push({ id: itemId, qty: delta });
+  } else {
+    // Thêm món mới vào giỏ
+    nextItems.push({ id: itemId, qty: delta });
   }
 
-  setState({ cart: { items, status: "modified" }});
+  // CHỈ GỌI SETSTATE MỘT LẦN DUY NHẤT Ở ĐÂY
+  setState({ 
+    cart: { 
+      ...state.cart, 
+      items: nextItems, 
+      status: "modified",
+      at: Date.now() // Kích hoạt syncUI
+    }
+  });
 }
 
 export function addToCart() {
