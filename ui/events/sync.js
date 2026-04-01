@@ -70,7 +70,6 @@ async function syncUI(state) {
   /* ---------- PANEL ---------- */
 
   if (state.panel.view !== prevState.panel?.view) {
-    renderHub(state);
     renderPanel(state);
   }
   
