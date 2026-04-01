@@ -26,11 +26,9 @@ export function renderHub(state) {
     </button>
   `}).join("");
 }
-export function eventHub(state, prevState) {
+export function eventHub(state) {
   const menuEl = document.getElementById("hubMenu");
-  const newView = state.panel.view;
-  const lastView = prevState.panel?.view;
-
-  menuEl.querySelector(`data-value=${lastView}`).classList.remove("is-active");
-  menuEl.querySelector(`data-value=${newView}`).classList.add("is-active");
-}
+  menuEl.querySelectorAll("button").forEach(btn => {
+    btn.classList.toggle("is-active", btn.getAttribute("data-value") === state.panel.view);
+  });
+} 
