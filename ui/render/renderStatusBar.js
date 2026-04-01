@@ -58,10 +58,5 @@ export function statutBarEvent() {
         statusBar.classList.toggle('is-collapsed');
     });
 
-    // Nếu muốn bấm vào cái "chấm" xanh khi đã thu nhỏ để mở ra
-    statusBar?.addEventListener('click', () => {
-        if (statusBar.classList.contains('is-collapsed')) {
-            statusBar.classList.remove('is-collapsed');
-        }
-    });
+    
 }
