@@ -5,7 +5,8 @@ import { sendRequest } from "../services/api.js";
 import { getVariantById } from "./menuQuery.js";
 import { getActivePlaceId, getActivePlaceType, getContext} from "../core/context.js";
 import { getLocationLabel } from "../data/helpers.js";
-
+import { notifyResponse } from "./action.js"
+import { renderStatusBar } from "../ui/render/renderStatusBar.js"
 
 
 /* ========================================================
@@ -114,14 +115,18 @@ export async function submitOrder(action) {
     const res = await sendRequest(payload);
     if (res?.success) {
       finalizeOrderSuccess(action);
-      showAck("success", "cart_bar.success", 3000); 
+      notifyResponse(res, payload);
+      showAck("success", "cart_bar.success", 3000);
       return true;
     }
     throw new Error("API_FAIL");
-  } catch (err) {
+  } catch (error) {
     setState({ order: { ...getState().order, status: "error" } });
     showAck("error", "cart_bar.error", 2500);
+    notifyResponse(error, payload);
     return false;
+  } finally {
+    setState({ ui: { isOrdering: false } });
   }
 }
 export function onOrderSuccess(orderId, items) {
@@ -138,6 +143,7 @@ export function onOrderSuccess(orderId, items) {
   
   const currentOrders = getState().orders?.active || [];
   setState({ orders: { active: [newOrder, ...currentOrders] } });
+  renderStatusBar();
 }
 
 /**
