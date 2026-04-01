@@ -55,7 +55,7 @@ export function addToCart() {
   if (!itemId) return;
 
   updateCartQuantity(itemId, 1);
-  showAck("success", "cart_bar.added");
+  //showAck("success", "cart_bar.added");
 }
 
 
