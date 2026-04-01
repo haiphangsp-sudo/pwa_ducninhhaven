@@ -77,7 +77,7 @@ export function addToCart(e) {
   const state = getState();
   const itemId = state.order?.line;
   if (!itemId) return;
-  const it = e.target.dataset.id
+  const it = e.target.closest('button').dataset.id
   console.log(it);
   if (e && e.target) {
     animateFlyToCart(e.target);
