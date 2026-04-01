@@ -36,7 +36,6 @@ export function renderStatusBar(state) {
         const latestOrder = active[active.length - 1]; // Lấy đơn mới nhất
         countEl.textContent = active.length; // Số lượng đơn đang chạy
         textEl.innerHTML = renderStepper(latestOrder.status);
-        if (btnCheck) btnCheck.style.display = "block";
         bar.className = `status-bar is-${latestOrder.status} ${!isBarExpanded ? 'is-collapsed' : ''}`;
     } 
     else {
@@ -46,7 +45,6 @@ export function renderStatusBar(state) {
         textEl.textContent = locationName 
             ? `${locationName} • ${totalCartQty} món`
             : `🛒 Giỏ hàng có ${totalCartQty} món`;
-        if (btnCheck) btnCheck.style.display = "none";
         bar.className = `status-bar is-idle ${!isBarExpanded ? 'is-collapsed' : ''}`;
     }
 }
