@@ -30,6 +30,6 @@ export function renderMenu(categoryKey,ui) {
 
 document.querySelectorAll('.btn-add').forEach(btn => {
     btn.addEventListener('click', (e) => {
-        addToCart(e.target.dataset.id); // Gọi hàm bình thường vì cùng nằm trong module
+        addToCart(e); // Gọi hàm bình thường vì cùng nằm trong module
     });
 });
