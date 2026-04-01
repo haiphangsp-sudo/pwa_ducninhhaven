@@ -61,14 +61,14 @@ export function addToCart() {
   if (!itemId) return;
 
   updateCartQuantity(itemId, 1);
-  showAck("success", translate("cart_bar.added"));
+  showAck("success", "cart_bar.added");
 }
 
 
 export function finalizeOrderSuccess(action) {
   // 1. Chuẩn bị thông báo
   const isCart = action === "send-cart";
-  const message = isCart ? translate("cart_bar.success_cart") : translate("cart_bar.success_instant");
+  const message = isCart ? "cart_bar.success_cart" : "cart_bar.success_instant";
 
   // 2. Gộp tất cả thay đổi vào MỘT lần setState duy nhất
   const patch = {
@@ -140,18 +140,18 @@ export async function submitOrder(action) {
 
   // Cập nhật UI sang trạng thái gửi
   setState({ order: { ...state.order, status: "pending" } });
-  showAck("sending", translate("cart_bar.sending"), 0);
+  showAck("sending", "cart_bar.sending", 0);
   try {
     const res = await sendRequest(payload);
     if (res?.success) {
       finalizeOrderSuccess(action);
-      showAck("success", translate("cart_bar.success"), 3000); 
+      showAck("success", "cart_bar.success", 3000); 
       return true;
     }
     throw new Error("API_FAIL");
   } catch (err) {
     setState({ order: { ...getState().order, status: "error" } });
-    showAck("error", translate("cart_bar.error"), 2500);
+    showAck("error", "cart_bar.error", 2500);
     return false;
   }
 }

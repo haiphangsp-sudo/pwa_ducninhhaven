@@ -2,22 +2,20 @@
 
 import { translate } from "../utils/translate.js";
 
-
-export function renderAck({ visible, status, message }) {
+export function renderAck(state) {
   const el = document.getElementById("ackOverlay");
   if (!el) return;
 
-  // Reset class về mặc định mỗi lần render
-  el.className = "overlay__ack"; 
-
-  if (visible) {
-    el.textContent = message; // Hỗ trợ cả key translate và string thô
-    el.classList.add("show");
-    el.classList.remove("hidden");
-
-    if (status) el.classList.add(status);
-  } else {
-    el.classList.remove("show");
+  const ack = state.ack;
+  if (!ack?.visible) {
     el.classList.add("hidden");
+    el.classList.remove("show");
+    el.textContent = "";
+    return;
   }
+
+  el.textContent = translate(ack.message || "" );
+  el.className = `overlay__ack ${ack.status || ""}`;
+  el.classList.remove("hidden");
+  el.classList.add("show");
 }

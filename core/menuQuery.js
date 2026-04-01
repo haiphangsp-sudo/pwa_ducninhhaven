@@ -44,7 +44,7 @@ export function getVariants(categoryKey, productKey) {
  */
 export function getCategories() {
   const menuData = getMenuData();
-  const currentPlaceType = getState().context.active?.type || "table"; 
+  const currentPlaceType = getState().context.active?.type; 
   const out = [];
 
   for (const [key, cat] of Object.entries(menuData)) {
