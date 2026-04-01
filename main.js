@@ -130,11 +130,11 @@ async function boot() {
     loadCart();
     normalizeContext();
     applyURLContext();
-    renderApp();
+    
     attachUI(); // Gắn các listener cho state
     attachAppEvents();
     
-    
+    renderApp();
     // Bắt đầu theo dõi ngầm
     watchMenu();
     detectRecovery();
