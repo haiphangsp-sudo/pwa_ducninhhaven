@@ -1,10 +1,11 @@
 // data/helpers.js
 //Hàm đọc menu theo mode (lọc hiển thị).
 
-import { MENU } from "../core/menuStore.js";
 import { getContext } from "../core/context.js";
 import { resolvePlace } from "../core/placesStore.js";
-import { translate } from "../ui/utils/translate.js"
+import { translate } from "../ui/utils/translate.js";
+import { getState } from "../core/state.js";
+
 
 
 /**
@@ -41,7 +42,8 @@ function getMode() {
 }
 export function getCategoriesForMode(){
   const placeType = getMode();
-  return Object.entries(MENU)
+  const MENUDTATA = getState().menu.data || {};
+  return Object.entries(MENUDTATA)
 
     .filter(([k,v]) =>
       v.active &&
