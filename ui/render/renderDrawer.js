@@ -30,7 +30,7 @@ export function renderDrawer(state) {
   sendBtn.disabled = false;
   sendBtn.dataset.action = "send-cart";
   sendBtn.dataset.option = "cart";
-  sendBtn.dataset.extra = "pending";
+  sendBtn.dataset.extra = "sending";
   
   updateSendButton(state, sendBtn);
 
