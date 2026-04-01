@@ -6,14 +6,8 @@ import { applyPlaceById, getActivePlaceId } from "../../core/context.js";
 import { syncContextToState } from "../../core/state.js";
 import { statutBarEvent } from "../render/renderStatusBar.js";
 import { toggleStatusBar } from "../../ui/components/statusBar.js";
+import { animateFlyToCart } from "../../ui/interactions/animateFlyToCart.js";
 
-
-
-document.querySelectorAll('.btn-add').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-        addToCart(Event.target.dataset.id); // Gọi hàm bình thường vì cùng nằm trong module
-    });
-});
 
 /* =========================
    MAIN EVENTS
@@ -75,7 +69,8 @@ function handleGlobalClick(e) {
 
     /* ---------- CART / ORDER ---------- */
     case "add_cart":
-      setOrder(cmd,cmd.action)
+      setOrder(cmd, cmd.action)
+      animateFlyToCart(target);
       break;
 
     case "buy_now":

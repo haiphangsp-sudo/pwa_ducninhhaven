@@ -61,7 +61,7 @@ export function statutBarEvent() {
     
 }
 
-export function animateFlyToCart(startElement) {
+ function animateFlyToCart(startElement) {
     const target = document.querySelector('#cartBar .cart-bar__icon');
     if (!startElement || !target) return;
 

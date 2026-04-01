@@ -137,12 +137,25 @@
     box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
 
-/* Hiệu ứng rung nhẹ cho giỏ hàng khi nhận được món */
-@keyframes cart-bounce {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.3); }
-    100% { transform: scale(1); }
+.fly-cart-ghost {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  overflow: hidden;
+  transition:
+    transform 520ms cubic-bezier(.2, .8, .2, 1),
+    opacity 520ms ease;
+  box-shadow: 0 10px 24px rgba(0,0,0,.18);
 }
+
 .cart-bounce {
-    animation: cart-bounce 0.4s ease;
+  animation: cartBounce 380ms ease;
+}
+
+@keyframes cartBounce {
+  0%   { transform: scale(1); }
+  35%  { transform: scale(1.12); }
+  65%  { transform: scale(.96); }
+  100% { transform: scale(1); }
 }
