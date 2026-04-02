@@ -12,6 +12,7 @@ export function renderStatusBar(state) {
     const btnToggle = document.getElementById('btnToggleBar');
 
     btnToggle.dataset.action = "toggle_status";
+    
     btnCheck.dataset.action = "check_orders";
 
     if (!bar || !textEl || !countEl) return;
@@ -25,6 +26,7 @@ export function renderStatusBar(state) {
     } else {
         bar.classList.remove("is-collapsed");
     }
+    btnToggle.dataset.value = isBarExpanded;
 
     // 2. CHỐT CHẶN HIỂN THỊ (Ẩn toàn bộ nếu không có gì)
     if (active.length === 0 && totalCartQty === 0) {
