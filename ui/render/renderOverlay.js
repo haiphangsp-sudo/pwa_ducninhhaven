@@ -2,6 +2,8 @@
 import { setState } from "../../core/state.js"
 import { translate } from "../utils/translate.js";
 
+import { translate } from "../utils/translate.js";
+
 export function renderAck(state) {
   const el = document.getElementById("ackOverlay");
   if (!el) return;
@@ -15,12 +17,13 @@ export function renderAck(state) {
   }
 
   const status = ack.status || "info";
-  const icon = getAckIcon(status);
   const title = ack.title ? translate(ack.title) : "";
   const message = translate(ack.message || "");
+  const icon = getAckIcon(status);
 
   el.className = "overlay__ack";
-  el.classList.add("show", `ack--${status}`);
+  el.classList.add(`ack--${status}`);
+  el.classList.remove("hidden");
 
   el.innerHTML = `
     <div class="ack__inner">
@@ -32,20 +35,17 @@ export function renderAck(state) {
     </div>
   `;
 
-  el.classList.remove("hidden");
+  requestAnimationFrame(() => {
+    el.classList.add("show");
+  });
 }
 
 function getAckIcon(status) {
   switch (status) {
-    case "success":
-      return "✓";
-    case "error":
-      return "⚠";
-    case "sending":
-      return "↻";
-    case "info":
-    default:
-      return "i";
+    case "success": return "✓";
+    case "error": return "!";
+    case "sending": return "↻";
+    default: return "i";
   }
 }
 
@@ -53,16 +53,21 @@ let toastTimer = null;
 
 export function showToast({
   type = "info",
+  title = "",
   message = "",
-  duration = 1500
+  duration = 2500
 }) {
-  if (toastTimer) clearTimeout(toastTimer);
+  if (toastTimer) {
+    clearTimeout(toastTimer);
+    toastTimer = null;
+  }
 
   setState({
     ack: {
       visible: true,
       status: type,
-      message: translate(message),
+      title,
+      message,
       at: Date.now()
     }
   });
@@ -73,24 +78,12 @@ export function showToast({
         ack: {
           visible: false,
           status: null,
+          title: "",
           message: "",
-          at: Date.now() // QUAN TRỌNG
+          at: Date.now()
         }
       });
       toastTimer = null;
     }, duration);
   }
 }
-//*type: "success" | "error" | "info" | "sending"*//
-
-export const toastSuccess = (msg) =>
-  showToast({ type: "success", message: msg });
-
-export const toastError = (msg) =>
-  showToast({ type: "error", message: msg });
-
-export const toastInfo = (msg) =>
-  showToast({ type: "info", message: msg });
-
-export const toastWarning = (msg) =>
-  showToast({ type: "warning", message: msg }); 

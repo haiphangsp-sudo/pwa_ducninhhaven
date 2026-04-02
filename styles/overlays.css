@@ -244,3 +244,91 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+.overlay__ack {
+  position: fixed;
+  left: 50%;
+  bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+  transform: translateX(-50%) translateY(10px);
+  width: max-content;
+  min-width: 220px;
+  max-width: min(420px, calc(100vw - 24px));
+  border-radius: 14px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.16);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 1200;
+  transition:
+    opacity 180ms ease,
+    transform 220ms cubic-bezier(.22,.8,.2,1);
+}
+
+.overlay__ack.hidden {
+  display: none;
+}
+
+.overlay__ack.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.ack__inner {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  color: #fff;
+}
+
+.ack__icon {
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,.14);
+  font-weight: 700;
+  line-height: 1;
+}
+
+.ack__content {
+  min-width: 0;
+}
+
+.ack__title {
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.25;
+  margin-bottom: 2px;
+}
+
+.ack__message {
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.overlay__ack.ack--success {
+  background: #2f5d46;
+}
+
+.overlay__ack.ack--error {
+  background: #a14a3f;
+}
+
+.overlay__ack.ack--info {
+  background: #4e6a63;
+}
+
+.overlay__ack.ack--sending {
+  background: #5d665f;
+}
+
+.overlay__ack.ack--sending .ack__icon {
+  animation: ackSpin 1s linear infinite;
+}
+
+@keyframes ackSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}

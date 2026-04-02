@@ -147,14 +147,6 @@
     padding: 5px 0;
 }
 
-.step {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
-    flex: 1;
-}
-
 /* Dấu chấm của từng bước */
 .step-dot {
     width: 12px;
