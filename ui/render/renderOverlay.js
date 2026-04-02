@@ -41,7 +41,7 @@ export function showToast({ type = "info", message = "", duration = 2500 }) {
           visible: false,
           status: null,
           message: "",
-          at: null
+          at: Date.now() 
         }
       });
       toastTimer = null;
