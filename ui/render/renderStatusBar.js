@@ -23,10 +23,10 @@ export function renderStatusBar(state) {
 
     // 1. QUẢN LÝ ĐÓNG/MỞ (is-collapsed)
     if (isBarExpanded) {
-        bar.classList.remove("is-collapsed");
+        bar.classList.add("is-collapsed");
         btnToggle.dataset.value = true;
     } else {
-        bar.classList.add("is-collapsed");
+        bar.classList.remove("is-collapsed");
         btnToggle.dataset.value = false;
     }
 
