@@ -132,16 +132,11 @@
 .step.is-complete .step-label { color: #2f5d46; }
 
 /* Trạng thái Đang thực hiện */
-
-.step.is-active {
-    .step-dot { 
-        background: #a88a64; 
-        box-shadow: 0 0 0 4px rgba(168, 138, 100, 0.2);
-    }
-    .step-label { 
-        color: #a88a64; font-weight: bold; 
-    }
+.step.is-active .step-dot { 
+    background: #a88a64; 
+    box-shadow: 0 0 0 4px rgba(168, 138, 100, 0.2);
 }
+.step.is-active .step-label { color: #a88a64; font-weight: bold; }
 .order-status-bar {
     position: fixed;
     top: 155px;
@@ -161,9 +156,8 @@
     padding: 8px;
 }
 
-.is-collapsed {
-    .bar-expanded { display: none; }
-}
+.is-collapsed .bar-expanded { display: none; }
+
 .btn-clear-all {
     background: transparent;
     color: #a88a64; /* Màu thương hiệu Haven */
