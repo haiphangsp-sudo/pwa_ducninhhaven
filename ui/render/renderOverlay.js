@@ -25,7 +25,7 @@ let toastTimer = null;
 export function showToast({
   type = "info",
   message = "",
-  duration = 2500
+  duration = 1500
 }) {
   if (toastTimer) clearTimeout(toastTimer);
 
