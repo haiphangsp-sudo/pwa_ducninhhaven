@@ -6,18 +6,47 @@ export function renderAck(state) {
   const el = document.getElementById("ackOverlay");
   if (!el) return;
 
-  const ack = state.ack;
+  const ack = state?.ack;
   if (!ack?.visible) {
     el.classList.add("hidden");
     el.classList.remove("show");
-    el.textContent = "";
+    el.innerHTML = "";
     return;
   }
 
-  el.textContent = translate(ack.message || "" );
-  el.className = `overlay__ack ${ack.status || ""}`;
+  const status = ack.status || "info";
+  const icon = getAckIcon(status);
+  const title = ack.title ? translate(ack.title) : "";
+  const message = translate(ack.message || "");
+
+  el.className = "overlay__ack";
+  el.classList.add("show", `ack--${status}`);
+
+  el.innerHTML = `
+    <div class="ack__inner">
+      <span class="ack__icon" aria-hidden="true">${icon}</span>
+      <div class="ack__content">
+        ${title ? `<div class="ack__title">${title}</div>` : ""}
+        <div class="ack__message">${message}</div>
+      </div>
+    </div>
+  `;
+
   el.classList.remove("hidden");
-  el.classList.add("show");
+}
+
+function getAckIcon(status) {
+  switch (status) {
+    case "success":
+      return "✓";
+    case "error":
+      return "⚠";
+    case "sending":
+      return "↻";
+    case "info":
+    default:
+      return "i";
+  }
 }
 
 let toastTimer = null;
