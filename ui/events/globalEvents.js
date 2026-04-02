@@ -28,7 +28,7 @@ function handleGlobalClick(e) {
   const target = e.target.closest("[data-action]");
   if (!target) return;
 
-  const { state, hasPlace, isBarExpanded, isCartEmpty, isSending } = getUIFlags();
+  const { state, hasPlace, isExpanded, isCartEmpty, isSending } = getUIFlags();
 
 
   const cmd = {
@@ -93,7 +93,8 @@ function handleGlobalClick(e) {
       setState({
         orders: {
             ...state.orders,
-            isBarExpanded: !cmd.value
+            isBarExpanded: isExpanded ? false : true
+        
         }
     });
        e.stopPropagation();

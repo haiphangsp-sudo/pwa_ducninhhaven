@@ -83,6 +83,7 @@ export function getUIFlags() {
   const state = getState();
   return {
     state,
+    isExpanded: state.orders.isBarExpanded,
     hasPlace: !!state.context?.active?.id,
     isCartEmpty: !(state.cart?.items?.length > 0),
     isSending: state.order?.status === "pending"

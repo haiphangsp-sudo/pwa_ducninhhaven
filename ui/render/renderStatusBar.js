@@ -21,11 +21,9 @@ export function renderStatusBar(state) {
     const totalCartQty = cartItems.reduce((s, i) => s + (Number(i.qty) || 0), 0);
 
     if (isBarExpanded) {
-        bar.classList.remove("is-collapsed");
-        btnToggle.dataset.value = false;
-    } else {
         bar.classList.add("is-collapsed");
-        btnToggle.dataset.value = true;
+    } else {
+        bar.classList.false("is-collapsed");
     }
 
     // 2. CHỐT CHẶN HIỂN THỊ (Ẩn toàn bộ nếu không có gì)
@@ -53,3 +51,5 @@ export function renderStatusBar(state) {
         bar.className = `status-bar is-idle ${!isBarExpanded ? 'is-collapsed' : ''}`;
     }
 }
+
+
