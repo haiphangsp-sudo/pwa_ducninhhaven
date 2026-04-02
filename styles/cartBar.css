@@ -303,6 +303,53 @@
     color: var(--text-main, #333);
     border: 1px solid var(--border-soft);
 }
+/* Nút bấm mặc định (Trạng thái sẵn sàng) */
+.drawer-send {
+    width: 100%;
+    padding: 15px;
+    border-radius: 12px;
+    border: none;
+    background: var(--brand, #6b8e23);
+    color: white;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+/* Khi chưa chọn phòng - Warm Sand/Yellow */
+.drawer-send.is-warning {
+    background: #ffcc00;
+    color: #5c4b00;
+}
+
+/* Khi đang gửi - Pulse & Spinner */
+.drawer-send.is-loading {
+    background: var(--brand-soft, #f4f7f0);
+    color: var(--brand);
+    position: relative;
+    cursor: wait;
+}
+
+/* Hiệu ứng Spinner nhỏ bên cạnh chữ khi loading */
+.drawer-send.is-loading::after {
+    content: "";
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    margin-left: 8px;
+    border: 2px solid var(--brand);
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    vertical-align: middle;
+}
+
+/* Khi bị disable (vô hiệu hóa) */
+.drawer-send:disabled {
+    opacity: 0.6;
+    filter: grayscale(0.5);
+    cursor: not-allowed;
+}
 /* =========================
    CART BAR
 ========================= */

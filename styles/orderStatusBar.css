@@ -309,3 +309,25 @@
     color: #444;
     font-weight: 500;
 }
+/* Trạng thái Nhắc nhở (ví dụ: chưa chọn phòng) */
+.status-bar.is-warning {
+    background-color: #fff9eb; /* Vàng kem rất nhẹ */
+    border: 1px solid #ffcc00;
+    box-shadow: 0 5px 15px rgba(255, 204, 0, 0.1);
+}
+
+.status-bar.is-warning .order-status-text {
+    color: #856404; /* Chữ màu nâu đậm cho dễ đọc trên nền vàng */
+    font-weight: 500;
+}
+
+/* Hiệu ứng rung nhẹ một lần duy nhất khi xuất hiện để gây chú ý */
+.status-bar.is-warning {
+    animation: soft-shake 0.4s ease-out;
+}
+
+@keyframes soft-shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-3px); }
+    75% { transform: translateX(3px); }
+}

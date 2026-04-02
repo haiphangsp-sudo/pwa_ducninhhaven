@@ -75,18 +75,19 @@ function updateSendButton(state, sendBtn) {
     //loadingCartBar();
     sendBtn.textContent = translate("cart_bar.sending");
     setTimeout(() => target.classList.remove("is-loading"), 500);
+    sendBtn.disabled = isSending; 
+    sendBtn.style.opacity = "0.6";
   } 
   const hasPlace = state.order.hasPlace;
   if (!hasPlace) {
     sendBtn.classList.add("is-warning");
     sendBtn.textContent = translate("cart_bar.place_prompt");
+    sendBtn.style.opacity = "0.6";
     return;
   }
   
-  //sendBtn.disabled = false;
   sendBtn.textContent = translate("cart_bar.send_request");
   sendBtn.classList.toggle("is-loading", isSending);
   sendBtn.classList.toggle("is-warning", !hasPlace);
-  // Wellness touch: Nếu chưa có chỗ ngồi, nút có thể mờ đi một chút
-  //sendBtn.style.opacity = hasPlace ? "1" : "0.6";
+  sendBtn.style.opacity = "1";
 }
