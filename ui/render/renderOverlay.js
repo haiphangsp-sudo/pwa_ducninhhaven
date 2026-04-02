@@ -2,8 +2,6 @@
 import { setState } from "../../core/state.js"
 import { translate } from "../utils/translate.js";
 
-import { translate } from "../utils/translate.js";
-
 export function renderAck(state) {
   const el = document.getElementById("ackOverlay");
   if (!el) return;
