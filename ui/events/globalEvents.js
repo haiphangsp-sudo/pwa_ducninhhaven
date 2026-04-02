@@ -4,7 +4,6 @@ import { setState } from "../../core/state.js";
 import { updateCartQuantity } from "../../core/events.js";
 import { applyPlaceById } from "../../core/context.js";
 import { syncContextToState } from "../../core/state.js";
-import { statutBarEvent } from "../render/renderStatusBar.js";
 import { toggleStatusBar } from "../../ui/components/statusBar.js";
 import { animateFlyToCart } from "../../ui/interactions/animateFlyToCart.js";
 import { getUIFlags } from "../../data/helpers.js";
@@ -18,7 +17,6 @@ export function attachAppEvents() {
 
   document.addEventListener("click", handleGlobalClick);
   window.addEventListener("contextchange", () => { syncContextToState(); });
-  statutBarEvent();
   toggleStatusBar();
 }
 
