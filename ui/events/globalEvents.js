@@ -93,7 +93,7 @@ function handleGlobalClick(e) {
       setState({
         orders: {
             ...state.orders, // Giữ nguyên active và inactive hiện có
-            isBarExpanded: cmd.value
+            isBarExpanded: !cmd.value
         }
     });
        e.stopPropagation();
