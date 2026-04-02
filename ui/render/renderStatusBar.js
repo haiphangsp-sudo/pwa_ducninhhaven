@@ -12,9 +12,7 @@ export function renderStatusBar(state) {
     const btnToggle = document.getElementById('btnToggleBar');
 
     btnToggle.dataset.action = "toggle_status";
-    btnToggle.dataset.value = true;
     btnCheck.dataset.action = "check_orders";
-    btnCheck.dataset.value = true;
 
     if (!bar || !textEl || !countEl) return;
 
@@ -23,12 +21,7 @@ export function renderStatusBar(state) {
     const totalCartQty = cartItems.reduce((s, i) => s + (Number(i.qty) || 0), 0);
 
     // 1. QUẢN LÝ ĐÓNG/MỞ (is-collapsed)
-    if (isBarExpanded) {
-        bar.classList.add("is-collapsed");
-    } else {
-        bar.classList.remove("is-collapsed");
-    }
-    btnToggle.dataset.value = !isBarExpanded;
+    bar.classList.toggle("is-collapsed", !isBarExpanded);
 
     // 2. CHỐT CHẶN HIỂN THỊ (Ẩn toàn bộ nếu không có gì)
     if (active.length === 0 && totalCartQty === 0) {

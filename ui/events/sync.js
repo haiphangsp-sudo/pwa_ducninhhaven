@@ -100,7 +100,9 @@ async function syncUI(state) {
   if (state.ack.visible !== prevState.ack?.visible) {
     renderAck(state);
   }
-
+  if (state.orders.isBarExpanded !== prevState.order?.isBarExpanded) {
+    renderStatusBar(state);
+  }
   handleOrderLogic(state, prevState);
   syncStepperStates(state, prevState);
 
