@@ -92,8 +92,8 @@ function handleGlobalClick(e) {
     case "toggle_status":
       setState({
         orders: {
-            ...state.orders, // Giữ nguyên active và inactive hiện có
-            isBarExpanded: !cmd.value
+            ...state.orders,
+            isBarExpanded: cmd.value
         }
     });
        e.stopPropagation();

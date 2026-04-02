@@ -19,8 +19,7 @@ export function renderStatusBar(state) {
     const { active, isBarExpanded } = state.orders;
     const cartItems = state.cart?.items || [];
     const totalCartQty = cartItems.reduce((s, i) => s + (Number(i.qty) || 0), 0);
-
-    btnToggle.dataset.value = isBarExpanded;
+     btnToggle.dataset.value = !isBarExpanded;
 
     // 1. QUẢN LÝ ĐÓNG/MỞ (is-collapsed)
     bar.classList.toggle("is-collapsed", isBarExpanded);
