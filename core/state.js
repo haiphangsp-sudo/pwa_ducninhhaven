@@ -78,7 +78,7 @@ export let UI = {
 
   orders: {
     active: [], // Lưu danh sách đơn hàng: [{id, status, items, time}, ...]
-    isBarExpanded: true // Trạng thái thu nhỏ/mở rộng của thanh Mini
+    isBarExpanded: false // Trạng thái thu nhỏ/mở rộng của thanh Mini
   },
 
   /* ---------------- DELIVERY STATE MACHINE ---------------- */
