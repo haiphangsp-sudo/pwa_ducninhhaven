@@ -6,91 +6,7 @@
   animation:ack .5s ease;
   white-space: nowrap;
 }
-/* Khung nền chung cho thông báo */
-.overlay__ack {
-  position: fixed;
-  padding: 12px 24px;
-  border-radius: 8px;
-  color: white;
-  font-weight: 500;
-  font-size: 14px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  transition: all 0.3s ease;
-  pointer-events: none; /* Không cản trở người dùng click */
-  min-width: 200px;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.6); /* Màu xám mờ sang trọng */
-    z-index: 10000; /* Cao nhất để đè lên cả Drawer và Picker */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
 
-/* Các trạng thái màu sắc */
-.overlay__ack.success {
-  background-color: #2ecc71; /* Xanh lá cho thành công */
-}
-
-.overlay__ack.error {
-  background-color: #e74c3c; /* Đỏ cho lỗi */
-}
-
-.overlay__ack.sending {
-  background-color: #3498db; /* Xanh dương cho lúc đang gửi */
-}
-
-/* Trạng thái ẩn */
-.overlay__ack.hidden {
-  opacity: 0;
-  visibility: hidden;
-  top: 0px; /* Hiệu ứng trượt nhẹ từ trên xuống khi hiện */
-}
-.overlay__ack::before {
-  margin-right: 6px;
-}
-
-.overlay__ack.success::before {
-  content: "✓";
-}
-
-.overlay__ack.error::before {
-  content: "!";
-}
-
-.overlay__ack.sending::before {
-  content: "…";
-}
-.overlay__ack {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.6);
-  color: white;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:20px;
-  z-index:1200;
-}
-
-/* Hộp chữ thông báo bên trong */
-.overlay__ack {
-  position: relative;   /* Không dùng fixed ở đây nữa vì đã có container bọc ngoài */
-  z-index: 9999;
-  padding: 16px 32px;
-  border-radius: 12px;
-  background: #333;     /* Màu nền của hộp chữ */
-  color: white;
-  /* ... các style khác ... */
-}
-
-/* Khi ẩn */
-.hidden {
-  display: none !important;
-  opacity: 0;
-}
  .overlay__panel{
   position:fixed;
   z-index:1000;
@@ -191,38 +107,6 @@
     100% { opacity: 1; }
 }
 
-/* =====================
-   ACK OVERLAY (Haptic Visual)
-===================== */
-
-#ackOverlay {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 10000;
-    background: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(4px); /* Hiệu ứng kính mờ sang trọng */
-    color: white;
-    padding: 20px 30px;
-    border-radius: var(--radius-l, 16px);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    pointer-events: none;
-    transition: opacity 0.2s ease;
-}
-
-#ackOverlay.hidden {
-    opacity: 0;
-}
-
-.ack-icon {
-    font-size: 32px;
-    color: var(--success);
-    animation: bounceIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
 
 @keyframes bounceIn {
     0% { transform: scale(0.3); opacity: 0; }
@@ -274,4 +158,89 @@
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
+}
+.overlay__ack {
+  position: fixed;
+  left: 50%;
+  bottom: 88px;
+  transform: translateX(-50%) translateY(8px);
+  min-width: 220px;
+  max-width: calc(100vw - 32px);
+  padding: 0;
+  border-radius: 14px;
+  box-shadow: 0 10px 28px rgba(0,0,0,.18);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .22s ease, transform .22s ease;
+  z-index: 1200;
+}
+
+.overlay__ack.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.overlay__ack.hidden {
+  display: none;
+}
+
+.ack__inner {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  color: #fff;
+}
+
+.ack__icon {
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  line-height: 1;
+  border-radius: 999px;
+  background: rgba(255,255,255,.16);
+}
+
+.ack__content {
+  min-width: 0;
+}
+
+.ack__title {
+  font-weight: 700;
+  line-height: 1.25;
+  margin-bottom: 2px;
+}
+
+.ack__message {
+  line-height: 1.35;
+  opacity: .96;
+}
+
+.overlay__ack.ack--success {
+  background: #2f7d57;
+}
+
+.overlay__ack.ack--error {
+  background: #b64134;
+}
+
+.overlay__ack.ack--info {
+  background: #3a5f8a;
+}
+
+.overlay__ack.ack--sending {
+  background: #4c5a52;
+}
+
+.overlay__ack.ack--sending .ack__icon {
+  animation: ack-spin 1s linear infinite;
+}
+
+@keyframes ack-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
