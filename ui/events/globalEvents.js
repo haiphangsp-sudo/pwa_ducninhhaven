@@ -94,7 +94,7 @@ function handleGlobalClick(e) {
         orders: {
           active: [],
           inactive: [],
-          isBarExpanded: cmd.value ? true : false
+          isBarExpanded: cmd.value
         }
       });
        e.stopPropagation();
