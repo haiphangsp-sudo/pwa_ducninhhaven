@@ -5,7 +5,7 @@ import { CONFIG } from "../../config.js";
 import { syncOverlay } from "../../ui/interactions/backdropManager.js"
 import { addToCart, submitOrder } from "../../core/events.js";
 import { renderPlacePicker } from "../render/renderPlacePicker.js";
-import { renderDrawer, updateSendButton } from "../render/renderDrawer.js";
+import { renderDrawer } from "../render/renderDrawer.js";
 import { renderNavBar } from "../render/renderNavBar.js";
 import { renderCartBar } from "../render/renderCartBar.js";
 import { renderStatusBar } from "../render/renderStatusBar.js";
@@ -60,9 +60,7 @@ async function syncUI(state) {
     }
     syncOverlay(activeId);
   }
-  if (activeId === null && state.overlay.source === "send_cart"){
-    updateSendButton(state);
-  } 
+
   /* ---------- CONTEXT ---------- */
   
   if (state.context !== prevState.context) {

@@ -14,9 +14,7 @@ export function renderDrawer(state) {
   const itemsEl = document.getElementById("drawerItems");
   const summaryEl = drawer.querySelector(".drawer-summary");
   const sendBtn = document.getElementById("drawerSend");
-  const type = state.order.type;
 
-  const cart = getDrawerExtended(state);
 
   if (cart.isEmpty) {
     if (summaryEl) summaryEl.classList.add("hidden");
@@ -63,33 +61,31 @@ export function renderDrawer(state) {
       </div>
     </div>
   `).join("");
-    updateSendButton(state);
-}
 
-export function updateSendButton(state) {
-  const sendBtn = document.getElementById("drawerSend");
-  if (!sendBtn) return;
 
-  const isSending = state.order.status === "sending";
+  const isSending = state?.order?.status === "sending";
+  const hasPlace = !!state?.order?.hasPlace;
 
-  // 1. Cập nhật Text dựa trên trạng thái
+  // reset class về base trước
+  sendBtn.classList.remove("is-loading", "is-warning", "is-disabled");
+
+  // 1. SENDING (ưu tiên cao nhất)
   if (isSending) {
-    //loadingCartBar();
     sendBtn.textContent = translate("cart_bar.sending");
-    setTimeout(() => sendBtn.classList.remove("is-loading"), 500);
-    sendBtn.disabled = isSending; 
-    sendBtn.style.opacity = "0.6";
-  } 
-  const hasPlace = state.order.hasPlace;
-  if (!hasPlace) {
-    sendBtn.classList.add("is-warning");
-    sendBtn.textContent = translate("cart_bar.place_prompt");
-    sendBtn.style.opacity = "0.6";
+    sendBtn.classList.add("is-loading");
+    sendBtn.disabled = true;
     return;
   }
-  
+
+  // 2. CHƯA CÓ PLACE
+  if (!hasPlace) {
+    sendBtn.textContent = translate("cart_bar.place_prompt");
+    sendBtn.classList.add("is-warning", "is-disabled");
+    sendBtn.disabled = false; // vẫn cho bấm → mở picker
+    return;
+  }
+
+  // 3. NORMAL
   sendBtn.textContent = translate("cart_bar.send_request");
-  sendBtn.classList.toggle("is-loading", isSending);
-  sendBtn.classList.toggle("is-warning", !hasPlace);
-  sendBtn.style.opacity = "1";
+  sendBtn.disabled = false;
 }
