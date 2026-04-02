@@ -1,7 +1,6 @@
 // ui/render/renderDrawer.js
 import { translate } from "../utils/translate.js";
 import { getDrawerExtended } from "../../core/menuQuery.js";
-import { getActivePlaceId } from "../../core/context.js";
 
 export function renderDrawer(state) {
   const drawer = document.getElementById("cartDrawer");
@@ -21,15 +20,24 @@ export function renderDrawer(state) {
 
   if (cart.isEmpty) {
     if (summaryEl) summaryEl.classList.add("hidden");
-    itemsEl.innerHTML = `<div class="p-xl center opacity-50">${translate("cart_bar.empty")}</div>`;
+    itemsEl.innerHTML = `
+    <div class="p-xl center text-muted stack items-center">
+        <div class="text-xxl mb-m">🛒</div>
+        <p>${translate("cart_bar.empty")}</p>
+    </div>
+    `
     if (totalEl) totalEl.textContent = "0 đ";
     if (countEl) countEl.textContent = "0";
-    
+    if (uniqueEl) uniqueEl.textContent = "0";
+    sendBtn.textContent(translate("cart_bar.close"));
+    sendBtn.dataset.action("close-overlay");
+    sendBtn.dataset.value = "cartDrawer";
+    sendBtn.classList.remove("is-loading", "is-warning");
     return;
   }
-  sendBtn.disabled = false;
   sendBtn.dataset.action = "send_cart";
-  sendBtn.dataset.option = "send";
+  sendBtn.dataset.option = "";
+  sendBtn.dataset.value = "";
   sendBtn.dataset.extra = "sending";
   
   updateSendButton(state, sendBtn);
@@ -62,19 +70,27 @@ export function renderDrawer(state) {
 function updateSendButton(state, sendBtn) {
   const { order, context} = state;
   const isSending = order.status === "sending";
-  const hasPlace = getActivePlaceId();
+  const hasPlace = context.active.id;
 
   // 1. Cập nhật Text dựa trên trạng thái
   if (isSending) {
-    loadingCartBar();
-    sendBtn.disabled = true;
+    //loadingCartBar();
     sendBtn.textContent = translate("cart_bar.sending");
     setTimeout(() => target.classList.remove("is-loading"), 500);
-  } else {
-    sendBtn.disabled = false;
-    sendBtn.textContent = translate("cart_bar.send_request");
-  }  
+  } 
+    
+  if (!hasPlace) {
+    sendBtn.classList.add("is-warning");
+    sendBtn.textContent = translate("cart_bar.no_place");
+    return;
+  }else{
+    sendBtn.classList.remove("is-warning");
+  }
+  
+  //sendBtn.disabled = false;
+  sendBtn.textContent = translate("cart_bar.send_request");
   sendBtn.classList.toggle("is-loading", isSending);
+  sendBtn.classList.toggle("is-warning", !hasPlace);
   // Wellness touch: Nếu chưa có chỗ ngồi, nút có thể mờ đi một chút
-  sendBtn.style.opacity = hasPlace ? "1" : "0.6";
+  //sendBtn.style.opacity = hasPlace ? "1" : "0.6";
 }

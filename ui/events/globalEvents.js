@@ -2,11 +2,12 @@
 
 import { setState } from "../../core/state.js";
 import { updateCartQuantity } from "../../core/events.js";
-import { applyPlaceById, getActivePlaceId } from "../../core/context.js";
+import { applyPlaceById } from "../../core/context.js";
 import { syncContextToState } from "../../core/state.js";
 import { statutBarEvent } from "../render/renderStatusBar.js";
 import { toggleStatusBar } from "../../ui/components/statusBar.js";
 import { animateFlyToCart } from "../../ui/interactions/animateFlyToCart.js";
+import { getUIFlags } from "../../data/helpers.js";
 
 
 /* =========================
@@ -29,13 +30,17 @@ function handleGlobalClick(e) {
   const target = e.target.closest("[data-action]");
   if (!target) return;
 
+  const { state, hasPlace, isCartEmpty, isSending } = getUIFlags();
+
+
   const cmd = {
     action: target.dataset.action,
     value: target.dataset.value,
     option: target.dataset.option,
     extra: target.dataset.extra
   };
-  
+  const source = cmd.action;
+
 
   switch (cmd.action) {
 
@@ -51,7 +56,7 @@ function handleGlobalClick(e) {
       break;
 
     case "open-overlay":
-      setState({ overlay: { view: cmd.value , source: cmd.action} });
+      setState({ overlay: { view: cmd.value, source: source } });
       break;
 
     case "close-overlay":
@@ -62,23 +67,23 @@ function handleGlobalClick(e) {
     
     case "select-place":
       setState({
-        overlay: { view: null,source: "" }
+        overlay: { view: null, source: "" }
       });
       applyPlaceById(cmd.value);
       break;
 
     /* ---------- CART / ORDER ---------- */
     case "add_cart":
-      setOrder(cmd, cmd.action)
+      setOrder(cmd)
       animateFlyToCart(target);
       break;
 
     case "buy_now":
-      checkCart(cmd,cmd.action);
+      checkCart(cmd, hasPlace, source);
       break;
 
     case "send_cart":
-      checkCart(cmd);
+      checkCart(cmd, hasPlace, source);
       break;
     
     case "update-qty":
@@ -86,6 +91,17 @@ function handleGlobalClick(e) {
       updateCartQuantity(cmd.value, delta);
       break;
     
+    case "toggle_status":
+      setState({
+        orders: {
+          active: [],
+          inactive: [],
+          isBarExpanded: isCartEmpty ? false : true
+        }
+      });
+       e.stopPropagation();
+      break;
+
     /* ---------- LANGUAGE ---------- */
 
     case "change-lang":
@@ -96,8 +112,8 @@ function handleGlobalClick(e) {
       break;
   }
 }
-function checkCart(cmd,s) {
-  if (getActivePlaceId()!==null) {
+function checkCart(cmd,hasPlace,s) {
+  if (hasPlace) {
     setOrder(cmd);
 
   }else{

@@ -79,3 +79,13 @@ export function getLocationLabel() {
   }
 }
 
+export function getUIFlags() {
+  const state = getState();
+  return {
+    ...state,
+    hasPlace: !!state.context?.active?.id,
+    isCartEmpty: !(state.cart?.items?.length > 0),
+    isSending: state.order?.status === "pending"
+  };
+}
+

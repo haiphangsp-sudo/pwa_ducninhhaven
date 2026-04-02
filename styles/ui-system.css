@@ -138,3 +138,7 @@
 .gap-m{ gap:16px }
 .gap-l{ gap:24px }
 
+.text-muted{
+  color:#666;
+  opacity: 0.5;
+}

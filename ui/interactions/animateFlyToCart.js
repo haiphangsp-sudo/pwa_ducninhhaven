@@ -1,5 +1,5 @@
 
-export function animateFlyToCartGood(sourceEl) {
+export function animateFlyToCart(sourceEl) {
   if (!sourceEl) return;
 
   const cartBtn =
@@ -36,8 +36,7 @@ export function animateFlyToCartGood(sourceEl) {
   });
 
   ghost.addEventListener(
-    "transitionend",
-    () => {
+    "transitionend",() => {
       ghost.remove();
       cartBtn.classList.add("cart-bounce");
       setTimeout(() => cartBtn.classList.remove("cart-bounce"), 380);
@@ -47,7 +46,7 @@ export function animateFlyToCartGood(sourceEl) {
 }
 
 
- export function animateFlyToCart(startElement) {
+ export function animateFlyToCartGeme(startElement) {
     const target = document.querySelector('#cartBar .cart-bar__icon');
     if (!startElement || !target) return;
 

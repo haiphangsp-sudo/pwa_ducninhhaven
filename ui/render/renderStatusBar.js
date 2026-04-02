@@ -9,6 +9,14 @@ export function renderStatusBar(state) {
     const countEl = document.getElementById("orderActiveCount");
     const textEl = document.getElementById("orderStatusText");
     const btnCheck = document.getElementById("btnCheckOrders");
+    const btnToggle = document.getElementById('btnToggleBar');
+
+    btnToggle.dataset.action = toggle_status;
+    btnToggle.dataset.value = true;
+    btnCheck.dataset.action = check_orders;
+    btnCheck.dataset.value = true;
+
+
     
     if (!bar || !textEl || !countEl) return;
 
@@ -47,16 +55,4 @@ export function renderStatusBar(state) {
             : `🛒 Giỏ hàng có ${totalCartQty} món`;
         bar.className = `status-bar is-idle ${!isBarExpanded ? 'is-collapsed' : ''}`;
     }
-}
-export function statutBarEvent() {
-    
-    const statusBar = document.getElementById('orderStatusBar');
-    const btnToggle = document.getElementById('btnToggleBar');
-
-    btnToggle?.addEventListener('click', (e) => {
-        e.stopPropagation();
-        statusBar.classList.toggle('is-collapsed');
-    });
-
-    
 }
