@@ -74,7 +74,7 @@ function updateSendButton(state, sendBtn) {
   if (isSending) {
     //loadingCartBar();
     sendBtn.textContent = translate("cart_bar.sending");
-    setTimeout(() => target.classList.remove("is-loading"), 500);
+    setTimeout(() => sendBtn.classList.remove("is-loading"), 500);
     sendBtn.disabled = isSending; 
     sendBtn.style.opacity = "0.6";
   } 

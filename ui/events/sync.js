@@ -95,7 +95,6 @@ async function syncUI(state) {
     localStorage.setItem(CONFIG.LANG_KEY, state.lang.current);
     syncLanguage(state);
   }
-  
 
   if (state.ack.visible !== prevState.ack?.visible) {
     renderAck(state);
@@ -105,6 +104,7 @@ async function syncUI(state) {
   }
   handleOrderLogic(state, prevState);
   syncStepperStates(state, prevState);
+
 
 }
 

@@ -26,7 +26,13 @@ export function attachAppEvents() {
 function handleGlobalClick(e) {
   const target = e.target.closest("[data-action]");
   if (!target) return;
-
+  setState({
+    orders: {
+      active: {
+        status: 'COOKING'
+      }
+    }
+  });
   const { state, hasPlace, isExpanded, isCartEmpty, isSending } = getUIFlags();
 
 
