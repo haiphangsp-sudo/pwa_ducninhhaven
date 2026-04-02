@@ -59,7 +59,7 @@ export function addToCart(e) {
   if (!itemId) return;
   
   updateCartQuantity(itemId, 1);
-  showToast({ type: "success", message: "cart_bar.added", duration: 0 });
+  showToast("success","cart_bar.added");
 }
 
 
