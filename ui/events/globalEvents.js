@@ -92,11 +92,10 @@ function handleGlobalClick(e) {
     case "toggle_status":
       setState({
         orders: {
-          active: [],
-          inactive: [],
-          isBarExpanded: { isBarExpanded: !isExpanded }
+            ...state.orders, // Giữ nguyên active và inactive hiện có
+            isBarExpanded: cmd.value // Chỉ đảo ngược trạng thái đóng/mở
         }
-      });
+    });
        e.stopPropagation();
       break;
 
