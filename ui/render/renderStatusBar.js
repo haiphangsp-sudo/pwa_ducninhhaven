@@ -23,7 +23,7 @@ export function renderStatusBar(state) {
     if (isBarExpanded) {
         bar.classList.add("is-collapsed");
     } else {
-        bar.classList.false("is-collapsed");
+        bar.classList.remove("is-collapsed");
     }
 
     // 2. CHỐT CHẶN HIỂN THỊ (Ẩn toàn bộ nếu không có gì)
