@@ -11,9 +11,9 @@ export function renderStatusBar(state) {
     const btnCheck = document.getElementById("btnCheckOrders");
     const btnToggle = document.getElementById('btnToggleBar');
 
-    btnToggle.dataset.action = toggle_status;
+    btnToggle.dataset.action = "toggle_status";
     btnToggle.dataset.value = true;
-    btnCheck.dataset.action = check_orders;
+    btnCheck.dataset.action = "check_orders";
     btnCheck.dataset.value = true;
 
 
