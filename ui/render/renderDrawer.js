@@ -68,9 +68,7 @@ export function renderDrawer(state) {
 }
 
 function updateSendButton(state, sendBtn) {
-  const { order, context} = state;
-  const isSending = order.status === "sending";
-  const hasPlace = context.active.id;
+  const isSending = state.order.status === "sending";
 
   // 1. Cập nhật Text dựa trên trạng thái
   if (isSending) {
@@ -78,7 +76,7 @@ function updateSendButton(state, sendBtn) {
     sendBtn.textContent = translate("cart_bar.sending");
     setTimeout(() => target.classList.remove("is-loading"), 500);
   } 
-    
+  const hasPlace = state.order.hasPlace;
   if (!hasPlace) {
     sendBtn.classList.add("is-warning");
     sendBtn.textContent = translate("cart_bar.no_place");

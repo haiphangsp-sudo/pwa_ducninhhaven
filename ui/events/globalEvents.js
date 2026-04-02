@@ -37,7 +37,7 @@ function handleGlobalClick(e) {
     option: target.dataset.option,
     extra: target.dataset.extra
   };
-  const source = cmd.action;
+  const sou = cmd.action;
 
 
   switch (cmd.action) {
@@ -54,7 +54,7 @@ function handleGlobalClick(e) {
       break;
 
     case "open-overlay":
-      setState({ overlay: { view: cmd.value, source: source } });
+      setState({ overlay: { view: cmd.value, source: sou } });
       break;
 
     case "close-overlay":
@@ -65,23 +65,23 @@ function handleGlobalClick(e) {
     
     case "select-place":
       setState({
-        overlay: { view: null, source: "" }
+        overlay: { view: null, source: { ...state.source } }
       });
       applyPlaceById(cmd.value);
       break;
 
     /* ---------- CART / ORDER ---------- */
     case "add_cart":
-      setOrder(cmd)
+      setOrder( cmd, hasPlace )
       animateFlyToCart(target);
       break;
 
     case "buy_now":
-      checkCart(cmd, hasPlace, source);
+      checkCart(cmd, hasPlace, sou);
       break;
 
     case "send_cart":
-      checkCart(cmd, hasPlace, source);
+      checkCart(cmd, hasPlace, sou);
       break;
     
     case "update-qty":
@@ -110,22 +110,22 @@ function handleGlobalClick(e) {
       break;
   }
 }
-function checkCart(cmd,hasPlace,s) {
+function checkCart( cmd, hasPlace, sou ) {
   if (hasPlace) {
     setOrder(cmd);
 
   }else{
     setState({
-      overlay: { view: "placePicker",source:s }
+      overlay: { view: "placePicker",source: sou }
     });
   }
 }
 
-function setOrder(cmd) {
+function setOrder(cmd, hasPlace) {
   setState({
     order: {
       action: cmd.action,
-      mode: cmd.option,
+      hasPlace: { place: hasPlace },
       line: cmd.value,
       status: cmd.extra,
       at: Date.now()
