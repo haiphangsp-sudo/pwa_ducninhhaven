@@ -94,7 +94,6 @@ function handleGlobalClick(e) {
         orders: {
             ...state.orders,
             isBarExpanded: !isExpanded
-        
         }
     });
        e.stopPropagation();
