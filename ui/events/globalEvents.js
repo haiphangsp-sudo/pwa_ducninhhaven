@@ -93,7 +93,7 @@ function handleGlobalClick(e) {
       setState({
         orders: {
             ...state.orders,
-            isBarExpanded: isExpanded ? false : true
+            isBarExpanded: !isExpanded
         
         }
     });
