@@ -12,6 +12,7 @@ export function renderStatusBar(state) {
     const btnToggle = document.getElementById('btnToggleBar');
 
     btnToggle.dataset.action = "toggle_status";
+    btnToggle.dataset.value = true;
     btnCheck.dataset.action = "check_orders";
     btnCheck.dataset.value = true;
 
@@ -24,11 +25,10 @@ export function renderStatusBar(state) {
     // 1. QUẢN LÝ ĐÓNG/MỞ (is-collapsed)
     if (isBarExpanded) {
         bar.classList.add("is-collapsed");
-        btnToggle.dataset.value = true;
     } else {
         bar.classList.remove("is-collapsed");
-        btnToggle.dataset.value = false;
     }
+    btnToggle.dataset.value = !isBarExpanded;
 
     // 2. CHỐT CHẶN HIỂN THỊ (Ẩn toàn bộ nếu không có gì)
     if (active.length === 0 && totalCartQty === 0) {
