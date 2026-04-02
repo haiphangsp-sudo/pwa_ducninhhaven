@@ -1,6 +1,7 @@
 // ui/render/renderDrawer.js
 import { translate } from "../utils/translate.js";
 import { getUIFlags } from "../../data/helpers.js";
+import { getDrawerExtended } from "../../core/menuQuery.js";
 
 export function renderDrawer(state) {
   const drawer = document.getElementById("cartDrawer");
@@ -15,8 +16,10 @@ export function renderDrawer(state) {
   const summaryEl = drawer.querySelector(".drawer-summary");
   const sendBtn = document.getElementById("drawerSend");
 
-  const { isCartEmpty, hasPlace, isSending } = getUIFlags();
-  if (isCartEmpty) {
+  const { items, totalQty, itemUnique, isEmpty, totalPriceFormat } = getDrawerExtended();
+
+  const { hasPlace, isSending } = getUIFlags();
+  if (isEmpty) {
     if (summaryEl) summaryEl.classList.add("hidden");
     itemsEl.innerHTML = `
     <div class="p-xl center text-muted stack items-center">
@@ -41,13 +44,13 @@ export function renderDrawer(state) {
   drawerHeader.textContent = translate("cart_bar.cart_title");
   
   if (summaryEl) summaryEl.classList.remove("hidden");
-  totalEl.textContent = cart.totalPrice;
+  totalEl.textContent = totalPriceFormat;
   
-  countEl.textContent = cart.totalQty;
-  uniqueEl.textContent = cart.itemUnique;
+  countEl.textContent = totalQty;
+  uniqueEl.textContent = itemUnique;
 
   // 3. Vẽ danh sách món
-  itemsEl.innerHTML = cart.items.map(item => `
+  itemsEl.innerHTML = items.map(item => `
     <div class="drawer__item drawer-item" data-id="${item.id}">
       <div class="drawer__info">
         <strong>${item.productLabel}</strong>
