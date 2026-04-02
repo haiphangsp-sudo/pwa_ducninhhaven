@@ -113,19 +113,19 @@ export async function submitOrder(action) {
 
   // Cập nhật UI sang trạng thái gửi
   setState({ order: { ...state.order, status: "pending" } });
-  showAck("sending", "cart_bar.sending", 0);
+  showToast({ type: "sending", message:"cart_bar.sending"});
   try {
     const res = await sendRequest(payload);
     if (res?.success) {
       finalizeOrderSuccess(action);
       notifyResponse(res, payload);
-      showAck("success", "cart_bar.success", 3000);
+      showToast({ type: "success", message: "cart_bar.success", duration: 3000 });
       return true;
     }
     throw new Error("API_FAIL");
   } catch (error) {
     setState({ order: { ...getState().order, status: "error" } });
-    showAck("error", "cart_bar.error", 2500);
+    showToast({type: "error", message: "cart_bar.error", duration: 2500});
     notifyResponse(error, payload);
     return false;
   } finally {

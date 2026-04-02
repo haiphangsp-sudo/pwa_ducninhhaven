@@ -42,16 +42,14 @@ export function renderStatusBar(state) {
         countEl.textContent = active.length; // Số lượng đơn đang chạy
         textEl.innerHTML = renderStepper(latestOrder.status);
         bar.className = `status-bar is-${latestOrder.status} ${!isBarExpanded ? 'is-collapsed' : ''}`;
-    } 
+    }
     else {
         // TRƯỜNG HỢP: Chỉ có giỏ hàng
         countEl.textContent = totalCartQty;
         const locationName = state.context?.active?.name || "";
-        textEl.textContent = locationName 
+        textEl.textContent = locationName
             ? `${locationName} • ${totalCartQty} món`
             : `🛒 Giỏ hàng có ${totalCartQty} món`;
         bar.className = `status-bar is-idle ${!isBarExpanded ? 'is-collapsed' : ''}`;
     }
 }
-
-

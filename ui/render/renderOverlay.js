@@ -52,3 +52,16 @@ export function showToast({
     }, duration);
   }
 }
+//*type: "success" | "error" | "info" | "sending"*//
+
+export const toastSuccess = (msg) =>
+  showToast({ type: "success", message: msg });
+
+export const toastError = (msg) =>
+  showToast({ type: "error", message: msg });
+
+export const toastInfo = (msg) =>
+  showToast({ type: "info", message: msg });
+
+export const toastWarning = (msg) =>
+  showToast({ type: "warning", message: msg }); 

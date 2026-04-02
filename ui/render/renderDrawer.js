@@ -40,8 +40,6 @@ export function renderDrawer(state) {
   sendBtn.dataset.value = "";
   sendBtn.dataset.extra = "sending";
   
-  updateSendButton(state, sendBtn);
-
   drawerHeader.textContent = translate("cart_bar.cart_title");
   
   if (summaryEl) summaryEl.classList.remove("hidden");
@@ -65,9 +63,13 @@ export function renderDrawer(state) {
       </div>
     </div>
   `).join("");
+    updateSendButton(state);
 }
 
-function updateSendButton(state, sendBtn) {
+export function updateSendButton(state) {
+  const sendBtn = document.getElementById("drawerSend");
+  if (!sendBtn) return;
+
   const isSending = state.order.status === "sending";
 
   // 1. Cập nhật Text dựa trên trạng thái
