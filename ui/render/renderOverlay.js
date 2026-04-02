@@ -19,3 +19,32 @@ export function renderAck(state) {
   el.classList.remove("hidden");
   el.classList.add("show");
 }
+
+let toastTimer = null;
+
+export function showToast({ type = "info", message = "", duration = 2500 }) {
+  if (toastTimer) clearTimeout(toastTimer);
+
+  setState({
+    ack: {
+      visible: true,
+      status: type,
+      message: translate(message),
+      at: Date.now()
+    }
+  });
+
+  if (duration > 0) {
+    toastTimer = setTimeout(() => {
+      setState({
+        ack: {
+          visible: false,
+          status: null,
+          message: "",
+          at: null
+        }
+      });
+      toastTimer = null;
+    }, duration);
+  }
+}

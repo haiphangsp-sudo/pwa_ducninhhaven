@@ -1,8 +1,7 @@
 // ui/notifications.js (hoặc đặt trong core/actions.js)
 
 import { onOrderSuccess } from "../core/events.js";
-// Giả định bạn có hàm showToast hoặc showOverlay để hiển thị thông báo
-// import { showToast } from "./utils.js"; 
+import { showToast } from "../ui/render/renderOverlay.js"; 
 
 /**
  * Điều phối thông báo và hành động UI dựa trên kết quả gửi đơn

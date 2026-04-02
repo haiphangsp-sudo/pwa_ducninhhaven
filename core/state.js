@@ -67,7 +67,7 @@ export let UI = {
 
   ack: {
     visible: false,
-    status: null,
+    status: null, //"success" | "error" | "info" | "sending"
     title: "",
     message: "",
     at: null

@@ -3,33 +3,13 @@
 import { getState, setState } from "./state.js";
 import { sendRequest } from "../services/api.js";
 import { getVariantById } from "./menuQuery.js";
-import { getActivePlaceId, getActivePlaceType, getContext} from "../core/context.js";
+import { getActivePlaceId, getActivePlaceType } from "../core/context.js";
 import { getLocationLabel } from "../data/helpers.js";
 import { notifyResponse } from "./action.js"
 import { renderStatusBar } from "../ui/render/renderStatusBar.js"
+import { showToast } from "../ui/render/renderOverlay.js";
 
 
-/* ========================================================
-   1. UI FEEDBACK HELPERS
-   ======================================================== */
-
-function showAck(status, message = "", timeout = 1500) {
-  setState({
-    ack: { visible: true, status, message, at: Date.now() }
-  });
-
-  // Nếu có set timeout, tự động đóng sau x giây
-  if (timeout > 0) {
-    setTimeout(() => {
-      setState({
-        ack: { visible: false, status: null, message: "", at: null }
-      });
-    }, timeout);
-  }
-}
-/* ========================================================
-   3. CART ACTIONS
-   ======================================================== */
 export async function updateCartQuantity(itemId, delta) {
   const state = getState();
   const items = [...(state.cart?.items || [])];
@@ -79,8 +59,7 @@ export function addToCart(e) {
   if (!itemId) return;
   
   updateCartQuantity(itemId, 1);
-
-  //showAck("success", "cart_bar.added");
+  showToast({ type: "success", message: "cart_bar.added", duration: 0 });
 }
 
 
