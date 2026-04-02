@@ -33,7 +33,7 @@ export function attachUI() {
 async function syncUI(state) {
 
 
-   // Deep copy để so sánh
+  // Deep copy để so sánh
   const prevState = lastState
     ? JSON.parse(JSON.stringify(lastState))
     : { order: {}, cart: { items: [] } };
@@ -42,27 +42,27 @@ async function syncUI(state) {
   
 
   /* ---------- OVERLAY ---------- */
-    const activeId = state.overlay.view;
-    if (activeId !== prevState.overlay?.view) {
+  const activeId = state.overlay.view;
+  if (activeId !== prevState.overlay?.view) {
         
-        switch (activeId) {
+    switch (activeId) {
         
-            case "cartDrawer":
-            renderDrawer(state);
-            break;
+      case "cartDrawer":
+        renderDrawer(state);
+        break;
 
-            case "placePicker":
-            renderPlacePicker(state);
-            updateSendButton(state);
+      case "placePicker":
+        renderPlacePicker(state);
+        break;
 
-            break;
-
-            default:
-            break;
-        }
-        syncOverlay(activeId);
+      default:
+        break;
     }
-
+    syncOverlay(activeId);
+  }
+  if (activeId === null && state.overlay.source === "send_cart"){
+    updateSendButton(state);
+  } 
   /* ---------- CONTEXT ---------- */
   
   if (state.context !== prevState.context) {
