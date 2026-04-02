@@ -13,6 +13,7 @@ import { renderHub, eventHub } from "../render/renderHub.js";
 import { renderPanel } from "../render/renderPanel.js";
 import { updateStepperUI } from "../render/renderStepper.js";
 import { renderAck } from "../render/renderOverlay.js";
+import { getUIFlags } from "../../data/helpers.js";
 
 let lastState = null; 
 let isProcessingOrder = false;
@@ -120,17 +121,35 @@ function syncLanguage(state) {
 
 /* --- 1. Xử lý luồng Đặt hàng --- */
 async function handleOrderLogic(state, prevState) {
+  const { hasPlace } = getUIFlags();
   const { action, at } = state.order || {};
   if (!action || !at || at === prevState.order?.at || isProcessingOrder) return;
 
   isProcessingOrder = true;
   try {
-    if (action === "add_cart") {
+    switch (action) {
       //bounceCartBar();
-      addToCart(); 
-    } else {
-      await submitOrder(action);
+
+      case "add_cart":
+        addToCart();
+        break;
+      
+      case "buy_now":
+        if (hasPlace) {
+          await submitOrder(action);
+        }
+        break;
+      
+      case "send_cart":
+        if (hasPlace) {
+          await submitOrder(action);
+        }
+        break;
+      
+      default:
+        break;
     }
+
   } finally {
     isProcessingOrder = false;
   }

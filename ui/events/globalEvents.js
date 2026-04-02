@@ -33,7 +33,7 @@ function handleGlobalClick(e) {
       }
     }
   });
-  const { state, hasPlace, isExpanded, isCartEmpty, isSending } = getUIFlags();
+  const { state, hasPlace, isCartEmpty, isSending } = getUIFlags();
 
 
   const cmd = {
@@ -82,11 +82,11 @@ function handleGlobalClick(e) {
       break;
 
     case "buy_now":
-      checkCart(cmd, hasPlace, sou);
+      checkCart(cmd, hasPlace);
       break;
 
     case "send_cart":
-      checkCart(cmd, hasPlace, sou);
+      checkCart(cmd, hasPlace);
       break;
     
     case "update-qty":
@@ -114,22 +114,20 @@ function handleGlobalClick(e) {
       break;
   }
 }
-function checkCart( cmd, hasPlace, sou ) {
+function checkCart( cmd, hasPlace ) {
   if (hasPlace) {
     setOrder(cmd);
-
   }else{
     setState({
-      overlay: { view: "placePicker",source: sou }
+      overlay: { view: "placePicker" }
     });
   }
 }
 
-function setOrder(cmd, hasPlace) {
+function setOrder(cmd) {
   setState({
     order: {
       action: cmd.action,
-      hasPlace: hasPlace,
       line: cmd.value,
       status: cmd.extra,
       at: Date.now()

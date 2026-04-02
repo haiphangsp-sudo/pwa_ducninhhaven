@@ -1,6 +1,6 @@
 // ui/render/renderDrawer.js
 import { translate } from "../utils/translate.js";
-import { getDrawerExtended } from "../../core/menuQuery.js";
+import { getUIFlags } from "../../data/helpers.js";
 
 export function renderDrawer(state) {
   const drawer = document.getElementById("cartDrawer");
@@ -15,8 +15,8 @@ export function renderDrawer(state) {
   const summaryEl = drawer.querySelector(".drawer-summary");
   const sendBtn = document.getElementById("drawerSend");
 
-
-  if (cart.isEmpty) {
+  const { isCartEmpty, hasPlace, isSending } = getUIFlags();
+  if (isCartEmpty) {
     if (summaryEl) summaryEl.classList.add("hidden");
     itemsEl.innerHTML = `
     <div class="p-xl center text-muted stack items-center">
@@ -62,9 +62,8 @@ export function renderDrawer(state) {
     </div>
   `).join("");
 
-
-  const isSending = state?.order?.status === "sending";
-  const hasPlace = !!state?.order?.hasPlace;
+  //const isSending = state?.order?.status === "sending";
+  //const hasPlace = !!state?.order?.hasPlace;
 
   // reset class về base trước
   sendBtn.classList.remove("is-loading", "is-warning", "is-disabled");

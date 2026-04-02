@@ -86,7 +86,7 @@ export function getUIFlags() {
     isExpanded: state.orders.isBarExpanded,
     hasPlace: !!state.context?.active?.id,
     isCartEmpty: !(state.cart?.items?.length > 0),
-    isSending: state.order?.status === "pending"
+    isSending: state.order?.status === "sending"
   };
 }
 
