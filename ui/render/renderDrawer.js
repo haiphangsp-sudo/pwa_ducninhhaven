@@ -81,8 +81,6 @@ function updateSendButton(state, sendBtn) {
     sendBtn.classList.add("is-warning");
     sendBtn.textContent = translate("cart_bar.no_place");
     return;
-  }else{
-    sendBtn.classList.remove("is-warning");
   }
   
   //sendBtn.disabled = false;

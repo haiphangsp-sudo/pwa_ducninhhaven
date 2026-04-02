@@ -125,7 +125,7 @@ function setOrder(cmd, hasPlace) {
   setState({
     order: {
       action: cmd.action,
-      hasPlace: { place: hasPlace },
+      hasPlace: hasPlace,
       line: cmd.value,
       status: cmd.extra,
       at: Date.now()
