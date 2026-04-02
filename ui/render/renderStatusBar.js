@@ -19,17 +19,14 @@ export function renderStatusBar(state) {
     const { active, isBarExpanded } = state.orders;
     const cartItems = state.cart?.items || [];
     const totalCartQty = cartItems.reduce((s, i) => s + (Number(i.qty) || 0), 0);
-    
+
     if (isBarExpanded) {
+        bar.classList.remove("is-collapsed");
         btnToggle.dataset.value = false;
-    } else{
+    } else {
+        bar.classList.add("is-collapsed");
         btnToggle.dataset.value = true;
     }
-
-
-    // 1. QUẢN LÝ ĐÓNG/MỞ (is-collapsed)
-    //Nếu KHÔNG mở rộng (!) thì THÊM class collapse
-    bar.classList.toggle("is-collapsed", !isBarExpanded)
 
     // 2. CHỐT CHẶN HIỂN THỊ (Ẩn toàn bộ nếu không có gì)
     if (active.length === 0 && totalCartQty === 0) {
