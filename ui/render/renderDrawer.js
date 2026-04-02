@@ -16,9 +16,10 @@ export function renderDrawer(state) {
   const summaryEl = drawer.querySelector(".drawer-summary");
   const sendBtn = document.getElementById("drawerSend");
 
-  const { items, totalQty, itemUnique, isEmpty, totalPriceFormat } = getDrawerExtended();
+  const { items, totalQtyFormat, itemUnique, isEmpty, totalPrice } = getDrawerExtended();
 
   const { hasPlace, isSending } = getUIFlags();
+  
   if (isEmpty) {
     if (summaryEl) summaryEl.classList.add("hidden");
     itemsEl.innerHTML = `
@@ -36,6 +37,7 @@ export function renderDrawer(state) {
     sendBtn.classList.remove("is-loading", "is-warning");
     return;
   }
+
   sendBtn.dataset.action = "send_cart";
   sendBtn.dataset.option = "";
   sendBtn.dataset.value = "";
@@ -44,9 +46,8 @@ export function renderDrawer(state) {
   drawerHeader.textContent = translate("cart_bar.cart_title");
   
   if (summaryEl) summaryEl.classList.remove("hidden");
-  totalEl.textContent = totalPriceFormat;
-  
-  countEl.textContent = totalQty;
+  totalEl.textContent = totalPrice;
+  countEl.textContent = totalQtyFormat;
   uniqueEl.textContent = itemUnique;
 
   // 3. Vẽ danh sách món

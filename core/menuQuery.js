@@ -150,6 +150,7 @@ export function getDrawerExtended() {
     isEmpty: totalQ === 0,
     itemUnique: `${detailedItems.length} ${translate("cart_bar.unique")}`,
     totalQty: totalQ,
+    totalQtyFormat: `${totalQ} ${translate("cart_bar.items")}`,
     totalPrice: new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(totalP)
   };
 }
