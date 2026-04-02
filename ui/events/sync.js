@@ -13,8 +13,6 @@ import { renderHub, eventHub } from "../render/renderHub.js";
 import { renderPanel } from "../render/renderPanel.js";
 import { updateStepperUI } from "../render/renderStepper.js";
 import { renderAck } from "../render/renderOverlay.js";
-import { bounceCartBar } from "../render/renderCartBar.js";
-
 
 let lastState = null; 
 let isProcessingOrder = false;
@@ -81,11 +79,14 @@ async function syncUI(state) {
   
   /* ---------- CART ---------- */
 
-  if (state.cart.items !== prevState.cart?.items) {
+  if (state.cart !== lastState.cart ) {
     renderCartBar(state);
     renderDrawer(state);
-    renderStatusBar(state);
+    
     localStorage.setItem(CONFIG.CART_KEY, JSON.stringify(state.cart.items || []));
+  }
+  if (state.cart !== lastState.cart || state.ack !== lastState.ack) {
+    renderStatusBar(state);
   }
 
   /* ---------- LANGUAGE ---------- */

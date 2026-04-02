@@ -79,7 +79,7 @@ function updateSendButton(state, sendBtn) {
   const hasPlace = state.order.hasPlace;
   if (!hasPlace) {
     sendBtn.classList.add("is-warning");
-    sendBtn.textContent = translate("cart_bar.no_place");
+    sendBtn.textContent = translate("cart_bar.place_prompt");
     return;
   }
   

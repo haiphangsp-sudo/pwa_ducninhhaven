@@ -132,7 +132,7 @@ body.en .hub-btn {
 }
 
 .hub-btn.is-active .hub-label{
-  color:var(--text-main);
+  color:var(--text-brand);
   font-weight:700;
 }
 
