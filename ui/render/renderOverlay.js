@@ -22,7 +22,11 @@ export function renderAck(state) {
 
 let toastTimer = null;
 
-export function showToast({ type = "info", message = "", duration = 2500 }) {
+export function showToast({
+  type = "info",
+  message = "",
+  duration = 2500
+}) {
   if (toastTimer) clearTimeout(toastTimer);
 
   setState({
@@ -41,7 +45,7 @@ export function showToast({ type = "info", message = "", duration = 2500 }) {
           visible: false,
           status: null,
           message: "",
-          at: Date.now() 
+          at: Date.now() // QUAN TRỌNG
         }
       });
       toastTimer = null;
