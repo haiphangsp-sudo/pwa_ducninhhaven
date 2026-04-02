@@ -256,6 +256,7 @@
     justify-content: space-between;
     align-items: center;
     transition: opacity 0.3s;
+    gap: 15px;
 }
 
 .status-bar.hidden {
@@ -294,14 +295,6 @@
     font-weight: bold;
     min-width: 18px;
     text-align: center;
-}
-
-/* Phần chi tiết (Text & Button) */
-.bar-expanded {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    transition: opacity 0.3s;
 }
 
 .status-text {
