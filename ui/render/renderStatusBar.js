@@ -22,7 +22,7 @@ export function renderStatusBar(state) {
     const totalCartQty = cartItems.reduce((s, i) => s + (Number(i.qty) || 0), 0);
 
     // 1. QUẢN LÝ ĐÓNG/MỞ (is-collapsed)
-    if (!isBarExpanded) {
+    if (isBarExpanded) {
         bar.classList.add("is-collapsed");
         btnToggle.dataset.value = false;
     } else {
