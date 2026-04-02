@@ -23,7 +23,7 @@ export function renderStatusBar(state) {
     btnToggle.dataset.value = !isBarExpanded;
 
     // 1. QUẢN LÝ ĐÓNG/MỞ (is-collapsed)
-    bar.classList.toggle("is-collapsed", !isBarExpanded);
+    bar.classList.toggle("is-collapsed", isBarExpanded);
 
     // 2. CHỐT CHẶN HIỂN THỊ (Ẩn toàn bộ nếu không có gì)
     if (active.length === 0 && totalCartQty === 0) {
