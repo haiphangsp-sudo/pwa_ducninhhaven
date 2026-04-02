@@ -30,7 +30,7 @@ export function renderDrawer(state) {
     if (countEl) countEl.textContent = "0";
     if (uniqueEl) uniqueEl.textContent = "0";
     sendBtn.textContent = translate("cart_bar.close");
-    sendBtn.dataset.action("close-overlay");
+    sendBtn.dataset.action ="close-overlay";
     sendBtn.dataset.value = "cartDrawer";
     sendBtn.classList.remove("is-loading", "is-warning");
     return;
