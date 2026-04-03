@@ -24,13 +24,6 @@ export function attachAppEvents() {
 function handleGlobalClick(e) {
   const target = e.target.closest("[data-action]");
   if (!target) return;
-  setState({
-    orders: {
-      active: {
-        status: 'COOKING'
-      }
-    }
-  });
 
   const cmd = {
     action: target.dataset.action,
