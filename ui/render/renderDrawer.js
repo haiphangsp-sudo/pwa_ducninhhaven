@@ -1,7 +1,6 @@
 // ui/render/renderDrawer.js
 import { translate } from "../utils/translate.js";
-import { getUIFlags } from "../../data/helpers.js";
-import { getDrawerExtended, getLocationInfo } from "../../core/menuQuery.js";
+import { getDrawerExtended, getLocationInfo, getUIFlags } from "../../core/menuQuery.js";
 
 export function renderDrawer(state) {
   const drawer = document.getElementById("cartDrawer");
@@ -19,7 +18,7 @@ export function renderDrawer(state) {
 
   const { items, totalQtyFormat, itemUnique, isEmpty, totalPrice } = getDrawerExtended();
 
-  const { isSending } = getUIFlags();
+  const { isSending } = getUIFlags(state);
   const { hasPlace, placeName } = getLocationInfo();
 
   if (isEmpty) {

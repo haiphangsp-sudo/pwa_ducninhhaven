@@ -1,15 +1,8 @@
 // data/helpers.js
-//Hàm đọc menu theo mode (lọc hiển thị).
 
-import { getContext } from "../core/context.js";
-import { resolvePlace } from "../core/placesStore.js";
-import { translate } from "../ui/utils/translate.js";
 import { getState } from "../core/state.js";
 
 
-/* =======================================================
-   CURRENT PLACE
-======================================================= */
 /**
  * Hàm gộp sâu Bất biến: Trả về một Object hoàn toàn mới
  */
@@ -35,16 +28,5 @@ export function deepMerge(target, source) {
     }
   }
   return output;
-}
-
-export function getUIFlags() {
-  const state = getState();
-  return {
-    state,
-    isExpanded: state.orders.isBarExpanded,
-    hasPlace: !!state.context?.active?.id,
-    isCartEmpty: !(state.cart?.items?.length > 0),
-    isSending: state.order?.status === "sending"
-  };
 }
 

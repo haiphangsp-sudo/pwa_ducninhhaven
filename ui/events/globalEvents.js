@@ -5,8 +5,6 @@ import { updateCartQuantity } from "../../core/events.js";
 import { applyPlaceById } from "../../core/context.js";
 import { syncContextToState } from "../../core/state.js";
 import { animateFlyToCart } from "../../ui/interactions/animateFlyToCart.js";
-import { getUIFlags } from "../../data/helpers.js";
-
 
 /* =========================
    MAIN EVENTS
@@ -33,8 +31,6 @@ function handleGlobalClick(e) {
       }
     }
   });
-  const { state, hasPlace, isCartEmpty, isSending } = getUIFlags();
-
 
   const cmd = {
     action: target.dataset.action,
@@ -77,16 +73,16 @@ function handleGlobalClick(e) {
 
     /* ---------- CART / ORDER ---------- */
     case "add_cart":
-      setOrder( cmd, hasPlace )
+      setOrder( cmd )
       animateFlyToCart(target);
       break;
 
     case "buy_now":
-      checkCart(cmd, hasPlace);
+      checkCart(cmd);
       break;
 
     case "send_cart":
-      checkCart(cmd, hasPlace);
+      checkCart(cmd);
       break;
     
     case "update-qty":
@@ -112,15 +108,6 @@ function handleGlobalClick(e) {
 
     default:
       break;
-  }
-}
-function checkCart( cmd, hasPlace ) {
-  if (hasPlace) {
-    setOrder(cmd);
-  }else{
-    setState({
-      overlay: { view: "placePicker" }
-    });
   }
 }
 

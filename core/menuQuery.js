@@ -26,41 +26,6 @@ export function getVariants(categoryKey, productKey) {
 }
 
 /**
- * Lấy danh mục (Categories) phù hợp với vị trí khách đang đứng
- */
-export function getCategories() {
-  const ctx = getContext();
-  const menuData = getMenuData();
-
-  if (!menuData) return [];
-
-  const currentType =
-    ctx?.active?.type ||
-    ctx?.anchor?.type ||
-    null;
-
-  const out = [];
-
-  for (const [key, cat] of Object.entries(menuData)) {
-    if (!cat || cat.active === false) continue;
-
-    // Nếu có rule allow thì kiểm tra
-    if (cat.allow && currentType) {
-      if (!cat.allow.includes(currentType)) continue;
-    }
-
-    out.push({
-      key,
-      label: cat.label,
-      ui: cat.ui,
-      icon: cat.icon
-    });
-  }
-
-  return out;
-}
-
-/**
  * Lấy danh sách sản phẩm trong một Category
  */
 
@@ -153,6 +118,17 @@ export function getDrawerExtended() {
   };
 }
 
+export function getUIFlags(state = {}) {
+  const cartItems = state.cart?.items || [];
+  const order = state.order || {};
+  const context = state.context || {};
+
+  return {
+    hasPlace: !!context.active?.id,
+    isCartEmpty: cartItems.length === 0,
+    isSending: order.status === "sending"
+  };
+}
 /* =======================================================
    INTERNAL
 ======================================================= */
