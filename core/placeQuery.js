@@ -130,9 +130,6 @@ export function getPlaceIcon() {
    PICKER (QUAN TRỌNG NHẤT)
 ======================================================= */
 
-// core/placeQuery.js
-// core/placeQuery.js
-
 export function getPickerGroups() {
   const ctx = getCtx();
   const anchor = ctx?.anchor;
@@ -141,7 +138,6 @@ export function getPickerGroups() {
   // 1. QUAY LẠI LOGIC CŨ: Mặc định là "table" nếu không có anchor
   const ruleType = anchor?.type || "table"; 
   const allowedTypes = getAllowedPlaceTypes(ruleType);
-
   const out = [];
 
   ["room", "area", "table"].forEach(type => {
