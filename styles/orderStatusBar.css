@@ -57,6 +57,12 @@
     font-size: 12px;
     font-weight: 600;
     cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+}
+
+.btn-check-order:active {
+    transform: scale(0.98);
 }
 
 /* Nút Toggle < > */
