@@ -1,5 +1,9 @@
 // ui/render/renderPanel.js
 export function renderPanel(state) {
+  const categoryKey = state.panel.view; 
+  
+
+  const ui = state.panel.option;
   // Lấy đúng đường dẫn theo state.js
   const nextPanelId = state.panel.view; 
   const container = document.querySelector(".page-container");
@@ -18,11 +22,10 @@ export function renderPanel(state) {
 
   // 2. Chỉ vẽ lại nội dung khi panel còn trống (tránh render thừa)
   if (panelEl.innerHTML === "") {
-    const category = getCategory(nextPanelId);
-    if (category) {
+    if (categoryKey) {
       panelEl.innerHTML = (nextPanelId === "intro") 
-        ? renderArticle(category) 
-        : renderMenu(category);
+        ? renderArticle(categoryKey) 
+        : renderMenu(categoryKey,ui);
     }
   }
 
