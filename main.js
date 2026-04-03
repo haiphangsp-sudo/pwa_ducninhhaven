@@ -132,7 +132,7 @@ async function boot() {
     loadCart();
     normalizeContext();
     applyURLContext();
-    syncContextToState();
+    //syncContextToState();
     attachUI(); // Gắn các listener cho state
     attachAppEvents();
     
