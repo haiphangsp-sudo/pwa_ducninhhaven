@@ -129,15 +129,17 @@ export function getPlaceIcon() {
 /* =======================================================
    PICKER (QUAN TRỌNG NHẤT)
 ======================================================= */
+// core/placeQuery.js
 
 export function getPickerGroups() {
   const ctx = getCtx();
   const anchor = ctx?.anchor;
   const activeId = ctx?.active?.id;
 
-  // 1. QUAY LẠI LOGIC CŨ: Mặc định là "table" nếu không có anchor
+  // 1. Xác định luật dựa trên QR (anchor)
   const ruleType = anchor?.type || "table"; 
   const allowedTypes = getAllowedPlaceTypes(ruleType);
+
   const out = [];
 
   ["room", "area", "table"].forEach(type => {
@@ -148,12 +150,13 @@ export function getPickerGroups() {
 
     let items = [];
 
-    // 2. LOGIC CŨ: Ưu tiên dùng anchor để hiển thị ngay lập tức
+    // 2. CHỐT CHẶN: Nếu là loại Room, chỉ hiển thị đúng phòng đã quét QR
     if (type === "room" && anchor?.type === "room") {
-      // Nếu tìm thấy trong database thì dùng (để có label xịn), 
-      // nếu không thì dùng tạm chính cái anchor từ URL
-      items = [resolvePlace(anchor.id) || anchor];
+      const resolved = resolvePlace(anchor.id);
+      // Dùng anchor từ URL nếu database chưa load kịp, để nút luôn xuất hiện
+      items = [resolved || anchor]; 
     } else {
+      // Các loại khác (area, table) thì cho phép chọn thoải mái
       items = getPlaceItems(type);
     }
 
@@ -161,12 +164,12 @@ export function getPickerGroups() {
 
     out.push({
       type,
-      title: group.meta?.label ? translate(group.meta.label) : type,
+      title: translate(group.meta?.label || type),
       icon: group.meta?.icon || "",
       items: items.map(p => ({
         id: p.id,
-        label: p.label ? translate(p.label) : p.id, // Fallback dùng ID nếu chưa có label
-        isActive: activeId === p.id
+        label: translate(p.label || p.id),
+        isActive: activeId === p.id // Đánh dấu vị trí đang được chọn thực tế
       }))
     });
   });
