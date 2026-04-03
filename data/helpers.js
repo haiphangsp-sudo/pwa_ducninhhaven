@@ -36,23 +36,6 @@ export function deepMerge(target, source) {
   }
   return output;
 }
-  
-export function getCategoriesForMode() {
-  const ctx = getContext();
-  const placeType = ctx?.active?.type || ctx?.anchor?.type || null;
-  const menuData = getState().menu.data || {};
-
-  return Object.entries(menuData)
-    .filter(([, v]) => {
-      if (!v || v.active === false) return false;
-      if (!placeType) return true;
-      return !v.allow || v.allow.includes(placeType);
-    })
-    .map(([key, v]) => ({
-      key,
-      ...v
-    }));
-}
 
 export function getUIFlags() {
   const state = getState();
