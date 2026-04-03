@@ -1,8 +1,7 @@
 // core/menuQuery.js
 
-import { getContext } from "./context.js";
+import { getContext, resolvePlace } from "./context.js";
 import { getState } from "./state.js";
-import { resolvePlace } from "./placesStore.js";
 import { translate } from "../ui/utils/translate.js";
 
 export function getCategory(key) {
