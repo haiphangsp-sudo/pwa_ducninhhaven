@@ -1,7 +1,12 @@
-// ui/render/renderPlacePicker.js
-
 import { getPickerGroups } from "../../core/placeQuery.js";
+import { translate } from "../utils/translate.js";
 
+let shellReady = false;
+
+export function renderPlacePicker() {
+  renderPlacePickerShell();
+  renderPlacePickerContent();
+}
 
 function renderPlacePickerShell() {
   if (shellReady) return;
@@ -21,15 +26,13 @@ function renderPlacePickerShell() {
   shellReady = true;
 }
 
-
-
-export function renderPlacePicker() {
+function renderPlacePickerContent() {
   const groups = getPickerGroups();
 
   updatePickerTitle();
 
   ["room", "area", "table"].forEach(type => {
-    const groupData = groups.find(g => g.type === type);
+    const groupData = groups.find(group => group.type === type);
 
     if (!groupData) {
       clearGroup(type);
@@ -40,18 +43,31 @@ export function renderPlacePicker() {
   });
 }
 
+function updatePickerTitle() {
+  const titleEl = document.querySelector(".picker-panel_title");
+  if (!titleEl) return;
+
+  titleEl.textContent = translate("place.select");
+}
+
 function renderGroup(type, groupData) {
   const group = document.querySelector(`[data-group="${type}"]`);
   if (!group) return;
 
+  const items = groupData?.items || [];
+  if (!items.length) {
+    group.innerHTML = "";
+    return;
+  }
+
   group.innerHTML = `
     <div class="flex gap-s">
-      <span class="${type}-icon">${groupData.icon}</span>
-      <span class="picker-title">${groupData.title}</span>
+      <span class="${type}-icon">${groupData.icon || ""}</span>
+      <span class="picker-title">${groupData.title || type}</span>
     </div>
 
     <div class="picker-list">
-      ${groupData.items.map(place => `
+      ${items.map(place => `
         <button
           class="picker-option btn center ${place.isActive ? "is-active" : ""}"
           type="button"
@@ -63,4 +79,11 @@ function renderGroup(type, groupData) {
       `).join("")}
     </div>
   `;
+}
+
+function clearGroup(type) {
+  const group = document.querySelector(`[data-group="${type}"]`);
+  if (!group) return;
+
+  group.innerHTML = "";
 }
