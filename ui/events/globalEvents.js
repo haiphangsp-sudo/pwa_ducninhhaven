@@ -78,11 +78,11 @@ function handleGlobalClick(e) {
       break;
 
     case "buy_now":
-      checkCart(cmd);
+      setOrder(cmd);
       break;
 
     case "send_cart":
-      checkCart(cmd);
+      setOrder(cmd);
       break;
     
     case "update-qty":
