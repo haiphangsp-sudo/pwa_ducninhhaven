@@ -17,9 +17,9 @@ export function renderNavBar(state) {
 
 function updateNavBar(state) {
   const currentLang = state.lang.current;
-  const {mode, placeName, anchor} = getLocationInfo();
+  const {placeName, anchor} = getLocationInfo();
 
-  if (refs.identityIcon) refs.identityIcon.textContent = getPlaceIcon(mode);
+  if (refs.identityIcon) refs.identityIcon.textContent = getPlaceIcon();
   if (refs.identityLabel) refs.identityLabel.textContent = getIdentityLabel(anchor);
   if (refs.locLabel) refs.locLabel.textContent = placeName;
 
