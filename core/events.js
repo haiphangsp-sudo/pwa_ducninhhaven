@@ -3,8 +3,7 @@
 import { getState, setState } from "./state.js";
 import { sendRequest } from "../services/api.js";
 import { getVariantById } from "./menuQuery.js";
-import { getActivePlaceId, getActivePlaceType } from "../core/context.js";
-import { getLocationLabel } from "../data/helpers.js";
+import { getLocationInfo } from "../data/helpers.js";
 import { notifyResponse } from "./action.js"
 import { renderStatusBar } from "../ui/render/renderStatusBar.js"
 import { showToast } from "../ui/render/renderOverlay.js";
@@ -84,8 +83,7 @@ const formatItemsForGAS = (rawItems) => {
   }).filter(Boolean);
 };
 function buildPayload(state, action) {
-  const placeId = getActivePlaceId();
-  const placeType = getActivePlaceType();
+  const { placeName, placeId, mode } = getLocationInfo();
   if (!placeId) return null;
 
   const rawItems = getSourceItems(state, action);
@@ -99,8 +97,8 @@ function buildPayload(state, action) {
     type: action,
     timestamp: new Date().toISOString(),
     place: placeId,
-    placeLabel: getLocationLabel(),
-    mode: placeType,
+    placeLabel: placeName,
+    mode: mode,
     items: formattedItems,
     device: navigator.userAgent
   };

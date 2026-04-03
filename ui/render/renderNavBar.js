@@ -1,8 +1,6 @@
 // ui/components/navBar.js
 
 import { translate } from "../utils/translate.js";
-import { getContext } from "../../core/context.js";
-import { resolvePlace } from "../../core/placesStore.js";
 import { getPlaceIcon, getLocationInfo } from "../../data/helpers.js";
 
 const refs = {
@@ -18,16 +16,13 @@ export function renderNavBar(state) {
 }
 
 function updateNavBar(state) {
-  const ctx = getContext();
-  const anchor = ctx?.anchor;
   const currentLang = state.lang.current;
-  
+  const {mode, placeName, anchor} = getLocationInfo();
 
-  if (refs.identityIcon) refs.identityIcon.textContent = getPlaceIcon(anchor?.type);
+  if (refs.identityIcon) refs.identityIcon.textContent = getPlaceIcon(mode);
   if (refs.identityLabel) refs.identityLabel.textContent = getIdentityLabel(anchor);
-  if (refs.locLabel) refs.locLabel.textContent = getLocationInfo().placeName;
+  if (refs.locLabel) refs.locLabel.textContent = placeName;
 
-  console.log;
   if (refs.langButtons) {
     refs.langButtons.querySelectorAll("button").forEach(btn => {
       btn.classList.toggle("is-active", btn.dataset.value === currentLang);
@@ -39,6 +34,7 @@ function updateNavBar(state) {
     document.body.classList.add(currentLang);
   }
 }
+
 function cacheElements() {
   refs.identityIcon = document.querySelector(".identity-icon");
   refs.identityLabel = document.querySelector(".identity-label");
@@ -51,7 +47,7 @@ function getIdentityLabel(anchor) {
   if (!anchor) return "Haven";
 
   const labels = {
-    room: () => translate(anchor.label || resolvePlace(anchor.id)?.label || anchor.id),
+    room: () => translate(anchor.label),
     table: () => translate("mode.table_guest"),
     area: () => translate("mode.area_guest")
   };
