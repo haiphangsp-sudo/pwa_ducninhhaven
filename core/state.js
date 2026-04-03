@@ -54,13 +54,12 @@ export let UI = {
     action: null,     // add_cart, buy_now, send_cart
     line: null,     // ID món ăn (nếu có)
     status: "idle", // idle, pending, sending, success, error, waiting_place
-    msg: "",        // Thông báo phản hồi cho khách
     at: null        // Timestamp để syncUI nhận diện cú click mới
   },
   /* ---------------- CART ---------------- */
 
   cart: {
-    items: [] 
+    items: []
   },
   /* ---------------- ACK (tap feedback) ---------------- */
 
