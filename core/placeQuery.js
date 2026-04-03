@@ -138,7 +138,8 @@ export function getPickerGroups() {
   const ruleType = anchor?.type || null;
   const allowedTypes = ruleType
     ? getAllowedPlaceTypes(ruleType)
-    : Object.keys(getGroups());
+    //: Object.keys(getGroups())
+    : ["table"];
 
   const out = [];
 
