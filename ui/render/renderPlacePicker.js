@@ -3,7 +3,6 @@
 import { getContext } from "../../core/context.js";
 import { getAllowedPlaceTypes, getPlaceGroup, getPlaceItems } from "../../core/placeQuery.js"
 import { translate } from "../utils/translate.js";
-import { getState } from "../../core/state.js";
 
 
 let shellReady = false;
