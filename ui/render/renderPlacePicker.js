@@ -106,7 +106,7 @@ function clearGroup(type) {
 }
 
 function getPlacesData() {
-  return getState().menu?.data || {};
+  return getState().places?.data || {};
 }
 
 export function renderPlacePicker() {
