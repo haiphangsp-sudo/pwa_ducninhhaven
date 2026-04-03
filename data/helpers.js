@@ -7,7 +7,9 @@ import { translate } from "../ui/utils/translate.js";
 import { getState } from "../core/state.js";
 
 
-
+/* =======================================================
+   CURRENT PLACE
+======================================================= */
 /**
  * Hàm gộp sâu Bất biến: Trả về một Object hoàn toàn mới
  */
@@ -34,13 +36,6 @@ export function deepMerge(target, source) {
   }
   return output;
 }
-function getMode() {
-    const ctx = getContext();
-    const anchor=ctx?.anchor;
-    if(!anchor) return "table";
-    return anchor.type;
-}
-
   
 export function getCategoriesForMode() {
   const ctx = getContext();
