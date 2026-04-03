@@ -111,7 +111,7 @@ function getPlacesData() {
 
 export function renderPlacePicker(state) {
     const el = document.getElementById("placePicker");
-    if (!el || state.view.overlay !== 'placePicker') return;
+    if (!el || state.overlay.view !== 'placePicker') return;
 
     const anchor = state.context.anchor; // Vị trí gốc từ URL (vd: {id: "cloud", type: "room"})
     const lang = state.lang.current;
