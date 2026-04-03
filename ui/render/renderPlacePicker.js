@@ -23,7 +23,7 @@ function renderPlacePickerShell() {
 
 
 
-function renderPlacePickerContent() {
+export function renderPlacePicker() {
   const groups = getPickerGroups();
 
   updatePickerTitle();
