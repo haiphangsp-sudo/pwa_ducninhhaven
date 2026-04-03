@@ -1,5 +1,3 @@
-// ui/render/renderPlacePicker.js
-
 import { getPickerGroups } from "../../core/placeQuery.js";
 import { translate } from "../utils/translate.js";
 
@@ -28,50 +26,55 @@ function renderPlacePickerShell() {
   shellReady = true;
 }
 
-/**
- * Hàm này bây giờ cực kỳ gọn vì logic đã nằm hết trong getPickerGroups()
- */
 function renderPlacePickerContent() {
-  // 1. Lấy dữ liệu đã được tính toán và dịch sẵn
-  const pickerGroups = getPickerGroups();
-  
-  // 2. Cập nhật tiêu đề chính
-  const titleEl = document.querySelector(".picker-panel_title");
-  if (titleEl) titleEl.textContent = translate("place.select");
+  const groups = getPickerGroups();
 
-  // 3. Xóa sạch các group cũ trước khi vẽ mới (phòng trường hợp allowedTypes thay đổi)
-  ["room", "area", "table"].forEach(clearGroup);
+  updatePickerTitle();
 
-  // 4. Vẽ từng group dựa trên dữ liệu trả về
-  pickerGroups.forEach(groupData => {
-    renderGroup(groupData);
+  ["room", "area", "table"].forEach(type => {
+    const groupData = groups.find(group => group.type === type);
+
+    if (!groupData) {
+      clearGroup(type);
+      return;
+    }
+
+    renderGroup(type, groupData);
   });
 }
 
-/**
- * Nhận object groupData từ getPickerGroups()
- * { type, title, icon, items: [{id, label, isActive}] }
- */
-function renderGroup(groupData) {
-  const { type, title, icon, items } = groupData;
-  const groupEl = document.querySelector(`[data-group="${type}"]`);
-  if (!groupEl) return;
+function updatePickerTitle() {
+  const titleEl = document.querySelector(".picker-panel_title");
+  if (!titleEl) return;
 
-  groupEl.innerHTML = `
+  titleEl.textContent = translate("place.select");
+}
+
+function renderGroup(type, groupData) {
+  const group = document.querySelector(`[data-group="${type}"]`);
+  if (!group) return;
+
+  const items = groupData?.items || [];
+  if (!items.length) {
+    group.innerHTML = "";
+    return;
+  }
+
+  group.innerHTML = `
     <div class="flex gap-s">
-      <span class="${type}-icon">${icon}</span>
-      <span class="picker-title">${title}</span>
+      <span class="${type}-icon">${groupData.icon || ""}</span>
+      <span class="picker-title">${groupData.title || type}</span>
     </div>
 
     <div class="picker-list">
-      ${items.map(item => `
+      ${items.map(place => `
         <button
-          class="picker-option btn center ${item.isActive ? "is-active" : ""}"
+          class="picker-option btn center ${place.isActive ? "is-active" : ""}"
           type="button"
           data-action="select-place"
           data-option="${type}"
-          data-value="${item.id}">
-          ${item.label}
+          data-value="${place.id}">
+          ${place.label}
         </button>
       `).join("")}
     </div>
@@ -80,5 +83,7 @@ function renderGroup(groupData) {
 
 function clearGroup(type) {
   const group = document.querySelector(`[data-group="${type}"]`);
-  if (group) group.innerHTML = "";
+  if (!group) return;
+
+  group.innerHTML = "";
 }
