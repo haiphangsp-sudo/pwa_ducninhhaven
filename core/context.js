@@ -8,6 +8,8 @@ const TTL = 1000 * 60 * 30;
 
 let context = loadContext();
 
+const placeData = getState().places?.data || {};
+
 /* =======================================================
    READ QR / URL
 ======================================================= */
@@ -17,7 +19,7 @@ export function applyURLContext() {
 
   const placeId = params.get("place");
   const modeId = params.get("mode");
-  console.log("places.data =", getState().places?.data);
+
   if (!placeId) return false;
 
   const resolved = resolvePlace(placeId);
@@ -37,7 +39,6 @@ export function applyURLContext() {
     const ok = applyEntryPlace(resolved);
     if (ok) clearURL();
     return ok;
-    
   }
 
   const ctx = getContext();
@@ -106,10 +107,8 @@ function isExpired(ctx) {
 }
 
 export function resolvePlace(placeId) {
-  const placeData = getState().places?.data;
-
-  if (!placeId || !placeData?.index) return null;
-
+  if (!placeId) return null;
+  
   return placeData.index[placeId] || null;
 }
 
