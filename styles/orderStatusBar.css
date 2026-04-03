@@ -271,12 +271,16 @@
     font-weight: bold;
     min-width: 18px;
     text-align: center;
+
 }
 
 .status-text {
     font-size: 14px;
     color: #444;
     font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 /* Trạng thái Nhắc nhở (ví dụ: chưa chọn phòng) */
 .status-bar.is-warning {
