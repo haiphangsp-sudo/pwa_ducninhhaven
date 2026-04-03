@@ -9,6 +9,7 @@ export function renderPanel(state) {
   const ui = state.panel.option;
   // Lấy đúng đường dẫn theo state.js
   const nextPanelId = state.panel.view; 
+  const langNew = state.lang.curent;
   const container = document.querySelector(".page-container");
   
   if (!container || !nextPanelId) return;
@@ -18,15 +19,17 @@ export function renderPanel(state) {
   if (!panelEl) {
     container.insertAdjacentHTML(
       "beforeend",
-      `<div id="${nextPanelId}" class="category-panel hidden"></div>`
+      `<div id="${nextPanelId}" class="${langNew} category-panel hidden"></div>`
     );
     panelEl = document.getElementById(nextPanelId);
   }
 
+  const langOld = container.querySelector(langNew);
+  
   // 2. Chỉ vẽ lại nội dung khi panel còn trống (tránh render thừa)
-  if (panelEl.innerHTML === "") {
+  if (panelEl.innerHTML === "" || langNew!==langOld) {
     if (categoryKey) {
-      panelEl.innerHTML = (nextPanelId === "intro") 
+     ui=== "article"
         ? renderArticle(categoryKey) 
         : renderMenu(categoryKey,ui);
     }
@@ -35,8 +38,8 @@ export function renderPanel(state) {
   // 3. Điều phối hiển thị (Toggle Visibility)
   document.querySelectorAll(".category-panel").forEach(el => {
     if (el.id === nextPanelId) {
-      el.classList.remove("hidden");
-      el.classList.add("animate-fade-in");
+      el.classList.remove("hidden",langOld);
+      el.classList.add("animate-fade-in",langNew);
     } else {
       el.classList.add("hidden");
       el.classList.remove("animate-fade-in");
