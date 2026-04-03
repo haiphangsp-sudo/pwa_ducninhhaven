@@ -1,39 +1,39 @@
 // ui/render/renderPanel.js
-
-import { renderArticle } from "./renderArticle.js";
-import { renderMenu } from "./renderCategory.js";
-
-/* =========================
-   PUBLIC
-========================= */
-
 export function renderPanel(state) {
-  const categoryKey = state.panel.view; 
-  const container = document.querySelector(".category-panel");
+  // Lấy đúng đường dẫn theo state.js
+  const nextPanelId = state.panel.view; 
+  const container = document.querySelector(".page-container");
   
-  if (!container || !categoryKey) return;
+  if (!container || !nextPanelId) return;
 
-  const ui = state.panel.option;
-
-  switch (ui) {
-    case "article":
-      container.innerHTML = renderArticle(categoryKey);
-      break;
-    
-    case "cart":
-      container.innerHTML = renderMenu(categoryKey, ui);
-      break;
-    
-    case "instant":
-      container.innerHTML = renderMenu(categoryKey, ui);
-      break;
-    
-    default:
-      
-      break;
- 
+  // 1. Tìm hoặc tạo element cho panel nếu chưa có
+  let panelEl = document.getElementById(nextPanelId);
+  if (!panelEl) {
+    container.insertAdjacentHTML(
+      "beforeend",
+      `<div id="${nextPanelId}" class="category-panel hidden"></div>`
+    );
+    panelEl = document.getElementById(nextPanelId);
   }
 
+  // 2. Chỉ vẽ lại nội dung khi panel còn trống (tránh render thừa)
+  if (panelEl.innerHTML === "") {
+    const category = getCategory(nextPanelId);
+    if (category) {
+      panelEl.innerHTML = (nextPanelId === "intro") 
+        ? renderArticle(category) 
+        : renderMenu(category);
+    }
+  }
+
+  // 3. Điều phối hiển thị (Toggle Visibility)
+  document.querySelectorAll(".category-panel").forEach(el => {
+    if (el.id === nextPanelId) {
+      el.classList.remove("hidden");
+      el.classList.add("animate-fade-in");
+    } else {
+      el.classList.add("hidden");
+      el.classList.remove("animate-fade-in");
+    }
+  });
 }
-
-
