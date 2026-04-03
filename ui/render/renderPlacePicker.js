@@ -1,7 +1,7 @@
 // ui/render/renderPlacePicker.js
 
 import { getContext } from "../../core/context.js";
-import { getAllowedPlaceTypes, getPlaceGroup, getPlaceItems } from "../../core/placesStore.js";
+import { getAllowedPlaceTypes, getPlaceGroup, getPlaceItems } from "../../core/placeQuery.js"
 import { translate } from "../utils/translate.js";
 import { getState } from "../../core/state.js";
 
