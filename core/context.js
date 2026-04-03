@@ -1,4 +1,5 @@
 import { CONFIG } from "../config.js";
+import { getState } from "./state.js";
 
 /* =======================================================
    CONTEXT STATE
@@ -8,7 +9,22 @@ const TTL = 1000 * 60 * 30;
 
 let context = loadContext();
 
-const placeData = getState().places?.data || {};
+
+function getPlacesState() {
+  return getState().places?.data || {};
+}
+
+function getGroups() {
+  return getPlacesState().groups || {};
+}
+
+function getIndex() {
+  return getPlacesState().index || {};
+}
+
+function getFlat() {
+  return getPlacesState().flat || {};
+}
 
 /* =======================================================
    READ QR / URL
@@ -108,8 +124,7 @@ function isExpired(ctx) {
 
 export function resolvePlace(placeId) {
   if (!placeId) return null;
-  
-  return placeData.index[placeId] || null;
+  return getPlacesState().index[placeId] || null;
 }
 
 /* =======================================================
