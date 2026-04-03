@@ -52,8 +52,6 @@ export let UI = {
 
   order: {
     action: null,     // add_cart, buy_now, send_cart
-    hasPlace: false,
-    isEmpty: true,
     line: null,     // ID món ăn (nếu có)
     status: "idle", // idle, pending, sending, success, error, waiting_place
     msg: "",        // Thông báo phản hồi cho khách

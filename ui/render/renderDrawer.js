@@ -1,6 +1,6 @@
 // ui/render/renderDrawer.js
 import { translate } from "../utils/translate.js";
-import { getDrawerExtended, getLocationInfo, getUIFlags } from "../../core/menuQuery.js";
+import { getDrawerExtended, getUIFlags } from "../../core/menuQuery.js";
 
 export function renderDrawer(state) {
   const drawer = document.getElementById("cartDrawer");
@@ -18,8 +18,7 @@ export function renderDrawer(state) {
 
   const { items, totalQtyFormat, itemUnique, isEmpty, totalPrice } = getDrawerExtended();
 
-  const { isSending } = getUIFlags(state);
-  const { hasPlace, placeName } = getLocationInfo();
+  const { isSending, hasPlace } = getUIFlags(state);
 
   if (isEmpty) {
     if (summaryEl) summaryEl.classList.add("hidden");
@@ -73,7 +72,7 @@ export function renderDrawer(state) {
   if (isSending) {
     sendBtn.textContent = translate("cart_bar.sending");
     sendBtn.classList.add("is-loading", "is-disabled");
-    sendBtn.dataset.extra = "sending";
+    sendBtn.dataset.value = "sending";
     sendBtn.disabled = true;
     return;
   }
@@ -92,6 +91,7 @@ export function renderDrawer(state) {
   sendBtn.textContent = translate("cart_bar.send_request");
   sendBtn.dataset.action = "send_cart";
   sendBtn.classList.remove("is-warning", "is-disabled");
+  sendBtn.dataset.value = "cart";
   sendBtn.dataset.extra = "normal";
   sendBtn.disabled = false;
 }
