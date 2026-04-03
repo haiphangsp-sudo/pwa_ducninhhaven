@@ -11,7 +11,7 @@ import { getDrawerExtended } from "../../core/menuQuery.js";
 
 export function renderCartBar(state) {
 
-  const cart = getDrawerExtended(state);
+  const cart = getDrawerExtended();
   const bar = document.getElementById("cartBar");
   const btn = document.getElementById("cartOpen");
   const countEl = document.getElementById("cartCount");
@@ -23,10 +23,7 @@ export function renderCartBar(state) {
   } else {
     bar.classList.remove("hidden");
     btn.textContent = translate("cart_bar.cart_title");
-    countEl.textContent = cart.totalQty > 1
-      ? `${cart.totalQty} ${translate("cart_bar.items")}`
-      : `${cart.totalQty} ${translate("cart_bar.item")}`;
-    
+    countEl.textContent = cart.totalQtyFormat;
   }
 }
 
