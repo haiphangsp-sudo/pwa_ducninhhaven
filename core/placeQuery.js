@@ -129,14 +129,13 @@ export function getPlaceIcon() {
 /* =======================================================
    PICKER (QUAN TRỌNG NHẤT)
 ======================================================= */
-// core/placeQuery.js
 
 export function getPickerGroups() {
   const ctx = getCtx();
   const anchor = ctx?.anchor;
   const activeId = ctx?.active?.id;
 
-  // 1. Xác định luật dựa trên QR (anchor)
+  // SỬA: Mặc định là "table" nếu không có anchor để tránh hiện tất cả
   const ruleType = anchor?.type || "table"; 
   const allowedTypes = getAllowedPlaceTypes(ruleType);
 
@@ -149,14 +148,10 @@ export function getPickerGroups() {
     if (!group) return;
 
     let items = [];
-
-    // 2. CHỐT CHẶN: Nếu là loại Room, chỉ hiển thị đúng phòng đã quét QR
     if (type === "room" && anchor?.type === "room") {
-      const resolved = resolvePlace(anchor.id);
-      // Dùng anchor từ URL nếu database chưa load kịp, để nút luôn xuất hiện
-      items = [resolved || anchor]; 
+      // SỬA: Dự phòng dùng luôn anchor nếu resolve chưa ra dữ liệu
+      items = [resolvePlace(anchor.id) || anchor]; 
     } else {
-      // Các loại khác (area, table) thì cho phép chọn thoải mái
       items = getPlaceItems(type);
     }
 
@@ -164,12 +159,12 @@ export function getPickerGroups() {
 
     out.push({
       type,
-      title: translate(group.meta?.label || type),
+      title: group.meta?.label ? translate(group.meta.label) : type,
       icon: group.meta?.icon || "",
       items: items.map(p => ({
         id: p.id,
-        label: translate(p.label || p.id),
-        isActive: activeId === p.id // Đánh dấu vị trí đang được chọn thực tế
+        label: p.label ? translate(p.label) : p.id, // Fallback nếu chưa có label
+        isActive: activeId === p.id
       }))
     });
   });
