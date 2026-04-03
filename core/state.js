@@ -26,8 +26,7 @@ export let UI = {
  places: {
     data: {
       groups: {}, // Object để chứa { room: {...}, table: {...} }
-      index: {},  // Object để tìm kiếm nhanh theo ID
-      flat: []    // Array để dùng cho tìm kiếm hoặc đếm tổng
+      index: {}  // Object để tìm kiếm nhanh theo ID
     },
     status: "ready",
     updatedAt: Date.now()

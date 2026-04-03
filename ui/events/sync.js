@@ -12,7 +12,7 @@ import { renderStatusBar } from "../render/renderStatusBar.js";
 import { renderHub, eventHub } from "../render/renderHub.js";
 import { renderPanel } from "../render/renderPanel.js";
 import { updateStepperUI } from "../render/renderStepper.js";
-import { renderAck } from "../render/renderOverlay.js";
+import { renderAck } from "../render/renderAck.js";
 
 let lastState = null; 
 let isProcessingOrder = false;

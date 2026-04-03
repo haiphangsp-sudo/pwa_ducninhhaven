@@ -5,7 +5,7 @@ import { sendRequest } from "../services/api.js";
 import { getVariantById, getLocationInfo } from "./menuQuery.js";
 import { notifyResponse } from "./action.js"
 import { renderStatusBar } from "../ui/render/renderStatusBar.js"
-import { showToast } from "../ui/render/renderOverlay.js";
+import { showToast } from "../ui/render/renderAck.js";
 
 
 export async function updateCartQuantity(itemId, delta) {

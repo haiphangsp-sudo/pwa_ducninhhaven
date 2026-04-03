@@ -1,5 +1,5 @@
+// core/placesStore.js
 import { getState, setState } from "./state.js";
-import { deepMerge } from "../data/helpers.js";
 
 /* =======================================================
    LOAD
@@ -9,27 +9,16 @@ export async function loadPlaces() {
   const base = await fetch("/data/places.json", { cache: "no-store" })
     .then(r => r.json());
 
+  // Chỉ cần tạo groups và index là đủ cho mọi hoạt động truy vấn
   const groups = normalizePlaceGroups(base);
   const index = buildPlaceIndex(groups);
 
-  // flat giữ dữ liệu theo type -> id để tiện tra cứu sâu nếu cần
-  let flat = Object.fromEntries(
-    Object.entries(groups).map(([type, group]) => [
-      type,
-      Object.fromEntries(group.items.map(item => [item.id, item]))
-    ])
-  );
-
-  // Gộp thêm dữ liệu gốc (nếu base có field phụ ngoài normalize)
-  flat = deepMerge(flat, base);
-
   setState({
     places: {
-        data: {
-          groups,
-          index,
-          flat
-        },
+      data: {
+        groups,
+        index
+      },
       status: "ready",
       updatedAt: Date.now()
     }
@@ -100,16 +89,10 @@ function getIndex() {
   return getPlacesState().index || {};
 }
 
-function getFlat() {
-  return getPlacesState().flat || {};
-}
 
 /* =======================================================
    PUBLIC HELPERS
 ======================================================= */
-
-
-
 
 export function getPlaceGroup(type) {
   if (!type) return null;
@@ -134,10 +117,9 @@ export function getAllPlacesIndex() {
   return getIndex();
 }
 
-export function getAllPlacesFlat() {
-  return getFlat();
-}
+// Đã loại bỏ getAllPlacesFlat() ở đây
 
 export function hasPlace(placeId) {
-  return !!resolvePlace(placeId);
+  // Vẫn sử dụng getIndex() để kiểm tra sự tồn tại của vị trí
+  return !!getIndex()[placeId];
 }
