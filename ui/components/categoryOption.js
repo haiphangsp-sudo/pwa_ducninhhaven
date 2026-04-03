@@ -12,7 +12,6 @@ import { getVariants } from "../../core/menuQuery.js";
 export function categoryOpt(categoryKey, productKey, ui) {
     const variants = getVariants(categoryKey, productKey);
     return variants.map(variant => {       
-    const price = variant.price;
     const isRecommend = variant.recommend;
 
         return `
@@ -27,11 +26,7 @@ export function categoryOpt(categoryKey, productKey, ui) {
             </div>
             <div class="row menu-cart__action card-bottom">
                 <div class="price">
-                    ${price > 0
-                ? price.toLocaleString("vi-VN") + " đ"
-                : price === 0 ? translate("cart_bar.free")
-                    : translate("cart_bar.instant")
-            }
+                    ${variant.price}
                 </div>
                 <button class="btn btn-primary btn-add"
                     data-action="${ui === "cart" ? "add_cart" : "buy_now"}"

@@ -21,6 +21,10 @@ export function getVariants(categoryKey, productKey) {
     .map(([key, variant]) => ({
       key,
       ...variant,
+      price: variant.price > 0
+                ? variant.price.toLocaleString("vi-VN") + " đ"
+                : variant.price === 0 ? translate("cart_bar.free")
+                : translate("cart_bar.instant"),
       recommend: (product.recommend || []).includes(key)
     }));
 }
