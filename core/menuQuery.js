@@ -113,7 +113,9 @@ export function getDrawerExtended() {
     isEmpty: totalQ === 0,
     itemUnique: `${detailedItems.length} ${translate("cart_bar.unique")}`,
     totalQty: totalQ,
-    totalQtyFormat: `${totalQ} ${translate("cart_bar.items")}`,
+    totalQtyFormat: totalQ > 1 ?
+      `${totalQ} ${translate("cart_bar.items")}`
+      : translate("cart_bar.item"),
     totalPrice: new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(totalP)
   };
 }
@@ -209,10 +211,6 @@ export function getLocationInfo() {
     isResolved: !!placeData,
     mode
   };
-}
-
-export function getLocationLabel() {
-  return getLocationInfo().placeName;
 }
 
 /* =======================================================
