@@ -3,10 +3,12 @@
 import { getContext } from "../../core/context.js";
 import { getAllowedPlaceTypes, getPlaceGroup, getPlaceItems } from "../../core/placesStore.js";
 import { translate } from "../utils/translate.js";
+import { getPlacesData } from "../../core/placeQuery.js";
+
 
 let shellReady = false;
 
-export function renderPlacePicker() {
+export function renderPlacePickerCu() {
   renderPlacePickerShell();
   renderPlacePickerContent();
 }
@@ -103,3 +105,61 @@ function clearGroup(type) {
   if (group) group.innerHTML = "";
 }
 
+
+export function renderPlacePicker(state) {
+    const el = document.getElementById("placePicker");
+    if (!el || state.view.overlay !== 'placePicker') return;
+
+    const anchor = state.context.anchor; // Vị trí gốc từ URL (vd: {id: "cloud", type: "room"})
+    const lang = state.lang.current;
+    const PLACES = getPlacesData();
+
+    // 1. Lấy danh sách các loại (Type) mà vị trí gốc của khách được phép nhìn thấy
+    // Ví dụ: Nếu khách ở 'area', PLACES['area'].meta.allow sẽ là ['area', 'table']
+    const anchorCategory = PLACES[anchor?.type];
+    const allowedTypes = anchorCategory?.meta?.allow || ["table"];
+
+    el.innerHTML = `
+        <div class="picker-panel p-m radius-xl bg-white shadow-lg animate-fade-in">
+            <div class="picker-header mb-m row justify-between items-center">
+                <h3 class="text-bold">${translate('place.select_title') || 'Where would you like to serve?'}</h3>
+                <button data-action="close-overlay" class="btn-close">✕</button>
+            </div>
+            
+            <div class="picker-content stack gap-l">
+                ${Object.entries(PLACES).map(([groupKey, group]) => {
+                    // 2. KIỂM TRA QUYỀN TRUY CẬP
+                    // Chỉ hiển thị nhóm nếu groupKey (room/area/table) nằm trong danh sách allowedTypes
+                    if (!allowedTypes.includes(groupKey)) return '';
+
+                    // 3. LOGIC LỌC PHÒNG (Privacy): 
+                    // Nếu là nhóm 'room', chỉ hiện đúng cái phòng mà khách đang ở (anchor.id)
+                    const filteredItems = group.items.filter(item => 
+                        groupKey === 'room' ? item.id === anchor?.id : true
+                    );
+
+                    if (filteredItems.length === 0) return '';
+
+                    return `
+                        <div class="place-group">
+                            <div class="group-header row items-center gap-s mb-s">
+                                <span class="group-icon">${group.meta.icon}</span>
+                                <span class="text-bold text-s">${group.meta.label[lang]}</span>
+                            </div>
+                            <div class="group-grid row wrap gap-s">
+                                ${filteredItems.map(item => `
+                                    <button class="btn-place p-m radius-m bg-green-dark text-white text-bold transition-all" 
+                                            data-action="select-place" 
+                                            data-value="${item.id}">
+                                        ${item.label[lang] || item.id}
+                                    </button>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                }).join('')}
+            </div>
+        </div>
+    `;
+    el.classList.remove("hidden");
+}
