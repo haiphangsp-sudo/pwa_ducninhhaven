@@ -121,15 +121,12 @@ grid-template-columns: 90px 1fr 110px;
 
 .lang-switch button{
   border:none;
-  background:none;
-
+  background: none;
+  
   padding:4px 8px;
-
   border-radius:8px;
-
   font-size:13px;
   font-weight:600;
-
   cursor:pointer;
   transition:.15s;
 }
@@ -138,9 +135,9 @@ grid-template-columns: 90px 1fr 110px;
   background:var(--bg-hover);
 }
 
-.lang-switch button.active{
-  background:var(--brand-soft);
-  color:var(--brand);
+.lang-switch button.is-active{
+  background: var(--bg-main);  color:var(--brand);
+  color:var(--text-primary);
   box-shadow:0 1px 3px rgba(0,0,0,.2);
 }
 
