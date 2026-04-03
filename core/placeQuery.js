@@ -129,46 +129,50 @@ export function getPlaceIcon() {
 /* =======================================================
    PICKER (QUAN TRỌNG NHẤT)
 ======================================================= */
+
+// core/placeQuery.js
+
 export function getPickerGroups() {
-  const ctx = getContext() || {};
-  const anchor = ctx.anchor || null;
-  const activeId = ctx.active?.id || null;
-  const ruleType = anchor?.type || null;
+  const ctx = getCtx();
+  const anchor = ctx?.anchor;
+  const activeId = ctx?.active?.id;
 
-  const allowedTypes = ruleType
-    ? getAllowedPlaceTypes(ruleType)
-    : ["table"];
+  // 1. QUAY LẠI LOGIC CŨ: Mặc định là "table" nếu không có anchor
+  const ruleType = anchor?.type || "table"; 
+  const allowedTypes = getAllowedPlaceTypes(ruleType);
 
-  const order = ["room", "area", "table"];
+  const out = [];
 
-  return order
-    .filter(type => allowedTypes.includes(type))
-    .map(type => {
-      const group = getPlaceGroup(type);
-      if (!group) return null;
+  ["room", "area", "table"].forEach(type => {
+    if (!allowedTypes.includes(type)) return;
 
-      const meta = group.meta || {};
-      let items = [];
+    const group = getPlaceGroup(type);
+    if (!group) return;
 
-      if (type === "room" && anchor?.type === "room" && anchor?.id) {
-        const room = resolvePlace(anchor.id);
-        if (room) items = [room];
-      } else {
-        items = getPlaceItems(type) || [];
-      }
+    let items = [];
 
-      if (!items.length) return null;
+    // 2. LOGIC CŨ: Ưu tiên dùng anchor để hiển thị ngay lập tức
+    if (type === "room" && anchor?.type === "room") {
+      // Nếu tìm thấy trong database thì dùng (để có label xịn), 
+      // nếu không thì dùng tạm chính cái anchor từ URL
+      items = [resolvePlace(anchor.id) || anchor];
+    } else {
+      items = getPlaceItems(type);
+    }
 
-      return {
-        type,
-        title: meta.label ? translate(meta.label) : type,
-        icon: meta.icon || "",
-        items: items.map(place => ({
-          id: place.id,
-          label: translate(place.label),
-          isActive: activeId === place.id
-        }))
-      };
-    })
-    .filter(Boolean);
+    if (!items.length) return;
+
+    out.push({
+      type,
+      title: group.meta?.label ? translate(group.meta.label) : type,
+      icon: group.meta?.icon || "",
+      items: items.map(p => ({
+        id: p.id,
+        label: p.label ? translate(p.label) : p.id, // Fallback dùng ID nếu chưa có label
+        isActive: activeId === p.id
+      }))
+    });
+  });
+
+  return out;
 }
