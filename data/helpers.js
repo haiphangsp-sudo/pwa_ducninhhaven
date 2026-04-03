@@ -42,29 +42,21 @@ function getMode() {
 }
 
   
-export function getCategoriesForMode(){
-  const placeType = getMode();
-  const MENUDTATA = getState().menu.data || {};
-  return Object.entries(MENUDTATA)
+export function getCategoriesForMode() {
+  const ctx = getContext();
+  const placeType = ctx?.active?.type || ctx?.anchor?.type || null;
+  const menuData = getState().menu.data || {};
 
-    .filter(([k,v]) =>
-      v.active &&
-      v.allow?.includes(placeType)
-    )
-
-    .map(([k,v])=>({
-      key:k,
+  return Object.entries(menuData)
+    .filter(([, v]) => {
+      if (!v || v.active === false) return false;
+      if (!placeType) return true;
+      return !v.allow || v.allow.includes(placeType);
+    })
+    .map(([key, v]) => ({
+      key,
       ...v
     }));
-
-}
-export function getPlaceIcon() {
-  const mode = getMode();
-
-  if (mode === "room") return "🛏";
-  if (mode === "table") return "☕";
-  if (mode === "area") return "🌿";
-  return "📍";
 }
 
 export function getLocationInfo() {
@@ -80,7 +72,7 @@ export function getLocationInfo() {
       placeId: null,
       placeName: translate("place.select"),
       placeData: null,
-      anchor,
+      isResolved: false,
       mode
     };
   }
@@ -94,7 +86,7 @@ export function getLocationInfo() {
       ? translate(placeData.label)
       : activeId,
     placeData: placeData || null,
-    anchor,
+    isResolved: !!placeData,
     mode
   };
 }

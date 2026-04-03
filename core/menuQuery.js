@@ -9,14 +9,6 @@ import { getState } from "../core/state.js";
  */
 const getMenuData = () => getState().menu.data || {};
 
-
-function getPlace() {  
-    const ctx = getContext();
-    const anchor=ctx?.anchor;
-    if(!anchor) return "table";
-    return anchor.type;
-}
-
 export function getCategory(key) {
   const menuData = getMenuData();
   return menuData[key] || null;
@@ -41,16 +33,25 @@ export function getVariants(categoryKey, productKey) {
  * Lấy danh mục (Categories) phù hợp với vị trí khách đang đứng
  */
 export function getCategories() {
+  const ctx = getContext();
   const menuData = getMenuData();
-  const currentPlaceType = getPlace();
-  //const currentPlaceType = getState().context.active?.type; 
+
+  if (!menuData) return [];
+
+  const currentType =
+    ctx?.active?.type ||
+    ctx?.anchor?.type ||
+    null;
+
   const out = [];
 
   for (const [key, cat] of Object.entries(menuData)) {
-    if (cat.active === false) continue;
-    
-    // Kiểm tra quyền truy cập (ví dụ: Spa chỉ cho Room, không cho Table)
-    if (cat.allow && !cat.allow.includes(currentPlaceType)) continue;
+    if (!cat || cat.active === false) continue;
+
+    // Nếu có rule allow thì kiểm tra
+    if (cat.allow && currentType) {
+      if (!cat.allow.includes(currentType)) continue;
+    }
 
     out.push({
       key,
@@ -59,6 +60,7 @@ export function getCategories() {
       icon: cat.icon
     });
   }
+
   return out;
 }
 

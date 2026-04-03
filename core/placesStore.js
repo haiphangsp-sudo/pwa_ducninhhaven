@@ -1,34 +1,44 @@
-// core/placesStore.js
-import { setState } from "./state.js";
+import { getState, setState } from "./state.js";
 import { deepMerge } from "../data/helpers.js";
 
-export let PLACE_GROUPS = {};
-export let PLACE_INDEX = {};
-export let PLACES = {};
-
+/* =======================================================
+   LOAD
+======================================================= */
 
 export async function loadPlaces() {
-  const base = await fetch("/data/places.json", { cache: "no-store" }).then(r => r.json());
+  const base = await fetch("/data/places.json", { cache: "no-store" })
+    .then(r => r.json());
 
-  PLACE_GROUPS = normalizePlaceGroups(base);
-  PLACE_INDEX = buildPlaceIndex(PLACE_GROUPS);
+  const groups = normalizePlaceGroups(base);
+  const index = buildPlaceIndex(groups);
 
-  PLACES = Object.fromEntries(
-    Object.entries(PLACE_GROUPS).map(([type, group]) => [
+  // flat giữ dữ liệu theo type -> id để tiện tra cứu sâu nếu cần
+  let flat = Object.fromEntries(
+    Object.entries(groups).map(([type, group]) => [
       type,
       Object.fromEntries(group.items.map(item => [item.id, item]))
     ])
   );
-  PLACES = deepMerge(PLACES, base);
 
-  setState({ 
-    places: { 
-      data: PLACES, 
+  // Gộp thêm dữ liệu gốc (nếu base có field phụ ngoài normalize)
+  flat = deepMerge(flat, base);
+
+  setState({
+    places: {
+      data: {
+        groups,
+        index,
+        flat
+      },
       status: "ready",
-      updatedAt: Date.now() 
+      updatedAt: Date.now()
     }
   });
 }
+
+/* =======================================================
+   NORMALIZE
+======================================================= */
 
 function normalizePlaceGroups(raw) {
   const out = {};
@@ -42,13 +52,17 @@ function normalizePlaceGroups(raw) {
         type,
         label: meta.label || { vi: type, en: type },
         icon: meta.icon || "",
-        allow: Array.isArray(meta.allow) ? meta.allow : [type]
+        allow: Array.isArray(meta.allow) && meta.allow.length
+          ? meta.allow
+          : [type]
       },
-      items: items.map(item => ({
-        id: item.id,
-        type,
-        label: item.label || { vi: item.id, en: item.id }
-      }))
+      items: items
+        .filter(item => item && item.id)
+        .map(item => ({
+          id: item.id,
+          type,
+          label: item.label || { vi: item.id, en: item.id }
+        }))
     };
   }
 
@@ -58,8 +72,8 @@ function normalizePlaceGroups(raw) {
 function buildPlaceIndex(groups) {
   const index = {};
 
-  for (const [type, group] of Object.entries(groups)) {
-    for (const item of group.items) {
+  for (const [type, group] of Object.entries(groups || {})) {
+    for (const item of group.items || []) {
       index[item.id] = {
         ...item,
         type
@@ -70,18 +84,67 @@ function buildPlaceIndex(groups) {
   return index;
 }
 
+/* =======================================================
+   INTERNAL READERS
+======================================================= */
+
+function getPlacesState() {
+  return getState().places?.data || {};
+}
+
+function getGroups() {
+  return getPlacesState().groups || {};
+}
+
+function getIndex() {
+  return getPlacesState().index || {};
+}
+
+function getFlat() {
+  return getPlacesState().flat || {};
+}
+
+/* =======================================================
+   PUBLIC HELPERS
+======================================================= */
+
 export function resolvePlace(placeId) {
-  return PLACE_INDEX[placeId] || null;
+  if (!placeId) return null;
+  return getIndex()[placeId] || null;
 }
 
 export function getAllowedPlaceTypes(anchorType) {
-  return PLACE_GROUPS?.[anchorType]?.meta?.allow || [anchorType];
+  if (!anchorType) return [];
+  return getGroups()?.[anchorType]?.meta?.allow || [anchorType];
 }
 
 export function getPlaceGroup(type) {
-  return PLACE_GROUPS[type] || null;
+  if (!type) return null;
+  return getGroups()?.[type] || null;
 }
 
 export function getPlaceItems(type) {
-  return PLACE_GROUPS?.[type]?.items || [];
+  if (!type) return [];
+  return getGroups()?.[type]?.items || [];
+}
+
+export function getPlaceMeta(type) {
+  if (!type) return null;
+  return getGroups()?.[type]?.meta || null;
+}
+
+export function getAllPlaceGroups() {
+  return getGroups();
+}
+
+export function getAllPlacesIndex() {
+  return getIndex();
+}
+
+export function getAllPlacesFlat() {
+  return getFlat();
+}
+
+export function hasPlace(placeId) {
+  return !!resolvePlace(placeId);
 }
