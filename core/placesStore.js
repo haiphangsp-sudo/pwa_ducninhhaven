@@ -1,4 +1,4 @@
-import { setState } from "./state.js";
+import { getState, setState } from "./state.js";
 import { deepMerge } from "../data/helpers.js";
 
 /* =======================================================
@@ -82,4 +82,62 @@ function buildPlaceIndex(groups) {
   }
 
   return index;
+}
+
+/* =======================================================
+   INTERNAL READERS
+======================================================= */
+
+function getPlacesState() {
+  return getState().places?.data || {};
+}
+
+function getGroups() {
+  return getPlacesState().groups || {};
+}
+
+function getIndex() {
+  return getPlacesState().index || {};
+}
+
+function getFlat() {
+  return getPlacesState().flat || {};
+}
+
+/* =======================================================
+   PUBLIC HELPERS
+======================================================= */
+
+
+
+
+export function getPlaceGroup(type) {
+  if (!type) return null;
+  return getGroups()?.[type] || null;
+}
+
+export function getPlaceItems(type) {
+  if (!type) return [];
+  return getGroups()?.[type]?.items || [];
+}
+
+export function getPlaceMeta(type) {
+  if (!type) return null;
+  return getGroups()?.[type]?.meta || null;
+}
+
+export function getAllPlaceGroups() {
+  return getGroups();
+}
+
+export function getAllPlacesIndex() {
+  return getIndex();
+}
+
+export function getAllPlacesFlat() {
+  return getFlat();
+}
+
+export function hasPlace(placeId) {
+  return !!resolvePlace(placeId);
 }
