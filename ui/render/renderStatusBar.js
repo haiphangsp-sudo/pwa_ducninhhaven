@@ -24,7 +24,7 @@ export function renderStatusBar(state) {
     const totalCartQty = cartItems.reduce((s, i) => s + (Number(i.qty) || 0), 0);
 
     if (isBarExpanded) {
-        bar.classList.add("is-collapsed");
+        bar.classList.add("is-collapsed", "is-expanded", "rơw");
     } else {
         bar.classList.remove("is-collapsed");
     }
