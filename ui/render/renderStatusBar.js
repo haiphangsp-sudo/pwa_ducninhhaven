@@ -3,6 +3,7 @@
 // ui/render/renderStatusBar.js
 import { translate } from '../utils/translate.js';
 import { renderStepper } from './renderStepper.js';
+import { getLocationInfo } from '../../data/helpers.js';
 
 export function renderStatusBar(state) {
     const bar = document.getElementById("orderStatusBar");
@@ -46,7 +47,7 @@ export function renderStatusBar(state) {
     else {
         // TRƯỜNG HỢP: Chỉ có giỏ hàng
         countEl.textContent = totalCartQty;
-        const locationName = state.context?.active?.name || "";
+        const locationName = getLocationInfo().placeName;
         textEl.textContent = locationName
             ? `${locationName} • ${totalCartQty} món`
             : `🛒 Giỏ hàng có ${totalCartQty} món`;

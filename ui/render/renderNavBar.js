@@ -3,7 +3,7 @@
 import { translate } from "../utils/translate.js";
 import { getContext } from "../../core/context.js";
 import { resolvePlace } from "../../core/placesStore.js";
-import { getPlaceIcon, getLocationLabel } from "../../data/helpers.js";
+import { getPlaceIcon, getLocationInfo } from "../../data/helpers.js";
 
 const refs = {
   identityIcon: null,
@@ -25,7 +25,9 @@ function updateNavBar(state) {
 
   if (refs.identityIcon) refs.identityIcon.textContent = getPlaceIcon(anchor?.type);
   if (refs.identityLabel) refs.identityLabel.textContent = getIdentityLabel(anchor);
-  if (refs.locLabel) refs.locLabel.textContent = getLocationLabel(ctx);
+  if (refs.locLabel) refs.locLabel.textContent = getLocationInfo().placeName;
+
+  console.log;
   if (refs.langButtons) {
     refs.langButtons.querySelectorAll("button").forEach(btn => {
       btn.classList.toggle("is-active", btn.dataset.value === currentLang);
@@ -46,7 +48,7 @@ function cacheElements() {
 }
 
 function getIdentityLabel(anchor) {
-  if (!anchor) return translate("haven");
+  if (!anchor) return "Haven";
 
   const labels = {
     room: () => translate(anchor.label || resolvePlace(anchor.id)?.label || anchor.id),
@@ -54,6 +56,6 @@ function getIdentityLabel(anchor) {
     area: () => translate("mode.area_guest")
   };
 
-  return labels[anchor.type]?.() || translate("haven");
+  return labels[anchor.type]?.() || "Haven";
 }
 

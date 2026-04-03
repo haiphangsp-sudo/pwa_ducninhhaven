@@ -67,16 +67,27 @@ export function getPlaceIcon() {
   return "📍";
 }
 
-export function getLocationLabel() {
+export function getLocationInfo() {
   const ctx = getContext();
-  if (!ctx?.active) {
-    return translate("place.select");
-  } else {
-    const id = ctx.active.id;
-    const placeData = resolvePlace(id);
-    const placeName = translate(placeData?.label) || id;
-    return placeName;
+  const activeId = ctx?.active?.id;
+
+  if (!activeId) {
+    return {
+      hasPlace: false,
+      placeId: null,
+      placeName: translate("place.select"),
+      placeData: null
+    };
   }
+
+  const placeData = resolvePlace(activeId);
+
+  return {
+    hasPlace: true,
+    placeId: activeId,
+    placeName: placeData?.label ? translate(placeData.label) : activeId,
+    placeData: placeData || null
+  };
 }
 
 export function getUIFlags() {

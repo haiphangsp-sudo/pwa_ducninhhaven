@@ -1,6 +1,6 @@
 // ui/render/renderDrawer.js
 import { translate } from "../utils/translate.js";
-import { getUIFlags } from "../../data/helpers.js";
+import { getUIFlags, getLocationInfo } from "../../data/helpers.js";
 import { getDrawerExtended } from "../../core/menuQuery.js";
 
 export function renderDrawer(state) {
@@ -9,6 +9,7 @@ export function renderDrawer(state) {
 
   // Lấy các element con
   const drawerHeader = drawer.querySelector(".drawer__header-title");
+  const namePlace = drawer.getElementById("namePlace");
   const totalEl = drawer.querySelector(".drawer__header-price");
   const countEl = drawer.querySelector(".drawer__header-count");
   const uniqueEl = drawer.querySelector(".drawer__header-unique");
@@ -18,8 +19,9 @@ export function renderDrawer(state) {
 
   const { items, totalQtyFormat, itemUnique, isEmpty, totalPrice } = getDrawerExtended();
 
-  const { hasPlace, isSending } = getUIFlags();
-  
+  const { isSending } = getUIFlags();
+  const { hasPlace, placeName } = getLocationInfo();
+
   if (isEmpty) {
     if (summaryEl) summaryEl.classList.add("hidden");
     itemsEl.innerHTML = `
@@ -79,8 +81,7 @@ export function renderDrawer(state) {
     sendBtn.disabled = true;
     return;
   }
-
-  // 2. CHƯA CÓ PLACE
+ 
   if (!hasPlace) {
     sendBtn.textContent = translate("cart_bar.place_prompt");
     sendBtn.classList.add("is-warning", "is-disabled");
@@ -91,4 +92,5 @@ export function renderDrawer(state) {
   // 3. NORMAL
   sendBtn.textContent = translate("cart_bar.send_request");
   sendBtn.disabled = false;
+  namePlace.textContent = placeName;
 }
