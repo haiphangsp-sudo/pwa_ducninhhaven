@@ -7,13 +7,10 @@ import { getVariants } from "../../core/menuQuery.js";
    PUBLIC
 ========================= */
 
-      
-      
 export function categoryOpt(categoryKey, productKey, ui) {
     const variants = getVariants(categoryKey, productKey);
     return variants.map(variant => {       
-    const isRecommend = variant.recommend;
-
+        const isRecommend = variant.recommend;
         return `
         <div class="card ${ui}">
             <div class="stack menu-cart__info">
@@ -25,9 +22,7 @@ export function categoryOpt(categoryKey, productKey, ui) {
                 </div>
             </div>
             <div class="row menu-cart__action card-bottom">
-                <div class="price">
-                    ${variant.price}
-                </div>
+                <div class="price">${variant.price}</div>
                 <button class="btn btn-primary btn-add"
                     data-action="${ui === "cart" ? "add_cart" : "buy_now"}"
                     data-extra="${categoryKey}"
@@ -40,7 +35,7 @@ export function categoryOpt(categoryKey, productKey, ui) {
                 </button>
             </div>
         </div>`;
-         }).join("");
+    }).join("");
 
 }
 
