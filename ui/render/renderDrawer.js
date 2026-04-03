@@ -18,8 +18,6 @@ export function renderDrawer(state) {
 
   const { items, totalQtyFormat, itemUnique, isEmpty, totalPrice } = getDrawerExtended();
 
-  const { isSending, hasPlace } = getUIFlags(state);
-
   if (isEmpty) {
     if (summaryEl) summaryEl.classList.add("hidden");
     itemsEl.innerHTML = `
@@ -62,8 +60,8 @@ export function renderDrawer(state) {
     </div>
   `).join("");
 
-  //const isSending = state?.order?.status === "sending";
-  //const hasPlace = !!state?.order?.hasPlace;
+  const isSending = state?.order?.status === "sending";
+  const hasPlace = !!state?.order?.hasPlace;
 
   // reset class về base trước
   sendBtn.classList.remove("is-loading", "is-warning", "is-disabled");
