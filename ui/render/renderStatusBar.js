@@ -3,7 +3,8 @@
 // ui/render/renderStatusBar.js
 import { translate } from '../utils/translate.js';
 import { renderStepper } from './renderStepper.js';
-import { getLocationInfo } from '../../data/helpers.js';
+import { getLocationInfo } from '../../core/menuQuery.js';
+
 
 export function renderStatusBar(state) {
     const bar = document.getElementById("orderStatusBar");
