@@ -1,46 +1,51 @@
 // ui/components/categoryCard.js
 
 import { translate } from "../utils/translate.js";
+import { getVariants } from "../../core/menuQuery.js";
 
 /* =========================
    PUBLIC
 ========================= */
 
-export function categoryOpt(opt, categoryKey,ui) {
+      
+      
+export function categoryOpt(categoryKey, productKey, ui) {
+    const variants = getVariants(categoryKey, productKey);
+    variants.map(variant => {       
+    const price = variant.price;
+    const isRecommend = variant.recommend;
 
-    const price = opt.price;
-    const isRecommend = opt.recommend;
-
-    return `
+        return `
         <div class="card ${ui}">
             <div class="stack menu-cart__info">
-                <div data-service="${opt.key}" class="menu-card__title ${isRecommend ? "is-default" : ""}">
-                ${translate(opt.label)}
+                <div data-service="${variant.key}" class="menu-card__title ${isRecommend ? "is-default" : ""}">
+                ${translate(variant.label)}
                 </div>           
                 <div class="card-desc menu-cart__desc">
-                    ${opt.description ?  translate(opt.description) : ""}
+                    ${variant.description ? translate(variant.description) : ""}
                 </div>
             </div>
             <div class="row menu-cart__action card-bottom">
                 <div class="price">
                     ${price > 0
-                        ? price.toLocaleString("vi-VN") + " đ"
-                        : price === 0 ? translate("cart_bar.free")
-                        : translate("cart_bar.instant")
-                    }
+                ? price.toLocaleString("vi-VN") + " đ"
+                : price === 0 ? translate("cart_bar.free")
+                    : translate("cart_bar.instant")
+            }
                 </div>
                 <button class="btn btn-primary btn-add"
-                    data-action="${ui=== "cart" ? "add_cart" : "buy_now"}"
+                    data-action="${ui === "cart" ? "add_cart" : "buy_now"}"
                     data-extra="${categoryKey}"
                     data-option="${ui}"
-                    data-value="${opt.id}">
+                    data-value="${variant.id}">
                     ${(ui === "cart")
-                        ? "+ " + translate("cart_bar.add_to_order")
-                        : "⚡ " + translate("cart_bar.send_request")
-                    }
+                ? "+ " + translate("cart_bar.add_to_order")
+                : "⚡ " + translate("cart_bar.send_request")
+            }
                 </button>
             </div>
         </div>`;
+         }).join("");
 
 }
 

@@ -32,12 +32,11 @@ export function getVariants(categoryKey, productKey) {
 export function getProducts(categoryKey) {
   if (!categoryKey) return [];
   
-  const menuData = getMenuData(); // Gọi hàm helper để lấy data mới nhất
+  const menuData = getMenuData();
   const category = menuData[categoryKey];
   
   if (!category || category.active === false) return [];
 
-  // menuSchema đã chuẩn hóa items -> products
   const products = category.products || {};
 
   return Object.entries(products)
@@ -73,7 +72,7 @@ export function getVariantById(id) {
             variantLabel: translate(variant.label),
             price: Number(variant.price || 0),
             priceFormat: new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(variant.price),
-            unit: variant.unit || "item",
+            unit: variant.unit,
             ui: cat.ui || "cart"
           };
         }
@@ -120,17 +119,6 @@ export function getDrawerExtended() {
   };
 }
 
-export function getUIFlags(state = {}) {
-  const cartItems = state.cart?.items || [];
-  const order = state.order || {};
-  const context = state.context || {};
-
-  return {
-    hasPlace: !!context.active?.id,
-    isCartEmpty: cartItems.length === 0,
-    isSending: order.status === "sending"
-  };
-}
 /* =======================================================
    INTERNAL
 ======================================================= */

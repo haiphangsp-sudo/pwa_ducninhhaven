@@ -1,6 +1,6 @@
 // ui/render/renderMenu.js
 
-import { getVariants, getProducts} from "../../core/menuQuery.js";
+import { getProducts} from "../../core/menuQuery.js";
 import { translate } from "../utils/translate.js";
 import { categoryOpt } from "../components/categoryOption.js";
 
@@ -11,17 +11,14 @@ export function renderMenu(categoryKey,ui) {
 
   return products.map(product => {
     const productKey = product.key;
-    const variants = getVariants(categoryKey, productKey);
-    const cards = variants.map(variant => {
-      return categoryOpt({ ...variant },categoryKey,ui);
-      }).join("");
+    
     return `
         <section class="menu-group">
           <h2 class="menu-group-title">
             ${translate(product.label)}
           </h2>
           <div class="menu-grid grid">
-            ${cards}
+            ${categoryOpt(categoryKey, productKey, ui)}
           </div>
         </section>
       `;
