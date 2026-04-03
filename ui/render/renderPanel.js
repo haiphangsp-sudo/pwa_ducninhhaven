@@ -38,8 +38,8 @@ export function renderPanel(state) {
   // 3. Điều phối hiển thị (Toggle Visibility)
   document.querySelectorAll(".category-panel").forEach(el => {
     if (el.id === nextPanelId) {
-      el.classList.remove("hidden",langOld);
-      el.classList.add("animate-fade-in",langNew);
+      el.classList.remove("hidden",langNew);
+      el.classList.add("animate-fade-in",langOld);
     } else {
       el.classList.add("hidden");
       el.classList.remove("animate-fade-in");
