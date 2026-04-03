@@ -15,14 +15,23 @@ export let UI = {
     status: "loading",
     updatedAt: Date.now() 
   },
-  /* ---------------- PLACES ---------------- */
+  /* ---------------- PLACES ---------------- 
 
   places: {
     data: {},
     status: "loading",
     updatedAt: Date.now()
   },
-  /* ---------------- LANGUAGE ---------------- */
+   ---------------- LANGUAGE ---------------- */
+ places: {
+    data: {
+      groups: {}, // Object để chứa { room: {...}, table: {...} }
+      index: {},  // Object để tìm kiếm nhanh theo ID
+      flat: []    // Array để dùng cho tìm kiếm hoặc đếm tổng
+    },
+    status: "ready",
+    updatedAt: Date.now()
+  },
 
   lang:{
     current: localStorage.getItem(CONFIG.LANG_KEY) || "vi"
@@ -131,12 +140,23 @@ export function setState(patch) {
 
 export function syncContextToState() {
   const ctx = getContext();
-  if (!ctx) return;
 
   setState({
     context: {
-      anchor: ctx?.anchor || null,
-      active: ctx?.active || null,
+      anchor: ctx?.anchor
+        ? {
+            id: ctx.anchor.id,
+            type: ctx.anchor.type || null
+          }
+        : null,
+
+      active: ctx?.active
+        ? {
+            id: ctx.active.id,
+            type: ctx.active.type || null
+          }
+        : null,
+
       updatedAt: ctx?.updatedAt || null
     }
   });

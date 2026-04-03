@@ -129,50 +129,46 @@ export function getPlaceIcon() {
 /* =======================================================
    PICKER (QUAN TRỌNG NHẤT)
 ======================================================= */
-
 export function getPickerGroups() {
-  const ctx = getCtx();
-  const anchor = ctx?.anchor;
-  const activeId = ctx?.active?.id;
-
+  const ctx = getContext() || {};
+  const anchor = ctx.anchor || null;
+  const activeId = ctx.active?.id || null;
   const ruleType = anchor?.type || null;
+
   const allowedTypes = ruleType
     ? getAllowedPlaceTypes(ruleType)
-    //: Object.keys(getGroups())
     : ["table"];
 
-  const out = [];
+  const order = ["room", "area", "table"];
 
-  ["room", "area", "table"].forEach(type => {
-    if (!allowedTypes.includes(type)) return;
+  return order
+    .filter(type => allowedTypes.includes(type))
+    .map(type => {
+      const group = getPlaceGroup(type);
+      if (!group) return null;
 
-    const group = getPlaceGroup(type);
-    if (!group) return;
+      const meta = group.meta || {};
+      let items = [];
 
-    const meta = group.meta || {};
-    let items = [];
+      if (type === "room" && anchor?.type === "room" && anchor?.id) {
+        const room = resolvePlace(anchor.id);
+        if (room) items = [room];
+      } else {
+        items = getPlaceItems(type) || [];
+      }
 
-    // Room đặc biệt: chỉ show anchor
-    if (type === "room" && anchor?.type === "room") {
-      const resolved = resolvePlace(anchor.id);
-      if (resolved) items = [resolved];
-    } else {
-      items = getPlaceItems(type);
-    }
+      if (!items.length) return null;
 
-    if (!items.length) return;
-
-    out.push({
-      type,
-      title: meta.label ? translate(meta.label) : type,
-      icon: meta.icon || "",
-      items: items.map(p => ({
-        id: p.id,
-        label: translate(p.label),
-        isActive: activeId === p.id
-      }))
-    });
-  });
-
-  return out;
+      return {
+        type,
+        title: meta.label ? translate(meta.label) : type,
+        icon: meta.icon || "",
+        items: items.map(place => ({
+          id: place.id,
+          label: translate(place.label),
+          isActive: activeId === place.id
+        }))
+      };
+    })
+    .filter(Boolean);
 }
