@@ -173,14 +173,6 @@
     z-index: 1;
 }
 
-.step-label {
-    font-size: 9px;
-    margin-top: 4px;
-    color: #999;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
 /* TRẠNG THÁI ACTIVE & COMPLETE */
 
 /* Bước đã xong */
