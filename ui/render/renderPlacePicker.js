@@ -109,7 +109,8 @@ function getPlacesData() {
   return getState().menu?.data || {};
 }
 
-export function renderPlacePicker(state) {
+export function renderPlacePicker() {
+    const state = getState();
     const el = document.getElementById("placePicker");
     if (!el || state.overlay.view !== 'placePicker') return;
 
