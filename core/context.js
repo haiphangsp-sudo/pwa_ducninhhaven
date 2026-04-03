@@ -18,13 +18,6 @@ function getGroups() {
   return getPlacesState().groups || {};
 }
 
-function getIndex() {
-  return getPlacesState().index || {};
-}
-
-function getFlat() {
-  return getPlacesState().flat || {};
-}
 
 /* =======================================================
    READ QR / URL
