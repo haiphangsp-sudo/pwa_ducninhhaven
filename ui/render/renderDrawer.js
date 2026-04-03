@@ -81,7 +81,7 @@ export function renderDrawer(state) {
   if (!hasPlace) {
     sendBtn.textContent = translate("cart_bar.place_prompt");
     sendBtn.classList.add("is-warning");
-    sendBtn.dataset.value = "cartDrawer";
+    sendBtn.dataset.value = "placePicker";
     sendBtn.dataset.action = "open-overlay";
     sendBtn.dataset.extra = "picker";
     sendBtn.disabled = false;
