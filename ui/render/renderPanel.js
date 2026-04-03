@@ -1,4 +1,7 @@
 // ui/render/renderPanel.js
+import { renderMenu } from "./renderCategory.js";
+import { renderArticle } from "./renderArticle.js";
+
 export function renderPanel(state) {
   const categoryKey = state.panel.view; 
   
