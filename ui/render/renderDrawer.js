@@ -1,6 +1,6 @@
 // ui/render/renderDrawer.js
 import { translate } from "../utils/translate.js";
-import { getDrawerExtended, getUIFlags } from "../../core/menuQuery.js";
+import { getDrawerExtended, getLocationInfo } from "../../core/menuQuery.js";
 
 export function renderDrawer(state) {
   const drawer = document.getElementById("cartDrawer");
@@ -61,7 +61,6 @@ export function renderDrawer(state) {
   `).join("");
 
   const isSending = state?.order?.status === "sending";
-  const hasPlace = !!state?.order?.hasPlace;
 
   // reset class về base trước
   sendBtn.classList.remove("is-loading", "is-warning", "is-disabled");
@@ -74,7 +73,7 @@ export function renderDrawer(state) {
     sendBtn.disabled = true;
     return;
   }
- 
+  const hasPlace = getLocationInfo().hasPlace;
   if (!hasPlace) {
     sendBtn.textContent = translate("cart_bar.place_prompt");
     sendBtn.classList.add("is-warning");
