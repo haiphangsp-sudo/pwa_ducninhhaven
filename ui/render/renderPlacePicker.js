@@ -2,11 +2,10 @@
 
 import { getContext } from "../../core/context.js";
 import { getAllowedPlaceTypes, getPlaceGroup, getPlaceItems } from "../../core/placesStore.js";
-import { translate } from "../utils/translate.js";
 
 let shellReady = false;
 
-export function renderPlacePicker() {
+export function renderPlacePickerCU() {
   renderPlacePickerShell();
   renderPlacePickerContent();
 }
@@ -101,4 +100,49 @@ function renderGroup(type, items, active) {
 function clearGroup(type) {
   const group = document.querySelector(`[data-group="${type}"]`);
   if (group) group.innerHTML = "";
+}
+
+import { getPickerGroups } from "../../core/placeQuery.js";
+import { translate } from "../utils/translate.js";
+
+function renderPlacePickerContent() {
+  const groups = getPickerGroups();
+
+  updatePickerTitle();
+
+  ["room", "area", "table"].forEach(type => {
+    const groupData = groups.find(g => g.type === type);
+
+    if (!groupData) {
+      clearGroup(type);
+      return;
+    }
+
+    renderGroup(type, groupData);
+  });
+}
+
+function renderGroup(type, groupData) {
+  const group = document.querySelector(`[data-group="${type}"]`);
+  if (!group) return;
+
+  group.innerHTML = `
+    <div class="flex gap-s">
+      <span class="${type}-icon">${groupData.icon}</span>
+      <span class="picker-title">${groupData.title}</span>
+    </div>
+
+    <div class="picker-list">
+      ${groupData.items.map(place => `
+        <button
+          class="picker-option btn center ${place.isActive ? "is-active" : ""}"
+          type="button"
+          data-action="select-place"
+          data-option="${type}"
+          data-value="${place.id}">
+          ${place.label}
+        </button>
+      `).join("")}
+    </div>
+  `;
 }

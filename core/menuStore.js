@@ -29,22 +29,3 @@ export async function loadMenu() {
     } 
   });
 }
-
-function deepMergeOld(base, patch) {
-  const out = structuredClone(base);
-
-  for (const k in patch) {
-    if (
-      typeof patch[k] === "object" &&
-      patch[k] !== null &&
-      !Array.isArray(patch[k]) &&
-      typeof out[k] === "object"
-    ) {
-      out[k] = deepMerge(out[k] || {}, patch[k]);
-    } else {
-      out[k] = patch[k];
-    }
-  }
-
-  return out;
-}

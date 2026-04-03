@@ -38,9 +38,7 @@ export function getProducts(categoryKey) {
   
   const menuData = getMenuData();
   const category = menuData[categoryKey];
-  
   if (!category || category.active === false) return [];
-
   const products = category.products || {};
 
   return Object.entries(products)
@@ -116,9 +114,9 @@ export function getDrawerExtended() {
     isEmpty: totalQ === 0,
     itemUnique: `${detailedItems.length} ${translate("cart_bar.unique")}`,
     totalQty: totalQ,
-    totalQtyFormat: totalQ > 1 ?
-      `${totalQ} ${translate("cart_bar.items")}`
-      : translate("cart_bar.item"),
+    totalQtyFormat: totalQ > 1
+      ? `${totalQ} ${translate("cart_bar.items")}`
+      : `${totalQ} ${translate("cart_bar.item")}`,
     totalPrice: new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(totalP)
   };
 }
@@ -129,6 +127,10 @@ export function getDrawerExtended() {
 
 function getCtx() {
   return getContext() || {};
+}
+
+function getPlaceData() {
+  return getState().menu?.data || {};
 }
 
 function getMenuData() {
