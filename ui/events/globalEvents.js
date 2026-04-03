@@ -55,7 +55,9 @@ function handleGlobalClick(e) {
       break;
 
     case "open-overlay":
-      setState({ overlay: { view: cmd.value, source: sou } });
+      setState({
+        overlay: { view: cmd.value }
+      });
       break;
 
     case "close-overlay":
@@ -66,7 +68,7 @@ function handleGlobalClick(e) {
     
     case "select-place":
       setState({
-        overlay: { view: null, source: { ...state.source } }
+        overlay: { view: null }
       });
       applyPlaceById(cmd.value);
       break;

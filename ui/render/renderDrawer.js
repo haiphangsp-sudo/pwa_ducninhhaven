@@ -39,7 +39,6 @@ export function renderDrawer(state) {
   }
 
   sendBtn.dataset.option = "";
-  sendBtn.dataset.value = "";
   
   drawerHeader.textContent = translate("cart_bar.cart_title");
   
@@ -93,7 +92,6 @@ export function renderDrawer(state) {
   sendBtn.textContent = translate("cart_bar.send_request");
   sendBtn.dataset.action = "send_cart";
   sendBtn.classList.remove("is-warning", "is-disabled");
-  namePlace.textContent = placeName;
   sendBtn.dataset.extra = "normal";
   sendBtn.disabled = false;
 }
