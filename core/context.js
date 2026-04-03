@@ -104,11 +104,12 @@ function isExpired(ctx) {
   if (!ctx?.updatedAt) return true;
   return Date.now() - ctx.updatedAt > TTL;
 }
-export function resolvePlace(placeId) {
-  const placeData = getState().places?.data || {};
 
-  if (!placeId) return null;
-  
+export function resolvePlace(placeId) {
+  const placeData = getState().places?.data;
+
+  if (!placeId || !placeData?.index) return null;
+
   return placeData.index[placeId] || null;
 }
 
