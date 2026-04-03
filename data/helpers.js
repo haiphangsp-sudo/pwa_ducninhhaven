@@ -54,38 +54,6 @@ export function getCategoriesForMode() {
     }));
 }
 
-export function getLocationInfo() {
-  const ctx = getContext();
-
-  const activeId = ctx?.active?.id;
-  const anchor = ctx?.anchor;
-  const mode = ctx?.mode || anchor?.type || null;
-
-  if (!activeId) {
-    return {
-      hasPlace: false,
-      placeId: null,
-      placeName: translate("place.select"),
-      placeData: null,
-      isResolved: false,
-      mode
-    };
-  }
-
-  const placeData = resolvePlace(activeId);
-
-  return {
-    hasPlace: true,
-    placeId: activeId,
-    placeName: placeData?.label
-      ? translate(placeData.label)
-      : activeId,
-    placeData: placeData || null,
-    isResolved: !!placeData,
-    mode
-  };
-}
-
 export function getUIFlags() {
   const state = getState();
   return {
