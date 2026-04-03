@@ -34,15 +34,12 @@ export function renderDrawer(state) {
     if (uniqueEl) uniqueEl.textContent = "0";
     sendBtn.textContent = translate("cart_bar.close");
     sendBtn.dataset.action ="close-overlay";
-    sendBtn.dataset.value = "cartDrawer";
     sendBtn.classList.remove("is-loading", "is-warning");
     return;
   }
 
-  sendBtn.dataset.action = "send_cart";
   sendBtn.dataset.option = "";
   sendBtn.dataset.value = "";
-  sendBtn.dataset.extra = "sending";
   
   drawerHeader.textContent = translate("cart_bar.cart_title");
   
@@ -76,20 +73,27 @@ export function renderDrawer(state) {
   // 1. SENDING (ưu tiên cao nhất)
   if (isSending) {
     sendBtn.textContent = translate("cart_bar.sending");
-    sendBtn.classList.add("is-loading");
+    sendBtn.classList.add("is-loading", "is-disabled");
+    sendBtn.dataset.extra = "sending";
     sendBtn.disabled = true;
     return;
   }
  
   if (!hasPlace) {
     sendBtn.textContent = translate("cart_bar.place_prompt");
-    sendBtn.classList.add("is-warning", "is-disabled");
-    sendBtn.disabled = false; // vẫn cho bấm → mở picker
+    sendBtn.classList.add("is-warning");
+    sendBtn.dataset.value = "cartDrawer";
+    sendBtn.dataset.action = "open-overlay";
+    sendBtn.dataset.extra = "picker";
+    sendBtn.disabled = false;
     return;
   }
 
   // 3. NORMAL
   sendBtn.textContent = translate("cart_bar.send_request");
-  sendBtn.disabled = false;
+  sendBtn.dataset.action = "send_cart";
+  sendBtn.classList.remove("is-warning", "is-disabled");
   namePlace.textContent = placeName;
+  sendBtn.dataset.extra = "normal";
+  sendBtn.disabled = false;
 }
