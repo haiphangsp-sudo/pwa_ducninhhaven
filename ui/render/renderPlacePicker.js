@@ -3,7 +3,7 @@
 import { getContext } from "../../core/context.js";
 import { getAllowedPlaceTypes, getPlaceGroup, getPlaceItems } from "../../core/placesStore.js";
 import { translate } from "../utils/translate.js";
-import { getPlacesData } from "../../core/placeQuery.js";
+import { getState } from "../../core/state.js";
 
 
 let shellReady = false;
@@ -105,6 +105,9 @@ function clearGroup(type) {
   if (group) group.innerHTML = "";
 }
 
+function getPlacesData() {
+  return getState().menu?.data || {};
+}
 
 export function renderPlacePicker(state) {
     const el = document.getElementById("placePicker");
