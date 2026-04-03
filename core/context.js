@@ -17,7 +17,7 @@ export function applyURLContext() {
 
   const placeId = params.get("place");
   const modeId = params.get("mode");
-
+  console.log("places.data =", getState().places?.data);
   if (!placeId) return false;
 
   const resolved = resolvePlace(placeId);
@@ -37,6 +37,7 @@ export function applyURLContext() {
     const ok = applyEntryPlace(resolved);
     if (ok) clearURL();
     return ok;
+    
   }
 
   const ctx = getContext();
