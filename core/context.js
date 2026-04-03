@@ -1,4 +1,3 @@
-import { resolvePlace, getAllowedPlaceTypes } from "./placesStore.js";
 import { CONFIG } from "../config.js";
 
 /* =======================================================
@@ -104,6 +103,13 @@ function isExpired(ctx) {
   if (!ctx?.updatedAt) return true;
   return Date.now() - ctx.updatedAt > TTL;
 }
+export function resolvePlace(placeId) {
+  const placeData = getState().places?.data || {};
+
+  if (!placeId) return null;
+  
+  return placeData.index[placeId] || null;
+}
 
 /* =======================================================
    NORMALIZE
@@ -175,6 +181,11 @@ export function getActivePlaceType() {
   return context?.active?.type || null;
 }
 
+
+export function getAllowedPlaceTypes(anchorType) {
+  if (!anchorType) return [];
+  return getGroups()?.[anchorType]?.meta?.allow || [anchorType];
+}
 /* =======================================================
    RULE
 ======================================================= */
