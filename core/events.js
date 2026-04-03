@@ -2,8 +2,7 @@
 
 import { getState, setState } from "./state.js";
 import { sendRequest } from "../services/api.js";
-import { getVariantById } from "./menuQuery.js";
-import { getLocationInfo } from "../data/helpers.js";
+import { getVariantById, getLocationInfo } from "./menuQuery.js";
 import { notifyResponse } from "./action.js"
 import { renderStatusBar } from "../ui/render/renderStatusBar.js"
 import { showToast } from "../ui/render/renderOverlay.js";
