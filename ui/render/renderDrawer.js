@@ -9,7 +9,7 @@ export function renderDrawer(state) {
 
   // Lấy các element con
   const drawerHeader = drawer.querySelector(".drawer__header-title");
-  const namePlace = drawer.getElementById("namePlace");
+  const namePlace = document.getElementById("namePlace");
   const totalEl = drawer.querySelector(".drawer__header-price");
   const countEl = drawer.querySelector(".drawer__header-count");
   const uniqueEl = drawer.querySelector(".drawer__header-unique");
