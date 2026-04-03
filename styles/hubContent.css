@@ -3,7 +3,7 @@
 .hub-content{
   width: 100%;
   box-sizing: border-box;
-  padding-bottom: 110px;
+  margin-bottom: 110px;
   contain: layout paint;
   padding:16px;
   background:var(--bg-main);
