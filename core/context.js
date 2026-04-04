@@ -1,64 +1,62 @@
 // core/context.js
 import { CONFIG } from "../config.js";
 import { getState, setState } from "./state.js";
-import { resolvePlace } from "./placeQuery.js";
+import { resolvePlace, getAllowedPlaceTypes } from "./placeQuery.js";
 
-const TTL_ACTIVE = 1000 * 60 * 30;      // 30 phút
-const TTL_ANCHOR = 1000 * 60 * 60 * 48; // 48 giờ
+const TTL_ACTIVE = 1000 * 60 * 30;
+const TTL_ANCHOR = 1000 * 60 * 60 * 48;
 
 let _ctx = { anchor: null, active: null };
 
-/* --- READERS --- */
 export function getContext() {
-  return getState().context || { 
-    current: { id: null, type: "table", isGuest: true } 
+  return getState().context || {
+    anchor: null,
+    active: null,
+    current: { id: null, type: "table", isGuest: true },
+    updatedAt: null
   };
 }
 
-/* --- MAIN LOGIC --- */
-
-// 1. Đọc dữ liệu từ máy khách và lọc bỏ cái hết hạn
 export function normalizeContext() {
-  const raw = localStorage.getItem(CONFIG.STORAGE_KEY);
-  _ctx = raw ? JSON.parse(raw) : { anchor: null, active: null };
-  
+  try {
+    const raw = localStorage.getItem(CONFIG.STORAGE_KEY);
+    _ctx = raw ? JSON.parse(raw) : { anchor: null, active: null };
+  } catch {
+    _ctx = { anchor: null, active: null };
+  }
+
   const now = Date.now();
-  if (_ctx.active?.at && (now - _ctx.active.at > TTL_ACTIVE)) _ctx.active = null;
-  if (_ctx.anchor?.at && (now - _ctx.anchor.at > TTL_ANCHOR)) _ctx.anchor = null;
+
+  if (_ctx.active?.at && now - _ctx.active.at > TTL_ACTIVE) _ctx.active = null;
+  if (_ctx.anchor?.at && now - _ctx.anchor.at > TTL_ANCHOR) _ctx.anchor = null;
 }
 
-// 2. Xử lý URL (Phải chạy SAU KHI loadPlaces xong)
 export function applyURLContext() {
   const params = new URLSearchParams(location.search);
   const placeId = params.get("place");
   const modeId = params.get("mode");
 
-  if (!placeId) return;
+  if (!placeId) return false;
 
   const resolved = resolvePlace(placeId);
-  if (!resolved) {
-    console.warn("[Haven] Không tìm thấy vị trí:", placeId);
-    return;
-  }
+  if (!resolved) return false;
 
-  // Kiểm tra mode nếu có (Logic cũ của bạn)
   const validModes = ["room", "area", "table"];
   if (modeId && (!validModes.includes(modeId) || resolved.type !== modeId)) {
-    return;
+    return false;
   }
 
   const ref = { id: resolved.id, type: resolved.type, at: Date.now() };
-  
-  // Thiết lập mới hoàn toàn khi quét QR
+
   _ctx.anchor = ref;
   _ctx.active = ref;
-  
-  // Xóa URL cho sạch
+
   history.replaceState({}, "", location.pathname);
+  syncContextToState();
+  return true;
 }
 
-// 3. Đẩy vào State và Lưu vào Storage
-export function syncContextToState(state) {
+export function syncContextToState() {
   const current = _ctx.active || _ctx.anchor;
 
   setState({
@@ -69,28 +67,42 @@ export function syncContextToState(state) {
         id: current?.id || null,
         type: current?.type || "table",
         isGuest: !_ctx.anchor
-      }
+      },
+      updatedAt: Date.now()
     }
   });
 
   localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(_ctx));
+
   const themeColors = {
-  room: "#2f5d46", // Xanh đậm cho phòng
-  area: "#4a5d4e", // Xanh lá cho sân vườn
-  table: "#333333" // Xám cho khách vãng lai
-};
+    room: "#2f5d46",
+    area: "#4a5d4e",
+    table: "#333333"
+  };
 
-const currentType = getState().context.current.type;
-document.querySelector('meta[name="theme-color"]')
-        .setAttribute('content', themeColors[currentType] || "#2f5d46");
+  const currentType = current?.type || "table";
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) {
+    meta.setAttribute("content", themeColors[currentType] || "#2f5d46");
+  }
 }
-
-/* --- UI ACTIONS --- */
 
 export function applyPlaceById(placeId) {
   const resolved = resolvePlace(placeId);
-  if (!resolved) return;
+  if (!resolved) return false;
 
-  _ctx.active = { id: resolved.id, type: resolved.type, at: Date.now() };
+  const anchorType = _ctx.anchor?.type;
+  if (anchorType) {
+    const allowed = getAllowedPlaceTypes(anchorType);
+    if (!allowed.includes(resolved.type)) return false;
+  }
+
+  _ctx.active = {
+    id: resolved.id,
+    type: resolved.type,
+    at: Date.now()
+  };
+
   syncContextToState();
+  return true;
 }

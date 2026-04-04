@@ -1,107 +1,150 @@
+// core/placesSchema.js
+
 /* =======================================================
    NORMALIZE
 ======================================================= */
-// core/placesSchema.js hoặc core/placesStore.js
 
 export function normalizePlaceGroups(raw) {
   const out = {};
 
   for (const [type, group] of Object.entries(raw || {})) {
-    const meta = group?.meta || {};
-    
-    // 1. Kiểm tra nếu toàn bộ Group bị tắt từ Admin (ví dụ: tắt toàn bộ 'table')
-    if (meta.active === false) continue;
+    if (!group || typeof group !== "object" || Array.isArray(group)) continue;
 
-    const items = Array.isArray(group?.items) ? group.items : [];
+    const meta = group.meta || {};
+    const items = Array.isArray(group.items) ? group.items : [];
 
-    // 2. Lọc danh sách items
-    const activeItems = items
-      .filter(item => {
-        // Chỉ giữ lại những item có ID và không bị Admin đặt active: false
-        return item && item.id && item.active !== false;
-      })
-      .map(item => ({
-        id: item.id,
+    out[type] = {
+      meta: {
         type,
-        // Giữ lại trạng thái active (mặc định true nếu không có)
-        active: true, 
-        label: item.label || { vi: item.id, en: item.id },
-        // Bạn có thể gộp thêm các trường phụ khác từ Admin tại đây
-        ...(item.meta || {}) 
-      }));
-
-    // 3. Chỉ đưa vào danh sách hiển thị nếu group đó có ít nhất 1 item đang bật
-    if (activeItems.length > 0) {
-      out[type] = {
-        meta: {
-          type,
-          label: meta.label || { vi: type, en: type },
-          icon: meta.icon || "",
-          allow: Array.isArray(meta.allow) && meta.allow.length
+        label: meta.label || { vi: type, en: type },
+        icon: meta.icon || "",
+        allow:
+          Array.isArray(meta.allow) && meta.allow.length
             ? meta.allow
-            : [type]
-        },
-        items: activeItems
-      };
-    }
+            : [type],
+        active: meta.active !== false
+      },
+
+      items: items
+        .filter(item => item && typeof item === "object" && item.id)
+        .map(item => ({
+          id: item.id,
+          type,
+          label: item.label || { vi: item.id, en: item.id },
+          active: item.active !== false,
+          ...(item.meta && typeof item.meta === "object" ? item.meta : {})
+        }))
+    };
   }
 
   return out;
 }
 
-// core/placesSchema.js
+/* =======================================================
+   VALIDATE
+======================================================= */
 
 export function validatePlaces(data) {
   const errors = [];
-  const idSet = new Set(); // Dùng để kiểm tra trùng lặp ID
+  const idSet = new Set();
+  const validTypes = ["room", "area", "table"];
 
-  if (!data || typeof data !== "object") {
-    throw new Error("PLACES_VALIDATION: Dữ liệu đầu vào không hợp lệ");
+  if (!data || typeof data !== "object" || Array.isArray(data)) {
+    throw new Error("PLACES_SCHEMA_ERROR\ninvalid places root");
   }
 
   for (const [type, group] of Object.entries(data)) {
     const path = `places.${type}`;
 
-    // 1. Kiểm tra cấu trúc Group
-    if (!group.meta) errors.push(`${path}: Thiếu trường 'meta'`);
-    if (!Array.isArray(group.items)) errors.push(`${path}: 'items' phải là một mảng`);
-
-    // 2. Kiểm tra Metadata
-    const meta = group.meta || {};
-    if (meta.label && typeof meta.label.vi !== "string") {
-      errors.push(`${path}.meta.label.vi: Phải là chuỗi ký tự`);
+    if (!validTypes.includes(type)) {
+      errors.push(`${path}: invalid group type`);
     }
 
-    // 3. Kiểm tra từng Item (Phòng/Bàn)
-    (group.items || []).forEach((item, index) => {
+    if (!group || typeof group !== "object" || Array.isArray(group)) {
+      errors.push(`${path}: invalid group object`);
+      continue;
+    }
+
+    if (!group.meta || typeof group.meta !== "object" || Array.isArray(group.meta)) {
+      errors.push(`${path}: missing meta`);
+    }
+
+    if (!Array.isArray(group.items)) {
+      errors.push(`${path}: items must be array`);
+      continue;
+    }
+
+    const meta = group.meta || {};
+
+    if (!meta.label || typeof meta.label !== "object") {
+      errors.push(`${path}.meta.label: invalid`);
+    } else {
+      if (typeof meta.label.vi !== "string") errors.push(`${path}.meta.label.vi: must be string`);
+      if (meta.label.en !== undefined && typeof meta.label.en !== "string") {
+        errors.push(`${path}.meta.label.en: must be string`);
+      }
+    }
+
+    if (meta.icon !== undefined && typeof meta.icon !== "string") {
+      errors.push(`${path}.meta.icon: must be string`);
+    }
+
+    if (meta.active !== undefined && typeof meta.active !== "boolean") {
+      errors.push(`${path}.meta.active: must be boolean`);
+    }
+
+    if (!Array.isArray(meta.allow)) {
+      errors.push(`${path}.meta.allow: must be array`);
+    } else {
+      meta.allow.forEach((allowType, idx) => {
+        if (!validTypes.includes(allowType)) {
+          errors.push(`${path}.meta.allow[${idx}]: invalid type '${allowType}'`);
+        }
+      });
+    }
+
+    group.items.forEach((item, index) => {
       const itemPath = `${path}.items[${index}]`;
 
-      // Kiểm tra ID
-      if (!item.id) {
-        errors.push(`${itemPath}: Thiếu trường 'id'`);
+      if (!item || typeof item !== "object" || Array.isArray(item)) {
+        errors.push(`${itemPath}: invalid item object`);
+        return;
+      }
+
+      if (!item.id || typeof item.id !== "string") {
+        errors.push(`${itemPath}.id: required string`);
       } else {
-        if (idSet.has(item.id)) {
-          errors.push(`${itemPath}: ID '${item.id}' bị trùng lặp`);
+        const normalizedId = item.id.trim();
+        if (idSet.has(normalizedId)) {
+          errors.push(`${itemPath}.id: duplicate '${normalizedId}'`);
         }
-        idSet.add(item.id);
+        idSet.add(normalizedId);
       }
 
-      // Kiểm tra Label
-      if (!item.label || !item.label.vi) {
-        errors.push(`${itemPath}: Thiếu nhãn 'label.vi'`);
+      if (!item.label || typeof item.label !== "object") {
+        errors.push(`${itemPath}.label: invalid`);
+      } else {
+        if (typeof item.label.vi !== "string") {
+          errors.push(`${itemPath}.label.vi: must be string`);
+        }
+        if (item.label.en !== undefined && typeof item.label.en !== "string") {
+          errors.push(`${itemPath}.label.en: must be string`);
+        }
       }
 
-      // Kiểm tra trạng thái Active (nếu có phải là boolean)
       if (item.active !== undefined && typeof item.active !== "boolean") {
-        errors.push(`${itemPath}: 'active' phải là true hoặc false`);
+        errors.push(`${itemPath}.active: must be boolean`);
+      }
+
+      if (item.type !== undefined && item.type !== type) {
+        errors.push(`${itemPath}.type: must match group type '${type}'`);
       }
     });
   }
 
-  // Nếu có lỗi, chặn đứng quy trình và báo cáo
-  if (errors.length > 0) {
+  if (errors.length) {
     throw new Error("PLACES_SCHEMA_ERROR\n" + errors.join("\n"));
   }
-  
+
   return true;
 }
