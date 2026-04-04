@@ -9,14 +9,18 @@ export default async function handler(req,res){
 
     if(req.method==="POST"){
       const patch=req.body||{};
-      let state=await kv.get("menuState")||{};
-      state=deepMerge(state,patch);
-      await kv.set("menuState",JSON.stringify(state));
+      let menu = await kv.get("menuState") || {};
+      let places = await kv.get("placesState") || {};
+      menu = deepMerge(menu, patch);
+      places = deepMerge(places, patch);
+      await kv.set("menuState", JSON.stringify(menu));
+      await kv.set("placesState", JSON.stringify(places));
       return res.status(200).json({ok:true});
     }
 
     if(req.method==="DELETE"){
       await kv.del("menuState");
+       await kv.del("placesState");
       return res.status(200).json({ok:true});
     }
 
