@@ -19,7 +19,7 @@ function updateNavBar(state) {
   const currentLang = state.lang.current;
   const {placeName, anchor} = getLocationInfo();
 
-  if (refs.identityIcon) refs.identityIcon.textContent = getAnchorDisplay().icon;
+  if (refs.identityIcon) refs.identityIcon.textContent = getAnchorDisplay(state).icon;
   if (refs.identityLabel) refs.identityLabel.textContent = getIdentityLabel(anchor);
   if (refs.locLabel) refs.locLabel.textContent = placeName;
 
