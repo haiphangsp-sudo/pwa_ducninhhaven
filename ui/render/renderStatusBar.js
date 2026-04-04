@@ -3,7 +3,7 @@
 // ui/render/renderStatusBar.js
 import { translate } from '../utils/translate.js';
 import { renderStepper } from './renderStepper.js';
-import { getLocationInfo } from '../../core/placeQuery.js';
+import { getLocationInfo } from '../../core/placesQuery.js';
 
 
 export function renderStatusBar(state) {

@@ -4,7 +4,7 @@ import { setState, getState } from "./state.js";
 import { deepMerge } from "../data/helpers.js";
 import { normalizePlaceGroups, validatePlaces } from "./placesSchema.js";
 
-export let PLACES = {}; // Dữ liệu đầy đủ cho Admin / Debug
+export let PLACES = {}; // Full data cho Admin / Debug
 
 /* =======================================================
    LOAD
@@ -40,13 +40,28 @@ export async function loadPlaces() {
         updatedAt: Date.now()
       }
     });
+
+    return { groups, index };
   } catch (err) {
     console.error("[Haven Check] Lỗi cấu trúc Vị trí:", err.message);
+
+    setState({
+      places: {
+        status: "error",
+        updatedAt: Date.now()
+      },
+      error: {
+        active: true,
+        message: err.message
+      }
+    });
+
+    return null;
   }
 }
 
 /* =======================================================
-   BUILD
+   BUILDERS
 ======================================================= */
 
 function buildPlaceIndex(groups) {
@@ -65,12 +80,16 @@ function buildPlaceIndex(groups) {
 }
 
 /* =======================================================
-   READERS (Runtime đọc từ State)
+   INTERNAL READERS
 ======================================================= */
 
 function getPlacesData() {
   return getState().places?.data || { groups: {}, index: {} };
 }
+
+/* =======================================================
+   RUNTIME READERS
+======================================================= */
 
 export function getPlaceGroups() {
   return getPlacesData().groups || {};
@@ -85,28 +104,69 @@ export function getPlaceGroup(type) {
 }
 
 export function getPlaceItems(type, options = {}) {
-  const items = getPlaceGroup(type)?.items || [];
+  const group = getPlaceGroup(type);
+  if (!group) return [];
 
-  if (options.includeInactive) return items;
+  const groupActive = group.meta?.active !== false;
+  const items = group.items || [];
+
+  if (options.includeInactive) {
+    return items;
+  }
+
+  if (!groupActive) return [];
 
   return items.filter(item => item.active !== false);
 }
 
 export function resolvePlace(placeId, options = {}) {
+  if (!placeId) return null;
+
   const place = getPlaceIndex()?.[placeId] || null;
   if (!place) return null;
 
-  if (options.includeInactive) return place;
-  if (place.active === false) return null;
+  const group = getPlaceGroup(place.type);
+  const groupActive = group?.meta?.active !== false;
+  const itemActive = place.active !== false;
+
+  if (options.includeInactive) {
+    return place;
+  }
+
+  if (!groupActive || !itemActive) {
+    return null;
+  }
 
   return place;
 }
 
 export function getAllowedPlaceTypes(anchorType) {
-  return getPlaceGroup(anchorType)?.meta?.allow || [anchorType];
+  const group = getPlaceGroup(anchorType);
+  const allow = group?.meta?.allow;
+
+  return Array.isArray(allow) && allow.length ? allow : [anchorType];
 }
 
 export function isPlaceActive(placeId) {
-  const place = getPlaceIndex()?.[placeId];
-  return !!place && place.active !== false;
+  return !!resolvePlace(placeId);
+}
+
+export function getAllPlaces(options = {}) {
+  const groups = getPlaceGroups();
+  const out = [];
+
+  for (const [type, group] of Object.entries(groups || {})) {
+    const items = options.includeInactive
+      ? (group.items || [])
+      : getPlaceItems(type);
+
+    items.forEach(item => {
+      out.push({
+        ...item,
+        type
+      });
+    });
+  }
+
+  return out;
 }

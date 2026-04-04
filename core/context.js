@@ -1,7 +1,7 @@
 // core/context.js
 import { CONFIG } from "../config.js";
 import { getState, setState } from "./state.js";
-import { resolvePlace, getAllowedPlaceTypes } from "./placeQuery.js";
+import { resolvePlace, getAllowedPlaceTypes } from "./placesStore.js";
 
 const TTL_ACTIVE = 1000 * 60 * 30;
 const TTL_ANCHOR = 1000 * 60 * 60 * 48;

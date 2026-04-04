@@ -1,6 +1,12 @@
 // core/placesQuery.js
-import { getState } from "./state.js";
+
 import { getContext } from "./context.js";
+import {
+  resolvePlace,
+  getAllowedPlaceTypes,
+  getPlaceGroup,
+  getPlaceItems
+} from "./placesStore.js";
 import { translate } from "../ui/utils/translate.js";
 
 /* =======================================================
@@ -9,27 +15,6 @@ import { translate } from "../ui/utils/translate.js";
 
 function getCtx() {
   return getContext() || {};
-}
-
-function getPlacesData() {
-  return getState().places?.data || {};
-}
-
-function getGroups() {
-  return getPlacesData().groups || {};
-}
-
-function getIndex() {
-  return getPlacesData().index || {};
-}
-
-/* =======================================================
-   BASIC RESOLVE
-======================================================= */
-
-export function resolvePlace(placeId) {
-  if (!placeId) return null;
-  return getIndex()[placeId] || null;
 }
 
 /* =======================================================
@@ -54,29 +39,6 @@ export function getAnchorId() {
 }
 
 /* =======================================================
-   RULE
-======================================================= */
-
-export function getAllowedPlaceTypes(anchorType) {
-  if (!anchorType) return [];
-
-  const group = getGroups()[anchorType];
-  return group?.meta?.allow || [anchorType];
-}
-
-/* =======================================================
-   GROUP / ITEMS
-======================================================= */
-
-export function getPlaceGroup(type) {
-  return getGroups()?.[type] || null;
-}
-
-export function getPlaceItems(type) {
-  return getGroups()?.[type]?.items || [];
-}
-
-/* =======================================================
    LOCATION INFO
 ======================================================= */
 
@@ -98,11 +60,9 @@ export function getLocationInfo() {
   const placeData = resolvePlace(activeId);
 
   return {
-    hasPlace: true,
-    placeId: activeId,
-    placeName: placeData?.label
-      ? translate(placeData.label)
-      : activeId,
+    hasPlace: !!placeData,
+    placeId: placeData?.id || null,
+    placeName: placeData?.label ? translate(placeData.label) : activeId,
     placeData: placeData || null,
     mode
   };
@@ -112,19 +72,16 @@ export function getLocationInfo() {
    ICON
 ======================================================= */
 
-
 export function getAnchorDisplay(state) {
   const anchor = state.context?.anchor;
   const index = state.places?.data?.index || {};
   const groups = state.places?.data?.groups || {};
 
-  // 1. Nếu không có anchor (Khách vãng lai)
   if (!anchor) return { icon: "📍", label: "Guest" };
 
   const item = index[anchor.id];
   if (!item) return { icon: "📍", label: "..." };
 
-  // 2. Lấy icon: Ưu tiên icon của chính item -> sau đó đến icon của nhóm (room/area)
   const icon = item.icon || groups[item.type]?.meta?.icon || "📍";
 
   return {
@@ -134,7 +91,7 @@ export function getAnchorDisplay(state) {
 }
 
 /* =======================================================
-   PICKER (QUAN TRỌNG NHẤT)
+   PICKER
 ======================================================= */
 
 export function getPickerGroups() {
@@ -142,8 +99,7 @@ export function getPickerGroups() {
   const anchor = ctx?.anchor;
   const activeId = ctx?.active?.id;
 
-  // SỬA: Mặc định là "table" nếu không có anchor để tránh hiện tất cả
-  const ruleType = anchor?.type || "table"; 
+  const ruleType = anchor?.type || "table";
   const allowedTypes = getAllowedPlaceTypes(ruleType);
 
   const out = [];
@@ -156,8 +112,8 @@ export function getPickerGroups() {
 
     let items = [];
     if (type === "room" && anchor?.type === "room") {
-      // SỬA: Dự phòng dùng luôn anchor nếu resolve chưa ra dữ liệu
-      items = [resolvePlace(anchor.id) || anchor]; 
+      const room = resolvePlace(anchor.id);
+      items = room ? [room] : [];
     } else {
       items = getPlaceItems(type);
     }
@@ -170,7 +126,7 @@ export function getPickerGroups() {
       icon: group.meta?.icon || "",
       items: items.map(p => ({
         id: p.id,
-        label: p.label ? translate(p.label) : p.id, // Fallback nếu chưa có label
+        label: p.label ? translate(p.label) : p.id,
         isActive: activeId === p.id
       }))
     });

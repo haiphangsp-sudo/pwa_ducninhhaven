@@ -3,7 +3,7 @@
 import { getState, setState } from "./state.js";
 import { sendRequest } from "../services/api.js";
 import { getVariantById } from "./menuQuery.js";
-import { getLocationInfo } from "./placeQuery.js";
+import { getLocationInfo } from "./placesQuery.js";
 import { notifyResponse } from "./action.js"
 import { renderStatusBar } from "../ui/render/renderStatusBar.js"
 import { showToast } from "../ui/render/renderAck.js";

@@ -1,5 +1,5 @@
 // ui/render/renderPlacePicker.js
-import { getPickerGroups } from "../../core/placeQuery.js";
+import { getPickerGroups } from "../../core/placesQuery.js";
 import { translate } from "../utils/translate.js";
 
 let shellReady = false;
