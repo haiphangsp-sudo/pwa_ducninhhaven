@@ -1,6 +1,7 @@
 {
     "room": {
       "meta": {
+        "active": true,
         "type": "room",
         "label": { "vi": "Phòng của tôi", "en": "My room" },
         "icon": "🛏️",
@@ -14,6 +15,7 @@
     },
     "area": {
       "meta": {
+        "active": true,
         "type": "area",
         "label": { "vi": "Chọn khu vực", "en": "Select area" },
         "icon": "🌿",
@@ -30,6 +32,7 @@
     },
     "table": {
       "meta": {
+        "active": true,
         "type": "table",
         "label": { "vi": "Lựa chọn bàn", "en": "Table selection" },
         "icon": "☕",
