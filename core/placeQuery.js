@@ -128,7 +128,7 @@ export function getAnchorDisplay(state) {
 
   return {
     icon,
-    label: item.label.vi || item.id
+    label: translate(item.label)
   };
 }
 
