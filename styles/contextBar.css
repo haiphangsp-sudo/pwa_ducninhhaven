@@ -22,11 +22,8 @@
   position: sticky;
   top: 0;
   z-index: 100;
-}
-.context-bar {
   /* Quan trọng: Tràn màu lên thanh trạng thái */
   padding-top: env(safe-area-inset-top, 20px); 
-  background-color: #2f5d46; /* Trùng với theme-color trong index.html */
 }
 
 /* =========================================================
