@@ -43,7 +43,7 @@ export const STRINGS = {
   },
 
   order: {
-    other: { vi: "Đơn hàng khác", en: "Other orders"},
+    other: { vi: "Đơn hàng khác", en: "Other orders" },
     confirm: { vi: "Xác nhận", en: "Confirm" },
     cancel: { vi: "Hủy", en: "Cancel" },
     status: { vi: "Trạng thái", en: "Status" },
@@ -67,6 +67,7 @@ export const STRINGS = {
     msg_RECOVERING: { vi: "Đang phục hồi sự tĩnh lặng...", en: "Restoring the serenity..." }
   },
   place: {
+    button_nav:{ vi: "Chọn vị trí", en: "Select a place"},
     select: { vi: "Chọn nơi phục vụ?", en: "Where would you like to be served?" },
     my_room: { vi: "Phòng tôi", en: "My room" },
     my_table: { vi: "Bàn tôi", en: "My table" },
