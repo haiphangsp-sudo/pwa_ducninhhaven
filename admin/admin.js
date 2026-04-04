@@ -123,7 +123,7 @@ function bindEvents(){
   });
 
   document.getElementById("resetBtn").onclick=async()=>{
-    await fetch("/api/admin/state",{
+    await fetch("/api/admin/menu",{
       method:"DELETE",
       headers:{ "x-admin-pin": localStorage.getItem("admin_pin") }
     });
@@ -137,7 +137,7 @@ function bindEvents(){
 
 async function saveState(patch){
 
-  const r = await fetch("/api/admin/state",{
+  const r = await fetch("/api/admin/menu",{
     method:"POST",
     headers:{
       "Content-Type":"application/json",
