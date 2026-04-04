@@ -7,9 +7,9 @@
         "allow": ["room", "area", "table"]
       },
       "items": [
-        { "id": "olive", "label": { "vi": "Phòng Olive", "en": "Olive Room" } },
-        { "id": "juniper", "label": { "vi": "Phòng Juniper", "en": "Juniper Room" } },
-        { "id": "cloud", "label": { "vi": "Phòng Cloud", "en": "Cloud Room" } }
+        { "id": "olive", "active":true, "label": { "vi": "Phòng Olive", "en": "Olive Room" } },
+        { "id": "juniper", "active":true, "label": { "vi": "Phòng Juniper", "en": "Juniper Room" } },
+        { "id": "cloud", "active":true, "label": { "vi": "Phòng Cloud", "en": "Cloud Room" } }
     ]
     },
     "area": {
@@ -20,12 +20,12 @@
         "allow": ["area", "table"]
       },
       "items": [
-        {"id":"lounge", "label": { "vi": "Phòng chờ", "en": "Lounge" } },
-        {"id":"living", "label": { "vi": "Phòng khách", "en": "Living room" } },
-        {"id":"dining", "label": { "vi": "Phòng ăn", "en": "Dining room" } },
-        {"id":"courtyard", "label": { "vi": "Sân giếng", "en": "Well yard" }},
-        {"id":"garden", "label": { "vi": "Vườn", "en": "Garden" } },
-        {"id":"pergola", "label": { "vi": "Giàn Pergola", "en": "Pergola" } }
+        {"id":"lounge", "active":true, "label": { "vi": "Phòng chờ", "en": "Lounge" } },
+        {"id":"living", "active":true, "label": { "vi": "Phòng khách", "en": "Living room" } },
+        {"id":"dining", "active":true, "label": { "vi": "Phòng ăn", "en": "Dining room" } },
+        {"id":"courtyard", "active":true, "label": { "vi": "Sân giếng", "en": "Well yard" }},
+        {"id":"garden", "active":true, "label": { "vi": "Vườn", "en": "Garden" } },
+        {"id":"pergola", "active":true, "label": { "vi": "Giàn Pergola", "en": "Pergola" } }
       ]
     },
     "table": {
@@ -36,9 +36,9 @@
         "allow": ["table"]
       },
       "items": [
-        { "id": "t1", "label": { "vi": "Bàn T1", "en": "Table T1" } },
-        { "id": "t2", "label": { "vi": "Bàn T2", "en": "Table T2" } },
-        { "id": "t3", "label": { "vi": "Bàn T3", "en": "Table T3" } }
+        { "id": "t1", "active":true, "label": { "vi": "Bàn T1", "en": "Table T1" } },
+        { "id": "t2", "active":true, "label": { "vi": "Bàn T2", "en": "Table T2" } },
+        { "id": "t3", "active":true, "label": { "vi": "Bàn T3", "en": "Table T3" } }
       ]
     }
 
