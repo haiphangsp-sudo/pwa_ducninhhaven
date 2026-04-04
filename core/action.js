@@ -1,4 +1,4 @@
-// ui/notifications.js (hoặc đặt trong core/actions.js)
+// core/action.js
 
 import { onOrderSuccess } from "../core/events.js";
 import { showToast } from "../ui/render/renderAck.js"; 

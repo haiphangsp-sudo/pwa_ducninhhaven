@@ -1,5 +1,8 @@
+// admin/admin.js
+
 import { loadMenu, MENU } from "../core/menuStore.js";
 import { loadPlaces, PLACES } from "../core/placesStore.js";
+
 
 
 /* ===== LOGIN GATE ===== */

@@ -1,3 +1,4 @@
+// ui/renderApp.js
 
 import { getState } from "../../core/state.js";
 import { renderHub } from "../../ui/render/renderHub.js";

@@ -1,8 +1,5 @@
 // data/helpers.js
 
-import { getState } from "../core/state.js";
-
-
 /**
  * Hàm gộp sâu Bất biến: Trả về một Object hoàn toàn mới
  */

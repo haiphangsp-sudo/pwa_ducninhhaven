@@ -1,4 +1,4 @@
-
+// core/menuStore.js
 import { validateMenu, normalizeMenu } from "./menuSchema.js";
 import { setState } from "./state.js";
 import { deepMerge } from "../data/helpers.js";

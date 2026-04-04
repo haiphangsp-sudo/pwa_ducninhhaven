@@ -1,3 +1,4 @@
+// core/placesQuery.js
 import { getState } from "./state.js";
 import { getContext } from "./context.js";
 import { translate } from "../ui/utils/translate.js";
