@@ -132,12 +132,15 @@ export function getDrawerExtended() {
 
 export function getCategoriesForCurrentPlace() {
   const menuData = getMenuData();
-  const placeType = getCurrentPlaceType();
+  const state = getState();
+  
+  // Lấy thẳng placeType đã được tính toán sẵn và validate thời gian
+  const placeType = state.context?.current?.type || "table"; 
 
   return Object.entries(menuData)
     .filter(([, cat]) => {
       if (!cat || cat.active === false) return false;
-      if (!placeType) return true;
+      // Chỉ hiện danh mục nếu nó cho phép loại vị trí hiện tại
       return !cat.allow || cat.allow.includes(placeType);
     })
     .map(([key, cat]) => ({
