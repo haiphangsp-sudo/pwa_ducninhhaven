@@ -1,4 +1,6 @@
 import { loadMenu, MENU } from "../core/menuStore.js";
+import { loadPlaces, PLACES } from "../core/placesStore.js";
+
 
 /* ===== LOGIN GATE ===== */
 function hasSession(){
@@ -43,21 +45,30 @@ async function doLogin(){
 
 document.getElementById("loginBtn").onclick = doLogin;
 
+
 if(hasSession()){
   showApp();
-  await loadMenu();
+  await Promise.all([loadMenu(), loadPlaces()]);
   render();
 }
 /* ===== LOAD ===== */
 
-await loadMenu();
+await Promise.all([loadMenu(), loadPlaces()]);
 render();
 
 /* ===== UI ===== */
 
-function render(){
+function render() {
+  renderMenu(); 
+  
+  renderPlaces();
 
-  const root=document.getElementById("adminApp");
+  bindEvents();
+}
+
+function renderMenu(){
+
+  const root=document.getElementById("adminMenu");
 
   root.innerHTML = Object.entries(MENU).map(([catKey,cat])=>`
   
@@ -105,20 +116,25 @@ function render(){
 function bindEvents(){
 
   document.querySelectorAll("input[type=checkbox]").forEach(cb=>{
-    cb.onchange = async ()=>{
-
+   cb.onchange = async () => {
       const path = cb.dataset.path.split(".");
+      const isPlace = cb.dataset.type === "place";
       const patch = {};
 
+      // Tạo object patch theo đường dẫn (Deep Patch)
       let ref = patch;
-      for(let i=0;i<path.length-1;i++){
-        ref[path[i]]={};
-        ref=ref[path[i]];
+      for (let i = 0; i < path.length - 1; i++) {
+        ref[path[i]] = {};
+        ref = ref[path[i]];
       }
-
       ref[path.at(-1)] = cb.checked;
 
-      await saveState(patch);
+      // Gửi đến đúng API
+      if (isPlace) {
+        await savePlacesState(patch);
+      } else {
+        await saveMenuState(patch);
+      }
     };
   });
 
@@ -133,9 +149,24 @@ function bindEvents(){
     lo.onclick = logout;
 }
 
+/* ===== API CHO PLACES ===== */
+async function savePlacesState(patch) {
+  const r = await fetch("/api/admin/places", { // Giả định endpoint cho places
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-admin-pin": localStorage.getItem("admin_pin")
+    },
+    body: JSON.stringify(patch)
+  });
+
+  if (r.status === 401) {
+    logout();
+  }
+}
 /* ===== API ===== */
 
-async function saveState(patch){
+async function saveMenuState(patch){
 
   const r = await fetch("/api/admin/menu",{
     method:"POST",
@@ -157,4 +188,41 @@ function logout(){
   localStorage.removeItem("admin_pin_expire");
   hideApp();
   location.reload();
+}
+
+
+function renderPlaces() {
+  const root = document.getElementById("adminPlaces");
+  const PLACES = getAllPlaceGroups(); // Lấy dữ liệu từ Store
+
+  if (!root || !PLACES) return;
+
+  root.innerHTML = Object.entries(PLACES).map(([typeKey, group]) => `
+    <section class="cat">
+      <div class="cat-header flex between">
+        <label class="cat-title">
+          <span class="icon">${group.meta.icon || ''}</span>
+          ${group.meta.label.vi}
+        </label>
+        <input type="checkbox" 
+               data-type="place"
+               data-path="${typeKey}.meta.active" 
+               ${group.meta.active !== false ? "checked" : ""}>
+      </div>
+
+      <div class="items">
+        ${group.items.map((item, index) => `
+          <div class="item flex between">
+            <label>
+              ${item.label.vi} <small>(${item.id})</small>
+            </label>
+            <input type="checkbox" 
+                   data-type="place"
+                   data-path="${typeKey}.items.${index}.active" 
+                   ${item.active !== false ? "checked" : ""}>
+          </div>
+        `).join("")}
+      </div>
+    </section>
+  `).join("");
 }

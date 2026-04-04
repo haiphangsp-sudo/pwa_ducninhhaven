@@ -7,28 +7,38 @@ import { normalizePlaceGroups } from "./placesSchema.js";
    LOAD
 ======================================================= */
 
-export let PLACES = {};
+export let PLACES = {}; // Dữ liệu đầy đủ (gồm cả mục đã tắt) cho Admin
 
 export async function loadPlaces() {
+  // 1. Tải dữ liệu cấu trúc gốc
   const base = await fetch("/data/places.json", { cache: "no-store" })
     .then(r => r.json());
 
-  normalizePlaceGroups(base);
-
-  let groups = {};
+  // 2. Tải các thay đổi từ Admin (trạng thái active/inactive)
+  let adminPatch = {};
   try {
-    groups = await fetch("/api/data/places", { cache: "no-store" }).then(r => r.json());
+    adminPatch = await fetch("/api/data/places", { cache: "no-store" }).then(r => r.json());
   } catch {
     console.warn("Không thể tải trạng thái places từ API");
   }
 
-  PLACES = deepMerge(base, groups); 
+  // 3. Gộp dữ liệu: Admin Patch đè lên Base JSON
+  // PLACES sẽ chứa mọi thứ để trang Admin có thể hiển thị checkbox
+  PLACES = deepMerge(base, adminPatch); 
 
-  const index = buildPlaceIndex(groups);
+  // 4. CHỐT CHẶN: Normalize để lọc bỏ các mục Admin đã tắt (active: false)
+  // Đây là dữ liệu thực tế sẽ hiển thị cho khách
+  const activeGroups = normalizePlaceGroups(PLACES);
+
+  // 5. Build index từ dữ liệu đã được lọc
+  const index = buildPlaceIndex(activeGroups);
 
   setState({
     places: {
-      data: { PLACES, index },
+      data: { 
+        groups: activeGroups, // Dùng mảng đã lọc cho UI
+        index 
+      },
       status: "ready",
       updatedAt: Date.now()
     }
@@ -37,7 +47,6 @@ export async function loadPlaces() {
 
 function buildPlaceIndex(groups) {
   const index = {};
-
   for (const [type, group] of Object.entries(groups || {})) {
     for (const item of group.items || []) {
       index[item.id] = {
@@ -46,6 +55,6 @@ function buildPlaceIndex(groups) {
       };
     }
   }
-
   return index;
 }
+
