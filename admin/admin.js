@@ -85,7 +85,6 @@ function render() {
   renderPlaces();
   bindEvents();
 }
-
 function renderMenu() {
   const root = document.getElementById("adminMenu");
   if (!root) return;
@@ -137,7 +136,6 @@ function renderMenu() {
     </section>
   `).join("");
 }
-
 function renderPlaces() {
   const root = document.getElementById("adminPlaces");
   if (!root) return;
@@ -176,7 +174,6 @@ function renderPlaces() {
 /* ======================================================
    EVENTS
 ====================================================== */
-
 function bindEvents() {
   document.querySelectorAll('input[type="checkbox"][data-path]').forEach(cb => {
     cb.onchange = async () => {
@@ -201,15 +198,16 @@ function bindEvents() {
       await Promise.all([
         fetch("/api/admin/menu", {
           method: "DELETE",
-          headers: { "x-admin-pin": getAdminPin() }
+          headers: { "x-admin-pin": localStorage.getItem("admin_pin") }
         }),
         fetch("/api/admin/places", {
           method: "DELETE",
-          headers: { "x-admin-pin": getAdminPin() }
+          headers: { "x-admin-pin": localStorage.getItem("admin_pin") }
         })
       ]);
 
-      await bootAdmin();
+      await Promise.all([loadMenu(), loadPlaces()]);
+      render();
     };
   }
 
