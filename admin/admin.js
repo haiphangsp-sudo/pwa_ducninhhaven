@@ -55,10 +55,6 @@ if(hasSession()){
   await Promise.all([loadMenu(), loadPlaces()]);
   render();
 }
-/* ===== LOAD ===== */
-
-await Promise.all([loadMenu(), loadPlaces()]);
-render();
 
 /* ===== UI ===== */
 
