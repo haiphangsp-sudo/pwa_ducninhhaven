@@ -15,7 +15,7 @@
 ========================= */
 
 .hub-menu {
-  position: sticky;
+  position: relative;
   top: var(--nav-h); /* Dính NGAY DƯỚI Nav */
   z-index: 90;       /* Thấp hơn Nav một chút */
   height: var(--hub-h);
@@ -24,7 +24,17 @@
   overflow-x: auto;
   border-bottom: 1px solid var(--border-soft);
 }
-
+.hub-menu::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px; /* Độ cao vùng mờ */
+  background: linear-gradient(to bottom, rgba(244, 241, 234, 0), #f4f1ea); 
+  pointer-events: none; /* Để khách vẫn click được vào món ở dưới */
+  transition: opacity 0.3s;
+}
 
 .hub-menu::-webkit-scrollbar{
   display:none;
