@@ -1,7 +1,7 @@
 // core/placesStore.js
 import { setState } from "./state.js";
 import { deepMerge } from "../data/helpers.js";
-import { normalizePlaceGroups } from "./placesSchema.js";
+import { normalizePlaceGroups, validatePlaces } from "./placesSchema.js";
 
 /* =======================================================
    LOAD
@@ -10,39 +10,41 @@ import { normalizePlaceGroups } from "./placesSchema.js";
 export let PLACES = {}; // Dữ liệu đầy đủ (gồm cả mục đã tắt) cho Admin
 
 export async function loadPlaces() {
-  // 1. Tải dữ liệu cấu trúc gốc
-  const base = await fetch("/data/places.json", { cache: "no-store" })
-    .then(r => r.json());
-
-  // 2. Tải các thay đổi từ Admin (trạng thái active/inactive)
+  const base = await fetch("/data/places.json", { cache: "no-store" }).then(r => r.json());
+  
   let adminPatch = {};
   try {
-    adminPatch = await fetch("/api/data/places", { cache: "no-store" }).then(r => r.json());
-  } catch {
-    console.warn("Không thể tải trạng thái places từ API");
-  }
+    adminPatch = await fetch("/api/data/places").then(r => r.json());
+  } catch { /* ignore */ }
 
-  // 3. Gộp dữ liệu: Admin Patch đè lên Base JSON
-  // PLACES sẽ chứa mọi thứ để trang Admin có thể hiển thị checkbox
-  PLACES = deepMerge(base, adminPatch); 
+  // 1. Gộp dữ liệu
+  const fullData = deepMerge(base, adminPatch);
 
-  // 4. CHỐT CHẶN: Normalize để lọc bỏ các mục Admin đã tắt (active: false)
-  // Đây là dữ liệu thực tế sẽ hiển thị cho khách
-  const activeGroups = normalizePlaceGroups(PLACES);
+  // 2. Chuẩn hóa (Normalize)
+  const groups = normalizePlaceGroups(fullData);
 
-  // 5. Build index từ dữ liệu đã được lọc
-  const index = buildPlaceIndex(activeGroups);
+  try {
+    // 3. KIỂM TRA (Validate)
+    validatePlaces(groups);
 
-  setState({
-    places: {
-      data: { 
-        groups: activeGroups, // Dùng mảng đã lọc cho UI
-        index 
-      },
-      status: "ready",
-      updatedAt: Date.now()
+    // 4. Nếu qua cửa, mới tính toán index và cập nhật State
+    const index = buildPlaceIndex(groups);
+    setState({
+      places: {
+        data: { groups, index },
+        status: "ready",
+        updatedAt: Date.now()
+      }
+    });
+  } catch (err) {
+    // Nếu dữ liệu Admin làm hỏng cấu trúc, ta báo lỗi và không cập nhật
+    console.error("[Haven Check] Lỗi cấu trúc Vị trí:", err.message);
+    
+    // Hiển thị thông báo cho người dùng/admin nếu cần
+    if (typeof showToast === "function") {
+      showToast({ type: "error", message: "Dữ liệu Vị trí bị lỗi cấu trúc!" });
     }
-  });
+  }
 }
 
 function buildPlaceIndex(groups) {
