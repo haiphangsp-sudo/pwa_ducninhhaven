@@ -14,15 +14,15 @@
         },  
         "active": true
       },
-        "about":{
-          "label":{"vi":"Về chúng tôi","en":"About Us"},
-          "content":{
-            "vi":"Chúng tôi không cố trở thành một nơi ai cũng thích.\n\nChúng tôi chỉ cố trở thành một nơi mà một số người cần.",
-            "en":"We're not trying to be a place everyone likes.\n\nWe're just trying to be a place that some people need."
+      "about":{
+        "label":{"vi":"Về chúng tôi","en":"About Us"},
+        "content":{
+          "vi":"Chúng tôi không cố trở thành một nơi ai cũng thích.\n\nChúng tôi chỉ cố trở thành một nơi mà một số người cần.",
+          "en":"We're not trying to be a place everyone likes.\n\nWe're just trying to be a place that some people need."
         },
-          "active":true
-        }
-  }
+        "active":true
+      }
+    }
   },
 
   "food":{

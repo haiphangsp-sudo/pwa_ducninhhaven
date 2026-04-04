@@ -11,22 +11,28 @@ export let MENU = {}; // Full data cho Admin / Debug
 ======================================================= */
 
 export async function loadMenu() {
-  const base = await fetch("/data/menu.json", { cache: "no-store" }).then(r => r.json());
-
-  let adminPatch = {};
   try {
-    adminPatch = await fetch("/api/data/menu", { cache: "no-store" }).then(r => r.json());
-  } catch {
-    adminPatch = {};
-  }
+    // 1. Load base
+    const base = await fetch("/data/menu.json", { cache: "no-store" }).then(r => r.json());
 
-  const fullData = deepMerge(base, adminPatch);
+    // 2. Chuẩn hóa base trước khi merge patch
+    normalizeMenu(base);
 
-  normalizeMenu(fullData);
+    // 3. Load admin patch
+    let adminPatch = {};
+    try {
+      adminPatch = await fetch("/api/data/menu", { cache: "no-store" }).then(r => r.json());
+    } catch {
+      adminPatch = {};
+    }
 
-  try {
+    // 4. Merge patch vào cây đã chuẩn hóa
+    const fullData = deepMerge(structuredClone(base), adminPatch);
+
+    // 5. Validate sau cùng
     validateMenu(fullData);
 
+    // 6. Commit
     MENU = fullData;
 
     setState({
@@ -38,6 +44,7 @@ export async function loadMenu() {
     });
 
     return fullData;
+
   } catch (error) {
     console.error("[Haven Check] Dữ liệu Menu bị lỗi, không thể cập nhật:", error.message);
 
