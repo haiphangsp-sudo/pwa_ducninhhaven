@@ -2,7 +2,7 @@
    NORMALIZE
 ======================================================= */
 
-function normalizePlaceGroups(raw) {
+export function normalizePlaceGroups(raw) {
   const out = {};
 
   for (const [type, group] of Object.entries(raw || {})) {
