@@ -1,7 +1,7 @@
 // ui/components/navBar.js
 
 import { translate } from "../utils/translate.js";
-import { getPlaceIcon, getLocationInfo } from "../../core/menuQuery.js";
+import { getPlaceIcon, getLocationInfo } from "../../core/placeQuery.js";
 
 const refs = {
   identityIcon: null,

@@ -1,6 +1,7 @@
 // ui/render/renderDrawer.js
 import { translate } from "../utils/translate.js";
-import { getDrawerExtended, getLocationInfo } from "../../core/menuQuery.js";
+import { getDrawerExtended } from "../../core/menuQuery.js";
+import { getLocationInfo } from "../../core/placeQuery.js";
 
 export function renderDrawer(state) {
   const drawer = document.getElementById("cartDrawer");
