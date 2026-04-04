@@ -48,24 +48,25 @@ export async function loadPlaces() {
     return null;
   }
 }
-
 function applyPlacesPatch(base, patch) {
   const out = structuredClone(base || {});
 
   for (const [type, groupPatch] of Object.entries(patch || {})) {
     if (!out[type]) continue;
 
-    if (groupPatch.meta && typeof groupPatch.meta === "object") {
+    // group
+    if (groupPatch.meta) {
       out[type].meta = {
-        ...(out[type].meta || {}),
+        ...out[type].meta,
         ...groupPatch.meta
       };
     }
 
-    if (groupPatch.itemsById && typeof groupPatch.itemsById === "object") {
-      out[type].items = (out[type].items || []).map(item => {
-        const itemPatch = groupPatch.itemsById[item.id];
-        return itemPatch ? { ...item, ...itemPatch } : item;
+    // items
+    if (groupPatch.itemsById) {
+      out[type].items = out[type].items.map(item => {
+        const patchItem = groupPatch.itemsById[item.id];
+        return patchItem ? { ...item, ...patchItem } : item;
       });
     }
   }
