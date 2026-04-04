@@ -157,7 +157,7 @@ function renderPlaces() {
       </div>
 
       <div class="items">
-        ${(group.items || []).map((item, index) => `
+        ${(group.items || []).map(item => `
           <div class="item flex between">
             <label>
               ${item.label?.vi || item.id} <small>(${item.id})</small>
@@ -165,7 +165,7 @@ function renderPlaces() {
             <input
               type="checkbox"
               data-kind="place"
-              data-path="${typeKey}.items.${index}.active"
+              data-path="${typeKey}.itemsById.${item.id}.active"
               ${item.active !== false ? "checked" : ""}>
           </div>
         `).join("")}
@@ -173,7 +173,6 @@ function renderPlaces() {
     </section>
   `).join("");
 }
-
 /* ======================================================
    EVENTS
 ====================================================== */
