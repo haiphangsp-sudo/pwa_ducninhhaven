@@ -1,14 +1,7 @@
-// core/placesStore.js
-
 import { setState, getState } from "./state.js";
-import { deepMerge } from "../data/helpers.js";
 import { normalizePlaceGroups, validatePlaces } from "./placesSchema.js";
 
-export let PLACES = {}; // Full data cho Admin / Debug
-
-/* =======================================================
-   LOAD
-======================================================= */
+export let PLACES = {};
 
 export async function loadPlaces() {
   const base = await fetch("/data/places.json", { cache: "no-store" }).then(r => r.json());
@@ -20,22 +13,18 @@ export async function loadPlaces() {
     adminPatch = {};
   }
 
-  const fullData = deepMerge(base, adminPatch);
+  const fullData = applyPlacesPatch(base, adminPatch);
   const groups = normalizePlaceGroups(fullData);
 
   try {
     validatePlaces(groups);
 
     const index = buildPlaceIndex(groups);
-
     PLACES = fullData;
 
     setState({
       places: {
-        data: {
-          groups,
-          index
-        },
+        data: { groups, index },
         status: "ready",
         updatedAt: Date.now()
       }
@@ -60,113 +49,36 @@ export async function loadPlaces() {
   }
 }
 
-/* =======================================================
-   BUILDERS
-======================================================= */
+function applyPlacesPatch(base, patch) {
+  const out = structuredClone(base || {});
 
-function buildPlaceIndex(groups) {
-  const index = {};
+  for (const [type, groupPatch] of Object.entries(patch || {})) {
+    if (!out[type]) continue;
 
-  for (const [type, group] of Object.entries(groups || {})) {
-    for (const item of group.items || []) {
-      index[item.id] = {
-        ...item,
-        type
+    if (groupPatch.meta && typeof groupPatch.meta === "object") {
+      out[type].meta = {
+        ...(out[type].meta || {}),
+        ...groupPatch.meta
       };
+    }
+
+    if (groupPatch.itemsById && typeof groupPatch.itemsById === "object") {
+      out[type].items = (out[type].items || []).map(item => {
+        const itemPatch = groupPatch.itemsById[item.id];
+        return itemPatch ? { ...item, ...itemPatch } : item;
+      });
     }
   }
 
-  return index;
-}
-
-/* =======================================================
-   INTERNAL READERS
-======================================================= */
-
-function getPlacesData() {
-  return getState().places?.data || { groups: {}, index: {} };
-}
-
-/* =======================================================
-   RUNTIME READERS
-======================================================= */
-
-export function getPlaceGroups() {
-  return getPlacesData().groups || {};
-}
-
-export function getPlaceIndex() {
-  return getPlacesData().index || {};
-}
-
-export function getPlaceGroup(type) {
-  return getPlaceGroups()?.[type] || null;
-}
-
-export function getPlaceItems(type, options = {}) {
-  const group = getPlaceGroup(type);
-  if (!group) return [];
-
-  const groupActive = group.meta?.active !== false;
-  const items = group.items || [];
-
-  if (options.includeInactive) {
-    return items;
-  }
-
-  if (!groupActive) return [];
-
-  return items.filter(item => item.active !== false);
-}
-
-export function resolvePlace(placeId, options = {}) {
-  if (!placeId) return null;
-
-  const place = getPlaceIndex()?.[placeId] || null;
-  if (!place) return null;
-
-  const group = getPlaceGroup(place.type);
-  const groupActive = group?.meta?.active !== false;
-  const itemActive = place.active !== false;
-
-  if (options.includeInactive) {
-    return place;
-  }
-
-  if (!groupActive || !itemActive) {
-    return null;
-  }
-
-  return place;
-}
-
-export function getAllowedPlaceTypes(anchorType) {
-  const group = getPlaceGroup(anchorType);
-  const allow = group?.meta?.allow;
-
-  return Array.isArray(allow) && allow.length ? allow : [anchorType];
-}
-
-export function isPlaceActive(placeId) {
-  return !!resolvePlace(placeId);
-}
-
-export function getAllPlaces(options = {}) {
-  const groups = getPlaceGroups();
-  const out = [];
-
-  for (const [type, group] of Object.entries(groups || {})) {
-    const items = options.includeInactive
-      ? (group.items || [])
-      : getPlaceItems(type);
-
-    items.forEach(item => {
-      out.push({
-        ...item,
-        type
-      });
-    });
-  }
-
   return out;
+}
+
+function buildPlaceIndex(groups) {
+  const index = {};
+  for (const [type, group] of Object.entries(groups || {})) {
+    for (const item of group.items || []) {
+      index[item.id] = { ...item, type };
+    }
+  }
+  return index;
 }
