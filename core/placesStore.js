@@ -6,22 +6,28 @@ import { deepMerge } from "../data/helpers.js";
    LOAD
 ======================================================= */
 
+export let PLACES = {};
+
 export async function loadPlaces() {
   const base = await fetch("/data/places.json", { cache: "no-store" })
     .then(r => r.json());
 
-  // 1. Tạo khung chuẩn trước
-  let groups = normalizePlaceGroups(base);
+  normalizePlaceGroups(base);
 
-  // 2. Gộp bù dữ liệu gốc vào để lấy các field phụ (ví dụ: description, capacity...)
-  groups = deepMerge(groups, base); 
+  let groups = {};
+  try {
+    groups = await fetch("/api/places/state", { cache: "no-store" }).then(r => r.json());
+  } catch {
+    console.warn("Không thể tải trạng thái places từ API");
+  }
 
-  // 3. Sau đó mới build index từ bản đã gộp đầy đủ
+  PLACES = deepMerge(groups, base); 
+
   const index = buildPlaceIndex(groups);
 
   setState({
     places: {
-      data: { groups, index },
+      data: { PLACES, index },
       status: "ready",
       updatedAt: Date.now()
     }
