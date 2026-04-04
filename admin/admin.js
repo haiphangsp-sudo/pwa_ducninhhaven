@@ -1,5 +1,3 @@
-// admin/admin.js
-
 import { loadMenu, MENU } from "../core/menuStore.js";
 import { loadPlaces, PLACES } from "../core/placesStore.js";
 
@@ -59,13 +57,14 @@ function logout() {
 
 async function bootAdmin() {
   await Promise.all([loadMenu(), loadPlaces()]);
-  render();
+  renderAll();
 }
 
 async function doLogin() {
   const pin = prompt("Nhập mã quản trị");
   if (!pin) return;
 
+<<<<<<< HEAD
   let res;
   try {
     res = await fetch("/api/admin/login", {
@@ -77,6 +76,13 @@ async function doLogin() {
     alert("Không thể kết nối máy chủ");
     return;
   }
+=======
+  const res = await fetch("/api/admin/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ pin })
+  });
+>>>>>>> 2dc6523 (s)
 
   if (!res.ok) {
     alert("Sai mã");
@@ -88,8 +94,12 @@ async function doLogin() {
   await bootAdmin();
 }
 
+<<<<<<< HEAD
 const loginBtn = document.getElementById("loginBtn");
 if (loginBtn) loginBtn.onclick = doLogin;
+=======
+document.getElementById("loginBtn")?.addEventListener("click", doLogin);
+>>>>>>> 2dc6523 (s)
 
 if (hasSession()) {
   showApp();
@@ -99,15 +109,37 @@ if (hasSession()) {
 }
 
 /* ======================================================
-   RENDER
+   ADMIN CONFIG
 ====================================================== */
 
-function render() {
-  renderMenu();
-  renderPlaces();
+const ADMIN_SECTIONS = {
+  menu: {
+    rootId: "adminMenu",
+    getData: () => MENU,
+    buildNodes: buildMenuNodes,
+    save: saveMenuState,
+    reload: loadMenu
+  },
+  place: {
+    rootId: "adminPlaces",
+    getData: () => PLACES,
+    buildNodes: buildPlaceNodes,
+    save: savePlacesState,
+    reload: loadPlaces
+  }
+};
+
+/* ======================================================
+   RENDER ENGINE
+====================================================== */
+
+function renderAll() {
+  renderSection("menu");
+  renderSection("place");
   bindEvents();
 }
 
+<<<<<<< HEAD
 function renderMenu() {
   const root = document.getElementById("adminMenu");
   if (!root) return;
@@ -207,6 +239,128 @@ function renderPlaces() {
     .join("");
 }
 
+=======
+function renderSection(kind) {
+  const section = ADMIN_SECTIONS[kind];
+  const root = document.getElementById(section.rootId);
+  if (!root) return;
+
+  const nodes = section.buildNodes(section.getData());
+  root.innerHTML = nodes.map(renderNode).join("");
+}
+
+function renderNode(node) {
+  const childrenHtml = (node.children || []).map(renderNode).join("");
+
+  if (node.variant === "group-header") {
+    return `
+      <section class="cat">
+        <div class="cat-header flex between">
+          <label class="cat-title">
+            ${node.icon ? `<span class="icon">${node.icon}</span>` : ""}
+            ${node.label}
+          </label>
+          ${
+            node.path
+              ? `
+              <input
+                type="checkbox"
+                data-kind="${node.kind}"
+                data-path="${node.path}"
+                ${node.checked ? "checked" : ""}>
+            `
+              : ""
+          }
+        </div>
+        <div class="items">${childrenHtml}</div>
+      </section>
+    `;
+  }
+
+  if (node.variant === "item-with-children") {
+    return `
+      <div class="item">
+        <label>
+          <input
+            type="checkbox"
+            data-kind="${node.kind}"
+            data-path="${node.path}"
+            ${node.checked ? "checked" : ""}>
+          ${node.label}
+        </label>
+        <div class="opts">${childrenHtml}</div>
+      </div>
+    `;
+  }
+
+  return `
+    <div class="item flex between">
+      <label>
+        ${node.label}
+        ${node.meta ? ` <small>${node.meta}</small>` : ""}
+      </label>
+      <input
+        type="checkbox"
+        data-kind="${node.kind}"
+        data-path="${node.path}"
+        ${node.checked ? "checked" : ""}>
+    </div>
+  `;
+}
+
+/* ======================================================
+   NODE BUILDERS
+====================================================== */
+
+function buildMenuNodes(menu) {
+  return Object.entries(menu || {}).map(([catKey, cat]) => ({
+    kind: "menu",
+    variant: "group-header",
+    label: cat?.label?.vi || catKey,
+    path: `${catKey}.active`,
+    checked: cat?.active !== false,
+    children: Object.entries(cat?.products || {}).map(([productKey, product]) => ({
+      kind: "menu",
+      variant: cat?.ui === "article" ? "simple-item" : "item-with-children",
+      label: product?.label?.vi || productKey,
+      path: `${catKey}.products.${productKey}.active`,
+      checked: product?.active !== false,
+      children:
+        cat?.ui === "article"
+          ? []
+          : Object.entries(product?.variants || {}).map(([variantKey, variant]) => ({
+              kind: "menu",
+              variant: "simple-item",
+              label: variant?.label?.vi || variantKey,
+              path: `${catKey}.products.${productKey}.variants.${variantKey}.active`,
+              checked: variant?.active !== false,
+              children: []
+            }))
+    }))
+  }));
+}
+
+function buildPlaceNodes(places) {
+  return Object.entries(places || {}).map(([typeKey, group]) => ({
+    kind: "place",
+    variant: "group-header",
+    icon: group?.meta?.icon || "",
+    label: group?.meta?.label?.vi || typeKey,
+    path: `${typeKey}.meta.active`,
+    checked: group?.meta?.active !== false,
+    children: (group?.items || []).map(item => ({
+      kind: "place",
+      variant: "simple-item",
+      label: item?.label?.vi || item?.id || "",
+      meta: item?.id ? `(${item.id})` : "",
+      path: `${typeKey}.itemsById.${item.id}.active`,
+      checked: item?.active !== false,
+      children: []
+    }))
+  }));
+}
+
+>>>>>>> 2dc6523 (s)
 /* ======================================================
    EVENTS
 ====================================================== */
@@ -214,9 +368,12 @@ function renderPlaces() {
 function bindEvents() {
   document.querySelectorAll('input[type="checkbox"][data-path]').forEach(cb => {
     cb.onchange = async () => {
-      const patch = buildPatchFromPath(cb.dataset.path, cb.checked);
       const kind = cb.dataset.kind;
+      const path = cb.dataset.path;
+      const patch = buildPatchFromPath(path, cb.checked);
+      const section = ADMIN_SECTIONS[kind];
 
+<<<<<<< HEAD
       try {
         if (kind === "place") {
           await savePlacesState(patch);
@@ -227,6 +384,15 @@ function bindEvents() {
         }
 
         render();
+=======
+      if (!section) return;
+
+      try {
+        await section.save(patch);
+        await section.reload();
+        renderSection(kind);
+        bindEvents();
+>>>>>>> 2dc6523 (s)
       } catch (err) {
         console.error("[Admin] Save error:", err);
         alert("Không thể lưu thay đổi");
@@ -234,6 +400,7 @@ function bindEvents() {
     };
   });
 
+<<<<<<< HEAD
   const resetBtn = document.getElementById("resetBtn");
   if (resetBtn) {
     resetBtn.onclick = async () => {
@@ -256,15 +423,37 @@ function bindEvents() {
       }
     };
   }
+=======
+  document.getElementById("resetBtn")?.addEventListener("click", async () => {
+    try {
+      await Promise.all([
+        fetch("/api/admin/menu", {
+          method: "DELETE",
+          headers: { "x-admin-pin": getAdminPin() }
+        }),
+        fetch("/api/admin/places", {
+          method: "DELETE",
+          headers: { "x-admin-pin": getAdminPin() }
+        })
+      ]);
 
-  const logoutBtn = document.getElementById("logoutBtn");
-  if (logoutBtn) {
-    logoutBtn.onclick = logout;
-  }
+      await bootAdmin();
+    } catch (err) {
+      console.error("[Admin] Reset error:", err);
+      alert("Không thể reset dữ liệu");
+    }
+  });
+>>>>>>> 2dc6523 (s)
+
+  document.getElementById("logoutBtn")?.addEventListener("click", logout);
 }
 
 /* ======================================================
+<<<<<<< HEAD
    PATCH BUILDER
+=======
+   PATCH
+>>>>>>> 2dc6523 (s)
 ====================================================== */
 
 function buildPatchFromPath(pathStr, value) {
