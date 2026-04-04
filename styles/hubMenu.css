@@ -18,7 +18,6 @@
     position: relative;
     overflow: hidden; /* Đảm bảo gradient không tràn ra ngoài */
     background: #ffffff; 
-    padding: 10px 0;
 }
 
 /* Thanh cuộn bên trong */
