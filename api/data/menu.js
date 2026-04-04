@@ -1,7 +1,7 @@
 // api/data/menu.js
 import { kv } from "@vercel/kv";
 
-export default async function handlerMenu(req,res){
+export default async function handler(req,res){
 
   if(req.method!=="GET")
     return res.status(405).end();
