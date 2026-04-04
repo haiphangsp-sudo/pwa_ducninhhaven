@@ -6,34 +6,31 @@ import { deepMerge } from "../data/helpers.js";
 
 export let MENU = {}; // Biến chứa TOÀN BỘ thực đơn (cho Admin)
 
+// core/menuStore.js hoặc placesStore.js
+
 export async function loadMenu() {
-  // 1. Tải cấu trúc thực đơn gốc từ file JSON
-  const base = await fetch("/data/menu.json", { cache: "no-store" })
-    .then(r => r.json());
+  // 1. Fetch dữ liệu
+  const base = await fetch("/data/menu.json").then(r => r.json());
+  const patch = await fetch("/api/data/menu").catch(() => ({}));
+  
+  // 2. Gộp dữ liệu
+  let data = deepMerge(base, patch);
 
-  // 2. Tải trạng thái tắt/bật (active/inactive) từ API Admin
-  let adminPatch = {};
+  // 3. Chuẩn hóa (Sửa lỗi định dạng, thêm default values)
+  normalizeMenu(data);
+
   try {
-    adminPatch = await fetch("/api/data/menu", { cache: "no-store" }).then(r => r.json());
-  } catch {
-    console.warn("Không thể tải trạng thái menu từ API");
+    // 4. KIỂM TRA (Validate)
+    // Nếu dữ liệu không vượt qua bài kiểm tra này, nó sẽ throw Error
+    validateMenu(data); 
+
+    // 5. Cập nhật State (Chỉ chạy khi dữ liệu đã "Sạch" và "Đúng")
+    setState({ menu: { data, status: "ready" } });
+
+  } catch (error) {
+    // Nếu dữ liệu lỗi, ta giữ nguyên State cũ và báo lỗi ra Console
+    console.error("[Haven Check] Dữ liệu Menu bị lỗi, không thể cập nhật:", error.message);
+    
+    // Tùy chọn: Gửi báo cáo lỗi về server Admin tại đây
   }
-
-  // 3. GỘP DỮ LIỆU: Patch từ Admin sẽ đè lên cấu trúc gốc
-  // Biến MENU này sẽ được export để trang Admin hiển thị đầy đủ checkbox
-  MENU = deepMerge(base, adminPatch);
-
-  // 4. CHUẨN HÓA & LỌC: 
-  // Hàm này sẽ loại bỏ những món có active: false để khách không nhìn thấy
-  const activeMenu = normalizeMenu(MENU);
-
-  // 5. CẬP NHẬT VÀO STATE: 
-  // Chỉ đẩy dữ liệu "sạch" (đã lọc món ẩn) vào State để UI vẽ ra
-  setState({ 
-    menu: { 
-      data: activeMenu, 
-      status: "ready",
-      updatedAt: Date.now() 
-    } 
-  });
 }
