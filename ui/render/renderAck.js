@@ -1,4 +1,4 @@
-// ui/render/renderOverlay.js
+// ui/render/renderAck.js
 import { setState } from "../../core/state.js"
 import { translate } from "../utils/translate.js";
 

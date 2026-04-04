@@ -1,8 +1,15 @@
 // core/menuQuery.js
 
-import { getContext, resolvePlace } from "./context.js";
+import { resolvePlace } from "./context.js";
 import { getState } from "./state.js";
 import { translate } from "../ui/utils/translate.js";
+
+/* =======================================================
+   PUBLIC
+======================================================= */
+function getMenuData() {
+  return getState().menu?.data || {};
+}
 
 export function getCategory(key) {
   const menuData = getMenuData();
@@ -120,48 +127,6 @@ export function getDrawerExtended() {
   };
 }
 
-/* =======================================================
-   INTERNAL
-======================================================= */
-
-function getCtx() {
-  return getContext() || {};
-}
-
-function getPlaceData() {
-  return getState().menu?.data || {};
-}
-
-function getMenuData() {
-  return getState().menu?.data || {};
-}
-
-/* =======================================================
-   MODE / PLACE
-======================================================= */
-
-export function getCurrentPlaceType() {
-  const ctx = getCtx();
-  return ctx?.active?.type || ctx?.anchor?.type || null;
-}
-
-export function getCurrentPlaceId() {
-  const ctx = getCtx();
-  return ctx?.active?.id || null;
-}
-
-export function getAnchorType() {
-  return getCtx()?.anchor?.type || null;
-}
-
-export function getAnchorId() {
-  return getCtx()?.anchor?.id || null;
-}
-
-export function hasActivePlace() {
-  return !!getCurrentPlaceId();
-}
-
 export function getResolvedActivePlace() {
   const placeId = getCurrentPlaceId();
   if (!placeId) return null;
@@ -172,53 +137,6 @@ export function getResolvedAnchorPlace() {
   const anchorId = getAnchorId();
   if (!anchorId) return null;
   return resolvePlace(anchorId);
-}
-
-/* =======================================================
-   LOCATION INFO
-======================================================= */
-
-export function getLocationInfo() {
-  const ctx = getCtx();
-  const activeId = ctx?.active?.id;
-  const mode = getCurrentPlaceType();
-
-  if (!activeId) {
-    return {
-      hasPlace: false,
-      placeId: null,
-      placeName: translate("place.select"),
-      placeData: null,
-      isResolved: false,
-      mode
-    };
-  }
-
-  const placeData = resolvePlace(activeId);
-
-  return {
-    hasPlace: true,
-    placeId: activeId,
-    placeName: placeData?.label ? translate(placeData.label) : activeId,
-    placeData: placeData || null,
-    isResolved: !!placeData,
-    mode
-  };
-}
-
-/* =======================================================
-   PLACE ICON
-======================================================= */
-
-const PLACE_ICONS = {
-  room: "🛏",
-  table: "☕",
-  area: "🌿"
-};
-
-export function getPlaceIcon() {
-  const mode = getCurrentPlaceType();
-  return PLACE_ICONS[mode] || "📍";
 }
 
 /* =======================================================

@@ -6,6 +6,10 @@ import { translate } from "../ui/utils/translate.js";
    INTERNAL
 ======================================================= */
 
+function getCtx() {
+  return getContext() || {};
+}
+
 function getPlacesData() {
   return getState().places?.data || {};
 }
@@ -16,10 +20,6 @@ function getGroups() {
 
 function getIndex() {
   return getPlacesData().index || {};
-}
-
-function getCtx() {
-  return getContext() || {};
 }
 
 /* =======================================================
