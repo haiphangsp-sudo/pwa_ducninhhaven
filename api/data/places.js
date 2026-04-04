@@ -1,22 +1,20 @@
 // api/data/places.js
-import { kv } from "@vercel/kv";
 
-export default async function handlerPlaces(req,res){
+import fs from "fs/promises";
+import path from "path";
 
-  if(req.method!=="GET")
-    return res.status(405).end();
+const PATCH_FILE = path.join(process.cwd(), "data", "places.state.json");
 
-  try{
-    let places = await kv.get("placesState");
-   
-    if(typeof places==="string"){
-      try{ places=JSON.parse(places); }
-      catch{ places={}; }
-    }
-
-    res.status(200).json(places||{});
-  }catch(e){
-    console.error(e);
-    res.status(500).json({});
+async function readPatchFile() {
+  try {
+    const raw = await fs.readFile(PATCH_FILE, "utf8");
+    return JSON.parse(raw);
+  } catch {
+    return {};
   }
+}
+
+export default async function handler(req, res) {
+  const patch = await readPatchFile();
+  return res.status(200).json(patch);
 }

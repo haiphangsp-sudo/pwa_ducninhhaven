@@ -1,41 +1,67 @@
 // api/admin/places.js
-import { kv } from "@vercel/kv";
 
-export default async function handlerPlaces(req,res){
+import fs from "fs/promises";
+import path from "path";
 
-  if(req.headers["x-admin-pin"]!==process.env.ADMIN_PIN)
-    return res.status(401).end();
+const PATCH_FILE = path.join(process.cwd(), "data", "places.state.json");
+const ADMIN_PIN = process.env.ADMIN_PIN || "123456";
 
-  try{
+function isAuthorized(req) {
+  return req.headers["x-admin-pin"] === ADMIN_PIN;
+}
 
-    if(req.method==="POST"){
-      const patch=req.body||{};
-      let places = await kv.get("placesState") || {};
-      places = deepMerge(places, patch);
-      await kv.set("placesState", JSON.stringify(places));
-      return res.status(200).json({ok:true});
-    }
-
-    if(req.method==="DELETE"){
-       await kv.del("placesState");
-      return res.status(200).json({ok:true});
-    }
-
-    res.status(405).end();
-
-  }catch(e){
-    console.error(e);
-    res.status(500).json({error:e.message});
+async function readPatchFile() {
+  try {
+    const raw = await fs.readFile(PATCH_FILE, "utf8");
+    return JSON.parse(raw);
+  } catch {
+    return {};
   }
 }
 
-function deepMerge(base,patch){
-  for(const k in patch){
-    if(typeof patch[k]==="object" && patch[k]!==null && !Array.isArray(patch[k])){
-      base[k]=deepMerge(base[k]||{},patch[k]);
-    }else{
-      base[k]=patch[k];
+async function writePatchFile(data) {
+  await fs.writeFile(PATCH_FILE, JSON.stringify(data, null, 2), "utf8");
+}
+
+function deepMergePatch(target, source) {
+  if (!source || typeof source !== "object" || Array.isArray(source)) {
+    return source;
+  }
+
+  const out = Array.isArray(target) ? [...target] : { ...(target || {}) };
+
+  for (const key of Object.keys(source)) {
+    const sv = source[key];
+    const tv = out[key];
+
+    if (sv && typeof sv === "object" && !Array.isArray(sv)) {
+      out[key] = deepMergePatch(tv || {}, sv);
+    } else {
+      out[key] = sv;
     }
   }
-  return base;
+
+  return out;
+}
+
+export default async function handler(req, res) {
+  if (!isAuthorized(req)) {
+    return res.status(401).json({ ok: false, message: "unauthorized" });
+  }
+
+  if (req.method === "POST") {
+    const current = await readPatchFile();
+    const incoming = req.body || {};
+    const next = deepMergePatch(current, incoming);
+
+    await writePatchFile(next);
+    return res.status(200).json({ ok: true, data: next });
+  }
+
+  if (req.method === "DELETE") {
+    await writePatchFile({});
+    return res.status(200).json({ ok: true });
+  }
+
+  return res.status(405).json({ ok: false, message: "method_not_allowed" });
 }
