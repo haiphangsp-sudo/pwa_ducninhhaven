@@ -1,16 +1,13 @@
-import { loadMenu, MENU } from "../core/menuStore.js";
-import { loadPlaces, PLACES } from "../core/placesStore.js";
+// admin/admin.js
 
-/* ======================================================
-   SESSION / AUTH
-====================================================== */
+import { loadMenu } from "../core/menuStore.js";
+import { loadPlaces } from "../core/placesStore.js";
 
-function hasSession() {
-  const pin = localStorage.getItem("admin_pin");
-  const expire = Number(localStorage.getItem("admin_pin_expire"));
-  return !!pin && !!expire && Date.now() < expire;
-}
+import { ADMIN_SECTIONS } from "./adminSections.js";
+import { renderSection } from "./adminRender.js";
+import { buildPatchFromPath } from "./adminActions.js";
 
+<<<<<<< HEAD
 function getAdminPin() {
   return localStorage.getItem("admin_pin") || "";
 }
@@ -56,10 +53,14 @@ function logout() {
 ====================================================== */
 
 async function bootAdmin() {
+=======
+async function boot() {
+>>>>>>> 3046edf (1z)
   await Promise.all([loadMenu(), loadPlaces()]);
   renderAll();
 }
 
+<<<<<<< HEAD
 async function doLogin() {
   const pin = prompt("Nhập mã quản trị");
   if (!pin) return;
@@ -133,12 +134,14 @@ const ADMIN_SECTIONS = {
    RENDER ENGINE
 ====================================================== */
 
+=======
+>>>>>>> 3046edf (1z)
 function renderAll() {
-  renderSection("menu");
-  renderSection("place");
+  Object.values(ADMIN_SECTIONS).forEach(renderSection);
   bindEvents();
 }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 function renderMenu() {
   const root = document.getElementById("adminMenu");
@@ -365,14 +368,15 @@ function buildPlaceNodes(places) {
    EVENTS
 ====================================================== */
 
+=======
+>>>>>>> 3046edf (1z)
 function bindEvents() {
-  document.querySelectorAll('input[type="checkbox"][data-path]').forEach(cb => {
-    cb.onchange = async () => {
-      const kind = cb.dataset.kind;
-      const path = cb.dataset.path;
-      const patch = buildPatchFromPath(path, cb.checked);
+  document.querySelectorAll('[data-path]').forEach(el => {
+    el.onchange = async () => {
+      const kind = el.dataset.kind;
       const section = ADMIN_SECTIONS[kind];
 
+<<<<<<< HEAD
 <<<<<<< HEAD
       try {
         if (kind === "place") {
@@ -514,3 +518,17 @@ async function savePlacesState(patch) {
     throw new Error("save_places_failed");
   }
 }
+=======
+      const patch = buildPatchFromPath(el.dataset.path, el.checked);
+
+      await section.save(patch);
+      await section.reload();
+
+      renderSection(section);
+      bindEvents();
+    };
+  });
+}
+
+await boot();
+>>>>>>> 3046edf (1z)
