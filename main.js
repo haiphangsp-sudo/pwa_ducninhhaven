@@ -10,6 +10,7 @@ import { attachUI } from "./ui/events/sync.js";
 import { loadPlaces } from "./core/placesStore.js";
 import { renderApp } from "./ui/render/renderApp.js";
 import { setState, syncContextToState } from "./core/state.js";
+import { showToast } from "./ui/render/renderAck.js"; 
 
 
 boot();
@@ -78,60 +79,51 @@ function loadCart() {
 }
 
 /* ---------- MENU WATCH ---------- */
-// - Theo dõi thay đổi của menu (thông qua polling), nếu có thay đổi thì render lại app để cập nhật menu mới nhất
+// - Theo dõi thay đổi của menu & place (thông qua polling), nếu có thay đổi thì render lại app để cập nhật menu mới nhất
 
-function watchAppUpdates() {
-  // 1. Khởi tạo bản băm (Hash) ban đầu
+export function watchAppUpdates() {
   let currentHashes = {
     menu: JSON.stringify(MENU),
     places: JSON.stringify(PLACES)
   };
 
   setInterval(async () => {
-    try {
-      console.log("[Haven] Đang kiểm tra cập nhật ngầm...");
+    if (!navigator.onLine) return;
 
-      // 2. Fetch song song cả 2 file dữ liệu (chỉ lấy text thô để so sánh nhanh)
+    try {
       const [rawMenu, rawPlaces] = await Promise.all([
         fetch("/data/menu.json", { cache: "no-store" }).then(r => r.text()),
         fetch("/data/places.json", { cache: "no-store" }).then(r => r.text())
       ]);
 
-      let hasChanged = false;
+      let menuChanged = currentHashes.menu !== rawMenu;
+      let placesChanged = currentHashes.places !== rawPlaces;
 
-      // 3. Kiểm tra Menu
-      if (currentHashes.menu !== rawMenu) {
-        console.log("[Haven] Phát hiện Menu mới!");
-        await loadMenu(); // Gọi hàm load xịn để chuẩn hóa và setState
-        currentHashes.menu = rawMenu;
-        hasChanged = true;
+      if (menuChanged || placesChanged) {
+        if (menuChanged) {
+          await loadMenu();
+          currentHashes.menu = rawMenu;
+          validateCart(); // Kiểm tra giỏ hàng ngay khi menu đổi
+        }
+
+        if (placesChanged) {
+          await loadPlaces();
+          currentHashes.places = rawPlaces;
+          validateCurrentPlace(); // Kiểm tra vị trí khách đang chọn
+        }
+
+        showToast({
+          type: "info",
+          message: "Dữ liệu đã được cập nhật mới nhất",
+          duration: 2000
+        }); //
       }
-
-      // 4. Kiểm tra Places
-      if (currentHashes.places !== rawPlaces) {
-        console.log("[Haven] Phát hiện thay đổi vị trí/phòng!");
-        await loadPlaces(); 
-        currentHashes.places = rawPlaces;
-        hasChanged = true;
-      }
-
-      // 5. Thông báo cho khách hàng nếu có bất kỳ thay đổi nào
-      if (hasChanged && typeof showMenuUpdated === "function") {
-        showMenuUpdated();
-      }
-
     } catch (err) {
-      console.warn("Lỗi kiểm tra cập nhật:", err);
+      console.warn("Lỗi đồng bộ ngầm:", err);
     }
-  }, 60000); // Tăng lên 60 giây (1 phút) là đủ cho một resort
+  }, 60000); 
 }
-function showMenuUpdated() {
-    const el = document.createElement("div");
-    el.className = "menu-update-banner";
-    el.textContent = "App Haven vừa được cập nhật";
-    document.querySelector(".app-version").appendChild(el);
-    setTimeout(() => el.remove(), 2500);
-  }
+
 /* ---------- BOOT ---------- */
 
 async function boot() {
