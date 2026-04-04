@@ -80,7 +80,6 @@ grid-template-columns: 90px 1fr 110px;
  display:flex;
 }
 
-
 .location-btn:hover{
   background:var(--bg-hover);
 }
@@ -152,6 +151,8 @@ grid-template-columns: 90px 1fr 110px;
   align-items:center;
   gap:6px;
   cursor:pointer;
+  width: 120px;
+
 }
 .location-btn:hover{
   background:var(--brand-soft);
