@@ -21,7 +21,7 @@ export async function loadPlaces() {
     console.warn("Không thể tải trạng thái places từ API");
   }
 
-  PLACES = deepMerge(groups, base); 
+  PLACES = deepMerge(base, groups); 
 
   const index = buildPlaceIndex(groups);
 
