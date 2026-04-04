@@ -1,13 +1,18 @@
 /* styles/layout.css */
-/* Bố cục màn hình*/
-
-/* styles/layout.css */
 html, body {
-  height: 100%;
+  margin: 0;
+  padding: 0;
+  min-height: 100%; /* Cho phép body kéo dài tự nhiên */
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch; /* Giúp cuộn mượt trên iOS */
 }
+
 body.app{
-  height:100%;
-  overflow:hidden;
+  
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+
 }
 
 body.vi {
