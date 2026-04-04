@@ -66,7 +66,7 @@ function render() {
   bindEvents();
 }
 
-function renderMenuCu(){
+function renderMenu(){
 
   const root=document.getElementById("adminMenu");
 
@@ -228,7 +228,7 @@ function renderPlaces() {
 
 // ui/admin.js
 
-function renderMenu() {
+function renderMenuMoi() {
   const root = document.getElementById("adminMenu");
   if (!root || !MENU) return;
 
