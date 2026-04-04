@@ -16,7 +16,7 @@ export async function loadPlaces() {
 
   let groups = {};
   try {
-    groups = await fetch("/api/places/state", { cache: "no-store" }).then(r => r.json());
+    groups = await fetch("/api/data/places", { cache: "no-store" }).then(r => r.json());
   } catch {
     console.warn("Không thể tải trạng thái places từ API");
   }
