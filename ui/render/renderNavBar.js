@@ -17,11 +17,11 @@ export function renderNavBar(state) {
 
 function updateNavBar(state) {
   const currentLang = state.lang.current;
-  const {placeName, anchor} = getLocationInfo();
+  const {placeName} = getLocationInfo();
 
   if (refs.identityIcon) refs.identityIcon.textContent = getAnchorDisplay(state).icon;
   if (refs.identityLabel) refs.identityLabel.textContent = getAnchorDisplay(state).label;
-  if (refs.locLabel) refs.locLabel.textContent = translate("place.button_nav");
+  if (refs.locLabel) refs.locLabel.textContent = placeName;
 
   if (refs.langButtons) {
     refs.langButtons.querySelectorAll("button").forEach(btn => {

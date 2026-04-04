@@ -88,7 +88,7 @@ export function getLocationInfo() {
     return {
       hasPlace: false,
       placeId: null,
-      placeName: translate("place.select"),
+      placeName: translate("place.button_nav"),
       placeData: null,
       mode
     };
