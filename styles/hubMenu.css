@@ -13,32 +13,60 @@
 /* =========================
    HUB MENU
 ========================= */
+/* Container bao ngoài */
+#hubMenu {
+    position: relative;
+    overflow: hidden; /* Đảm bảo gradient không tràn ra ngoài */
+    background: #f4f1ea; 
+    padding: 10px 0;
+}
 
-.hub-menu {
-  position: relative;
-  top: var(--nav-h); /* Dính NGAY DƯỚI Nav */
-  z-index: 90;       /* Thấp hơn Nav một chút */
-  height: var(--hub-h);
-  background: var(--bg-soft);
-  display: flex;
-  overflow-x: auto;
-  border-bottom: 1px solid var(--border-soft);
+/* Thanh cuộn bên trong */
+.hub-container {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory; /* Tạo hiệu ứng dính từng món cực sang */
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    gap: 12px;
+    padding: 0 20px; /* Tạo khoảng trống ở 2 đầu */
+}
+
+/* Ẩn thanh cuộn xấu xí của trình duyệt */
+.hub-container::-webkit-scrollbar {
+    display: none;
+}
+
+/* Lớp sương mờ bên phải */
+#hubMenu::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 60px;
+    height: 100%;
+    background: linear-gradient(to right, rgba(244, 241, 234, 0), #f4f1ea);
+    pointer-events: none; /* Khách vẫn có thể vuốt xuyên qua lớp mờ */
+    transition: opacity 0.3s ease;
+    z-index: 10;
+}
+
+/* Khi đã cuộn đến cuối, ẩn lớp mờ đi */
+#hubMenu.is-at-end::after {
+    opacity: 0;
 }
 .hub-menu::after {
   content: "";
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 60px; /* Độ cao vùng mờ */
-  background: linear-gradient(to bottom, rgba(244, 241, 234, 0), #f4f1ea); 
-  pointer-events: none; /* Để khách vẫn click được vào món ở dưới */
-  transition: opacity 0.3s;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 50px;
+    height: 100%;
+    background: linear-gradient(to right, rgba(244, 241, 234, 0), #f4f1ea);
+    pointer-events: none;
+    z-index: 2;
 }
 
-.hub-menu::-webkit-scrollbar{
-  display:none;
-}
 
 /* =========================
    HUB BUTTON
@@ -61,10 +89,10 @@
   color:var(--text-soft);
 
   scroll-snap-align:start;
-  transition:
-    background-color .18s ease,
-    color .18s ease,
-    transform .18s ease;
+  transition: background-color .18s ease, color .18s ease, transform .18s ease;
+  flex: 0 0 auto;
+  scroll-snap-align: center;
+  min-width: 100px;
 }
 body.en .hub-btn {
   font-size: 0.9rem; 
