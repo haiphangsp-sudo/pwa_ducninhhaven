@@ -2,7 +2,7 @@
 
 import { setState, syncContextToState } from "../../core/state.js";
 import { updateCartQuantity } from "../../core/events.js";
-import { applyPlaceById } from "../../core/context.js";
+import { selectActivePlace } from "../../core/context.js";
 import { animateFlyToCart } from "../../ui/interactions/animateFlyToCart.js";
 
 /* =========================
@@ -61,7 +61,7 @@ function handleGlobalClick(e) {
       setState({
         overlay: { view: null }
       });
-      applyPlaceById(cmd.value);
+      selectActivePlace(cmd.value);
       break;
 
     /* ---------- CART / ORDER ---------- */
