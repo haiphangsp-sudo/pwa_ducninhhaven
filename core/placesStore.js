@@ -1,5 +1,5 @@
 // core/placesStore.js
-import { getState, setState } from "./state.js";
+import { setState } from "./state.js";
 
 /* =======================================================
    LOAD
@@ -9,16 +9,18 @@ export async function loadPlaces() {
   const base = await fetch("/data/places.json", { cache: "no-store" })
     .then(r => r.json());
 
-  // Chỉ cần tạo groups và index là đủ cho mọi hoạt động truy vấn
-  const groups = normalizePlaceGroups(base);
+  // 1. Tạo khung chuẩn trước
+  let groups = normalizePlaceGroups(base);
+
+  // 2. Gộp bù dữ liệu gốc vào để lấy các field phụ (ví dụ: description, capacity...)
+  groups = deepMerge(groups, base); 
+
+  // 3. Sau đó mới build index từ bản đã gộp đầy đủ
   const index = buildPlaceIndex(groups);
 
   setState({
     places: {
-      data: {
-        groups,
-        index
-      },
+      data: { groups, index },
       status: "ready",
       updatedAt: Date.now()
     }
@@ -71,55 +73,4 @@ function buildPlaceIndex(groups) {
   }
 
   return index;
-}
-
-/* =======================================================
-   INTERNAL READERS
-======================================================= */
-
-function getPlacesState() {
-  return getState().places?.data || {};
-}
-
-function getGroups() {
-  return getPlacesState().groups || {};
-}
-
-function getIndex() {
-  return getPlacesState().index || {};
-}
-
-
-/* =======================================================
-   PUBLIC HELPERS
-======================================================= */
-
-export function getPlaceGroup(type) {
-  if (!type) return null;
-  return getGroups()?.[type] || null;
-}
-
-export function getPlaceItems(type) {
-  if (!type) return [];
-  return getGroups()?.[type]?.items || [];
-}
-
-export function getPlaceMeta(type) {
-  if (!type) return null;
-  return getGroups()?.[type]?.meta || null;
-}
-
-export function getAllPlaceGroups() {
-  return getGroups();
-}
-
-export function getAllPlacesIndex() {
-  return getIndex();
-}
-
-// Đã loại bỏ getAllPlacesFlat() ở đây
-
-export function hasPlace(placeId) {
-  // Vẫn sử dụng getIndex() để kiểm tra sự tồn tại của vị trí
-  return !!getIndex()[placeId];
 }
