@@ -3,21 +3,21 @@ import { getState, setState } from "./state.js";
 import { resolvePlace } from "./placeQuery.js";
 
 /* =======================================================
-   CẤU HÌNH HẠN SỬ DỤNG (TTL)
+   CẤU HÌNH & BIẾN NỘI BỘ
 ======================================================= */
 
-const TTL_ACTIVE = 1000 * 60 * 30;      // 30 phút (Vị trí ngồi)
-const TTL_ANCHOR = 1000 * 60 * 60 * 48; // 48 giờ (Mã QR gốc/Phòng)
+const TTL_ACTIVE = 1000 * 60 * 30;      // 30 phút cho Active
+const TTL_ANCHOR = 1000 * 60 * 60 * 48; // 48 giờ cho Anchor
 
-// Biến cục bộ để xử lý trung gian
-let _ctx = { anchor: null, active: null };
+let _ctx = loadFromStorage();
 
 /* =======================================================
-   HÀM ĐỌC (READERS)
+   HÀM ĐỌC (GETTERS)
 ======================================================= */
 
 export function getContext() {
-  return getState().context || {
+  const state = getState();
+  return state.context || {
     anchor: null,
     active: null,
     current: { id: null, type: "table", isGuest: true }
@@ -25,61 +25,57 @@ export function getContext() {
 }
 
 /* =======================================================
-   HÀM CŨ ĐƯỢC VIẾT LẠI (MAIN FLOW)
+   HÀM XỬ LÝ URL (KHÔI PHỤC LOGIC CŨ)
 ======================================================= */
 
-/**
- * 1. NORMALIZE: Đọc và kiểm tra hạn sử dụng
- * Chạy ngay khi App khởi động để dọn dẹp dữ liệu cũ.
- */
-export function normalizeContext() {
-  _ctx = loadFromStorage();
-  const now = Date.now();
-
-  // Kiểm tra 30p cho vị trí ngồi
-  if (_ctx.active?.at && (now - _ctx.active.at > TTL_ACTIVE)) {
-    console.log("[Haven] Chỗ ngồi hết hạn 30p -> Reset");
-    _ctx.active = null;
-  }
-
-  // Kiểm tra 48h cho điểm neo QR
-  if (_ctx.anchor?.at && (now - _ctx.anchor.at > TTL_ANCHOR)) {
-    console.log("[Haven] Điểm neo QR hết hạn 48h -> Reset");
-    _ctx.anchor = null;
-  }
-}
-
-/**
- * 2. APPLY URL: Xử lý khi quét mã QR mới
- * Nếu có ?place= trên URL, nó sẽ đè lên context hiện tại.
- */
 export function applyURLContext() {
   const params = new URLSearchParams(location.search);
   const placeId = params.get("place");
-  
-  if (!placeId) return; // Không có QR mới thì giữ nguyên _ctx từ bước normalize
+  const modeId = params.get("mode");
+
+  if (!placeId) return;
 
   const resolved = resolvePlace(placeId);
   if (!resolved) return;
 
-  // Xóa query URL cho sạch màn hình khách
+  // Khôi phục logic kiểm tra Mode từ file cũ
+  const validModes = ["room", "area", "table"];
+  if (modeId && (!validModes.includes(modeId) || resolved.type !== modeId)) {
+    console.warn("[Haven] URL Mode không hợp lệ hoặc không khớp với Place");
+    return;
+  }
+
+  // Dọn dẹp URL
   history.replaceState({}, "", location.pathname);
 
-  const ref = {
-    id: resolved.id,
-    type: resolved.type,
-    at: Date.now()
-  };
+  const ref = { id: resolved.id, type: resolved.type, at: Date.now() };
 
-  // Quét QR mới thì thiết lập lại toàn bộ
+  // Logic cũ: Nếu chưa có anchor hoặc quét QR mới, thiết lập cả hai
   _ctx.anchor = ref;
   _ctx.active = ref;
+
+  saveToStorage(_ctx); // Lưu ngay để chống mất khi reload
 }
 
-/**
- * 3. SYNC: Đẩy dữ liệu cuối cùng vào State
- * Phải gọi hàm này cuối cùng để cập nhật UI.
- */
+/* =======================================================
+   HÀM CHUẨN HÓA & ĐỒNG BỘ
+======================================================= */
+
+export function normalizeContext() {
+  _ctx = loadFromStorage();
+  const now = Date.now();
+
+  // Kiểm tra hết hạn 30p (Active)
+  if (_ctx.active?.at && (now - _ctx.active.at > TTL_ACTIVE)) {
+    _ctx.active = null;
+  }
+
+  // Kiểm tra hết hạn 48h (Anchor)
+  if (_ctx.anchor?.at && (now - _ctx.anchor.at > TTL_ANCHOR)) {
+    _ctx.anchor = null;
+  }
+}
+
 export function syncContextToState() {
   const current = _ctx.active || _ctx.anchor;
 
@@ -89,7 +85,7 @@ export function syncContextToState() {
       active: _ctx.active,
       current: {
         id: current?.id || null,
-        type: current?.type || "table", 
+        type: current?.type || "table",
         isGuest: !_ctx.anchor
       }
     }
@@ -99,16 +95,19 @@ export function syncContextToState() {
 }
 
 /* =======================================================
-   HÀM BỔ TRỢ (HELPERS)
+   HÀM APPLY (THAY THẾ applyPlaceById CŨ)
 ======================================================= */
 
 /**
- * Thay thế cho applyPlaceById cũ
+ * Tương đương với applyPlaceById cũ nhưng có lưu 'at'
  */
-export function selectActivePlace(placeId) {
+export function applyPlaceById(placeId) {
+  if (!placeId) return;
+
   const resolved = resolvePlace(placeId);
   if (!resolved) return;
 
+  // Cập nhật vị trí ngồi hiện tại
   _ctx.active = {
     id: resolved.id,
     type: resolved.type,
@@ -117,6 +116,10 @@ export function selectActivePlace(placeId) {
 
   syncContextToState();
 }
+
+/* =======================================================
+   STORAGE HELPERS
+======================================================= */
 
 function loadFromStorage() {
   try {
