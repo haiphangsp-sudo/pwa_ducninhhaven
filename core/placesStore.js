@@ -1,5 +1,6 @@
 // core/placesStore.js
 import { setState } from "./state.js";
+import { deepMerge } from "../data/helpers.js";
 
 /* =======================================================
    LOAD
