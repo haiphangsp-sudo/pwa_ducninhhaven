@@ -80,47 +80,37 @@ function loadCart() {
 /* ---------- MENU WATCH ---------- */
 // - Theo dõi thay đổi của menu & place (thông qua polling), nếu có thay đổi thì render lại app để cập nhật menu mới nhất
 
-export function watchAppUpdates() {
+function watchAppUpdates() {
   let currentHashes = {
     menu: JSON.stringify(MENU),
     places: JSON.stringify(PLACES)
   };
 
   setInterval(async () => {
-    if (!navigator.onLine) return;
-
     try {
       const [rawMenu, rawPlaces] = await Promise.all([
         fetch("/data/menu.json", { cache: "no-store" }).then(r => r.text()),
         fetch("/data/places.json", { cache: "no-store" }).then(r => r.text())
       ]);
 
-      let menuChanged = currentHashes.menu !== rawMenu;
-      let placesChanged = currentHashes.places !== rawPlaces;
-
-      if (menuChanged || placesChanged) {
-        if (menuChanged) {
-          await loadMenu();
-          currentHashes.menu = rawMenu;
-          validateCart(); // Kiểm tra giỏ hàng ngay khi menu đổi
-        }
-
-        if (placesChanged) {
-          await loadPlaces();
-          currentHashes.places = rawPlaces;
-          validateCurrentPlace(); // Kiểm tra vị trí khách đang chọn
-        }
-
-        showToast({
-          type: "info",
-          message: "Dữ liệu đã được cập nhật mới nhất",
-          duration: 2000
-        }); //
+      // CHỈ CẬP NHẬT NẾU CÓ THAY ĐỔI THỰC SỰ
+      if (currentHashes.menu !== rawMenu) {
+        currentHashes.menu = rawMenu;
+        await loadMenu(); 
+        // Cập nhật âm thầm, không hiện toast
+        console.log("[Haven] Menu updated silently");
       }
+
+      if (currentHashes.places !== rawPlaces) {
+        currentHashes.places = rawPlaces;
+        await loadPlaces();
+        // Kiểm tra xem vị trí khách đang chọn có còn tồn tại không
+      }
+
     } catch (err) {
-      console.warn("Lỗi đồng bộ ngầm:", err);
+      // Lỗi mạng thì lờ đi, không làm phiền khách
     }
-  }, 60000); 
+  }, 30000); 
 }
 
 /* ---------- BOOT ---------- */
