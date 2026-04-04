@@ -1,8 +1,8 @@
 // ui/events/globalEvents.js
 
-import { setState, syncContextToState } from "../../core/state.js";
+import { setState } from "../../core/state.js";
 import { updateCartQuantity } from "../../core/events.js";
-import { applyPlaceById } from "../../core/context.js";
+import { applyPlaceById, syncContextToState } from "../../core/context.js";
 import { animateFlyToCart } from "../../ui/interactions/animateFlyToCart.js";
 
 /* =========================
