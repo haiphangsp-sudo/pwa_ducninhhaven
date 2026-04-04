@@ -17,7 +17,7 @@
 #hubMenu {
     position: relative;
     overflow: hidden; /* Đảm bảo gradient không tràn ra ngoài */
-    background: #f4f1ea; 
+    background: #ffffff; 
     padding: 10px 0;
 }
 
