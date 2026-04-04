@@ -45,16 +45,38 @@ grid-template-columns: 90px 1fr 110px;
   font-weight:600;
   font-size:15px;
   color:var(--text-primary);
+  display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 12px 4px 4px;
+    background: rgba(255, 255, 255, 0.1); /* Nền mờ cho cả cụm */
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .identity-icon{
-  font-size:16px;
+  display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background-color: #f4f1ea; /* Màu nền kem nhạt từ index.html */
+    border-radius: 50%;
+    font-size: 1.2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); /* Đổ bóng tạo độ nổi */
+    transition: transform 0.3s ease;
 }
 
 .identity-label{
   white-space:nowrap;
   font-weight: 600;
-  font-size: 14px
+  font-size: 14px;
+  color: #ffffff;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
 }
 
 
