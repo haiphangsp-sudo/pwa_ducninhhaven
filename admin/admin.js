@@ -151,7 +151,7 @@ function bindEvents(){
 
 /* ===== API CHO PLACES ===== */
 async function savePlacesState(patch) {
-  const r = await fetch("/api/admin/places", { // Giả định endpoint cho places
+  const r = await fetch("/api/admin/places", { 
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -193,7 +193,6 @@ function logout(){
 
 function renderPlaces() {
   const root = document.getElementById("adminPlaces");
-  const PLACES = getAllPlaceGroups(); // Lấy dữ liệu từ Store
 
   if (!root || !PLACES) return;
 
