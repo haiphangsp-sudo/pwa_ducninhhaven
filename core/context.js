@@ -58,7 +58,7 @@ export function applyURLContext() {
 }
 
 // 3. Đẩy vào State và Lưu vào Storage
-export function syncContextToState() {
+export function syncContextToState(state) {
   const current = _ctx.active || _ctx.anchor;
 
   setState({
@@ -74,6 +74,15 @@ export function syncContextToState() {
   });
 
   localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(_ctx));
+  const themeColors = {
+  room: "#2f5d46", // Xanh đậm cho phòng
+  area: "#4a5d4e", // Xanh lá cho sân vườn
+  table: "#333333" // Xám cho khách vãng lai
+};
+
+const currentType = getState().context.current.type;
+document.querySelector('meta[name="theme-color"]')
+        .setAttribute('content', themeColors[currentType] || "#2f5d46");
 }
 
 /* --- UI ACTIONS --- */
