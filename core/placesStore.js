@@ -29,6 +29,7 @@ export async function loadPlaces() {
 
     // 4. Nếu qua cửa, mới tính toán index và cập nhật State
     const index = buildPlaceIndex(groups);
+    PLACES = fullData;
     setState({
       places: {
         data: { groups, index },

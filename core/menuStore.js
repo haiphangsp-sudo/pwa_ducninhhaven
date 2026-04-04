@@ -22,6 +22,7 @@ export async function loadMenu() {
     // 4. KIỂM TRA (Validate)
     // Nếu dữ liệu không vượt qua bài kiểm tra này, nó sẽ throw Error
     validateMenu(data); 
+    MENU = data;
 
     // 5. Cập nhật State (Chỉ chạy khi dữ liệu đã "Sạch" và "Đúng")
     setState({ menu: { data, status: "ready" } });
