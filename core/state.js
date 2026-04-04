@@ -28,7 +28,7 @@ export let UI = {
       groups: {}, // Object để chứa { room: {...}, table: {...} }
       index: {}  // Object để tìm kiếm nhanh theo ID
     },
-    status: "ready",
+    status: "loading",
     updatedAt: Date.now()
   },
 
