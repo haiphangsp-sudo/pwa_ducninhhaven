@@ -6,7 +6,6 @@ import { deepMerge } from "../data/helpers.js";
 
 export let MENU = {}; // Biến chứa TOÀN BỘ thực đơn (cho Admin)
 
-// core/menuStore.js hoặc placesStore.js
 
 export async function loadMenu() {
   // 1. Fetch dữ liệu
