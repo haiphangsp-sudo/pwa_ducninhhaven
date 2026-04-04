@@ -1,46 +1,48 @@
+// api/admin/menu.js
 import { kv } from "@vercel/kv";
 
-export default async function handler(req, res) {
+const STATE_KEY = "menuState";
 
-  if (req.headers["x-admin-pin"] !== process.env.ADMIN_PIN)
-    return res.status(401).end();
+export default async function handler(req, res) {
+  if (req.headers["x-admin-pin"] !== process.env.ADMIN_PIN) {
+    return res.status(401).json({ ok: false, message: "unauthorized" });
+  }
 
   try {
-
     if (req.method === "POST") {
       const patch = req.body || {};
-      let state = await kv.get("menuState") || {};
+      const current = (await kv.get(STATE_KEY)) || {};
+      const next = mergePatch(current, patch);
 
-      state = mergePatch(state, patch);
-      await kv.set("menuState", state);
-
-      return res.status(200).json({ ok: true });
+      await kv.set(STATE_KEY, next);
+      return res.status(200).json({ ok: true, data: next });
     }
 
     if (req.method === "DELETE") {
-      await kv.del("menuState");
+      await kv.del(STATE_KEY);
       return res.status(200).json({ ok: true });
     }
 
-    return res.status(405).end();
-
+    return res.status(405).json({ ok: false, message: "method_not_allowed" });
   } catch (e) {
-    console.error(e);
-    return res.status(500).json({ error: e.message });
+    console.error("[api/admin/menu]", e);
+    return res.status(500).json({ ok: false, error: e.message });
   }
 }
 
-function mergePatch(base, patch) {
-  for (const k in patch) {
-    if (
-      typeof patch[k] === "object" &&
-      patch[k] !== null &&
-      !Array.isArray(patch[k])
-    ) {
-      base[k] = mergePatch(base[k] || {}, patch[k]);
+function mergePatch(target, source) {
+  const out = Array.isArray(target) ? [...target] : { ...(target || {}) };
+
+  for (const key of Object.keys(source || {})) {
+    const sv = source[key];
+    const tv = out[key];
+
+    if (sv && typeof sv === "object" && !Array.isArray(sv)) {
+      out[key] = mergePatch(tv || {}, sv);
     } else {
-      base[k] = patch[k];
+      out[key] = sv;
     }
   }
-  return base;
+
+  return out;
 }
