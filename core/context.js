@@ -1,6 +1,6 @@
-import { CONFIG } from "./config.js";
-import { getState, setState } from "./state.js";
-import { resolvePlace } from "./placeQuery.js";
+import { CONFIG } from "../config.js";
+import { getState, setState } from "../core/state.js";
+import { resolvePlace } from "../core/placeQuery.js";
 
 /* =======================================================
    CẤU HÌNH HẠN SỬ DỤNG (TTL)
