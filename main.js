@@ -7,7 +7,6 @@ import { normalizeContext, applyURLContext } from "./core/context.js";
 import { detectRecovery } from "./core/queue.js";
 import { attachAppEvents } from "./ui/events/globalEvents.js"; 
 import { attachUI } from "./ui/events/sync.js";
-import { loadPlaces } from "./core/placesStore.js";
 import { renderApp } from "./ui/render/renderApp.js";
 import { setState, syncContextToState } from "./core/state.js";
 import { showToast } from "./ui/render/renderAck.js"; 
