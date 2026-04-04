@@ -2,7 +2,6 @@
 
 // core/state.js
 // Single source of truth.
-import { getContext } from "./context.js";
 import { CONFIG } from "../config.js";
 import { deepMerge } from "../data/helpers.js";
 
