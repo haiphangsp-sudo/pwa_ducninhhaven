@@ -107,10 +107,6 @@ export function getLocationInfo() {
   };
 }
 
-export function getLocationLabel() {
-  return getLocationInfo().placeName;
-}
-
 /* =======================================================
    ICON
 ======================================================= */

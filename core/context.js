@@ -1,33 +1,33 @@
+// core/context.js
 import { CONFIG } from "../config.js";
 import { getState, setState } from "./state.js";
 import { resolvePlace } from "./placeQuery.js";
 
-/* =======================================================
-   CẤU HÌNH & BIẾN NỘI BỘ
-======================================================= */
+const TTL_ACTIVE = 1000 * 60 * 30;      // 30 phút
+const TTL_ANCHOR = 1000 * 60 * 60 * 48; // 48 giờ
 
-const TTL_ACTIVE = 1000 * 60 * 30;      // 30 phút cho Active
-const TTL_ANCHOR = 1000 * 60 * 60 * 48; // 48 giờ cho Anchor
+let _ctx = { anchor: null, active: null };
 
-let _ctx = loadFromStorage();
-
-/* =======================================================
-   HÀM ĐỌC (GETTERS)
-======================================================= */
-
+/* --- READERS --- */
 export function getContext() {
-  const state = getState();
-  return state.context || {
-    anchor: null,
-    active: null,
-    current: { id: null, type: "table", isGuest: true }
+  return getState().context || { 
+    current: { id: null, type: "table", isGuest: true } 
   };
 }
 
-/* =======================================================
-   HÀM XỬ LÝ URL (KHÔI PHỤC LOGIC CŨ)
-======================================================= */
+/* --- MAIN LOGIC --- */
 
+// 1. Đọc dữ liệu từ máy khách và lọc bỏ cái hết hạn
+export function normalizeContext() {
+  const raw = localStorage.getItem(CONFIG.STORAGE_KEY);
+  _ctx = raw ? JSON.parse(raw) : { anchor: null, active: null };
+  
+  const now = Date.now();
+  if (_ctx.active?.at && (now - _ctx.active.at > TTL_ACTIVE)) _ctx.active = null;
+  if (_ctx.anchor?.at && (now - _ctx.anchor.at > TTL_ANCHOR)) _ctx.anchor = null;
+}
+
+// 2. Xử lý URL (Phải chạy SAU KHI loadPlaces xong)
 export function applyURLContext() {
   const params = new URLSearchParams(location.search);
   const placeId = params.get("place");
@@ -36,46 +36,28 @@ export function applyURLContext() {
   if (!placeId) return;
 
   const resolved = resolvePlace(placeId);
-  if (!resolved) return;
-
-  // Khôi phục logic kiểm tra Mode từ file cũ
-  const validModes = ["room", "area", "table"];
-  if (modeId && (!validModes.includes(modeId) || resolved.type !== modeId)) {
-    console.warn("[Haven] URL Mode không hợp lệ hoặc không khớp với Place");
+  if (!resolved) {
+    console.warn("[Haven] Không tìm thấy vị trí:", placeId);
     return;
   }
 
-  // Dọn dẹp URL
-  history.replaceState({}, "", location.pathname);
+  // Kiểm tra mode nếu có (Logic cũ của bạn)
+  const validModes = ["room", "area", "table"];
+  if (modeId && (!validModes.includes(modeId) || resolved.type !== modeId)) {
+    return;
+  }
 
   const ref = { id: resolved.id, type: resolved.type, at: Date.now() };
-
-  // Logic cũ: Nếu chưa có anchor hoặc quét QR mới, thiết lập cả hai
+  
+  // Thiết lập mới hoàn toàn khi quét QR
   _ctx.anchor = ref;
   _ctx.active = ref;
-
-  saveToStorage(_ctx); // Lưu ngay để chống mất khi reload
+  
+  // Xóa URL cho sạch
+  history.replaceState({}, "", location.pathname);
 }
 
-/* =======================================================
-   HÀM CHUẨN HÓA & ĐỒNG BỘ
-======================================================= */
-
-export function normalizeContext() {
-  _ctx = loadFromStorage();
-  const now = Date.now();
-
-  // Kiểm tra hết hạn 30p (Active)
-  if (_ctx.active?.at && (now - _ctx.active.at > TTL_ACTIVE)) {
-    _ctx.active = null;
-  }
-
-  // Kiểm tra hết hạn 48h (Anchor)
-  if (_ctx.anchor?.at && (now - _ctx.anchor.at > TTL_ANCHOR)) {
-    _ctx.anchor = null;
-  }
-}
-
+// 3. Đẩy vào State và Lưu vào Storage
 export function syncContextToState() {
   const current = _ctx.active || _ctx.anchor;
 
@@ -91,45 +73,15 @@ export function syncContextToState() {
     }
   });
 
-  saveToStorage(_ctx);
+  localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(_ctx));
 }
 
-/* =======================================================
-   HÀM APPLY (THAY THẾ applyPlaceById CŨ)
-======================================================= */
+/* --- UI ACTIONS --- */
 
-/**
- * Tương đương với applyPlaceById cũ nhưng có lưu 'at'
- */
 export function applyPlaceById(placeId) {
-  if (!placeId) return;
-
   const resolved = resolvePlace(placeId);
   if (!resolved) return;
 
-  // Cập nhật vị trí ngồi hiện tại
-  _ctx.active = {
-    id: resolved.id,
-    type: resolved.type,
-    at: Date.now()
-  };
-
+  _ctx.active = { id: resolved.id, type: resolved.type, at: Date.now() };
   syncContextToState();
-}
-
-/* =======================================================
-   STORAGE HELPERS
-======================================================= */
-
-function loadFromStorage() {
-  try {
-    const raw = localStorage.getItem(CONFIG.STORAGE_KEY);
-    return raw ? JSON.parse(raw) : { anchor: null, active: null };
-  } catch {
-    return { anchor: null, active: null };
-  }
-}
-
-function saveToStorage(data) {
-  localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(data));
 }
