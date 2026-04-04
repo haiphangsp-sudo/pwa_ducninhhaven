@@ -111,15 +111,25 @@ export function getLocationInfo() {
    ICON
 ======================================================= */
 
-const PLACE_ICONS = {
-  room: "🛏",
-  table: "☕",
-  area: "🌿"
-};
 
-export function getPlaceIcon() {
-  const mode = getCurrentPlaceType();
-  return PLACE_ICONS[mode] || "📍";
+export function getAnchorDisplay(state) {
+  const anchor = state.context?.anchor;
+  const index = state.places?.data?.index || {};
+  const groups = state.places?.data?.groups || {};
+
+  // 1. Nếu không có anchor (Khách vãng lai)
+  if (!anchor) return { icon: "📍", label: "Guest" };
+
+  const item = index[anchor.id];
+  if (!item) return { icon: "📍", label: "..." };
+
+  // 2. Lấy icon: Ưu tiên icon của chính item -> sau đó đến icon của nhóm (room/area)
+  const icon = item.icon || groups[item.type]?.meta?.icon || "📍";
+
+  return {
+    icon,
+    label: item.label.vi || item.id
+  };
 }
 
 /* =======================================================

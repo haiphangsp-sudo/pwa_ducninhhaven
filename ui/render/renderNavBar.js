@@ -1,7 +1,7 @@
 // ui/components/navBar.js
 
 import { translate } from "../utils/translate.js";
-import { getPlaceIcon, getLocationInfo } from "../../core/placeQuery.js";
+import { getAnchorDisplay, getLocationInfo } from "../../core/placeQuery.js";
 
 const refs = {
   identityIcon: null,
@@ -19,7 +19,7 @@ function updateNavBar(state) {
   const currentLang = state.lang.current;
   const {placeName, anchor} = getLocationInfo();
 
-  if (refs.identityIcon) refs.identityIcon.textContent = getPlaceIcon();
+  if (refs.identityIcon) refs.identityIcon.textContent = getAnchorDisplay().icon;
   if (refs.identityLabel) refs.identityLabel.textContent = getIdentityLabel(anchor);
   if (refs.locLabel) refs.locLabel.textContent = placeName;
 
