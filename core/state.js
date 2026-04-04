@@ -136,27 +136,3 @@ export function setState(patch) {
     listeners.forEach(fn => fn(UI));
   }
 }
-
-export function syncContextToState() {
-  const ctx = getContext();
-
-  setState({
-    context: {
-      anchor: ctx?.anchor
-        ? {
-            id: ctx.anchor.id,
-            type: ctx.anchor.type || null
-          }
-        : null,
-
-      active: ctx?.active
-        ? {
-            id: ctx.active.id,
-            type: ctx.active.type || null
-          }
-        : null,
-
-      updatedAt: ctx?.updatedAt || null
-    }
-  });
-}
