@@ -3,6 +3,7 @@
 import { resolvePlace } from "./context.js";
 import { getState } from "./state.js";
 import { translate } from "../ui/utils/translate.js";
+import { getCurrentPlaceType, getCurrentPlaceId, getAnchorId } from "./placeQuery.js";
 
 /* =======================================================
    PUBLIC
