@@ -37,6 +37,7 @@ async function doLogin(){
     localStorage.setItem("admin_pin_expire",Date.now()+2*60*60*1000);
     showApp();
     await loadMenu();
+    await loadPlaces();
     render();
   }else{
     alert("Sai mã");
