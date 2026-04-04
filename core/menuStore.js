@@ -14,7 +14,7 @@ export async function loadMenu() {
 
   let state = {};
   try {
-    state = await fetch("/api/data/menu", { cache: "no-store" }).then(r => r.json());
+    state = await fetch("/api/data/stase", { cache: "no-store" }).then(r => r.json());
   } catch {
     console.warn("Không thể tải trạng thái menu từ API");
   }
