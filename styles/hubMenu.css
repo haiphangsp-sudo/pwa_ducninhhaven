@@ -35,24 +35,14 @@
 .hub-container::-webkit-scrollbar {
     display: none;
 }
-
-/* Lớp sương mờ bên phải */
-#hubMenu::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 60px;
-    height: 100%;
-    background: linear-gradient(to right, rgba(244, 241, 234, 0), #f4f1ea);
-    pointer-events: none; /* Khách vẫn có thể vuốt xuyên qua lớp mờ */
-    transition: opacity 0.3s ease;
-    z-index: 10;
+.hub-menu {
+  transition: transform 0.25s ease, opacity 0.25s ease;
 }
 
-/* Khi đã cuộn đến cuối, ẩn lớp mờ đi */
-#hubMenu.is-at-end::after {
-    opacity: 0;
+.hub-menu--hidden {
+  transform: translateY(-100%);
+  opacity: 0;
+  pointer-events: none;
 }
 .hub-menu::after {
   content: "";

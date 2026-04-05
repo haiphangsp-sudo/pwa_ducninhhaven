@@ -22,11 +22,18 @@
   /* Quan trọng: Tràn màu lên thanh trạng thái */
   padding-top: env(safe-area-inset-top, 20px); 
     top: 0;
-    transition: transform 0.3s ease-in-out; /* Hiệu ứng trượt mượt mà */
+}
+.context-bar {
+  transition: transform 0.22s ease, padding 0.22s ease, height 0.22s ease, opacity 0.22s ease;
 }
 
-.context-bar--hidden {
-    transform: translateY(-100%); /* Đẩy thanh bar lên khỏi màn hình */
+.context-bar--compact {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+.context-bar--compact .app-version {
+  display: none;
 }
 /* =========================================================
    FLEX GROUPS
