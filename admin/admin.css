@@ -160,7 +160,6 @@ body {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    padding: 15px;
     max-width: 600px;
     margin: 0 auto;
 }
@@ -210,6 +209,7 @@ body {
     border-bottom: 1px solid #f0f0f0;
     align-items: center;
     transition: background 0.2s;
+    width: 90%;
 }
 
 .item:last-child {
@@ -279,7 +279,7 @@ input[type="checkbox"]:checked::before {
 
 /* --- PHẦN SẢN PHẨM CHÍNH (.item-header) --- */
 .item-product {
- width: 40%;
+ width: 30%;
 }
 
 .item-header label {
@@ -293,7 +293,7 @@ input[type="checkbox"]:checked::before {
     padding-left: 28px; /* Thụt lề vào để lộ rõ quan hệ Cha-Con */
     background-color: #ffffff;
     position: relative;
-    width: 60%;
+    width: 70%;
 
 }
 
