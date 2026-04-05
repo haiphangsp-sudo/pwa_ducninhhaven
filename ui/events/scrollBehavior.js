@@ -11,7 +11,7 @@ export function applyScrollUI() {
   if (y <= 10) {
     nav?.classList.remove("context-bar--compact");
     hub?.classList.remove("hub-menu--hidden");
-    cart?.classList.remove("cart-bar--compact", "cart-bar--hidden");
+    cart?.classList.remove("cart-bar--hidden");
     lastY = y;
     return;
   }
