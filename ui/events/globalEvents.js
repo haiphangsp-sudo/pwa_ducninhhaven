@@ -4,6 +4,7 @@ import { setState } from "../../core/state.js";
 import { updateCartQuantity } from "../../core/events.js";
 import { applyPlaceById, syncContextToState } from "../../core/context.js";
 import { animateFlyToCart } from "../../ui/interactions/animateFlyToCart.js";
+import { applyScrollUI } from "./scrollBehavior.js";
 
 /* =========================
    MAIN EVENTS
@@ -13,6 +14,16 @@ export function attachAppEvents() {
 
   document.addEventListener("click", handleGlobalClick);
   window.addEventListener("contextchange", () => { syncContextToState(); });
+   let ticking = false;
+    window.addEventListener("scroll", () => {
+    if (!ticking) {
+        requestAnimationFrame(() => {
+            applyScrollUI();
+        ticking = false;
+        });
+        ticking = true;
+    }
+    });
 }
 
 /* =========================
