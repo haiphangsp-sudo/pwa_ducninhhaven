@@ -266,7 +266,7 @@ input[type="checkbox"]:checked::before {
     left: 22px;
 }
 /* Đảm bảo các hàng luôn dàn hàng ngang và đẩy 2 đầu */
-.flex.between {
+.opts .item {
     display: flex;
     justify-content: space-between;
     align-items: center;
