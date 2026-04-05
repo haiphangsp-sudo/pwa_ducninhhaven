@@ -379,10 +379,7 @@
 
   transition:transform .3s ease, opacity .3s ease;
 
-    position: sticky;
-    top: 0;
     transition: transform 0.3s ease-in-out; /* Hiệu ứng trượt mượt mà */
-    z-index: 1000;
 }
 
 /* Class này sẽ được JS thêm vào khi cuộn xuống */
