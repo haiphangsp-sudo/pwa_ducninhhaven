@@ -9,7 +9,7 @@ import { renderDrawer } from "../render/renderDrawer.js";
 import { renderNavBar } from "../render/renderNavBar.js";
 import { renderCartBar } from "../render/renderCartBar.js";
 import { renderStatusBar } from "../render/renderStatusBar.js";
-import { renderHub, eventHub } from "../render/renderHub.js";
+import { renderHub } from "../render/renderHub.js";
 import { renderPanel } from "../render/renderPanel.js";
 import { updateStepperUI } from "../render/renderStepper.js";
 import { renderAck } from "../render/renderAck.js";
@@ -73,7 +73,6 @@ async function syncUI(state) {
   if (state.panel.view !== prevState.panel?.view) {
     
     renderPanel(state);
-    eventHub(state);
 
   }
   
@@ -113,8 +112,8 @@ function syncLanguage(state) {
   renderCartBar(state);
   renderStatusBar(state);
   renderHub(state);
-  renderPanel(state);
-  renderDrawer(state);
+  //renderPanel(state);
+  //renderDrawer(state);
 }
 
 
