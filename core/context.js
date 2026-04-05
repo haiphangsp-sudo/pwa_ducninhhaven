@@ -16,7 +16,78 @@ export function getContext() {
     updatedAt: null
   };
 }
+export function clearContext() {
+  _ctx = { anchor: null, active: null };
+  syncContextToState();
+}
 
+export function reconcileContextAfterPlacesRefresh() {
+  const anchorId = _ctx?.anchor?.id || null;
+  const activeId = _ctx?.active?.id || null;
+
+  const resolvedAnchor = anchorId ? resolvePlace(anchorId) : null;
+  const resolvedActive = activeId ? resolvePlace(activeId) : null;
+
+  // 1. Không còn gì hợp lệ
+  if (!resolvedAnchor && !resolvedActive) {
+    const hadContext = !!(_ctx.anchor || _ctx.active);
+    _ctx = { anchor: null, active: null };
+
+    if (hadContext) {
+      syncContextToState();
+      return { changed: true, mode: "cleared" };
+    }
+
+    return { changed: false, mode: "none" };
+  }
+
+  // 2. Anchor còn, active mất => fallback về anchor
+  if (resolvedAnchor && !resolvedActive) {
+    _ctx.anchor = {
+      id: resolvedAnchor.id,
+      type: resolvedAnchor.type,
+      at: _ctx.anchor?.at || Date.now()
+    };
+
+    _ctx.active = {
+      id: resolvedAnchor.id,
+      type: resolvedAnchor.type,
+      at: Date.now()
+    };
+
+    syncContextToState();
+    return { changed: true, mode: "fallback-anchor" };
+  }
+
+  // 3. Guest đang chọn active, không có anchor => giữ active nếu còn hợp lệ
+  if (!resolvedAnchor && resolvedActive) {
+    _ctx.anchor = null;
+    _ctx.active = {
+      id: resolvedActive.id,
+      type: resolvedActive.type,
+      at: _ctx.active?.at || Date.now()
+    };
+
+    syncContextToState();
+    return { changed: true, mode: "keep-active" };
+  }
+
+  // 4. Cả hai còn hợp lệ => chỉ đồng bộ lại type nếu cần
+  _ctx.anchor = {
+    id: resolvedAnchor.id,
+    type: resolvedAnchor.type,
+    at: _ctx.anchor?.at || Date.now()
+  };
+
+  _ctx.active = {
+    id: resolvedActive.id,
+    type: resolvedActive.type,
+    at: _ctx.active?.at || Date.now()
+  };
+
+  syncContextToState();
+  return { changed: false, mode: "ok" };
+}
 export function normalizeContext() {
   try {
     const raw = localStorage.getItem(CONFIG.STORAGE_KEY);

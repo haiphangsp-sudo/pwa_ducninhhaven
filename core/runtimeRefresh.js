@@ -2,13 +2,15 @@
 
 import { loadMenu } from "./menuStore.js";
 import { loadPlaces } from "./placesStore.js";
+import { reconcileContextAfterPlacesRefresh } from "./context.js";
+import { showToast } from "../ui/render/renderAck.js";
 
 let refreshBusy = false;
 let lastRefreshAt = 0;
 let intervalId = null;
 
-const DEFAULT_MIN_GAP = 5000;     // chống refresh dồn dập
-const DEFAULT_INTERVAL = 60000;   // polling 60 giây
+const DEFAULT_MIN_GAP = 5000;
+const DEFAULT_INTERVAL = 60000;
 
 async function refreshRuntimeData(force = false) {
   const now = Date.now();
@@ -23,6 +25,24 @@ async function refreshRuntimeData(force = false) {
       loadMenu(),
       loadPlaces()
     ]);
+
+    const result = reconcileContextAfterPlacesRefresh();
+
+    if (result?.changed) {
+      if (result.mode === "fallback-anchor") {
+        showToast?.({
+          type: "info",
+          message: "Vị trí hiện tại không còn khả dụng, đã chuyển về vị trí gốc."
+        });
+      }
+
+      if (result.mode === "cleared") {
+        showToast?.({
+          type: "info",
+          message: "Vị trí phục vụ không còn khả dụng, vui lòng chọn lại."
+        });
+      }
+    }
 
     lastRefreshAt = Date.now();
     return true;

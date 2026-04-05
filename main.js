@@ -17,10 +17,10 @@ boot();
 /* ---------- VERSION ---------- */
 // - Đảm bảo phiên bản SW khớp với phiên bản app
 function checkVersion(){
-  const stored = localStorage.getItem(CONFIG.VERSION_KEY);
+  const stored = localStorage.getItem(CONFIG.APP_VERSION_KEY);
 
   if(stored !== CONFIG.VERSION){
-    localStorage.setItem(CONFIG.VERSION_KEY, CONFIG.VERSION);
+    localStorage.setItem(CONFIG.APP_VERSION_KEY, CONFIG.VERSION);
     if("caches" in window){
       caches.keys().then(keys=>{
         keys.forEach(k=>caches.delete(k));
