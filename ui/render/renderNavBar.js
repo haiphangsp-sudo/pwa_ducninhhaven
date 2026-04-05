@@ -1,6 +1,5 @@
 // ui/components/navBar.js
 
-import { translate } from "../utils/translate.js";
 import { getAnchorDisplay, getLocationInfo } from "../../core/placesQuery.js";
 
 const refs = {

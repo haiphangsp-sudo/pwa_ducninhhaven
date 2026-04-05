@@ -1,7 +1,7 @@
 // ui/renderApp.js
 
 import { getState } from "../../core/state.js";
-import { renderHub, eventHub } from "./renderHub.js";
+import { renderHub } from "./renderHub.js";
 import { renderNavBar } from "./renderNavBar.js";
 import { attachRuntimeRefresh } from "../../core/runtimeRefresh.js";
 import { applyScrollUI } from "../events/scrollBehavior.js";
@@ -12,7 +12,6 @@ export function renderApp() {
     
     renderNavBar(s);
     renderHub(s);
-    eventHub(s);
 
 
     attachRuntimeRefresh({
