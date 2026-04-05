@@ -21,7 +21,6 @@
   z-index: 100;
   /* Quan trọng: Tràn màu lên thanh trạng thái */
   padding-top: env(safe-area-inset-top, 20px); 
-    position: sticky;
     top: 0;
     transition: transform 0.3s ease-in-out; /* Hiệu ứng trượt mượt mà */
 }
