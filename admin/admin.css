@@ -178,10 +178,13 @@ body {
 
 /* Tiêu đề nhóm (Header) */
 .cat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    border-bottom: 1px solid #f0f0f0;
     background: #2f5d46; /* Xanh đậm Haven */
     color: #ffffff;
-    padding: 12px 16px;
-    align-items: center;
 }
 
 .cat-title {
@@ -260,7 +263,25 @@ input[type="checkbox"]::before {
 input[type="checkbox"]:checked::before {
     left: 22px;
 }
+/* Đảm bảo các hàng luôn dàn hàng ngang và đẩy 2 đầu */
+.flex.between {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%; /* Đảm bảo chiếm hết chiều ngang */
+}
 
+/* Ép các ô checkbox/nút gạt về sát lề phải */
+#adminPlaces input[type="checkbox"] {
+    margin-left: auto; /* Tự động đẩy hết khoảng trống bên trái */
+    flex-shrink: 0;    /* Không cho phép nút bị bóp méo khi chữ quá dài */
+}
+
+/* Tinh chỉnh khoảng cách nhãn để không đè vào nút */
+.item label, .cat-title {
+    padding-right: 15px;
+    flex-grow: 1; /* Để nhãn chiếm phần không gian còn lại */
+}
 /* Hiệu ứng làm mờ khi Vị trí bị tắt */
 .item:has(input[type="checkbox"]:not(:checked)) {
     background: #f9f9f9;
