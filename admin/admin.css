@@ -169,6 +169,7 @@ body {
 
 /* Thẻ từng nhóm (Phòng, Khu vực, Bàn) */
 .cat {
+    padding: 15px;
     background: #ffffff;
     border-radius: 16px;
     overflow: hidden;
@@ -288,4 +289,67 @@ input[type="checkbox"]:checked::before {
 
 .item:has(input[type="checkbox"]:not(:checked)) label {
     color: #bbb;
+}
+/* --- PHẦN SẢN PHẨM CHÍNH (.item-header) --- */
+.item-header {
+    background-color: #f8faf9; /* Màu nền xanh cực nhạt để tách biệt */
+    padding: 12px 16px;
+    border-bottom: 1px solid #edf2f0;
+}
+
+.item-header label {
+    font-weight: 700; /* Chữ đậm cho tên món chính */
+    color: #2f5d46;   /* Màu xanh Haven */
+    font-size: 1rem;
+}
+
+/* --- PHẦN TÙY CHỌN/BIẾN THỂ (.opts) --- */
+.opts {
+    padding-left: 28px; /* Thụt lề vào để lộ rõ quan hệ Cha-Con */
+    background-color: #ffffff;
+    position: relative;
+}
+
+/* Vẽ một đường gạch dọc nối các option cho đẹp */
+.opts::before {
+    content: "";
+    position: absolute;
+    left: 16px;
+    top: 0;
+    bottom: 15px;
+    width: 2px;
+    background: #edf2f0; /* Đường nối mờ */
+}
+
+/* Từng dòng option cụ thể (Lưu ý class .item-headr bạn viết trong HTML) */
+.item-headr, .opts .item {
+    padding: 10px 16px 10px 8px;
+    border-bottom: 1px dashed #f0f0f0;
+    position: relative;
+}
+
+/* Vẽ gạch ngang nhỏ nối từ đường dọc vào từng option */
+.item-headr::before, .opts .item::before {
+    content: "";
+    position: absolute;
+    left: -12px;
+    top: 50%;
+    width: 8px;
+    height: 1px;
+    background: #edf2f0;
+}
+
+.item-headr label, .opts .item label {
+    font-weight: 400;
+    color: #555;
+    font-size: 0.9rem; /* Chữ nhỏ hơn một chút so với món chính */
+}
+
+/* --- ĐIỀU CHỈNH INPUT --- */
+.item-header input[type="checkbox"] {
+    transform: scale(1.1); /* Nút gạt món chính to hơn */
+}
+
+.item-headr input[type="checkbox"], .opts .item input[type="checkbox"] {
+    transform: scale(0.9); /* Nút gạt option nhỏ hơn */
 }
