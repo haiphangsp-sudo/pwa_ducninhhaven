@@ -42,16 +42,30 @@ function cacheElements() {
   refs.langButtons = document.getElementById("langSwitch");
   refs.pickerButton = document.getElementById("pickerNav");
 }
+// ui/events/scrollBehavior.js
 
-function getIdentityLabel(anchor) {
-  if (!anchor) return "Haven";
+let lastScrollTop = 0;
+const threshold = 10; // Khoảng cách cuộn tối thiểu để kích hoạt (tránh rung lắc)
 
-  const labels = {
-    room: () => translate(anchor.label),
-    table: () => translate("mode.table_guest"),
-    area: () => translate("mode.area_guest")
-  };
+export function initSmartHeader() {
+    const contextBar = document.getElementById('contextBar');
+    if (!contextBar) return;
 
-  return labels[anchor.type]?.() || "Haven";
+    window.addEventListener('scroll', () => {
+        let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+        // Bỏ qua nếu cuộn quá ít
+        if (Math.abs(lastScrollTop - scrollTop) <= threshold) return;
+
+        if (scrollTop > lastScrollTop && scrollTop > 100) {
+            // CUỘN XUỐNG: Ẩn thanh bar
+            contextBar.classList.add('context-bar--hidden');
+        } else {
+            // CUỘN LÊN: Hiện thanh bar
+            contextBar.classList.remove('context-bar--hidden');
+        }
+
+        lastScrollTop = scrollTop;
+    }, { passive: true }); // Tối ưu hiệu suất cuộn
 }
 
