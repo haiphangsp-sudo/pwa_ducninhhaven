@@ -9,7 +9,7 @@ export function applyScrollUI() {
   const cart = document.getElementById("cartBar");
 
   if (y <= 10) {
-    nav?.classList.remove("context-bar--compact");
+    nav?.classList.remove("context-bar--hidden");
     hub?.classList.remove("hub-menu--hidden");
     cart?.classList.remove("cart-bar--hidden");
     lastY = y;
@@ -19,11 +19,11 @@ export function applyScrollUI() {
   if (Math.abs(delta) < 6) return;
 
   if (delta > 0) {
-    nav?.classList.add("context-bar--compact");
+    nav?.classList.add("context-bar--hidden");
     hub?.classList.add("hub-menu--hidden");
     cart?.classList.add("cart-bar--hidden");
   } else {
-    nav?.classList.remove("context-bar--compact");
+    nav?.classList.remove("context-bar--hidden");
     hub?.classList.remove("hub-menu--hidden");
     cart?.classList.remove("cart-bar--hidden");
   }
