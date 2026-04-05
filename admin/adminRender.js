@@ -49,7 +49,7 @@ function renderNode(node) {
   }
 
   return `
-    <div class="item-product flex between">
+    <div class="item flex between">
       <label>
         ${node.label}
         ${node.meta || ""}
