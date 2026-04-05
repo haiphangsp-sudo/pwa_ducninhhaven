@@ -36,13 +36,11 @@ function renderNode(node) {
   if (node.variant === "item-with-children") {
     return `
       <div class="item">
-        <label>
-          <input type="checkbox"
+        <label>${node.label}</label>
+        <input type="checkbox"
             data-kind="${node.kind}"
             data-path="${node.path}"
             ${node.checked ? "checked" : ""}>
-          ${node.label}
-        </label>
         <div class="opts">${children}</div>
       </div>
     `;
