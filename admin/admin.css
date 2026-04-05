@@ -290,7 +290,7 @@ input[type="checkbox"]:checked::before {
 
 /* --- PHẦN TÙY CHỌN/BIẾN THỂ (.opts) --- */
 .opts {
-    padding-left: 28px; /* Thụt lề vào để lộ rõ quan hệ Cha-Con */
+    padding-left: 18px; /* Thụt lề vào để lộ rõ quan hệ Cha-Con */
     background-color: #ffffff;
     position: relative;
     width: 70%;
