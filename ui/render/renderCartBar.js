@@ -58,11 +58,9 @@ export function handleScroll() {
 
   if (delta > 0) {
     // scroll xuống
-    cartBar.classList.add("cart-bar--compact");
-    cartBar.classList.remove("cart-bar--hidden");
+    cartBar.classList.add("cart-bar--hidden");
   } else {
     // scroll lên
-    cartBar.classList.remove("cart-bar--compact");
     cartBar.classList.remove("cart-bar--hidden");
   }
 
