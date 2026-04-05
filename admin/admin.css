@@ -266,16 +266,11 @@ input[type="checkbox"]:checked::before {
     left: 22px;
 }
 /* Đảm bảo các hàng luôn dàn hàng ngang và đẩy 2 đầu */
-.opts .item {
+
+.opts .item, .items .item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-}
-
-/* Ép các ô checkbox/nút gạt về sát lề phải */
-#adminPlaces input[type="checkbox"] {
-    margin-left: auto; /* Tự động đẩy hết khoảng trống bên trái */
-    flex-shrink: 0;    /* Không cho phép nút bị bóp méo khi chữ quá dài */
 }
 
 /* Tinh chỉnh khoảng cách nhãn để không đè vào nút */
