@@ -376,15 +376,17 @@
   background:var(--bg-soft);
   border-top:1px solid var(--border-soft);
   box-shadow:var(--shadow-floating);
-
   transition:transform .3s ease, opacity .3s ease;
-
-    transition: transform 0.3s ease-in-out; /* Hiệu ứng trượt mượt mà */
+  transform: translateY(0);
 }
 
-/* Class này sẽ được JS thêm vào khi cuộn xuống */
 .cart-bar--hidden {
-    transform: translateY(-100%); /* Đẩy thanh bar lên khỏi màn hình */
+  transform: translateY(100%);
+}
+
+.cart-bar--compact {
+  transform: translateY(50%);
+  opacity: 0.7;
 }
 .cart-bar.hidden{
   transform:translateY(100%);

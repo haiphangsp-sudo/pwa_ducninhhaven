@@ -42,28 +42,34 @@ export function bounceCartBar() {
   }, 400);
 }
 
-// ui/events/scrollBehavior.js
+/* =========================
+   SCROLL
+========================= */
+let lastY = window.scrollY;
 
-let lastScrollTop = 0;
-const threshold = 10; // Khoảng cách cuộn tối thiểu để kích hoạt (tránh rung lắc)
+export function handleScroll() {
+  const currentY = window.scrollY;
+  const delta = currentY - lastY;
 
-export function initSmartHeader() {
-    const contextBar = document.getElementById('cartBar');
-    if (!contextBar) return;
+  const cartBar = document.querySelector(".cart-bar");
+  if (!cartBar) return;
 
-    window.addEventListener('scroll', () => {
-        let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+  if (Math.abs(delta) < 5) return;
 
-        // Bỏ qua nếu cuộn quá ít
-        if (Math.abs(lastScrollTop - scrollTop) <= threshold) return;
+  if (delta > 0) {
+    // scroll xuống
+    cartBar.classList.add("cart-bar--compact");
+    cartBar.classList.remove("cart-bar--hidden");
+  } else {
+    // scroll lên
+    cartBar.classList.remove("cart-bar--compact");
+    cartBar.classList.remove("cart-bar--hidden");
+  }
 
-        if (scrollTop > lastScrollTop && scrollTop > 100) {
-            contextBar.classList.remove('cart-bar--hidden');
-        } else {
-            contextBar.classList.add('cart-bar--hidden');
-        }
-
-        lastScrollTop = scrollTop;
-    }, { passive: true }); // Tối ưu hiệu suất cuộn
+  lastY = currentY;
 }
+
+
+
+
 

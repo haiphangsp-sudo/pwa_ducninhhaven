@@ -4,7 +4,7 @@ import { getState } from "../../core/state.js";
 import { renderHub } from "../../ui/render/renderHub.js";
 import { renderNavBar } from "../../ui/render/renderNavBar.js";
 import { attachRuntimeRefresh } from "../../core/runtimeRefresh.js";
-import { initSmartHeader } from "../../ui/render/renderCartBar.js";
+import { handleScroll } from "../../ui/render/renderCartBar.js";
 
 
 
@@ -14,7 +14,6 @@ export function renderApp() {
     
     renderNavBar(s);
     renderHub(s);
-    initSmartHeader();
 
 
     attachRuntimeRefresh({
@@ -23,4 +22,14 @@ export function renderApp() {
     });
     
     
+    let ticking = false;
+    window.addEventListener("scroll", () => {
+    if (!ticking) {
+        requestAnimationFrame(() => {
+        handleScroll();
+        ticking = false;
+        });
+        ticking = true;
+    }
+    });
 }
