@@ -157,3 +157,115 @@ body {
     padding: 12px;
   }
 }
+/* Container tổng */
+#adminPlaces {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 15px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Thẻ từng nhóm (Phòng, Khu vực, Bàn) */
+.cat {
+    background: #ffffff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Tiêu đề nhóm (Header) */
+.cat-header {
+    background: #2f5d46; /* Xanh đậm Haven */
+    color: #ffffff;
+    padding: 12px 16px;
+    align-items: center;
+}
+
+.cat-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.cat-title .icon {
+    font-size: 1.3rem;
+}
+
+/* Danh sách các item bên trong */
+.items {
+    padding: 5px 0;
+}
+
+/* Từng dòng Vị trí (Phòng Olive, Bàn T1...) */
+.item {
+    padding: 12px 16px;
+    border-bottom: 1px solid #f0f0f0;
+    align-items: center;
+    transition: background 0.2s;
+}
+
+.item:last-child {
+    border-bottom: none;
+}
+
+.item label {
+    font-weight: 500;
+    color: #333;
+    line-height: 1.4;
+}
+
+.item label small {
+    display: block;
+    color: #888;
+    font-size: 0.8rem;
+    font-weight: 400;
+}
+
+/* --- HIỆU ỨNG TOGGLE SWITCH (Biến checkbox thành nút gạt) --- */
+input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 44px;
+    height: 24px;
+    background: #ddd;
+    border-radius: 20px;
+    position: relative;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+input[type="checkbox"]:checked {
+    background: #2f5d46; /* Màu xanh khi bật */
+}
+
+input[type="checkbox"]::before {
+    content: "";
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: white;
+    border-radius: 50%;
+    top: 2px;
+    left: 2px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+input[type="checkbox"]:checked::before {
+    left: 22px;
+}
+
+/* Hiệu ứng làm mờ khi Vị trí bị tắt */
+.item:has(input[type="checkbox"]:not(:checked)) {
+    background: #f9f9f9;
+}
+
+.item:has(input[type="checkbox"]:not(:checked)) label {
+    color: #bbb;
+}
