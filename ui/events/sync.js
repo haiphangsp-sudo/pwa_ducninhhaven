@@ -113,7 +113,6 @@ function syncLanguage(state) {
   renderStatusBar(state);
   renderHub(state);
   //renderPanel(state);
-  //renderDrawer(state);
 }
 
 

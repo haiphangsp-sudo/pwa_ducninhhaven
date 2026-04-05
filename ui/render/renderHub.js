@@ -25,3 +25,9 @@ export function renderHub(state) {
     </button>
   `}).join("");
 }
+export function eventHub(state) {
+  const menuEl = document.getElementById("hub-container");
+  menuEl.querySelectorAll("button").forEach(btn => {
+    btn.classList.toggle("is-active", btn.getAttribute("data-value") === state.panel.view);
+  });
+}
