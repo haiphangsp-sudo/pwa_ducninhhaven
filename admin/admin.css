@@ -272,7 +272,7 @@ input[type="checkbox"]:checked::before {
 }
 
 /* Tinh chỉnh khoảng cách nhãn để không đè vào nút */
-.item label, .cat-title {
+.cat-title {
     padding-right: 15px;
     flex-grow: 1; /* Để nhãn chiếm phần không gian còn lại */
 }
@@ -309,21 +309,10 @@ input[type="checkbox"]:checked::before {
 }
 
 /* Từng dòng option cụ thể (Lưu ý class .item-headr bạn viết trong HTML) */
-.item-headr, .opts .item {
+.item-headr {
     padding: 10px 16px 10px 8px;
     border-bottom: 1px dashed #f0f0f0;
     position: relative;
-}
-
-/* Vẽ gạch ngang nhỏ nối từ đường dọc vào từng option */
-.item-headr::before, .opts .item::before {
-    content: "";
-    position: absolute;
-    left: -12px;
-    top: 50%;
-    width: 8px;
-    height: 1px;
-    background: #edf2f0;
 }
 
 .item-headr label, .opts .item label {
