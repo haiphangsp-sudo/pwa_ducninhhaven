@@ -19,22 +19,9 @@
   height: var(--nav-h); /* Dùng biến */
   position: sticky;
   z-index: 100;
-  /* Quan trọng: Tràn màu lên thanh trạng thái */
-  padding-top: env(safe-area-inset-top, 20px); 
     top: 0;
 }
-.context-bar {
-  transition: transform 0.22s ease, padding 0.22s ease, height 0.22s ease, opacity 0.22s ease;
-}
 
-.context-bar--compact {
-  padding-top: 4px;
-  padding-bottom: 4px;
-}
-
-.context-bar--compact .app-version {
-  display: none;
-}
 /* =========================================================
    FLEX GROUPS
    ========================================================= */
