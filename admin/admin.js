@@ -5,27 +5,34 @@ import { loadPlaces } from "../core/placesStore.js";
 
 import { ADMIN_SECTIONS } from "./adminSections.js";
 import { renderSection } from "./adminRender.js";
-import { buildPatchFromPath } from "./adminActions.js";
+import {
+  buildPatchFromPath,
+  resetAdminState
+} from "./adminActions.js";
 
-/* =========================
+/* =======================================================
    AUTH
-========================= */
+======================================================= */
 
-function hasSession() {
-  return localStorage.getItem("admin") === "1";
+function getPin() {
+  return localStorage.getItem("admin_pin") || "";
 }
 
-function setSession() {
-  localStorage.setItem("admin", "1");
+function hasSession() {
+  return !!getPin();
+}
+
+function setSession(pin) {
+  localStorage.setItem("admin_pin", pin);
 }
 
 function clearSession() {
-  localStorage.removeItem("admin");
+  localStorage.removeItem("admin_pin");
 }
 
-/* =========================
+/* =======================================================
    UI
-========================= */
+======================================================= */
 
 function showApp() {
   document.getElementById("adminApp").style.display = "block";
@@ -39,77 +46,159 @@ function hideApp() {
   document.getElementById("adminBtn").style.display = "none";
 }
 
-/* =========================
+/* =======================================================
    LOGIN
-========================= */
+======================================================= */
 
 async function doLogin() {
   const pin = prompt("Nhập mã quản trị:");
   if (!pin) return;
 
-  const res = await fetch("/api/admin/login", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ pin })
-  });
+  try {
+    const res = await fetch("/api/admin/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ pin })
+    });
 
-  if (res.ok) {
-    setSession();
+    if (!res.ok) {
+      alert("Sai mã");
+      return;
+    }
+
+    setSession(pin);
     showApp();
     await boot();
-  } else {
-    alert("Sai mã");
+
+  } catch (err) {
+    console.error("[Admin] Login error:", err);
+    alert("Không thể đăng nhập");
   }
 }
 
-/* =========================
+function logout() {
+  clearSession();
+  location.reload();
+}
+
+/* =======================================================
    CORE
-========================= */
+======================================================= */
 
 async function boot() {
   try {
-    await Promise.all([loadMenu(), loadPlaces()]);
+    await Promise.all([
+      loadMenu(),
+      loadPlaces()
+    ]);
+
     renderAll();
-  } catch (e) {
-    console.error("Admin boot error:", e);
+
+  } catch (err) {
+    console.error("[Admin] Boot error:", err);
+    alert("Không thể tải dữ liệu admin");
   }
 }
 
 function renderAll() {
   Object.values(ADMIN_SECTIONS).forEach(renderSection);
-  bindEvents();
+
+  bindToggleEvents();
+  bindStaticButtons();
 }
 
-function bindEvents() {
-  document.querySelectorAll('[data-path]').forEach(el => {
+/* =======================================================
+   EVENTS - TOGGLE
+======================================================= */
+
+function bindToggleEvents() {
+  document.querySelectorAll("[data-path]").forEach(el => {
     el.onchange = async () => {
       const kind = el.dataset.kind;
       const section = ADMIN_SECTIONS[kind];
+      if (!section) return;
 
       const patch = buildPatchFromPath(el.dataset.path, el.checked);
 
-      await section.save(patch);
-      await section.reload();
+      try {
+        await section.save(patch);
+        await section.reload();
 
-      renderSection(section);
-      bindEvents();
+        renderSection(section);
+        bindToggleEvents();
+
+      } catch (err) {
+        console.error("[Admin] Save error:", err);
+
+        if (err.message === "unauthorized") {
+          logout();
+          return;
+        }
+
+        alert("Không thể lưu thay đổi");
+      }
     };
   });
 }
 
-/* =========================
+/* =======================================================
+   EVENTS - STATIC
+======================================================= */
+
+function bindStaticButtons() {
+
+  // RESET
+  const resetBtn = document.getElementById("resetBtn");
+  if (resetBtn) {
+    resetBtn.onclick = async () => {
+      const ok = confirm("Khôi phục toàn bộ Menu và Places về mặc định?");
+      if (!ok) return;
+
+      resetBtn.disabled = true;
+
+      try {
+        await resetAdminState();
+
+        await Promise.all([
+          loadMenu(),
+          loadPlaces()
+        ]);
+
+        renderAll();
+
+        alert("Đã khôi phục mặc định");
+
+      } catch (err) {
+        console.error("[Admin] Reset error:", err);
+
+        if (err.message === "unauthorized") {
+          logout();
+          return;
+        }
+
+        alert("Không thể khôi phục mặc định");
+
+      } finally {
+        resetBtn.disabled = false;
+      }
+    };
+  }
+
+  // LOGOUT
+  const logoutBtn = document.getElementById("logoutBtn");
+  if (logoutBtn) {
+    logoutBtn.onclick = logout;
+  }
+}
+
+/* =======================================================
    INIT
-========================= */
+======================================================= */
 
 async function initAdmin() {
-  console.log("ADMIN INIT");
+  console.log("[Admin] Init");
 
   document.getElementById("loginBtn")?.addEventListener("click", doLogin);
-
-  document.getElementById("logoutBtn")?.addEventListener("click", () => {
-    clearSession();
-    location.reload();
-  });
 
   if (hasSession()) {
     showApp();
