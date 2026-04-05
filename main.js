@@ -78,42 +78,6 @@ function loadCart() {
   }
 }
 
-/* ---------- MENU WATCH ---------- */
-// - Theo dõi thay đổi của menu & place (thông qua polling), nếu có thay đổi thì render lại app để cập nhật menu mới nhất
-
-function watchAppUpdates() {
-  let currentHashes = {
-    menu: JSON.stringify(MENU),
-    places: JSON.stringify(PLACES)
-  };
-
-  setInterval(async () => {
-    try {
-      const [rawMenu, rawPlaces] = await Promise.all([
-        fetch("/data/menu.json", { cache: "no-store" }).then(r => r.text()),
-        fetch("/data/places.json", { cache: "no-store" }).then(r => r.text())
-      ]);
-
-      // CHỈ CẬP NHẬT NẾU CÓ THAY ĐỔI THỰC SỰ
-      if (currentHashes.menu !== rawMenu) {
-        currentHashes.menu = rawMenu;
-        await loadMenu(); 
-        // Cập nhật âm thầm, không hiện toast
-        console.log("[Haven] Menu updated silently");
-      }
-
-      if (currentHashes.places !== rawPlaces) {
-        currentHashes.places = rawPlaces;
-        await loadPlaces();
-        // Kiểm tra xem vị trí khách đang chọn có còn tồn tại không
-      }
-
-    } catch (err) {
-      // Lỗi mạng thì lờ đi, không làm phiền khách
-    }
-  }, 30000); 
-}
-
 /* ---------- BOOT ---------- */
 
 async function boot() {
@@ -137,8 +101,6 @@ async function boot() {
     attachAppEvents();
     
     renderApp();
-    // Bắt đầu theo dõi ngầm
-    watchAppUpdates();
     detectRecovery();
     
   } catch (criticalError) {

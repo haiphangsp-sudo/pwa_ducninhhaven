@@ -3,6 +3,7 @@
 import { getState } from "../../core/state.js";
 import { renderHub } from "../../ui/render/renderHub.js";
 import { renderNavBar } from "../../ui/render/renderNavBar.js";
+import { attachRuntimeRefresh } from "../../core/runtimeRefresh.js";
 
 
 
@@ -12,5 +13,10 @@ export function renderApp() {
     
     renderNavBar(s);
     renderHub(s);
+
+    attachRuntimeRefresh({
+        intervalMs: 60000,
+        enableInterval: true
+    });
     
 }
