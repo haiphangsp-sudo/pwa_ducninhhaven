@@ -186,7 +186,7 @@
 /* --- TRẠNG THÁI MỞ (Mặc định) --- */
 .status-bar {
     position: fixed;
-    top: 155px;
+    bottom: 10px;
     right: 20px; /* Neo cố định ở lề phải */
     width: calc(100% - 40px);
     max-width: 420px;
