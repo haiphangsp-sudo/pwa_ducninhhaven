@@ -268,7 +268,6 @@ input[type="checkbox"]:checked::before {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%; /* Đảm bảo chiếm hết chiều ngang */
 }
 
 /* Ép các ô checkbox/nút gạt về sát lề phải */
