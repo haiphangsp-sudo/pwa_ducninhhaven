@@ -184,8 +184,9 @@ body {
     align-items: center;
     padding: 12px 16px;
     border-bottom: 1px solid #f0f0f0;
-    background: #2f5d46; /* Xanh đậm Haven */
     color: #ffffff;
+    background: cadetblue;
+
 }
 
 .cat-title {
@@ -282,17 +283,10 @@ input[type="checkbox"]:checked::before {
     padding-right: 15px;
     flex-grow: 1; /* Để nhãn chiếm phần không gian còn lại */
 }
-/* Hiệu ứng làm mờ khi Vị trí bị tắt */
-.item:has(input[type="checkbox"]:not(:checked)) {
-    background: #f9f9f9;
-}
 
-.item:has(input[type="checkbox"]:not(:checked)) label {
-    color: #bbb;
-}
 /* --- PHẦN SẢN PHẨM CHÍNH (.item-header) --- */
 .item-header {
-    background-color: #f8faf9; /* Màu nền xanh cực nhạt để tách biệt */
+    background-color: burlywood;
     padding: 12px 16px;
     border-bottom: 1px solid #edf2f0;
 }
