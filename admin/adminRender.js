@@ -36,7 +36,7 @@ function renderNode(node) {
   if (node.variant === "item-with-children") {
     return `
       <div class="item">
-        <div class="item-header flex between">
+        <div class="item item-header flex between">
           <label>${node.label}</label>
           <input type="checkbox"
             data-kind="${node.kind}"
@@ -49,7 +49,7 @@ function renderNode(node) {
   }
 
   return `
-    <div class="item-headr flex between">
+    <div class="item item-headr flex between">
       <label>
         ${node.label}
         ${node.meta || ""}
