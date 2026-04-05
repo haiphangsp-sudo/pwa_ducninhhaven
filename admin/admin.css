@@ -280,6 +280,10 @@ input[type="checkbox"]:checked::before {
 /* --- PHẦN SẢN PHẨM CHÍNH (.item-header) --- */
 .item-product {
  width: 30%;
+ display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .item-header label {
