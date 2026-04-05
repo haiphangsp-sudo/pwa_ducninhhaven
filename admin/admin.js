@@ -7,7 +7,8 @@ import { ADMIN_SECTIONS } from "./adminSections.js";
 import { renderSection } from "./adminRender.js";
 import {
   buildPatchFromPath,
-  resetAdminState
+  resetMenuState,
+  resetPlacesState
 } from "./adminActions.js";
 
 /* =======================================================
@@ -35,15 +36,32 @@ function clearSession() {
 ======================================================= */
 
 function showApp() {
-  document.getElementById("adminApp").style.display = "block";
-  document.getElementById("adminLock").style.display = "none";
-  document.getElementById("adminBtn").style.display = "block";
+  const app = document.getElementById("adminApp");
+  const lock = document.getElementById("adminLock");
+  const btn = document.getElementById("adminBtn");
+
+  if (app) app.style.display = "block";
+  if (lock) lock.style.display = "none";
+  if (btn) btn.style.display = "block";
 }
 
 function hideApp() {
-  document.getElementById("adminApp").style.display = "none";
-  document.getElementById("adminLock").style.display = "block";
-  document.getElementById("adminBtn").style.display = "none";
+  const app = document.getElementById("adminApp");
+  const lock = document.getElementById("adminLock");
+  const btn = document.getElementById("adminBtn");
+
+  if (app) app.style.display = "none";
+  if (lock) lock.style.display = "block";
+  if (btn) btn.style.display = "none";
+}
+
+function activateTab(tabName) {
+  document.querySelectorAll("[data-tab]").forEach(btn => {
+    btn.classList.toggle("is-active", btn.dataset.tab === tabName);
+  });
+
+  document.getElementById("tab-menu")?.classList.toggle("hidden", tabName !== "menu");
+  document.getElementById("tab-place")?.classList.toggle("hidden", tabName !== "place");
 }
 
 /* =======================================================
@@ -57,7 +75,9 @@ async function doLogin() {
   try {
     const res = await fetch("/api/admin/login", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json"
+      },
       body: JSON.stringify({ pin })
     });
 
@@ -69,7 +89,6 @@ async function doLogin() {
     setSession(pin);
     showApp();
     await boot();
-
   } catch (err) {
     console.error("[Admin] Login error:", err);
     alert("Không thể đăng nhập");
@@ -82,7 +101,7 @@ function logout() {
 }
 
 /* =======================================================
-   CORE
+   BOOT / RENDER
 ======================================================= */
 
 async function boot() {
@@ -93,7 +112,6 @@ async function boot() {
     ]);
 
     renderAll();
-
   } catch (err) {
     console.error("[Admin] Boot error:", err);
     alert("Không thể tải dữ liệu admin");
@@ -101,14 +119,16 @@ async function boot() {
 }
 
 function renderAll() {
-  Object.values(ADMIN_SECTIONS).forEach(renderSection);
+  renderSection(ADMIN_SECTIONS.menu);
+  renderSection(ADMIN_SECTIONS.place);
 
   bindToggleEvents();
   bindStaticButtons();
+  bindTabs();
 }
 
 /* =======================================================
-   EVENTS - TOGGLE
+   TOGGLE EVENTS
 ======================================================= */
 
 function bindToggleEvents() {
@@ -126,7 +146,6 @@ function bindToggleEvents() {
 
         renderSection(section);
         bindToggleEvents();
-
       } catch (err) {
         console.error("[Admin] Save error:", err);
 
@@ -142,53 +161,88 @@ function bindToggleEvents() {
 }
 
 /* =======================================================
-   EVENTS - STATIC
+   STATIC BUTTONS
 ======================================================= */
 
 function bindStaticButtons() {
+  const logoutBtn = document.getElementById("logoutBtn");
+  if (logoutBtn) {
+    logoutBtn.onclick = logout;
+  }
 
-  // RESET
-  const resetBtn = document.getElementById("resetBtn");
-  if (resetBtn) {
-    resetBtn.onclick = async () => {
-      const ok = confirm("Khôi phục toàn bộ Menu và Places về mặc định?");
+  const resetMenuBtn = document.getElementById("resetMenuBtn");
+  if (resetMenuBtn) {
+    resetMenuBtn.onclick = async () => {
+      const ok = confirm("Khôi phục toàn bộ Menu về mặc định?");
       if (!ok) return;
 
-      resetBtn.disabled = true;
+      resetMenuBtn.disabled = true;
 
       try {
-        await resetAdminState();
+        await resetMenuState();
+        await loadMenu();
 
-        await Promise.all([
-          loadMenu(),
-          loadPlaces()
-        ]);
+        renderSection(ADMIN_SECTIONS.menu);
+        bindToggleEvents();
 
-        renderAll();
-
-        alert("Đã khôi phục mặc định");
-
+        alert("Đã khôi phục Menu");
       } catch (err) {
-        console.error("[Admin] Reset error:", err);
+        console.error("[Admin] Reset menu error:", err);
 
         if (err.message === "unauthorized") {
           logout();
           return;
         }
 
-        alert("Không thể khôi phục mặc định");
-
+        alert("Không thể khôi phục Menu");
       } finally {
-        resetBtn.disabled = false;
+        resetMenuBtn.disabled = false;
       }
     };
   }
 
-  // LOGOUT
-  const logoutBtn = document.getElementById("logoutBtn");
-  if (logoutBtn) {
-    logoutBtn.onclick = logout;
+  const resetPlacesBtn = document.getElementById("resetPlacesBtn");
+  if (resetPlacesBtn) {
+    resetPlacesBtn.onclick = async () => {
+      const ok = confirm("Khôi phục toàn bộ Places về mặc định?");
+      if (!ok) return;
+
+      resetPlacesBtn.disabled = true;
+
+      try {
+        await resetPlacesState();
+        await loadPlaces();
+
+        renderSection(ADMIN_SECTIONS.place);
+        bindToggleEvents();
+
+        alert("Đã khôi phục Places");
+      } catch (err) {
+        console.error("[Admin] Reset places error:", err);
+
+        if (err.message === "unauthorized") {
+          logout();
+          return;
+        }
+
+        alert("Không thể khôi phục Places");
+      } finally {
+        resetPlacesBtn.disabled = false;
+      }
+    };
   }
+}
+
+/* =======================================================
+   TABS
+======================================================= */
+
+function bindTabs() {
+  document.querySelectorAll("[data-tab]").forEach(btn => {
+    btn.onclick = () => {
+      activateTab(btn.dataset.tab);
+    };
+  });
 }
 
 /* =======================================================
@@ -206,6 +260,8 @@ async function initAdmin() {
   } else {
     hideApp();
   }
+
+  activateTab("menu");
 }
 
 initAdmin();

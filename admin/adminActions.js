@@ -5,13 +5,14 @@ function getPin() {
 }
 
 export function buildPatchFromPath(pathStr, value) {
-  const path = pathStr.split(".");
+  const path = String(pathStr || "").split(".").filter(Boolean);
   const out = {};
 
   let ref = out;
   for (let i = 0; i < path.length - 1; i++) {
-    ref[path[i]] = {};
-    ref = ref[path[i]];
+    const key = path[i];
+    ref[key] = {};
+    ref = ref[key];
   }
 
   ref[path[path.length - 1]] = value;
@@ -28,7 +29,10 @@ export async function saveMenuState(patch) {
     body: JSON.stringify(patch)
   });
 
-  if (!r.ok) throw new Error("menu_save_failed");
+  if (r.status === 401) throw new Error("unauthorized");
+  if (!r.ok) throw new Error(await safeReadText(r) || "menu_save_failed");
+
+  return r.json().catch(() => ({ ok: true }));
 }
 
 export async function savePlacesState(patch) {
@@ -41,5 +45,44 @@ export async function savePlacesState(patch) {
     body: JSON.stringify(patch)
   });
 
-  if (!r.ok) throw new Error("places_save_failed");
+  if (r.status === 401) throw new Error("unauthorized");
+  if (!r.ok) throw new Error(await safeReadText(r) || "places_save_failed");
+
+  return r.json().catch(() => ({ ok: true }));
+}
+
+export async function resetMenuState() {
+  const r = await fetch("/api/admin/menu", {
+    method: "DELETE",
+    headers: {
+      "x-admin-pin": getPin()
+    }
+  });
+
+  if (r.status === 401) throw new Error("unauthorized");
+  if (!r.ok) throw new Error(await safeReadText(r) || "reset_menu_failed");
+
+  return true;
+}
+
+export async function resetPlacesState() {
+  const r = await fetch("/api/admin/places", {
+    method: "DELETE",
+    headers: {
+      "x-admin-pin": getPin()
+    }
+  });
+
+  if (r.status === 401) throw new Error("unauthorized");
+  if (!r.ok) throw new Error(await safeReadText(r) || "reset_places_failed");
+
+  return true;
+}
+
+async function safeReadText(res) {
+  try {
+    return await res.text();
+  } catch {
+    return "";
+  }
 }
