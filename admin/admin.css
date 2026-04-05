@@ -285,7 +285,7 @@ input[type="checkbox"]:checked::before {
 }
 
 /* --- PHẦN SẢN PHẨM CHÍNH (.item-header) --- */
-.item-header {
+.item-product {
     background-color: burlywood;
     padding: 12px 16px;
     border-bottom: 1px solid #edf2f0;
