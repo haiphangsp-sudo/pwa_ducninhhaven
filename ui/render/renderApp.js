@@ -1,11 +1,10 @@
 // ui/renderApp.js
 
 import { getState } from "../../core/state.js";
-import { renderHub } from "../../ui/render/renderHub.js";
-import { renderNavBar } from "../../ui/render/renderNavBar.js";
+import { renderHub } from "./renderHub.js";
+import { renderNavBar } from "./renderNavBar.js";
 import { attachRuntimeRefresh } from "../../core/runtimeRefresh.js";
-import { applyScrollUI } from "../../ui/events/scrollBehavior.js";
-
+import { applyScrollUI } from "../events/scrollBehavior.js";
 
 
 export function renderApp() {

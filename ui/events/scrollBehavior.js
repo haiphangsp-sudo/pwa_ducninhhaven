@@ -1,6 +1,6 @@
 let lastY = window.scrollY;
 
-function applyScrollUI() {
+export function applyScrollUI() {
   const y = window.scrollY;
   const delta = y - lastY;
 
