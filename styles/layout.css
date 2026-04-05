@@ -5,6 +5,7 @@ html, body {
   min-height: 100%; /* Cho phép body kéo dài tự nhiên */
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch; /* Giúp cuộn mượt trên iOS */
+  font-family: "Inter", sans-serif;
 }
 
 body.app{
@@ -15,13 +16,13 @@ body.app{
 
 }
 
-body.vi {
-  font-family: 'Inter', sans-serif;
-}
-body.en {
-  font-family: 'Playfair Display', serif;
+body.vi #contextBar {
+  font-family: "Be Vietnam Pro", sans-serif;
 }
 
+body.en #contextBar {
+  font-family: "Playfair Display", serif;
+}
 #app {
   height: 100%;
   display: flex;
