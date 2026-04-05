@@ -378,8 +378,17 @@
   box-shadow:var(--shadow-floating);
 
   transition:transform .3s ease, opacity .3s ease;
+
+    position: sticky;
+    top: 0;
+    transition: transform 0.3s ease-in-out; /* Hiệu ứng trượt mượt mà */
+    z-index: 1000;
 }
 
+/* Class này sẽ được JS thêm vào khi cuộn xuống */
+.cart-bar--hidden {
+    transform: translateY(-100%); /* Đẩy thanh bar lên khỏi màn hình */
+}
 .cart-bar.hidden{
   transform:translateY(100%);
   opacity:0;
