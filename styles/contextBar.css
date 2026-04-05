@@ -23,6 +23,8 @@
     left: 0;
     right: 0;
     background-color:#ffffff;
+    transition: transform .3s ease, opacity .3s ease;
+    transform: translateY(0);
 }
 
 /* =========================================================
