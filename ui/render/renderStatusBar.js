@@ -28,6 +28,7 @@ export function renderStatusBar(state) {
     } else {
         bar.classList.remove("is-collapsed");
     }
+    
     btnToggle.dataset.value = isBarExpanded;
 
     // 2. CHỐT CHẶN HIỂN THỊ (Ẩn toàn bộ nếu không có gì)
@@ -43,7 +44,7 @@ export function renderStatusBar(state) {
         const latestOrder = active[active.length - 1]; // Lấy đơn mới nhất
         countEl.textContent = active.length; // Số lượng đơn đang chạy
         textEl.innerHTML = renderStepper(latestOrder.status);
-        bar.className = `status-bar is-${latestOrder.status} ${!isBarExpanded ? 'is-collapsed' : ''}`;
+        bar.className = `order-status-bar is-${latestOrder.status} ${!isBarExpanded ? 'is-collapsed' : ''}`;
     }
     else {
         // TRƯỜNG HỢP: Chỉ có giỏ hàng
@@ -52,6 +53,6 @@ export function renderStatusBar(state) {
         textEl.textContent = locationName
             ? `${locationName} • ${totalCartQty} món`
             : `🛒 Giỏ hàng có ${totalCartQty} món`;
-        bar.className = `status-bar is-idle ${!isBarExpanded ? 'is-collapsed' : ''}`;
+        bar.className = `order-status-bar is-idle ${!isBarExpanded ? 'is-collapsed' : ''}`;
     }
 }
