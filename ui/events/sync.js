@@ -11,8 +11,9 @@ import { renderCartBar } from "../render/renderCartBar.js";
 import { renderStatusBar } from "../render/renderStatusBar.js";
 import { renderHub, eventHub } from "../render/renderHub.js";
 import { renderPanel } from "../render/renderPanel.js";
-import { updateStepperUI } from "../render/renderStepper.js";
+import { syncStepperStates } from "../render/renderStepper.js";
 import { renderAck } from "../render/renderAck.js";
+import { openOrderTracker } from "../components/orderTracker.js";
 
 let lastState = null; 
 let isProcessingOrder = false;
@@ -54,7 +55,10 @@ async function syncUI(state) {
       case "placePicker":
         renderPlacePicker(state);
         break;
-
+      case "orderTrackerPage":
+        openOrderTracker();
+        break;
+      
       default:
         break;
     }
@@ -100,6 +104,10 @@ async function syncUI(state) {
   if (state.orders.isBarExpanded !== prevState.order?.isBarExpanded) {
     renderStatusBar(state);
   }
+
+  if (state.ordes.active !== prevState.orders?.active) {
+    renderStatusBar();
+  }
   handleOrderLogic(state, prevState);
   syncStepperStates(state, prevState);
 
@@ -143,24 +151,4 @@ async function handleOrderLogic(state, prevState) {
   } finally {
     isProcessingOrder = false;
   }
-}
-
-/* --- 2. Xử lý đồng bộ nút Stepper (Cộng/Trừ) --- */
-function syncStepperStates(state, prevState) {
-  const currentItems = state.cart?.items || [];
-  const prevItems = prevState.cart?.items || [];
-
-  // Cập nhật các món mới hoặc thay đổi số lượng
-  currentItems.forEach(item => {
-    const prev = prevItems.find(i => i.id === item.id);
-    if (!prev || prev.qty !== item.qty) {
-      updateStepperUI(item.id, item.qty);
-    }
-  });
-
-  // Reset các món vừa bị xóa khỏi giỏ
-  prevItems.forEach(prevItem => {
-    const stillInCart = currentItems.find(i => i.id === prevItem.id);
-    if (!stillInCart) updateStepperUI(prevItem.id, 0);
-  });
 }

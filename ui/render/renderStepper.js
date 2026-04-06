@@ -42,7 +42,7 @@ export function renderStepper(currentStatus) {
 }
 
 
-export function updateStepperUI(itemId, qty) {
+function updateStepperUI(itemId, qty) {
   // 1. Tìm tất cả các chỗ hiển thị số lượng của món này (trong Menu và trong Drawer)
   const qtyDisplays = document.querySelectorAll(`[data-qty-id="${itemId}"]`);
   
@@ -62,4 +62,25 @@ export function updateStepperUI(itemId, qty) {
     const itemRow = document.querySelector(`.drawer-item[data-id="${itemId}"]`);
     if (itemRow) itemRow.remove();
   }
+}
+
+
+/* --- 2. Xử lý đồng bộ nút Stepper (Cộng/Trừ) --- */
+function syncStepperStates(state, prevState) {
+  const currentItems = state.cart?.items || [];
+  const prevItems = prevState.cart?.items || [];
+
+  // Cập nhật các món mới hoặc thay đổi số lượng
+  currentItems.forEach(item => {
+    const prev = prevItems.find(i => i.id === item.id);
+    if (!prev || prev.qty !== item.qty) {
+      updateStepperUI(item.id, item.qty);
+    }
+  });
+
+  // Reset các món vừa bị xóa khỏi giỏ
+  prevItems.forEach(prevItem => {
+    const stillInCart = currentItems.find(i => i.id === prevItem.id);
+    if (!stillInCart) updateStepperUI(prevItem.id, 0);
+  });
 }

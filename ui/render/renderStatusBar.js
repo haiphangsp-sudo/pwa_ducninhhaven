@@ -14,7 +14,8 @@ export function renderStatusBar(state) {
 
     btnToggle.dataset.action = "toggle_status";
     
-    btnCheck.dataset.action = "check_orders";
+    btnCheck.dataset.action = "open-overlay";
+    btnCheck.dataset.value = "orderTrackerPage";
 
     if (!bar || !textEl || !countEl) return;
 
