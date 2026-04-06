@@ -11,87 +11,103 @@ const VALID_PLACES = [
   "pergola","t1","t2","t3","t4","garden"
 ];
 
-/* ================= ENTRY ================= */
-
+/* ================= ENTRY: ĐẶT MÓN (POST) ================= */
 function doPost(e) {
-  
   try {
-    if (!e || !e.postData || !e.postData.contents ) {
-      logSecurity("Debug Raw", {contents:e.postData? e.postData.contents:"null"});
+    if (!e || !e.postData || !e.postData.contents) {
       return json({ status: "error", message: "no_body" });
     }
-    const payload = JSON.parse(e.postData.contents);
-    const data = parseData(payload);
+    const data = JSON.parse(e.postData.contents);
     
-    if (data.secret !== API_SECRET) {
-      logSecurity("Unauthorized", data);
-      return json({ status: "unauthorized" });
-    }
-    
-    if (!validate(data)) {
-      logSecurity("Invalid", data);
-      return json({ status: "invalid" });
-    }
+    // Kiểm tra bảo mật
+    if (data.secret !== API_SECRET) return json({ status: "unauthorized" });
 
     const sheet = getSheet(SHEET_LIVE);
+    
+    // Ghi dòng mới (Giả sử cột A là ID, cột J là Trạng thái mặc định NEW)
+    // Cấu trúc appendRow phụ thuộc vào bảng của bạn, đây là ví dụ:
+    sheet.appendRow([
+      data.id,           // A: ID đơn hàng
+      new Date(),        // B: Thời gian
+      data.placeLabel,   // C: Vị trí
+      JSON.stringify(data.items), // D: Chi tiết món
+      "", "", "", "", "", // E, F, G, H, I: Để trống hoặc info khác
+      "NEW"              // J: Trạng thái mặc định
+    ]);
 
-    if (isDuplicate(sheet, data.id)) {
-      logSecurity("Duplicate",data);
-      return json({ status: "duplicate" });
-    }
-
-    if (isRateLimited(data.place)) {
-      logSecurity("RateLimited",data)
-      return json({ status: "rate_limited" });
-    }
-      saveCart(data);
-
-    return json({ status: "ok" });
-
+    return json({ success: true, id: data.id });
   } catch (err) {
-
-    logSecurity("System Error", { error: String(err) });
-    return json({ status: "error", message: String(err) });
+    return json({ status: "error", message: err.message });
   }
 }
+
+/* ================= ENTRY: THEO DÕI (GET) ================= */
 function doGet(e) {
   const action = e.parameter.action;
-  
+
+  // 1. Lấy trạng thái cho khách (syncOrdersWithServer)
   if (action === "getStatuses") {
-    const ids = e.parameter.ids.split(",");
-    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_LIVE);
-    const data = sheet.getDataRange().getValues(); // Lấy toàn bộ data
+    const idsParam = e.parameter.ids;
+    if (!idsParam) return json({});
     
+    const ids = idsParam.split(",");
+    const sheet = getSheet(SHEET_LIVE);
+    const data = sheet.getDataRange().getValues();
     const results = {};
-    
-    // Duyệt qua danh sách ID khách gửi lên
+
     ids.forEach(id => {
-      // Tìm dòng có ID tương ứng (ID ở cột A, Trạng thái ở cột J)
-      const row = data.find(r => r[0] == id);
-      if (row) {
-        results[id] = row[9]; // Trả về trạng thái hiện tại trong Sheets
-      }
+      // Tìm ID ở cột A (index 0), lấy status ở cột J (index 9)
+      const row = data.find(r => r[0].toString() === id.toString());
+      if (row) results[id] = row[9] || "NEW";
     });
-    if (action === "update") {
-    const id = e.parameter.id;
-    const status = e.parameter.status;
-    const success = updateOrderStatus(id, status);
-    return ContentService.createTextOutput(JSON.stringify({success: success}))
-           .setMimeType(ContentService.MimeType.JSON);
+
+    return json(results);
   }
-    
-    return ContentService.createTextOutput(JSON.stringify(results))
-      .setMimeType(ContentService.MimeType.JSON);
-  }
+
+  // 2. Cập nhật trạng thái (Dùng cho Admin nếu cần)
   if (action === "update") {
     const id = e.parameter.id;
     const status = e.parameter.status;
-    const success = updateOrderStatus(id, status);
-    return ContentService.createTextOutput(JSON.stringify({success: success}))
-           .setMimeType(ContentService.MimeType.JSON);
+    const sheet = getSheet(SHEET_LIVE);
+    const data = sheet.getDataRange().getValues();
+    
+    for (let i = 1; i < data.length; i++) {
+      if (data[i][0].toString() === id.toString()) {
+        sheet.getRange(i + 1, 10).setValue(status); // Cột 10 là J
+        return json({ success: true });
+      }
+    }
+    return json({ success: false });
   }
 }
 
+/* ================= HELPERS ================= */
+function getSheet(name) {
+  return SpreadsheetApp.getActiveSpreadsheet().getSheetByName(name);
+}
+
+function json(obj) {
+  return ContentService.createTextOutput(JSON.stringify(obj))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+// Hàm hỗ trợ cập nhật trạng thái vào Google Sheets
+function updateOrderStatus(orderId, newStatus) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName(SHEET_LIVE);
+  if (!sheet) return false;
+
+  const data = sheet.getDataRange().getValues();
+  
+  for (let i = 1; i < data.length; i++) {
+    if (data[i][0].toString() === orderId.toString()) { 
+      // Cập nhật tại cột J (cột thứ 10)
+      sheet.getRange(i + 1, 10).setValue(newStatus); 
+      return true;
+    }
+  }
+  return false;
+}
 
 /* ================= DATA PARSER ================= */
 
@@ -197,13 +213,6 @@ function getPriority(category) {
   return "ASK";
 }
 
-/* ================= HELPERS ================= */
-
-function getSheet(name) {
-  return SpreadsheetApp
-    .openById(SPREADSHEET_ID)
-    .getSheetByName(name);
-}
 
 /* ================= SECURITY ================= */
 
@@ -217,30 +226,6 @@ function logSecurity(type, data) {
   ]);
 }
 
-/* ================= RESPONSE ================= */
-
-function json(obj) {
-  return ContentService
-    .createTextOutput(JSON.stringify(obj))
-    .setMimeType(ContentService.MimeType.JSON);
-}
-
-
-// xử lý việc cập nhật trạng thái từ PWA
-function updateOrderStatus(orderId, newStatus) {
-  const sheet = getSheet(SHEET_LIVE);
-  const data = sheet.getDataRange().getValues();
-  
-  // Tìm dòng có ID tương ứng
-  for (let i = 1; i < data.length; i++) {
-    if (data[i][0] == orderId) { // Cột A là ID
-      // Cập nhật giá trị tại cột J (index 9)
-      sheet.getRange(i + 1, 10).setValue(newStatus); 
-      return true;
-    }
-  }
-  return false;
-}
 /**
  * Tự động chuyển các đơn hàng đã hoàn tất sang kho lưu trữ (ARCHIVE)
  * Giúp sheet LIVE luôn nhẹ và mượt.

@@ -101,7 +101,7 @@ async function syncUI(state) {
   if (state.ack.visible !== prevState.ack?.visible) {
     renderAck(state);
   }
-  if (state.orders.isBarExpanded !== prevState.order?.isBarExpanded || state.orders.active !== prevState.orders?.active) {
+  if (state.orders.isBarExpanded !== prevState.orders?.isBarExpanded || state.orders.active !== prevState.orders?.active) {
     renderStatusBar(state);
   }
 
