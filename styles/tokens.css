@@ -14,9 +14,10 @@
    BACKGROUND
 ===================== */
 
---bg-main: #f4f1ea;
---bg-soft: #ffffff;
 --bg-muted: #f7f6f2;
+--bg-main: #f6f4ef;     /* nền chính, hơi ngà */
+--bg-soft: #fbfaf7;     /* nền phụ */
+--bg-card: #ffffff;     /* card */
 
 /* =====================
    TEXT
