@@ -168,6 +168,9 @@
     opacity: 0;
     pointer-events: none;
 }
+.status-bar.is-collapsed .bar-content {
+    display:none;
+}
 
 /* Đổi chiều mũi tên khi thu nhỏ */
 .status-bar.is-collapsed #btnToggleBar {
