@@ -51,7 +51,7 @@ export const STRINGS = {
     current_status: { vi: "Tiến độ dịch vụ", en: "Service Progress" },
     success_title: { vi: "Đặt đơn thành công", en: "Order Placed" },
     success_msg: { vi: "Yêu cầu của bạn đã được chuyển tới bộ phận liên quan.", en: "Your request has been sent to the relevant department." },
-    check_detail: { vi: "Kiểm tra ❯", en: "Check ❯" },
+    check_detail: { vi: "Kiểm tra", en: "Check" },
     no_active_order: { vi: "Bạn không có đơn hàng nào đang xử lý.", en: "No active orders at the moment." }
   },
   status: {

@@ -1,5 +1,8 @@
 import { renderStepper } from './renderStepper.js';
 import { getLocationInfo } from '../../core/placesQuery.js';
+import { getDrawerExtended } from '../../core/menuQuery.js';
+import { translate } from '../utils/translate.js';
+
 
 const TERMINAL_STATUSES = ['DONE', 'RECOVERING', 'CANCELED'];
 
@@ -31,8 +34,8 @@ export function renderStatusBar(state) {
   const activeOrders = state.orders?.active || [];
   const isBarExpanded = !!state.orders?.isBarExpanded;
 
-  const cartItems = state.cart?.items || [];
-  const totalCartQty = cartItems.reduce((s, i) => s + (Number(i.qty) || 0), 0);
+  const totalCartQty = getDrawerExtended().totalQtyFormat;
+
 
   const actionableOrders = activeOrders.filter(
     o => !TERMINAL_STATUSES.includes(o.status)
@@ -42,7 +45,8 @@ export function renderStatusBar(state) {
   btnToggle.dataset.value = String(isBarExpanded);
 
   btnCheck.dataset.action = "open-overlay";
-  btnCheck.dataset.value = "orderTrackerPage";
+    btnCheck.dataset.value = "orderTrackerPage";
+    btnCheck.textContent=translate("order.check_detail")
 
   // Không có gì → ẩn
   if (actionableOrders.length === 0 && totalCartQty === 0) {
@@ -77,12 +81,13 @@ export function renderStatusBar(state) {
   /* =========================
      FALLBACK: CART
   ========================= */
-  const locationName = getLocationInfo()?.placeName;
+    const locationName = getLocationInfo()?.placeName;
+    getDrawerExtended();
 
   countEl.textContent = String(totalCartQty);
   textEl.textContent = locationName
-    ? `${locationName} • ${totalCartQty} món`
-    : `Giỏ hàng • ${totalCartQty} món`;
+    ? `${locationName} • ${totalCartQty}`
+    : `Giỏ hàng • ${totalCartQty}`;
 
   bar.classList.add("is-idle");
 }
