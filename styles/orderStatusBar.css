@@ -79,7 +79,7 @@
 .step-label {
     font-size: 10px;
     margin-top: 8px;
-    color: #999;
+    color: #2f5d46; 
 }
 
 .step-line {
@@ -92,10 +92,6 @@
     z-index: 1;
 }
 
-/* Trạng thái Hoàn thành */
-.step.is-complete .step-dot { background: #2f5d46; color: white; }
-.step.is-complete .step-line { background: #2f5d46; }
-.step.is-complete .step-label { color: #2f5d46; }
 
 /* Trạng thái Đang thực hiện */
 .step.is-active .step-dot { 
