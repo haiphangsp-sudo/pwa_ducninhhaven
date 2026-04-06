@@ -44,34 +44,48 @@ export async function syncOrdersWithServer() {
     if (savedIds.length === 0) return;
 
     try {
-        // Gọi GAS lấy trạng thái mới nhất
         const response = await fetch(`${SCRIPT_URL}?action=getStatuses&ids=${savedIds.join(",")}`);
         if (!response.ok) throw new Error("Network response was not ok");
-        
-        const updates = await response.json(); 
-        // updates format: { "ORD001": "COOKING", "ORD002": "DONE" }
-        console.log("[Haven Sync] Dữ liệu từ Server:", updates);
-        const { active } = getState().orders;
-        let hasChanges = false;
 
-        const updatedOrders = active.map(order => {
-            const newStatus = updates[order.id];
-            if (newStatus && order.status !== newStatus) {
-                hasChanges = true;
-                return { ...order, status: newStatus };
-            }
-            return order;
+        const updates = await response.json();
+        console.log("[Haven Sync] Dữ liệu từ Server:", updates);
+
+        const { active = [] } = getState().orders || {};
+
+        // index nhanh theo id từ state hiện tại
+        const activeMap = new Map(active.map(order => [order.id, order]));
+
+        // dựng lại danh sách theo savedIds, không phụ thuộc active đang có hay không
+        const rebuiltOrders = savedIds.map(id => {
+            const existing = activeMap.get(id);
+
+            return {
+                id,
+                status: updates[id] || existing?.status || "SYNCING",
+                items: existing?.items || [],
+                time: existing?.time || ""
+            };
         });
 
-        if (hasChanges) {
-            setState({ orders: { active: updatedOrders } });
-        }
+        // bỏ các terminal state khỏi storage nếu muốn giữ sạch
+        const terminalStates = ['DONE', 'RECOVERING', 'CANCELED'];
+        const stillActive = rebuiltOrders.filter(order => !terminalStates.includes(order.status));
+
+        setState({
+            orders: {
+                active: stillActive
+            }
+        });
+
+        localStorage.setItem(
+            STORAGE_KEY,
+            JSON.stringify(stillActive.map(order => order.id))
+        );
 
     } catch (error) {
         console.error("Haven Service Error [Sync]:", error);
     }
 }
-
 /**
  * Dọn dẹp các đơn hàng đã hoàn tất (DONE) khỏi danh sách theo dõi
  */
