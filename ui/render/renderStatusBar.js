@@ -41,7 +41,7 @@ export function renderStatusBar(state) {
     const actionableOrders = active.filter(o => o.status !== 'DONE' && o.status !== 'RECOVERING' && o.status !== 'CANCELED');
     const displayCount = actionableOrders.length;
     countEl.textContent = displayCount;
-    
+
     if (active.length > 0) {
         // Tìm đơn hàng có trạng thái cao nhất (tiến gần tới lúc ăn nhất)
         const priorityOrder = active.reduce((prev, current) => {
@@ -51,7 +51,7 @@ export function renderStatusBar(state) {
         textEl.innerHTML = renderStepper(priorityOrder.status); // Hiển thị stepper của đơn tiến xa nhất
 
         bar.className = 'status-bar';
-        bar.classList.add(`is-${latestOrder.status}`);
+        bar.classList.add(`is-${priorityOrder.status}`);
         
         // Xử lý Expand/Collapse
         if (isBarExpanded) {
