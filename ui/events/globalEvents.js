@@ -35,11 +35,19 @@ export function attachAppEvents() {
   });
 
   // CHỈ CHẠY 1 LẦN
-  if (!orderPollingStarted) {
-    orderPollingStarted = true;
+  fastSyncTimer = setInterval(() => {
+      const { active } = getState().orders || {};
 
-    syncOrdersWithServer();
+      const hasSyncing = active?.some(o => o.status === "SYNCING");
 
+      if (hasSyncing) {
+        syncOrdersWithServer();
+      } else {
+        clearInterval(fastSyncTimer);
+      }
+    }, 5000);
+
+    // 3. POLLING CHẬM (45s)
     setInterval(() => {
       const { active } = getState().orders || {};
 
@@ -51,12 +59,12 @@ export function attachAppEvents() {
         syncOrdersWithServer();
       }
     }, 45000);
-  }
+  
 
-  attachRuntimeRefresh({
-    intervalMs: 60000,
-    enableInterval: true
-  });
+    attachRuntimeRefresh({
+      intervalMs: 60000,
+      enableInterval: true
+    });
 }
 
 /* =========================

@@ -221,13 +221,6 @@
 
 }
 
-.status-text {
-    font-size: 14px;
-    color: #444;
-    font-weight: 500;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
 /* Trạng thái Nhắc nhở (ví dụ: chưa chọn phòng) */
 .status-bar.is-warning {
     background-color: #fff9eb; /* Vàng kem rất nhẹ */
