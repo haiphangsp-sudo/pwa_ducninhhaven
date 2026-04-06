@@ -66,7 +66,7 @@ function updateStepperUI(itemId, qty) {
 
 
 /* --- 2. Xử lý đồng bộ nút Stepper (Cộng/Trừ) --- */
-function syncStepperStates(state, prevState) {
+export function syncStepperStates(state, prevState) {
   const currentItems = state.cart?.items || [];
   const prevItems = prevState.cart?.items || [];
 
