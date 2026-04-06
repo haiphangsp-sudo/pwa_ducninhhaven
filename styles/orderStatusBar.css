@@ -270,6 +270,7 @@
 /* Trạng thái Đã hoàn thành - Dùng màu Brand (Xanh Haven) */
 .step.is-complete .step-dot {
     background: var(--brand);
+    color: #ffffff;
 }
 
 /* Trạng thái Đang xử lý - Dùng màu Accent (Vàng đồng) */
