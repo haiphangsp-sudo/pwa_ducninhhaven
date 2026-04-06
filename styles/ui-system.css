@@ -1,144 +1,109 @@
-/* ================================
-   HAVEN UI SYSTEM
-================================ */
+/* styles/ui-system.css */
 
-
-.card{
-  background:var(--bg-soft);
-  border:1px solid var(--border-soft);
-  border-radius:var(--radius-l);
-  box-shadow:var(--shadow-soft);
-  padding:var(--space-3);
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-l);
+  box-shadow: var(--shadow-soft);
+  padding: var(--space-3);
 }
-/* card header */
 
-.menu-card__title{
+.card-desc {
+  font-size: var(--font-s);
+  color: var(--text-soft);
+  line-height: var(--line-height-base);
+  margin: 6px 0 0;
+}
+
+.menu-card__title {
   font-size: 22px;
   font-weight: 600;
   display: flex;
   align-items: center;
   gap: 12px;
-  letter-spacing: .02em;
-  color: var(--brand);
+  letter-spacing: .01em;
+  color: var(--text-main);
 }
 
-/* card description */
+/* Buttons */
 
-.card-desc{
-  font-size: var(--font-s);
-  color:#666;
-  line-height:1.45;
-  margin: 6px 0;
-}
-
-/* ---------- Buttons ---------- */
-
-.btn{
-  border:none;
+.btn {
+  border: none;
   border-radius: var(--radius-m);
-  padding:10px 16px;
-  font-weight:600;
-  cursor:pointer;
-  transition:.15s ease;
+  padding: 10px 16px;
+  font-weight: 600;
+  transition: background .18s ease, color .18s ease, transform .12s ease, opacity .18s ease;
 }
 
-/* primary */
-
-.btn-primary{
-  background: var(--brand);
-  color: var(--text-invert);
-}
-.btn-primary:hover{
-  background:var(--brand-hover);
-}
-.btn-primary:active, 
-.btn:active{
-  transform:scale(.96);
+.btn:active {
+  transform: scale(.97);
 }
 
-/* secondary */
-
-.btn-secondary{
-  background:#f3f2ef;
-  color:#333;
+.btn-primary {
+  background: var(--button-primary-bg);
+  color: var(--button-primary-text);
+  box-shadow: var(--shadow-card);
 }
 
-/* ghost */
-
-.btn-ghost{
-  background:transparent;
+.btn-primary:hover {
+  background: var(--button-primary-hover);
 }
 
+.btn-secondary {
+  background: var(--button-secondary-bg);
+  color: var(--button-secondary-text);
+  border: 1px solid var(--button-secondary-border);
+}
 
-/* ---------- Price ---------- */
+.btn-ghost {
+  background: transparent;
+  color: var(--text-main);
+}
 
-.price{
+/* Price */
+
+.price {
   font-size: var(--font-m);
-  font-weight:600;
-  color:#2f4f3e;
+  font-weight: 600;
+  color: var(--brand);
   white-space: nowrap;
 }
 
-/* ---------- Icon container ---------- */
+/* Icon container */
 
-.icon{
-  width:28px;
-  height:28px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  border-radius:8px;
+.icon {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
 }
 
-/* ---------- Grid ---------- */
+/* Grid / Stack */
 
-.grid{
-  display:grid;
-  gap:18px;
+.grid {
+  display: grid;
+  gap: 18px;
 }
 
-.grid-2{
-  grid-template-columns:1fr 1fr;
+.grid-2 {
+  grid-template-columns: 1fr 1fr;
 }
 
-.grid-3{
-  grid-template-columns:1fr 1fr 1fr;
+.grid-3 {
+  grid-template-columns: 1fr 1fr 1fr;
 }
 
-/* ---------- Stack layout ---------- */
-
-.stack{
-  display:flex;
-  flex-direction:column;
-  gap:16px;
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
-/* ---------- Row layout ---------- */
-
-.row{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-}
-
-/* ---------- Utility ---------- */
-
-.center{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-.flex{
-  display:flex;
-}
-
-.gap-s{ gap:8px }
-.gap-m{ gap:16px }
-.gap-l{ gap:24px }
-
-.text-muted{
-  color:#666;
-  opacity: 0.5;
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
 }

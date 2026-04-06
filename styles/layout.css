@@ -1,51 +1,53 @@
 /* styles/layout.css */
-html, body {
+
+html,
+body {
   margin: 0;
   padding: 0;
-  min-height: 100%; /* Cho phép body kéo dài tự nhiên */
-  -webkit-overflow-scrolling: touch; /* Giúp cuộn mượt trên iOS */
-  font-family: "Inter", sans-serif;
+  min-height: 100%;
+  -webkit-overflow-scrolling: touch;
+  font-family: var(--font-family-base);
+  background: var(--bg-main);
 }
 
-body.app{
-  
+body.app {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-
 }
 
 body.vi #contextBar {
-  font-family: "Be Vietnam Pro", sans-serif;
+  font-family: "Be Vietnam Pro", var(--font-family-base);
 }
 
 body.en #contextBar {
-  font-family: "Playfair Display", serif;
+  font-family: "Inter", var(--font-family-base);
 }
+
 #app {
-  height: 100%;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  min-height: 100vh; /* Dùng min-height thay vì height */
 }
 
 #hub {
   flex: 1;
   display: flex;
   flex-direction: column;
-  overflow: hidden
+  min-height: 0;
+  background: var(--hub-bg);
 }
-#hubContent{
+
+#hubContent {
   flex: 1;
   min-height: 0;
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
   overflow-y: auto;
-  contain: layout paint;
   -webkit-overflow-scrolling: touch;
-
 }
+
 .main {
   flex: 1;
   min-height: 0;
@@ -53,160 +55,130 @@ body.en #contextBar {
   flex-direction: column;
 }
 
+.container {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--space-3);
+}
 
-/* ===== Delivery Banner ===== */
+/* Overlay */
+
+.overlay-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.32);
+  z-index: 900;
+}
+
+.overlay-backdrop.hidden {
+  display: none !important;
+}
+
+/* Delivery Banner */
 
 .delivery-banner {
   position: fixed;
-  bottom: 20px;
+  left: 50%;
+  bottom: calc(16px + env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  z-index: 1100;
+
+  padding: 10px 16px;
+  border-radius: var(--radius-pill);
+  background: rgba(31, 42, 35, 0.92);
+  color: var(--text-invert);
+  box-shadow: var(--shadow-floating);
+  font-size: var(--font-s);
+}
+
+/* Recovery Banner */
+
+.recovery-banner {
+  position: fixed;
+  top: 12px;
   left: 50%;
   transform: translateX(-50%);
-  background: #222;
-  color: white;
-  padding: 10px 16px;
-  border-radius: 6px;
-  font-size:14px;
   z-index: 1100;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: rgba(31, 42, 35, 0.92);
+  color: var(--text-invert);
+  box-shadow: var(--shadow-floating);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  font-size: var(--font-s);
+  line-height: 1.2;
 }
 
-/* ===== Recovery Banner ===== */
-
-.recovery-banner{
-  position:fixed;
-  top:12px;
-  left:50%;
-  transform:translateX(-50%);
-  z-index:1100;
-  display:flex;
-  align-items:center;
-  gap:12px;
-  padding:10px 14px;
-  border-radius:12px;
-  background:rgba(28,28,30,.92);
-  color:#fff;
-  backdrop-filter:blur(10px);
-  -webkit-backdrop-filter:blur(10px);
-  box-shadow:
-    0 6px 18px rgba(0,0,0,.18),
-    0 1px 0 rgba(255,255,255,.08) inset;
-
-  font-size:14px;
-  line-height:1;
-  animation:recoverSlide .25s ease;
+.recovery-banner::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--warning);
+  box-shadow: 0 0 8px rgba(185, 133, 78, 0.55);
 }
 
-/* icon */
-.recovery-banner::before{
-  content:"";
-  width:8px;
-  height:8px;
-  border-radius:50%;
-  background:#ffcc66;
-  box-shadow:0 0 8px rgba(255,204,102,.7);
+.recovery-banner button {
+  border: none;
+  font-size: var(--font-xs);
+  padding: 6px 10px;
+  border-radius: 10px;
 }
 
-/* text */
-.recovery-banner span{
-  opacity:.92;
+#recoverySend {
+  background: var(--brand);
+  color: var(--text-invert);
 }
 
-/* buttons */
-.recovery-banner button{
-  appearance:none;
-  border:none;
-  font-size:13px;
-  padding:6px 10px;
-  border-radius:8px;
-  cursor:pointer;
-  transition:.15s ease;
+#recoveryCancel {
+  background: transparent;
+  color: rgba(255,255,255,.86);
 }
 
-/* primary action */
-#recoverySend{
-  background:#4caf50;
-  color:#fff;
-}
+/* Generic utilities */
 
-#recoverySend:active{
-  transform:translateY(1px);
-  background:#449d48;
-}
-
-/* secondary */
-#recoveryCancel{
-  background:transparent;
-  color:#ddd;
-}
-
-#recoveryCancel:hover{
-  background:rgba(255,255,255,.12);
-}
-
-.menu-update-banner{
-  position:fixed;
-  top:60px;
-  left:50%;
-  transform:translateX(-50%);
-
-  background:#2f4f3e;
-  color:white;
-  padding:8px 14px;
-  border-radius:12px;
-
-  font-size:13px;
-  opacity:.95;
-  z-index:50;
-}
-
-.container{
-  max-width:var(--container-max);
-  margin:0 auto;
-  padding:0 var(--space-3);
-}
-
-.column{
-  display:flex;
-  flex-direction:column;
-}
-
-.overlay-backdrop{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.35);
-  z-index: 900;
-  pointer-events: auto;
-}
-
-.text-warning {
-    color: #f39c12; 
-}
-
-.color-brand {
-    color: var(--color-primary, #2c3e50); 
-}
-/* Layout & Spacing */
 .row { display: flex; flex-direction: row; }
+.column { display: flex; flex-direction: column; }
+.flex { display: flex; }
+.center { display: flex; align-items: center; justify-content: center; }
+
 .items-center { align-items: center; }
 .justify-between { justify-content: space-between; }
-.gap-s { gap: 4px; }
+
+.gap-s { gap: 8px; }
 .gap-m { gap: 12px; }
+.gap-l { gap: 24px; }
+
 .p-m { padding: 12px; }
 .p-xl { padding: 32px; }
+
 .mb-s { margin-bottom: 4px; }
 .mb-m { margin-bottom: 12px; }
 
-/* Decor */
-.radius-m { border-radius: 12px; }
-.bg-white { background: #ffffff; }
-.shadow-sm { box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-.border { border: 1px solid rgba(0,0,0,0.08); }
-.opacity-70 { opacity: 0.7; }
-.hidden { display: none !important; }
+.radius-m { border-radius: var(--radius-m); }
 
-/* Typography */
-.text-s { font-size: 0.85rem; }
-.text-m { font-size: 1rem; }
-.text-xs { font-size: 0.75rem; }
+.bg-white { background: var(--bg-card); }
+.bg-muted { background: var(--bg-muted); }
+
+.shadow-sm { box-shadow: var(--shadow-soft); }
+
+.border { border: 1px solid var(--border-soft); }
+
+.opacity-70 { opacity: .7; }
+.opacity-50 { opacity: .5; }
+
+.text-s { font-size: var(--font-s); }
+.text-m { font-size: var(--font-m); }
+.text-xs { font-size: var(--font-xs); }
 .text-bold { font-weight: 600; }
-.color-brand { color: #2f5d46; } /* Màu xanh Haven */
-.text-muted { color: #888; }
+.text-muted { color: var(--text-soft); }
+
+.color-brand { color: var(--brand); }
+.text-warning { color: var(--warning); }

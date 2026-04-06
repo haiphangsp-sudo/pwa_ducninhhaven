@@ -1,142 +1,126 @@
 /* styles/hubContent.css */
 
-.hub-content{
+.hub-content {
   width: 100%;
   box-sizing: border-box;
-  margin-bottom: 110px;
-  contain: layout paint;
-  padding:16px;
-  background:var(--bg-main);
+  margin-bottom: var(--content-bottom);
+  padding: 16px;
+  background: var(--bg-main);
 }
-.page-container{
+
+.page-container {
+  width: 100%;
   max-width: var(--content-max);
-}
-.article{
-  max-width:620px;
-  margin:40px auto;
-  line-height:1.65;
-  font-size:16px;
-  padding: 20px 16px;
+  margin: 0 auto;
 }
 
-.article p{
-  margin-bottom:12px;
-  opacity:.85;
-  color:#555;
-}
-
-.menu-item{
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-  margin-bottom:18px;
-}
-
-.item-title{
-  font-size:18px;
-  font-weight:600;
-  letter-spacing:.02em;
-  color:#1f2a23;
-}
-
-#hubContent::-webkit-scrollbar{
-  width:8px;
-}
-
-#hubContent::-webkit-scrollbar-thumb{
-  background:rgba(0,0,0,.18);
-  border-radius:4px;
-}
-
-#hubContent::-webkit-scrollbar-track{
-  background:transparent;
-}
-
-.menu-group-title{
- font-size: var(--font-xl);
- font-weight:600;
- margin-bottom:12px;
- letter-spacing:.02em;
- scroll-margin-top: 100px;
-}
-
-.menu-card{
- cursor:pointer;
- transition: transform .15s ease, box-shadow .15s ease;
- justify-content:space-between;
-}
-
-.menu-card:active{
- transform:scale(.98);
-}
-
-.menu-thumb{
- width:72px;
- height:72px;
- border-radius: var(--radius-m);
- object-fit:cover;
- flex-shrink:0;
- background: #eee;
-}
-
-.menu-thumb[src=""]{
- display:none;
-}
-
-.category-panel{
-  gap:28px;
+.category-panel {
+  gap: 28px;
   margin: var(--space-2);
 }
 
-[data-service].is-default::before {
-  content:"✓";
-  display: grid;
-  font-size: 14px;
-  font-weight: 700;
+.article {
+  max-width: 680px;
+  margin: 32px auto;
+  padding: 12px 8px;
 }
-[data-service]::before{
+
+.article p {
+  margin-bottom: 14px;
+  color: var(--text-soft);
+  line-height: var(--line-height-relaxed);
+  font-size: var(--font-m);
+}
+
+.menu-group {
+  margin-bottom: var(--space-4);
+}
+
+.menu-group-title {
+  font-size: var(--font-l);
+  font-weight: 700;
+  margin-bottom: var(--space-2);
+  letter-spacing: .01em;
+  color: var(--text-main);
+  scroll-margin-top: 100px;
+}
+
+.menu-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-3);
+}
+
+.menu-item {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.item-title {
+  font-size: var(--font-m);
+  font-weight: 600;
+  letter-spacing: .01em;
+  color: var(--text-main);
+}
+
+.menu-card {
+  cursor: pointer;
+  transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+  justify-content: space-between;
+}
+
+.menu-card:active {
+  transform: scale(.985);
+}
+
+.menu-thumb {
+  width: 72px;
+  height: 72px;
+  border-radius: var(--radius-m);
+  object-fit: cover;
+  flex-shrink: 0;
+  background: var(--bg-muted);
+}
+
+.menu-thumb[src=""] {
+  display: none;
+}
+
+#hubContent::-webkit-scrollbar {
+  width: 8px;
+}
+
+#hubContent::-webkit-scrollbar-thumb {
+  background: rgba(31, 42, 35, .14);
+  border-radius: 999px;
+}
+
+#hubContent::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Service icons */
+
+[data-service]::before {
   content: "";
   width: 28px;
   height: 28px;
   display: flex;
-  justify-items: center;
+  justify-content: center;
   align-items: center;
   border-radius: 8px;
   background: var(--brand-soft);
   color: var(--brand);
   margin-right: 8px;
-  font-size: 22px;
+  font-size: 18px;
   line-height: 1;
   flex-shrink: 0;
-  justify-content: center;
 }
 
-[data-service="cleaning"]::before{
-  content:"🧹";
-}
-[data-service="laundry"]::before{
-  content:"👕";
-}
-[data-service="reception"]::before{
-  content:"🔔";
-}
-[data-service="pay"]:before{
-  content:"💳";
-}
-
-.menu-group{
-  margin-bottom:var(--space-4);
-}
-
-.menu-group-title{
-  font-size:var(--font-l);
-  font-weight:700;
-  margin-bottom:var(--space-2);
-}
-
-.menu-grid{
-  display:grid;
-  grid-template-columns:1fr;
-  gap:var(--space-3);
-}
-
+[data-service].is-default::before { content: "✓"; }
+[data-service="cleaning"]::before { content: "🧹"; }
+[data-service="laundry"]::before { content: "👕"; }
+[data-service="reception"]::before { content: "🔔"; }
+[data-service="pay"]::before { content: "💳"; }

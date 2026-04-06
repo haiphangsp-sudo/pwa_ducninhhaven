@@ -1,31 +1,31 @@
-.icon-svg{
-  width:18px;
-  height:18px;
-  display:inline-block;
-  background-size:contain;
-  background-repeat:no-repeat;
-  background-position:center;
-  opacity:.85;
+/* styles/icons.css */
+
+.icon-svg {
+  width: 18px;
+  height: 18px;
+  display: inline-block;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: .88;
 }
 
-.icon-svg svg{
-  width:100%;
-  height:100%;
+.icon-svg svg {
+  width: 100%;
+  height: 100%;
 }
 
-.hub-icon img{
-  width:22px;
-  height:22px;
+.hub-icon img {
+  width: 22px;
+  height: 22px;
 }
 
-/* icon */
-
-.icon{
-  width:24px;
-  height:24px;
+.icon {
+  width: 24px;
+  height: 24px;
 }
 
-.icon img{
-  width:100%;
-  height:100%;
+.icon img {
+  width: 100%;
+  height: 100%;
 }
