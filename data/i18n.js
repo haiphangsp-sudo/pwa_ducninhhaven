@@ -55,9 +55,9 @@ export const STRINGS = {
     no_active_order: { vi: "Bạn không có đơn hàng nào đang xử lý.", en: "No active orders at the moment." }
   },
   status: {
-    NEW: { vi: "Đang tiếp nhận", en: "Received" },
-    COOKING: { vi: "Đang chuẩn bị", en: "Preparing" },
-    DELIVERING: { vi: "Đang mang tới", en: "Delivering" },
+    NEW: { vi: "Tiếp nhận", en: "Received" },
+    COOKING: { vi: "Chuẩn bị", en: "Preparing" },
+    DELIVERING: { vi: "Đang tới", en: "Delivering" },
     DONE: { vi: "Hoàn tất", en: "Completed" },
     RECOVERING: { vi: "Đang dọn dẹp", en: "Recovering" },
     // Tin nhắn thông báo nhanh trên Status Bar
