@@ -11,6 +11,9 @@ export function renderStatusBar(state) {
     const textEl = document.getElementById("orderStatusText");
     const btnCheck = document.getElementById("btnCheckOrders");
     const btnToggle = document.getElementById('btnToggleBar');
+    const { active, isBarExpanded } = state.orders;
+    const cartItems = state.cart?.items || [];
+    const totalCartQty = cartItems.reduce((s, i) => s + (Number(i.qty) || 0), 0);
 
     btnToggle.dataset.action = "toggle_status";
     btnToggle.dataset.value = isBarExpanded;
@@ -19,11 +22,6 @@ export function renderStatusBar(state) {
     btnCheck.dataset.value = "orderTrackerPage";
 
     if (!bar || !textEl || !countEl) return;
-
-    const { active, isBarExpanded } = state.orders;
-    const cartItems = state.cart?.items || [];
-    const totalCartQty = cartItems.reduce((s, i) => s + (Number(i.qty) || 0), 0);
-    
 
     // 2. CHỐT CHẶN HIỂN THỊ (Ẩn toàn bộ nếu không có gì)
     if (active.length === 0 && totalCartQty === 0) {
@@ -53,8 +51,7 @@ export function renderStatusBar(state) {
         } else {
             bar.classList.add('is-collapsed');
         }
-    }
-    else {
+    }else {
         // TRƯỜNG HỢP: Chỉ có giỏ hàng
         countEl.textContent = totalCartQty;
         const locationName = getLocationInfo()?.placeName;
@@ -70,6 +67,4 @@ export function renderStatusBar(state) {
             bar.classList.add('is-expanded');
         }
     }
-        
-
 }
