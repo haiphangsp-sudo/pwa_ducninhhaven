@@ -101,11 +101,27 @@ function _getSavedIds() {
     }
 }
 
+
 export function hydrateOrdersFromStorage() {
-    const savedIds = _getSavedIds();
+    const savedIds = _getSavedIds(); // Lấy danh sách ID từ localStorage
+    
     if (savedIds.length > 0) {
-        // Nạp tạm các ID vào state với status là '...' hoặc 'SYNCING'
-        const placeholderOrders = savedIds.map(id => ({ id, status: 'NEW', items: [] }));
-        setState({ orders: { active: placeholderOrders } });
+        // Tạo các đơn hàng "chờ" (placeholder) để UI biết là có đơn cần hiện
+        const placeholderOrders = savedIds.map(id => ({
+            id: id,
+            status: 'SYNCING', // Trạng thái tạm thời khi đang đợi server
+            items: []
+        }));
+
+        // Đẩy vào State ngay lập tức
+        setState({ 
+            orders: { 
+                active: placeholderOrders,
+                isBarExpanded: false // Hoặc lấy từ một key khác trong storage nếu muốn
+            } 
+        });
+        
+        return true;
     }
+    return false;
 }
