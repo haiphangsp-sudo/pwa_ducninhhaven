@@ -1,161 +1,135 @@
 /* styles/motion.css */
-/* Chuyển động nhẹ, không gây khó chịu */
+/* Haven motion system: nhẹ, êm, không phô */
+
+:root {
+  --ease-soft: cubic-bezier(.22, .8, .2, 1);
+  --ease-bounce: cubic-bezier(.25, .8, .25, 1);
+}
+
+/* ===== INTERACTION ===== */
 
 .btn,
 .card,
-.hub-btn{
-  background: .2s ease;
-  box-shadow: .2s ease;
-  transform: .1s ease;
+.hub-btn,
+.menu-card,
+.location-btn,
+.drawer-send,
+#cartOpen {
+  transition:
+    transform .12s var(--ease-soft),
+    box-shadow .18s var(--ease-soft),
+    background-color .2s ease,
+    opacity .18s ease,
+    border-color .18s ease,
+    color .18s ease;
 }
-.btn:active{
-  transform: scale(.96);
+
+.btn:active,
+.location-btn:active,
+#cartOpen:active,
+.drawer-send:active {
+  transform: scale(.97);
 }
-.card:hover{
+
+.card:hover,
+.menu-card:hover {
   box-shadow: var(--shadow-card);
 }
 
-.cart-bar.hidden{
-  transform:translateY(100%);
-  opacity:0;
-}
+/* ===== FEEDBACK ===== */
 
-/* ACK overlay fade nhanh */
-#ackOverlay{
-  animation:fadeIn .18s ease;
-}
-
-/* Delivery banner trượt nhẹ */
-#deliveryStatus{
-  animation:slideUp .22s ease;
-}
 .cart-bounce {
-  animation: cart-bounce 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  animation: cart-bounce .38s var(--ease-bounce);
 }
+
 @keyframes cart-bounce {
-  0% { transform: scale(1);}
-  30%{ transform: scale(1.12);}
-  60%{ transform: scale(0.95);}
-  100%{ transform: scale(1);}
-}
-@keyframes fadeIn{
-  from{opacity:0}
-  to{opacity:1}
-}
-
-@keyframes slideUp{
-  from{
-    opacity:0;
-    transform:translate(-50%,20px);
-  }
-  to{
-    opacity:1;
-    transform:translate(-50%,0);
-  }
-}
-
-@keyframes ack{
-  from{transform:scale(.5);opacity:.4}
-  to{transform:scale(1.4);opacity:0}
-}
-
-
-@keyframes drawerUp{
-  from{
-    transform:translateY(100%);
-  }
-  to{
-    transform:translateY(0);
-  }
-}
-
-@keyframes recoverSlide{
-  from{
-    opacity:0;
-    transform:translate(-50%,-10px);
-  }
-  to{
-    opacity:1;
-    transform:translate(-50%,0);
-  }
-}
-.place-picker{
-  animation: pickerIn .18s ease;
-}
-@keyframes pickerIn {
-  from{ 
-    transform: translate(-50%, -60%);
-    opacity: .7
-  }
-  to{
-    transform: translate(-50%, -50%);
-    opacity: 1
-  }
-}
-
-/* Hiệu ứng khi món ăn bị xóa */
-.item-exit {
-    animation: itemExit 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-    pointer-events: none; /* Tránh bấm nhầm khi đang biến mất */
-}
-
-@keyframes itemExit {
-    0% {
-        opacity: 1;
-        transform: translateX(0);
-        max-height: 200px; /* Ước lượng chiều cao tối đa */
-        margin-bottom: 12px;
-    }
-    30% {
-        opacity: 0.5;
-        transform: translateX(30px); /* Bay nhẹ sang phải */
-    }
-    100% {
-        opacity: 0;
-        transform: translateX(100px);
-        max-height: 0;
-        margin-bottom: 0;
-        padding-top: 0;
-        padding-bottom: 0;
-    }
-}
-/* Hạt bay */
-.fly-item {
-    position: fixed;
-    z-index: 9999;
-    width: 30px;
-    height: 30px;
-    background: var(--brand, #6b8e23); /* Màu xanh Sage của resort */
-    border-radius: 50%;
-    pointer-events: none;
-    transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 12px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-}
-
-.fly-cart-ghost {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 14px;
-  overflow: hidden;
-  transition:
-    transform 520ms cubic-bezier(.2, .8, .2, 1),
-    opacity 520ms ease;
-  box-shadow: 0 10px 24px rgba(0,0,0,.18);
-}
-
-.cart-bounce {
-  animation: cartBounce 380ms ease;
-}
-
-@keyframes cartBounce {
   0%   { transform: scale(1); }
   35%  { transform: scale(1.12); }
   65%  { transform: scale(.96); }
   100% { transform: scale(1); }
 }
+
+.count.pulse {
+  animation: pulse-animation .4s ease-out;
+}
+
+@keyframes pulse-animation {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.35); }
+  100% { transform: scale(1); }
+}
+
+/* ===== OVERLAY / BANNERS ===== */
+
+#ackOverlay {
+  animation: fade-in .18s ease;
+}
+
+#deliveryStatus {
+  animation: slide-up .22s ease;
+}
+
+.place-picker {
+  animation: picker-in .18s var(--ease-soft);
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 20px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+@keyframes picker-in {
+  from {
+    transform: translate(-50%, -60%);
+    opacity: .72;
+  }
+  to {
+    transform: translate(-50%, -50%);
+    opacity: 1;
+  }
+}
+
+@keyframes drawerUp {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+
+@keyframes recoverSlide {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -10px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+/* ===== ACK / SPINNER ===== */
+
+@keyframes ack {
+  from { transform: scale(.5); opacity: .4; }
+  to   { transform: scale(1.4); opacity: 0; }
+}
+
+@keyframes ackSpin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/*
