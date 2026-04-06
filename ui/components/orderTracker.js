@@ -9,6 +9,8 @@ export function openOrderTracker() {
     
     const trackerPage = document.getElementById("orderTrackerPage");
     const listContainer = document.getElementById("orderTrackerList");
+    if (!trackerPage || !listContainer) return;
+
 
     // 1. Hiển thị Overlay (Phải gọi ID của Panel/Page)
    
