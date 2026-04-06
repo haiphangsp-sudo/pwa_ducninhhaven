@@ -13,6 +13,7 @@ export function renderStatusBar(state) {
     const btnToggle = document.getElementById('btnToggleBar');
 
     btnToggle.dataset.action = "toggle_status";
+    btnToggle.dataset.value = isBarExpanded;
     
     btnCheck.dataset.action = "open-overlay";
     btnCheck.dataset.value = "orderTrackerPage";
@@ -65,6 +66,6 @@ export function renderStatusBar(state) {
             bar.classList.add('is-expanded');
         }
     }
-        btnToggle.dataset.value = isBarExpanded;
+        
 
 }

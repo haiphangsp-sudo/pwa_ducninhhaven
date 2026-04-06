@@ -87,9 +87,7 @@ async function syncUI(state) {
     
     localStorage.setItem(CONFIG.CART_KEY, JSON.stringify(state.cart.items || []));
   }
-  if (state.cart !== lastState.cart || state.ack !== lastState.ack) {
-    renderStatusBar(state);
-  }
+
 
   /* ---------- LANGUAGE ---------- */
 
@@ -106,8 +104,7 @@ async function syncUI(state) {
   }
 
   handleOrderLogic(state, prevState);
-  syncStepperStates(state, prevState);
-
+  
 }
 
 function syncLanguage(state) {
@@ -147,5 +144,7 @@ async function handleOrderLogic(state, prevState) {
 
   } finally {
     isProcessingOrder = false;
+    syncStepperStates(state, prevState);
+
   }
 }
