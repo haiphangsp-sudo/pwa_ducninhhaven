@@ -99,7 +99,7 @@ export function notifyResponse(response, payload) {
  * FINAL ACTION: Dọn dẹp và thông báo sau khi đơn hàng thành công
  * @param {string} type - Loại đơn ('cart', 'instant', 'recovery')
  */
-export function finalizeOrderSuccess(type) {
+export function finalizeOrderSuccess(type,payload) {
   // 1. Bản đồ thông báo theo loại đơn hàng
   const feedbackMap = {
     send_cart: { title: "Thành công", msg: "Giỏ hàng của bạn đã được gửi tới bếp!" },
@@ -108,7 +108,9 @@ export function finalizeOrderSuccess(type) {
   };
 
   const feedback = feedbackMap[type] || feedbackMap.cart;
-
+  if (payload && payload.id) {
+    addOrderToTracking(payload.id, payload.items);
+  }
   // 2. Chuẩn bị bản cập nhật State
   const patch = {
     ack: { 

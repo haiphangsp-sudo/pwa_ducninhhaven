@@ -101,8 +101,9 @@ function parseData(p) {
     id: p?.id || "",
     type: p?.type || "",
     timestamp: p?.timestamp || "",
-    mode: (p?.mode || "").toLowerCase(),
-    place: (p?.place || "").toLowerCase(),
+    mode: (p?.mode || ""),
+    place: (p?.place || ""),
+    placeLabel:p?.placeLabel,
     device: p?.device || "",
     items: Array.isArray(p?.items)
       ? p.items.map(item => ({
@@ -142,18 +143,14 @@ function saveCart(data) {
   }
 
   const rows = items.map(it => [
-    data.
     data.id || "",                  // request_id
     now,                            // server_time
-    data.timestamp || "",           // client_time
     data.mode || "",
-    data.place || "",
-    it.id || "",                    // option_id
+    data.placeLabel || "",
     it.category || "",
     it.item || "",
     it.option || "",
     Number(it.qty || 0),
-    Number(it.price || 0),
     getPriority(it.category),
     "NEW",
     data.type || "",

@@ -14,7 +14,6 @@ import { renderPanel } from "../render/renderPanel.js";
 import { syncStepperStates } from "../render/renderStepper.js";
 import { renderAck } from "../render/renderAck.js";
 import { openOrderTracker } from "../components/orderTracker.js";
-import { addOrderToTracking } from "../../core/orders.js";
 
 let lastState = null; 
 let isProcessingOrder = false;
@@ -104,7 +103,6 @@ async function syncUI(state) {
   }
   if (state.orders.isBarExpanded !== prevState.order?.isBarExpanded || state.orders.active !== prevState.orders?.active) {
     renderStatusBar(state);
-    addOrderToTracking(state);
   }
 
   handleOrderLogic(state, prevState);

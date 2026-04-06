@@ -72,7 +72,7 @@ export async function submitOrder(action) {
   try {
     const res = await sendRequest(payload);
     if (res?.success) {
-      finalizeOrderSuccess(action);
+      finalizeOrderSuccess(action,payload);
       notifyResponse(res, payload);
       showToast({ type: "success", message: "cart_bar.success", duration: 3000 });
       return true;
