@@ -303,3 +303,63 @@
     25% { transform: translateX(-3px); }
     75% { transform: translateX(3px); }
 }
+/* order-status-bar.css */
+
+.order-status-bar {
+    position: fixed;
+    /* Sử dụng biến layout đã khai báo trong tokens.css */
+    bottom: calc(var(--cartbar-height) + var(--space-3)); 
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    
+    /* Background & Effects */
+    background: rgba(255, 255, 255, 0.85); /* Có thể giữ rgba để dùng backdrop-filter */
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border-strong);
+    border-radius: 50px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    
+    display: flex;
+    align-items: center;
+    padding: 0 var(--space-3);
+    gap: var(--space-2);
+    height: 48px;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Nội dung văn bản */
+.status-text {
+    font-size: var(--font-s);
+    color: var(--text-main);
+    font-weight: 500;
+}
+
+/* Các chấm tiến trình (Steps) */
+.step-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--border-strong);
+}
+
+/* Trạng thái Đã hoàn thành - Dùng màu Brand (Xanh Haven) */
+.step.is-complete .step-dot {
+    background: var(--brand);
+}
+
+/* Trạng thái Đang xử lý - Dùng màu Accent (Vàng đồng) */
+.step.is-active .step-dot {
+    background: var(--accent);
+    box-shadow: 0 0 0 4px var(--accent-soft);
+}
+
+/* Trạng thái Cảnh báo - Dùng biến Warning */
+.order-status-bar.is-warning {
+    background-color: var(--warning-soft, #fff9eb);
+    border-color: var(--warning, #b98e00);
+}
+
+.is-warning .status-text {
+    color: var(--warning, #856404);
+}
