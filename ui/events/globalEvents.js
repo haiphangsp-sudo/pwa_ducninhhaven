@@ -14,35 +14,49 @@ import { attachRuntimeRefresh } from "../../core/runtimeRefresh.js";
 /* =========================
    MAIN EVENTS
 ========================= */
+let orderPollingStarted = false;
 
 export function attachAppEvents() {
-
   document.addEventListener("click", handleGlobalClick);
-  window.addEventListener("contextchange", () => { syncContextToState(); });
-   let ticking = false;
-    window.addEventListener("scroll", () => {
+
+  window.addEventListener("contextchange", () => {
+    syncContextToState();
+  });
+
+  let ticking = false;
+  window.addEventListener("scroll", () => {
     if (!ticking) {
-        requestAnimationFrame(() => {
-            applyScrollUI();
+      requestAnimationFrame(() => {
+        applyScrollUI();
         ticking = false;
-        });
-        ticking = true;
+      });
+      ticking = true;
     }
-    });
-  
-  syncOrdersWithServer();
-  // Polling mỗi 45 giây
+  });
+
+  // CHỈ CHẠY 1 LẦN
+  if (!orderPollingStarted) {
+    orderPollingStarted = true;
+
+    syncOrdersWithServer();
+
     setInterval(() => {
-        const { active } = getState().orders;
-        if (active && active.some(o => o.status !== 'DONE')) {
-            syncOrdersWithServer();
-        }
+      const { active } = getState().orders || {};
+
+      const hasActive = active?.some(
+        o => !['DONE', 'RECOVERING', 'CANCELED'].includes(o.status)
+      );
+
+      if (hasActive) {
+        syncOrdersWithServer();
+      }
     }, 45000);
-  
-   attachRuntimeRefresh({
-        intervalMs: 60000,
-        enableInterval: true
-    });
+  }
+
+  attachRuntimeRefresh({
+    intervalMs: 60000,
+    enableInterval: true
+  });
 }
 
 /* =========================

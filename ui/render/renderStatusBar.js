@@ -1,78 +1,88 @@
-
-
-// ui/render/renderStatusBar.js
 import { renderStepper } from './renderStepper.js';
 import { getLocationInfo } from '../../core/placesQuery.js';
 
+const TERMINAL_STATUSES = ['DONE', 'RECOVERING', 'CANCELED'];
+
+const ORDER_PRIORITY = {
+  DELIVERING: 4,
+  COOKING: 3,
+  NEW: 2,
+  SYNCING: 1
+};
+
+function getPriorityOrder(orders = []) {
+  return orders.reduce((best, current) => {
+    if (!best) return current;
+    const bestScore = ORDER_PRIORITY[best.status] || 0;
+    const currentScore = ORDER_PRIORITY[current.status] || 0;
+    return currentScore > bestScore ? current : best;
+  }, null);
+}
 
 export function renderStatusBar(state) {
-    const bar = document.getElementById("orderStatusBar");
-    const countEl = document.getElementById("orderActiveCount");
-    const textEl = document.getElementById("orderStatusText");
-    const btnCheck = document.getElementById("btnCheckOrders");
-    const btnToggle = document.getElementById('btnToggleBar');
-    const { active, isBarExpanded } = state.orders;
-    const cartItems = state.cart?.items || [];
-    const totalCartQty = cartItems.reduce((s, i) => s + (Number(i.qty) || 0), 0);
+  const bar = document.getElementById("orderStatusBar");
+  const countEl = document.getElementById("orderActiveCount");
+  const textEl = document.getElementById("orderStatusText");
+  const btnCheck = document.getElementById("btnCheckOrders");
+  const btnToggle = document.getElementById("btnToggleBar");
 
-    btnToggle.dataset.action = "toggle_status";
-    btnToggle.dataset.value = isBarExpanded;
-    
-    btnCheck.dataset.action = "open-overlay";
-    btnCheck.dataset.value = "orderTrackerPage";
+  if (!bar || !countEl || !textEl || !btnCheck || !btnToggle) return;
 
-    if (!bar || !textEl || !countEl) return;
+  const activeOrders = state.orders?.active || [];
+  const isBarExpanded = !!state.orders?.isBarExpanded;
 
-    // 2. CHỐT CHẶN HIỂN THỊ (Ẩn toàn bộ nếu không có gì)
-    if (active.length === 0 && totalCartQty === 0) {
-        bar.classList.add("hidden");
-        return;
+  const cartItems = state.cart?.items || [];
+  const totalCartQty = cartItems.reduce((s, i) => s + (Number(i.qty) || 0), 0);
+
+  const actionableOrders = activeOrders.filter(
+    o => !TERMINAL_STATUSES.includes(o.status)
+  );
+
+  btnToggle.dataset.action = "toggle_status";
+  btnToggle.dataset.value = String(isBarExpanded);
+
+  btnCheck.dataset.action = "open-overlay";
+  btnCheck.dataset.value = "orderTrackerPage";
+
+  // Không có gì → ẩn
+  if (actionableOrders.length === 0 && totalCartQty === 0) {
+    bar.className = "status-bar hidden";
+    return;
+  }
+
+  bar.className = "status-bar";
+  bar.classList.toggle("is-expanded", isBarExpanded);
+  bar.classList.toggle("is-collapsed", !isBarExpanded);
+  bar.classList.remove("hidden");
+
+  /* =========================
+     ƯU TIÊN ORDER
+  ========================= */
+  if (actionableOrders.length > 0) {
+    const priorityOrder = getPriorityOrder(actionableOrders);
+    const status = priorityOrder?.status || "SYNCING";
+
+    countEl.textContent = String(actionableOrders.length);
+    bar.classList.add(`is-${status.toLowerCase()}`);
+
+    if (status === "SYNCING") {
+      textEl.textContent = "Đang kiểm tra đơn hàng...";
+    } else {
+      textEl.innerHTML = renderStepper(status);
     }
-    bar.classList.remove("hidden");
-    const STATUS_PRIORITY = {
-        'RECOVERING': 5,
-        'DONE': 4,
-        'DELIVERING': 3,
-        'COOKING': 2,
-        'NEW': 1
-    };
-    // 3. LOGIC NỘI DUNG (Ưu tiên Đơn hàng > Giỏ hàng)
-    
-    const actionableOrders = active.filter(o => o.status !== 'DONE' && o.status !== 'RECOVERING' && o.status !== 'CANCELED');
-    const displayCount = actionableOrders.length;
-    countEl.textContent = displayCount;
 
-    if (active.length > 0) {
-        // Tìm đơn hàng có trạng thái cao nhất (tiến gần tới lúc ăn nhất)
-        const priorityOrder = active.reduce((prev, current) => {
-            return (STATUS_PRIORITY[current.status] > STATUS_PRIORITY[prev.status]) ? current : prev;
-        });
-        countEl.textContent = displayCount;
-        textEl.innerHTML = renderStepper(priorityOrder.status); // Hiển thị stepper của đơn tiến xa nhất
+    return;
+  }
 
-        bar.className = 'status-bar';
-        bar.classList.add(`is-${priorityOrder.status}`);
-        
-        // Xử lý Expand/Collapse
-        if (isBarExpanded) {
-            bar.classList.add('is-expanded');
-        } else {
-            bar.classList.add('is-collapsed');
-        }
-    }else {
-        // TRƯỜNG HỢP: Chỉ có giỏ hàng
-        countEl.textContent = totalCartQty;
-        const locationName = getLocationInfo()?.placeName;
-        textEl.textContent = locationName
-            ? `${locationName} • ${totalCartQty} món`
-            : `🛒 Giỏ hàng có ${totalCartQty} món`;
+  /* =========================
+     FALLBACK: CART
+  ========================= */
+  const locationName = getLocationInfo()?.placeName;
 
-        // Gán class cho trạng thái chờ
-        bar.className = 'status-bar is-idle';
-        if (!isBarExpanded) {
-            bar.classList.add('is-collapsed');
-        } else {
-            bar.classList.add('is-expanded');
-        }
-    }
+  countEl.textContent = String(totalCartQty);
+  textEl.textContent = locationName
+    ? `${locationName} • ${totalCartQty} món`
+    : `Giỏ hàng • ${totalCartQty} món`;
+
+  bar.classList.add("is-idle");
 }
