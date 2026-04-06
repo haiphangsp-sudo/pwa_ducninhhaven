@@ -7,6 +7,8 @@ import { getLocationInfo } from "./placesQuery.js";
 import { notifyResponse } from "./action.js"
 import { renderStatusBar } from "../ui/render/renderStatusBar.js"
 import { showToast } from "../ui/render/renderAck.js";
+import { addOrderToTracking } from "./orders.js";
+
 
 
 export async function updateCartQuantity(itemId, delta) {
@@ -145,6 +147,7 @@ export function onOrderSuccess(orderId, items) {
   const currentOrders = getState().orders?.active || [];
   setState({ orders: { active: [newOrder, ...currentOrders] } });
   renderStatusBar();
+  addOrderToTracking(orderId, items);
 }
 
 /**

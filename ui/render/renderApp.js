@@ -4,6 +4,7 @@ import { getState } from "../../core/state.js";
 import { renderHub } from "./renderHub.js";
 import { renderNavBar } from "./renderNavBar.js";
 import { attachRuntimeRefresh } from "../../core/runtimeRefresh.js";
+import { syncOrdersWithServer } from "../../core/orders.js";
 
 
 export function renderApp() {
@@ -11,6 +12,7 @@ export function renderApp() {
     
     renderNavBar(s);
     renderHub(s);
+    syncOrdersWithServer();
 
 
     attachRuntimeRefresh({
