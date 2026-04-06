@@ -1,10 +1,8 @@
 // ui/components/orderTracker.js
 import { renderStepper } from "../render/renderStepper.js";
-import { getState } from "../../core/state.js";
 import { translate } from "../utils/translate.js";
 
-export function openOrderTracker() {
-    const state = getState();
+export function openOrderTracker(state) {
     const active = state.orders?.active || []; // Chặn lỗi nếu state.orders chưa init
     
     const trackerPage = document.getElementById("orderTrackerPage");

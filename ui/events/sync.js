@@ -56,7 +56,7 @@ async function syncUI(state) {
         renderPlacePicker(state);
         break;
       case "orderTrackerPage":
-        openOrderTracker();
+        openOrderTracker(state);
         break;
       
       default:
