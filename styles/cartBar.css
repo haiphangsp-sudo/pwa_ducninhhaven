@@ -303,26 +303,23 @@
     color: var(--text-main, #333);
     border: 1px solid var(--border-soft);
 }
-/* Nút bấm mặc định (Trạng thái sẵn sàng) */
 .drawer-send {
     width: 100%;
     padding: 15px;
     border-radius: 12px;
     border: none;
-    background: var(--brand, #6b8e23);
+    background: #6b8e23;
     color: white;
     font-weight: 600;
     transition: all 0.3s ease;
     cursor: pointer;
 }
 
-/* Khi chưa chọn phòng - Warm Sand/Yellow */
 .drawer-send.is-warning {
     background: #ffcc00;
     color: #5c4b00;
 }
 
-/* Khi đang gửi - Pulse & Spinner */
 .drawer-send.is-loading {
     background: var(--brand-soft, #f4f7f0);
     color: var(--brand);
@@ -330,7 +327,6 @@
     cursor: wait;
 }
 
-/* Hiệu ứng Spinner nhỏ bên cạnh chữ khi loading */
 .drawer-send.is-loading::after {
     content: "";
     display: inline-block;
@@ -380,14 +376,11 @@
   transform: translateY(0);
 }
 
-.cart-bar--hidden {
-  transform: translateY(100%);
-}
-
 .cart-bar--compact {
   transform: translateY(50%);
   opacity: 0.7;
 }
+
 .cart-bar.hidden{
   transform:translateY(100%);
   opacity:0;

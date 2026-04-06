@@ -44,18 +44,6 @@
   opacity: 0;
   pointer-events: none;
 }
-.hub-menu::after {
-  content: "";
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 50px;
-    height: 100%;
-    background: linear-gradient(to right, rgba(244, 241, 234, 0), #f4f1ea);
-    pointer-events: none;
-    z-index: 2;
-}
-
 
 /* =========================
    HUB BUTTON
@@ -79,8 +67,6 @@
 
   scroll-snap-align:start;
   transition: background-color .18s ease, color .18s ease, transform .18s ease;
-  flex: 0 0 auto;
-  scroll-snap-align: center;
   min-width: 100px;
 }
 body.en .hub-btn {
