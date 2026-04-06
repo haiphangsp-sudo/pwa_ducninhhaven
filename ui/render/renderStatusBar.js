@@ -44,7 +44,7 @@ export function renderStatusBar(state) {
         const latestOrder = active[active.length - 1]; // Lấy đơn mới nhất
         countEl.textContent = active.length; // Số lượng đơn đang chạy
         textEl.innerHTML = renderStepper(latestOrder.status);
-        bar.classList.add(`is-${latestOrder.status}, ${!isBarExpanded ? 'is-collapsed' : ''}`);
+        bar.classList.add(`"is-${latestOrder.status}", "${!isBarExpanded ? 'is-collapsed' : ''}"`);
         bar.classList.remove('is-idle');
     }
     else {
