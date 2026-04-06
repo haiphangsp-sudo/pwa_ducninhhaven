@@ -1,61 +1,70 @@
 /* styles/tokens.css */
-/*Design tokens (màu, spacing, radius, font scale)*/
+/* Design tokens: color, spacing, radius, typography, layout */
 
 :root{
 /* =====================
-   BRAND
+   BRAND / IDENTITY
 ===================== */
 
---brand: #2f5d46;
---brand-hover: #254a38;
---brand-soft: #e6efe9;
+--brand: #2f4f3e;
+--brand-hover: #243d31;
+--brand-soft: #e7efe9;
+--brand-contrast: #ffffff;
+
+--accent: #c89b6d;
+--accent-soft: #e7d2b8;
 
 /* =====================
    BACKGROUND
 ===================== */
 
---bg-muted: #f7f6f2;
---bg-main: #f6f4ef;     /* nền chính, hơi ngà */
---bg-soft: #fbfaf7;     /* nền phụ */
---bg-card: #ffffff;     /* card */
+--bg-main: #f6f4ef;
+--bg-soft: #fbfaf7;
+--bg-muted: #f2eee7;
+--bg-card: #ffffff;
+--bg-elevated: #fffdf9;
 
 /* =====================
    TEXT
 ===================== */
 
 --text-main: #1f1f1f;
---text-soft: #6b6b6b;
---text-muted: #9a9a9a;
+--text-soft: #666257;
+--text-muted: #9a9488;
 --text-invert: #ffffff;
---text-brand: #2f5d46;
-
+--text-brand: var(--brand);
 
 /* =====================
    BORDER
 ===================== */
 
---border-soft: #e5e1d8;
---border-light: #f0ede6;
+--border-soft: #e6e2dc;
+--border-light: #f1eee8;
+--border-strong: #d7d1c7;
 
 /* =====================
    STATUS
 ===================== */
---bg: #F3F4F5;
---card: #FFFFFF;
---text: #1C1C1E;
---muted: #8E8E93;
---accent: #2F6FED;
---success: #2e7d32;
---error: #b00020;
---warning: #f5a623;
+
+--success: #3f6b4f;
+--success-soft: #e6efe9;
+
+--warning: #b9854e;
+--warning-soft: #f5e6d6;
+
+--error: #a14b43;
+--error-soft: #f4dfdc;
+
+--info: #6b7c6f;
+--info-soft: #e8ece8;
 
 /* =====================
    SHADOW
 ===================== */
---shadow: 0 6px 18px rgba(0,0,0,0.08);
---shadow-soft: 0 4px 14px rgba(0,0,0,0.06);
---shadow-card: 0 8px 22px rgba(0,0,0,0.08);
---shadow-floating: 0 12px 30px rgba(0,0,0,0.12);
+
+--shadow-soft: 0 4px 14px rgba(0, 0, 0, 0.06);
+--shadow-card: 0 8px 22px rgba(0, 0, 0, 0.08);
+--shadow-floating: 0 12px 30px rgba(0, 0, 0, 0.12);
 
 /* =====================
    RADIUS
@@ -65,6 +74,7 @@
 --radius-m: 16px;
 --radius-l: 22px;
 --radius-xl: 30px;
+--radius-pill: 999px;
 
 /* =====================
    SPACING
@@ -75,10 +85,14 @@
 --space-3: 16px;
 --space-4: 24px;
 --space-5: 32px;
+--space-6: 48px;
 
 /* =====================
    TYPOGRAPHY
 ===================== */
+
+--font-family-base: "Inter", "Be Vietnam Pro", system-ui, sans-serif;
+--font-family-heading: "Inter", "Be Vietnam Pro", system-ui, sans-serif;
 
 --font-xl: 32px;
 --font-l: 24px;
@@ -86,18 +100,46 @@
 --font-s: 15px;
 --font-xs: 13px;
 
+--line-height-tight: 1.25;
+--line-height-base: 1.5;
+--line-height-relaxed: 1.7;
+
 /* =====================
    LAYOUT
 ===================== */
 
-
 --header-height: 56px;
 --hub-height: 60px;
-  /* Tổng khoảng cách để vùng nội dung không bị che khuất */
---content-top: calc(var(--header-height) + var(--hub-height));
+--cartbar-height: 64px;
 
+--content-top: calc(var(--header-height) + var(--hub-height));
+--content-bottom: calc(var(--cartbar-height) + var(--space-3));
 
 --container-max: 980px;
 --content-max: 720px;
 
+/* =====================
+   COMPONENT SUGGESTIONS
+===================== */
+
+--nav-bg: var(--bg-soft);
+--nav-border: var(--border-soft);
+
+--hub-bg: var(--bg-main);
+--hub-item-bg: var(--bg-card);
+--hub-item-border: var(--border-soft);
+
+--cartbar-bg: var(--brand);
+--cartbar-text: var(--text-invert);
+
+--drawer-bg: var(--bg-card);
+--picker-bg: var(--bg-card);
+
+--button-primary-bg: var(--brand);
+--button-primary-hover: var(--brand-hover);
+--button-primary-text: var(--text-invert);
+
+--button-secondary-bg: transparent;
+--button-secondary-border: var(--border-strong);
+--button-secondary-text: var(--text-main);
 }
