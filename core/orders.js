@@ -13,7 +13,7 @@ const STORAGE_KEY = "haven_active_order_ids";
  * Thêm một đơn hàng mới vào hệ thống theo dõi
  */
 export function addOrderToTracking(orderId, items) {
-    
+
     const newOrder = {
         id: orderId,
         status: 'NEW', // Khớp với nhãn trong Google Sheets
@@ -50,7 +50,7 @@ export async function syncOrdersWithServer() {
         
         const updates = await response.json(); 
         // updates format: { "ORD001": "COOKING", "ORD002": "DONE" }
-
+        console.log("[Haven Sync] Dữ liệu từ Server:", updates);
         const { active } = getState().orders;
         let hasChanges = false;
 
