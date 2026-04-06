@@ -13,7 +13,8 @@ export function renderStepper(currentStatus) {
         { key: 'NEW', label: translate('status.NEW') },
         { key: 'COOKING', label: translate('status.COOKING') },
         { key: 'DELIVERING', label: translate('status.DELIVERING') },
-        { key: 'DONE', label: translate('status.DONE') }
+        { key: 'DONE', label: translate('status.DONE') },
+        { key: 'RECOVERING', label: translate('status.RECOVERING') }
     ];
 
     // Tìm chỉ số của trạng thái hiện tại

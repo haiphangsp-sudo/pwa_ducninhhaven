@@ -30,6 +30,7 @@ export function renderStatusBar(state) {
     }
     bar.classList.remove("hidden");
     const STATUS_PRIORITY = {
+        'RECOVERING': 5,
         'DONE': 4,
         'DELIVERING': 3,
         'COOKING': 2,
