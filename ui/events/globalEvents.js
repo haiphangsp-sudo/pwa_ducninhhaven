@@ -15,6 +15,7 @@ import { attachRuntimeRefresh } from "../../core/runtimeRefresh.js";
    MAIN EVENTS
 ========================= */
 let orderPollingStarted = false;
+let fastSyncTimer = null;
 
 export function attachAppEvents() {
   document.addEventListener("click", handleGlobalClick);
@@ -34,8 +35,14 @@ export function attachAppEvents() {
     }
   });
 
-  // CHỈ CHẠY 1 LẦN
-  fastSyncTimer = setInterval(() => {
+  if (!orderPollingStarted) {
+    orderPollingStarted = true;
+
+    // 1. gọi ngay
+    syncOrdersWithServer();
+
+    // 2. FAST RETRY cho SYNCING (5s)
+    fastSyncTimer = setInterval(() => {
       const { active } = getState().orders || {};
 
       const hasSyncing = active?.some(o => o.status === "SYNCING");
@@ -59,12 +66,12 @@ export function attachAppEvents() {
         syncOrdersWithServer();
       }
     }, 45000);
-  
+  }
 
-    attachRuntimeRefresh({
-      intervalMs: 60000,
-      enableInterval: true
-    });
+  attachRuntimeRefresh({
+    intervalMs: 60000,
+    enableInterval: true
+  });
 }
 
 /* =========================
