@@ -1,6 +1,7 @@
 // core/action.js
 import { getState, setState } from "./state.js";
 import { showToast } from "../ui/render/renderAck.js"; 
+import { addOrderToTracking } from "./orders.js";
 
 
 export async function updateCartQuantity(itemId, delta) {
@@ -63,7 +64,7 @@ export function notifyResponse(response, payload) {
 
     // Gọi hàm hậu mãi: xóa giỏ, lưu đơn vào StatusBar
     // Lưu ý: response.orderId nên được trả về từ server (GAS)
-    onOrderSuccess(response.orderId || Date.now(), payload.items);
+    addOrderToTracking(response.orderId || Date.now(), payload.items);
     return;
   }
 
@@ -131,19 +132,4 @@ export function finalizeOrderSuccess(type) {
   setTimeout(() => {
     setState({ ack: { state: "hidden" } });
   }, 3500);
-}
-export function onOrderSuccess(orderId, items) {
-  // Chỉ xóa giỏ hàng nếu đó là đơn hàng gửi từ giỏ (CART)
-  // Bạn có thể thêm logic check type ở đây nếu cần
-  
-  // Cập nhật StatusBar
-  const newOrder = {
-    id: orderId,
-    status: 'pending',
-    items: items,
-    time: new Date().toISOString()
-  };
-  
-  const currentOrders = getState().orders?.active || [];
-  setState({ orders: { active: [newOrder, ...currentOrders] } });
 }

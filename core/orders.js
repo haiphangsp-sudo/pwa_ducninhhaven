@@ -13,6 +13,7 @@ const STORAGE_KEY = "haven_active_order_ids";
  * Thêm một đơn hàng mới vào hệ thống theo dõi
  */
 export function addOrderToTracking(orderId, items) {
+    
     const newOrder = {
         id: orderId,
         status: 'NEW', // Khớp với nhãn trong Google Sheets
@@ -97,5 +98,14 @@ function _getSavedIds() {
         return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
     } catch (e) {
         return [];
+    }
+}
+
+export function hydrateOrdersFromStorage() {
+    const savedIds = _getSavedIds();
+    if (savedIds.length > 0) {
+        // Nạp tạm các ID vào state với status là '...' hoặc 'SYNCING'
+        const placeholderOrders = savedIds.map(id => ({ id, status: 'NEW', items: [] }));
+        setState({ orders: { active: placeholderOrders } });
     }
 }
