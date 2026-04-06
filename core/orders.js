@@ -75,16 +75,16 @@ export async function syncOrdersWithServer() {
 /**
  * Dọn dẹp các đơn hàng đã hoàn tất (DONE) khỏi danh sách theo dõi
  */
+// core/orders.js
 export function clearCompletedOrders() {
     const { active } = getState().orders;
     
-    // Chỉ giữ lại những đơn chưa DONE
-    const stillActive = active.filter(order => order.status !== 'DONE');
+    // Xóa sạch các đơn "đầu cuối": Xong, Hoàn tất, hoặc Đã hủy
+    const terminalStates = ['DONE', 'RECOVERING', 'CANCELED'];
+    const stillActive = active.filter(order => !terminalStates.includes(order.status));
     
-    // Cập nhật State
     setState({ orders: { active: stillActive } });
     
-    // Cập nhật LocalStorage
     const activeIds = stillActive.map(o => o.id);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(activeIds));
 }

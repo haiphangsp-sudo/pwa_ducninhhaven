@@ -37,15 +37,17 @@ export function renderStatusBar(state) {
         'NEW': 1
     };
     // 3. LOGIC NỘI DUNG (Ưu tiên Đơn hàng > Giỏ hàng)
-    const latestOrder = active[active.length - 1]; 
-    countEl.textContent = active.length;
+    
+    const actionableOrders = active.filter(o => o.status !== 'DONE' && o.status !== 'RECOVERING' && o.status !== 'CANCELED');
+    const displayCount = actionableOrders.length;
+    countEl.textContent = displayCount;
+    
     if (active.length > 0) {
         // Tìm đơn hàng có trạng thái cao nhất (tiến gần tới lúc ăn nhất)
         const priorityOrder = active.reduce((prev, current) => {
             return (STATUS_PRIORITY[current.status] > STATUS_PRIORITY[prev.status]) ? current : prev;
         });
-
-        countEl.textContent = active.length; 
+        countEl.textContent = displayCount;
         textEl.innerHTML = renderStepper(priorityOrder.status); // Hiển thị stepper của đơn tiến xa nhất
 
         bar.className = 'status-bar';
