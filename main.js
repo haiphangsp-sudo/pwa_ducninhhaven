@@ -1,14 +1,13 @@
 // main.js
 
 import { CONFIG } from "./config.js";
-import { loadMenu, MENU } from "./core/menuStore.js";
-import { loadPlaces, PLACES } from "./core/placesStore.js";
+import { loadMenu } from "./core/menuStore.js";
+import { loadPlaces } from "./core/placesStore.js";
 import { normalizeContext, applyURLContext, syncContextToState } from "./core/context.js";
 import { detectRecovery } from "./core/queue.js";
 import { attachAppEvents } from "./ui/events/globalEvents.js"; 
 import { attachUI } from "./ui/events/sync.js";
 import { renderApp } from "./ui/render/renderApp.js";
-import { showToast } from "./ui/render/renderAck.js"; 
 import { setState } from "./core/state.js";
 
 

@@ -132,4 +132,30 @@
   to { transform: rotate(360deg); }
 }
 
-/*
+
+/* Hiệu ứng khi món ăn bị xóa */
+.item-exit {
+    animation: itemExit 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    pointer-events: none; /* Tránh bấm nhầm khi đang biến mất */
+}
+
+@keyframes itemExit {
+    0% {
+        opacity: 1;
+        transform: translateX(0);
+        max-height: 200px; /* Ước lượng chiều cao tối đa */
+        margin-bottom: 12px;
+    }
+    30% {
+        opacity: 0.5;
+        transform: translateX(30px); /* Bay nhẹ sang phải */
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(100px);
+        max-height: 0;
+        margin-bottom: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+}

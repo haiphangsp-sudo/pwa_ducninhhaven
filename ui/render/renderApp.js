@@ -7,12 +7,12 @@ import { attachRuntimeRefresh } from "../../core/runtimeRefresh.js";
 import { syncOrdersWithServer } from "../../core/orders.js";
 
 
-export function renderApp() {
+export async function renderApp() {
     const s = getState();
     
     renderNavBar(s);
     renderHub(s);
-    syncOrdersWithServer();
+    await syncOrdersWithServer()
 
 
     attachRuntimeRefresh({
