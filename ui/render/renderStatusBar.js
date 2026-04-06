@@ -29,7 +29,12 @@ export function renderStatusBar(state) {
         return;
     }
     bar.classList.remove("hidden");
-
+    const STATUS_PRIORITY = {
+        'DONE': 4,
+        'DELIVERING': 3,
+        'COOKING': 2,
+        'NEW': 1
+    };
     // 3. LOGIC NỘI DUNG (Ưu tiên Đơn hàng > Giỏ hàng)
     const latestOrder = active[active.length - 1]; 
     countEl.textContent = active.length;
