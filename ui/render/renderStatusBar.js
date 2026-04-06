@@ -33,14 +33,18 @@ export function renderStatusBar(state) {
     bar.classList.remove("hidden");
 
     // 3. LOGIC NỘI DUNG (Ưu tiên Đơn hàng > Giỏ hàng)
+    const latestOrder = active[active.length - 1]; 
+    countEl.textContent = active.length;
     if (active.length > 0) {
-        // TRƯỜNG HỢP: Đang có đơn hàng (Hiển thị Stepper)
-        const latestOrder = active[active.length - 1]; 
-        countEl.textContent = active.length;
-        textEl.innerHTML = renderStepper(latestOrder.status);
+        // Tìm đơn hàng có trạng thái cao nhất (tiến gần tới lúc ăn nhất)
+        const priorityOrder = active.reduce((prev, current) => {
+            return (STATUS_PRIORITY[current.status] > STATUS_PRIORITY[prev.status]) ? current : prev;
+        });
 
-        // DỌN DẸP VÀ GÁN CLASS MỚI (Cách viết chuẩn)
-        bar.className = 'status-bar'; // Reset về class gốc
+        countEl.textContent = active.length; 
+        textEl.innerHTML = renderStepper(priorityOrder.status); // Hiển thị stepper của đơn tiến xa nhất
+
+        bar.className = 'status-bar';
         bar.classList.add(`is-${latestOrder.status}`);
         
         // Xử lý Expand/Collapse
