@@ -39,7 +39,7 @@ export function renderStatusBar(state) {
         textEl.innerHTML = renderStepper(latestOrder.status);
 
         // DỌN DẸP VÀ GÁN CLASS MỚI (Cách viết chuẩn)
-        bar.className = 'order-status-bar'; // Reset về class gốc
+        bar.className = 'status-bar'; // Reset về class gốc
         bar.classList.add(`is-${latestOrder.status}`);
         
         // Xử lý Expand/Collapse
@@ -58,7 +58,7 @@ export function renderStatusBar(state) {
             : `🛒 Giỏ hàng có ${totalCartQty} món`;
 
         // Gán class cho trạng thái chờ
-        bar.className = 'order-status-bar is-idle';
+        bar.className = 'status-bar is-idle';
         if (!isBarExpanded) {
             bar.classList.add('is-collapsed');
         } else {
