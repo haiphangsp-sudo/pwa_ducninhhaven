@@ -315,8 +315,8 @@
   transform: translateY(0);
 }
 
-.cart-bar--compact {
-  transform: translateY(50%);
+.cart-bar--hidden {
+  transform: translateY(100%);
   opacity: .74;
 }
 
