@@ -39,21 +39,37 @@ export function renderStatusBar(state) {
     bar.classList.remove("hidden");
 
     // 3. LOGIC NỘI DUNG (Ưu tiên Đơn hàng > Giỏ hàng)
-    if (active.length > 0) {
-        // TRƯỜNG HỢP: Đang có đơn hàng (Hiển thị Stepper)
-        const latestOrder = active[active.length - 1]; // Lấy đơn mới nhất
-        countEl.textContent = active.length; // Số lượng đơn đang chạy
-        textEl.innerHTML = renderStepper(latestOrder.status);
-        bar.classList.add(`"is-${latestOrder.status}", "${!isBarExpanded ? 'is-collapsed' : ''}"`);
-        bar.classList.remove('is-idle');
+if (active.length > 0) {
+    // TRƯỜNG HỢP: Đang có đơn hàng (Hiển thị Stepper)
+    const latestOrder = active[active.length - 1]; 
+    countEl.textContent = active.length;
+    textEl.innerHTML = renderStepper(latestOrder.status);
+
+    // DỌN DẸP VÀ GÁN CLASS MỚI (Cách viết chuẩn)
+    bar.className = 'status-bar'; // Reset về class gốc
+    bar.classList.add(`is-${latestOrder.status}`);
+    
+    // Xử lý Expand/Collapse
+    if (isBarExpanded) {
+        bar.classList.add('is-expanded');
+    } else {
+        bar.classList.add('is-collapsed');
     }
-    else {
-        // TRƯỜNG HỢP: Chỉ có giỏ hàng
-        countEl.textContent = totalCartQty;
-        const locationName = getLocationInfo().placeName;
-        textEl.textContent = locationName
-            ? `${locationName} • ${totalCartQty} món`
-            : `🛒 Giỏ hàng có ${totalCartQty} món`;
-        bar.classList.add(`is-idle`, `${!isBarExpanded ? 'is-collapsed' : ''}`);
+}
+else {
+    // TRƯỜNG HỢP: Chỉ có giỏ hàng
+    countEl.textContent = totalCartQty;
+    const locationName = getLocationInfo()?.placeName;
+    textEl.textContent = locationName
+        ? `${locationName} • ${totalCartQty} món`
+        : `🛒 Giỏ hàng có ${totalCartQty} món`;
+
+    // Gán class cho trạng thái chờ
+    bar.className = 'status-bar is-idle';
+    if (!isBarExpanded) {
+        bar.classList.add('is-collapsed');
+    } else {
+        bar.classList.add('is-expanded');
     }
+}
 }
