@@ -1,5 +1,5 @@
 /* Container chính của thanh trạng thái */
-.order-status-bar {
+.status-bar {
     position: fixed;
     bottom: 90px; /* Nằm trên thanh điều hướng chính một chút */
     left: 50%;
@@ -22,7 +22,7 @@
 }
 
 /* Khi thanh bar thu nhỏ */
-.order-status-bar.is-collapsed {
+.status-bar.is-collapsed {
     width: 48px;
     padding: 0;
     justify-content: center;
@@ -133,7 +133,7 @@
     box-shadow: 0 0 0 4px rgba(168, 138, 100, 0.2);
 }
 .step.is-active .step-label { color: #a88a64; font-weight: bold; }
-.order-status-bar {
+.status-bar {
     position: fixed;
     top: 155px;
     left: 50%;
@@ -147,7 +147,7 @@
     transition: all 0.3s ease;
 }
 
-.order-status-bar.is-collapsed {
+.status-bar.is-collapsed {
     width: 50px;
     padding: 8px;
 }
@@ -303,9 +303,8 @@
     25% { transform: translateX(-3px); }
     75% { transform: translateX(3px); }
 }
-/* order-status-bar.css */
 
-.order-status-bar {
+.status-bar {
     position: fixed;
     /* Sử dụng biến layout đã khai báo trong tokens.css */
     bottom: calc(var(--cartbar-height) + var(--space-3)); 
@@ -355,7 +354,7 @@
 }
 
 /* Trạng thái Cảnh báo - Dùng biến Warning */
-.order-status-bar.is-warning {
+.status-bar.is-warning {
     background-color: var(--warning-soft, #fff9eb);
     border-color: var(--warning, #b98e00);
 }
