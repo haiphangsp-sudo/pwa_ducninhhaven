@@ -36,9 +36,17 @@ async function syncUI(state) {
 
   // Deep copy để so sánh
   const prevState = lastState
-    ? JSON.parse(JSON.stringify(lastState))
-    : { orders: {}, cart: { items: [] } };
-  
+  ? JSON.parse(JSON.stringify(lastState))
+  : {
+      overlay: { view: null },
+      context: {},
+      panel: { view: null },
+      cart: { items: [] },
+      lang: { current: "vi" },
+      ack: { visible: false },
+      orders: { active: [], isBarExpanded: false },
+      order: { action: null, at: null }
+    };
   
 
   /* ---------- OVERLAY ---------- */
