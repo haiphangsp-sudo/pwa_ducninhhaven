@@ -2,7 +2,7 @@
 
 import { getState, setState } from "./state.js";
 import { sendRequest } from "../services/api.js";
-import { getVariantById } from "./menuQuery.js";
+import { getVariantById, getDrawerExtended } from "./menuQuery.js";
 import { getLocationInfo } from "./placesQuery.js";
 import { notifyResponse, finalizeOrderSuccess, updateCartQuantity} from "./action.js"
 import { showToast } from "../ui/render/renderAck.js";
@@ -48,6 +48,7 @@ function buildPayload(state, action) {
 
   const formattedItems = formatItemsForGAS(rawItems);
   if (formattedItems.length === 0) return null;
+  const {totalQtyFormat,totalPrice} = getDrawerExtended();
 
   return {
     id: `H-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
@@ -56,6 +57,8 @@ function buildPayload(state, action) {
     place: placeId,
     placeLabel: placeName,
     mode: mode,
+    totalQty: totalQtyFormat,
+    totalPrice: totalPrice,
     items: formattedItems,
     device: navigator.userAgent
   };
@@ -79,12 +82,12 @@ export async function submitOrder(action) {
     }
     throw new Error("API_FAIL");
   } catch (error) {
-    setState({ order: { status: "error" } });
-    showToast({type: "error", message: "cart_bar.error", duration: 2500});
-    notifyResponse(error, payload);
+      setState({ order: { status: "error" } });
+      showToast({type: "error", message: "cart_bar.error", duration: 2500});
+      notifyResponse(error, payload);
     return false;
   } finally {
-    setState({ ui: { isOrdering: false } });
+      setState({ ui: { isOrdering: false } });
   }
 }
 
