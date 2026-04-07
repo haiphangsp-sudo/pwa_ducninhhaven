@@ -81,7 +81,7 @@ async function syncUI(state) {
     renderDrawer(state);
   }
 
-  if (state.panel.view !== prevState.panel.view) {
+  if (state.panel.view !== prevState.panel?.view) {
     renderPanel(state);
     eventHub(state);
   }
