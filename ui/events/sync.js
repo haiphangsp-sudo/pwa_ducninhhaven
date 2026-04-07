@@ -132,32 +132,35 @@ function syncLanguage(state) {
 /* --- 1. Xử lý luồng Đặt hàng --- */
 async function handleOrderLogic(state, prevState) {
   const { action, at } = state.order || {};
-  if (!action || !at || at === prevState.order?.at || isProcessingOrder) return;
 
+  const isNewCommand =
+    !!action &&
+    !!at &&
+    at !== prevState.order?.at &&
+    at !== lastHandledOrderAt;
+
+  if (!isNewCommand || isProcessingOrder) return;
+
+  // Đánh dấu đã xử lý command này
+  lastHandledOrderAt = at;
   isProcessingOrder = true;
+
   try {
     switch (action) {
-      //bounceCartBar();
-
       case "add_cart":
         addToCart();
         break;
-      
+
       case "buy_now":
-          await submitOrder(action);
-        break;
-      
       case "send_cart":
-          await submitOrder(action);
+        await submitOrder(action);
         break;
-      
+
       default:
         break;
     }
-
   } finally {
     isProcessingOrder = false;
-    syncStepperStates(state, prevState);
-
+    syncStepperStates(getState(), prevState);
   }
 }
