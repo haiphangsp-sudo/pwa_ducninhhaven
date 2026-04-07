@@ -1,8 +1,6 @@
-// ui/sync.js
-
 import { subscribe, getState } from "../../core/state.js";
 import { CONFIG } from "../../config.js";
-import { syncOverlay } from "../../ui/interactions/backdropManager.js"
+import { syncOverlay } from "../../ui/interactions/backdropManager.js";
 import { addToCart, submitOrder } from "../../core/events.js";
 import { renderPlacePicker } from "../render/renderPlacePicker.js";
 import { renderDrawer } from "../render/renderDrawer.js";
@@ -15,146 +13,139 @@ import { syncStepperStates } from "../render/renderStepper.js";
 import { renderAck } from "../render/renderAck.js";
 import { openOrderTracker } from "../components/orderTracker.js";
 
-let lastState = null; 
+let lastState = null;
 let isProcessingOrder = false;
-
-/* =======================================================
-   ENTRY
-======================================================= */
+let lastHandledOrderAt = null;
+let uiAttached = false;
 
 export function attachUI() {
+  if (uiAttached) return;
+  uiAttached = true;
+
   subscribe(syncUI);
   syncUI(getState());
 }
 
-/* =======================================================
-   MAIN SYNC
-======================================================= */
-
 async function syncUI(state) {
-
-
-  // Deep copy để so sánh
   const prevState = lastState
-  ? JSON.parse(JSON.stringify(lastState))
-  : {
-      overlay: { view: null },
-      context: {},
-      panel: { view: null },
-      cart: { items: [] },
-      lang: { current: "vi" },
-      ack: { visible: false },
-      orders: { active: [], isBarExpanded: false },
-      order: { action: null, at: null }
-    };
-  
+    ? JSON.parse(JSON.stringify(lastState))
+    : {
+        overlay: {},
+        context: {},
+        panel: {},
+        cart: { items: [] },
+        lang: {},
+        ack: {},
+        orders: { active: [], isBarExpanded: false },
+        order: {}
+      };
 
-  /* ---------- OVERLAY ---------- */
-  const activeId = state.overlay.view;
+  const activeId = state.overlay?.view;
   if (activeId !== prevState.overlay?.view) {
-        
     switch (activeId) {
-        
       case "cartDrawer":
         renderDrawer(state);
         break;
-
       case "placePicker":
         renderPlacePicker(state);
         break;
       case "orderTrackerPage":
         openOrderTracker(state);
         break;
-      
       default:
         break;
     }
     syncOverlay(activeId);
   }
 
-  /* ---------- CONTEXT ---------- */
-  
-  if (state.context !== prevState.context) {
+  if (JSON.stringify(state.context || {}) !== JSON.stringify(prevState.context || {})) {
     renderNavBar(state);
     renderDrawer(state);
   }
 
-  /* ---------- PANEL ---------- */
-
-  if (state.panel.view !== prevState.panel?.view) {
+  if (state.panel?.view !== prevState.panel?.view) {
     renderPanel(state);
     eventHub(state);
   }
-  
-  /* ---------- CART ---------- */
 
-  if (state.cart !== lastState?.cart ) {
+  const cartChanged =
+    JSON.stringify(state.cart?.items || []) !==
+    JSON.stringify(prevState.cart?.items || []);
+
+  if (cartChanged) {
     renderCartBar(state);
     renderDrawer(state);
-    
     localStorage.setItem(CONFIG.CART_KEY, JSON.stringify(state.cart.items || []));
   }
 
-
-  /* ---------- LANGUAGE ---------- */
-
-  if (state.lang.current !== prevState.lang?.current) {
+  if (state.lang?.current !== prevState.lang?.current) {
     localStorage.setItem(CONFIG.LANG_KEY, state.lang.current);
     syncLanguage(state);
   }
 
-  if (state.ack.visible !== prevState.ack?.visible) {
+  if (
+    state.ack?.visible !== prevState.ack?.visible ||
+    state.ack?.message !== prevState.ack?.message ||
+    state.ack?.status !== prevState.ack?.status
+  ) {
     renderAck(state);
   }
-  if (state.orders.isBarExpanded !== prevState.orders?.isBarExpanded || state.orders.active !== prevState.orders?.active) {
+
+  const ordersChanged =
+    JSON.stringify(state.orders?.active || []) !==
+      JSON.stringify(prevState.orders?.active || []) ||
+    state.orders?.isBarExpanded !== prevState.orders?.isBarExpanded;
+
+  if (ordersChanged) {
     renderStatusBar(state);
+
+    if (state.overlay?.view === "orderTrackerPage") {
+      openOrderTracker(state);
+    }
   }
 
-  handleOrderLogic(state, prevState);
+  await handleOrderLogic(state, prevState);
 
-  lastState = JSON.parse(JSON.stringify(state));
-  
-  
+  lastState = JSON.parse(JSON.stringify(getState()));
 }
 
 function syncLanguage(state) {
-
   renderNavBar(state);
   renderCartBar(state);
   renderStatusBar(state);
   renderHub(state);
 }
 
-
-/* --- 1. Xử lý luồng Đặt hàng --- */
 async function handleOrderLogic(state, prevState) {
   const { action, at } = state.order || {};
-  if (!action || !at || at === prevState.order?.at || isProcessingOrder) return;
 
+  const isNewCommand =
+    !!action &&
+    !!at &&
+    at !== prevState.order?.at &&
+    at !== lastHandledOrderAt;
+
+  if (!isNewCommand || isProcessingOrder) return;
+
+  lastHandledOrderAt = at;
   isProcessingOrder = true;
+
   try {
     switch (action) {
-      //bounceCartBar();
-
       case "add_cart":
         addToCart();
         break;
-      
+
       case "buy_now":
-          await submitOrder(action);
-        break;
-      
       case "send_cart":
-          await submitOrder(action);
+        await submitOrder(action);
         break;
-      
+
       default:
         break;
     }
-
   } finally {
     isProcessingOrder = false;
-    syncStepperStates(state, prevState);
-
+    syncStepperStates(getState(), prevState);
   }
 }
