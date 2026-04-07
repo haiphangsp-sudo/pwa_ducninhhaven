@@ -88,7 +88,7 @@ async function syncUI(state) {
 
   const cartChanged =
     JSON.stringify(state.cart.items || []) !==
-    JSON.stringify(prevState.cart.items || []);
+    JSON.stringify(prevState.cart?.items || []);
 
   if (cartChanged) {
     renderCartBar(state);
@@ -96,15 +96,15 @@ async function syncUI(state) {
     localStorage.setItem(CONFIG.CART_KEY, JSON.stringify(state.cart.items || []));
   }
 
-  if (state.lang.current !== prevState.lang.current) {
+  if (state.lang.current !== prevState.lang?.current) {
     localStorage.setItem(CONFIG.LANG_KEY, state.lang.current);
     syncLanguage(state);
   }
 
   if (
-    state.ack.visible !== prevState.ack.visible ||
-    state.ack.message !== prevState.ack.message ||
-    state.ack.status !== prevState.ack.status
+    state.ack.visible !== prevState.ack?.visible ||
+    state.ack.message !== prevState.ack?.message ||
+    state.ack.status !== prevState.ack?.status
   ) {
     renderAck(state);
   }
