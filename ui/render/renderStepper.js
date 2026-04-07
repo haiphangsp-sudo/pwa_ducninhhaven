@@ -1,15 +1,23 @@
 // ui/render/renderStepper.js
+import { STRINGS } from "../../data/i18n.js";
+import { getState } from "../../core/state.js";
 
-import { translate } from "../../ui/utils/translate.js";
-
+/**
+ * Render thanh tiến trình 4 bước dựa trên 5 trạng thái từ Server
+ * @param {string} currentStatus - Trạng thái hiện tại (NEW, COOKING, ...)
+ */
 export function renderStepper(currentStatus) {
+  const lang = getState().lang?.current || 'vi';
+  
+  // 4 điểm hiển thị trên giao diện
   const steps = [
-    { key: 'NEW', label: translate('status.NEW') },
-    { key: 'COOKING', label: translate('status.COOKING') },
-    { key: 'DELIVERING', label: translate('status.DELIVERING') },
-    { key: 'DONE', label: translate('status.DONE') }
+    { key: 'NEW', label: STRINGS.status.NEW[lang] },
+    { key: 'COOKING', label: STRINGS.status.COOKING[lang] },
+    { key: 'DELIVERING', label: STRINGS.status.DELIVERING[lang] },
+    { key: 'DONE', label: STRINGS.status.DONE[lang] }
   ];
 
+  // Thứ tự logic 5 bước để so sánh
   const statusOrder = ['NEW', 'COOKING', 'DELIVERING', 'DONE', 'RECOVERING'];
   const currentIndex = statusOrder.indexOf(currentStatus);
 
@@ -18,18 +26,19 @@ export function renderStepper(currentStatus) {
       ${steps.map((step, index) => {
         let stateClass = "";
 
-        // Nếu status là RECOVERING (thứ 5) -> Tích xanh tất cả 4 dot
+        // Nếu là RECOVERING -> Tất cả các bước đều hoàn thành
         if (currentStatus === 'RECOVERING') {
           stateClass = "is-complete";
         } 
-        // Nếu vị trí của status hiện tại trong mảng lớn hơn index của dot -> Dot đã xong
+        // Nếu vị trí hiện tại của đơn hàng > vị trí của dot -> Dot đó đã xong (✓)
         else if (currentIndex > index) {
           stateClass = "is-complete";
         } 
-        // Nếu vị trí status bằng đúng index của dot -> Dot đó đang Nâu (Active)
+        // Nếu vị trí hiện tại đúng bằng dot này -> Dot này đang xử lý (Màu Nâu)
         else if (currentIndex === index) {
           stateClass = "is-active";
         } 
+        // Còn lại là chưa tới
         else {
           stateClass = "is-pending";
         }
@@ -46,46 +55,4 @@ export function renderStepper(currentStatus) {
       }).join("")}
     </div>
   `;
-}
-function updateStepperUI(itemId, qty) {
-  // 1. Tìm tất cả các chỗ hiển thị số lượng của món này (trong Menu và trong Drawer)
-  const qtyDisplays = document.querySelectorAll(`[data-qty-id="${itemId}"]`);
-  
-  qtyDisplays.forEach(el => {
-    // Chỉ cập nhật con số, không render lại HTML
-    if (el.textContent !== String(qty)) {
-      el.textContent = qty;
-      
-      // Hiệu ứng Wellness: Chớp nhẹ một cái để khách biết đã nhảy số
-      el.classList.add('pulse');
-      setTimeout(() => el.classList.remove('pulse'), 300);
-    }
-  });
-
-  // 2. Nếu số lượng về 0 và đang ở trong Drawer, ta mới cần xóa dòng đó
-  if (qty === 0) {
-    const itemRow = document.querySelector(`.drawer-item[data-id="${itemId}"]`);
-    if (itemRow) itemRow.remove();
-  }
-}
-
-
-/* --- 2. Xử lý đồng bộ nút Stepper (Cộng/Trừ) --- */
-export function syncStepperStates(state, prevState) {
-  const currentItems = state.cart?.items || [];
-  const prevItems = prevState.cart?.items || [];
-
-  // Cập nhật các món mới hoặc thay đổi số lượng
-  currentItems.forEach(item => {
-    const prev = prevItems.find(i => i.id === item.id);
-    if (!prev || prev.qty !== item.qty) {
-      updateStepperUI(item.id, item.qty);
-    }
-  });
-
-  // Reset các món vừa bị xóa khỏi giỏ
-  prevItems.forEach(prevItem => {
-    const stillInCart = currentItems.find(i => i.id === prevItem.id);
-    if (!stillInCart) updateStepperUI(prevItem.id, 0);
-  });
 }

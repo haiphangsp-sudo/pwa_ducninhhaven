@@ -1,10 +1,14 @@
+// ui/render/renderStatusBar.js
 import { renderStepper } from './renderStepper.js';
 import { getLocationInfo } from '../../core/placesQuery.js';
 import { getDrawerExtended } from "../../core/menuQuery.js";
 import { translate } from "../utils/translate.js";
+import { STRINGS } from "../../data/i18n.js";
 
-const TERMINAL_STATUSES = ['DONE', 'RECOVERING', 'CANCELED'];
+// RECOVERING và CANCELED sẽ làm thanh bar ẩn đi (hoặc vào kho lưu trữ)
+const TERMINAL_STATUSES = ['RECOVERING', 'CANCELED'];
 
+// Thứ tự ưu tiên hiển thị nếu khách có nhiều đơn hàng cùng lúc
 const ORDER_PRIORITY = {
   DONE: 5,
   DELIVERING: 4,
@@ -16,16 +20,9 @@ const ORDER_PRIORITY = {
 function getPriorityOrder(orders = []) {
   return orders.reduce((best, current) => {
     if (!best) return current;
-
     const bestScore = ORDER_PRIORITY[best.status] || 0;
     const currentScore = ORDER_PRIORITY[current.status] || 0;
-
-    if (currentScore !== bestScore) {
-      return currentScore > bestScore ? current : best;
-    }
-
-    // nếu cùng trạng thái, ưu tiên đơn mới hơn ở cuối mảng
-    return current;
+    return currentScore > bestScore ? current : best;
   }, null);
 }
 
@@ -38,54 +35,58 @@ export function renderStatusBar(state) {
 
   if (!bar || !countEl || !textEl || !btnCheck || !btnToggle) return;
 
+  const lang = state.lang?.current || 'vi';
   const activeOrders = state.orders?.active || [];
   const isBarExpanded = !!state.orders?.isBarExpanded;
-  const { totalQty, totalQtyFormat} = getDrawerExtended();
+  const { totalQty } = getDrawerExtended();
 
+  // Lọc các đơn chưa kết thúc
   const actionableOrders = activeOrders.filter(
     order => !TERMINAL_STATUSES.includes(order.status)
   );
 
-  btnToggle.dataset.action = "toggle_status";
-  btnToggle.dataset.value = String(isBarExpanded);
-
-  btnCheck.dataset.action = "open-overlay";
-  btnCheck.dataset.value = "orderTrackerPage";
-  btnCheck.textContent = translate("order.button");
-
-
+  // 1. Logic Ẩn/Hiện thanh Bar
   if (actionableOrders.length === 0 && totalQty === 0) {
     bar.className = "status-bar hidden";
     return;
   }
 
-  bar.className = "status-bar";
-  bar.classList.toggle("is-expanded", isBarExpanded);
-  bar.classList.toggle("is-collapsed", !isBarExpanded);
-  bar.classList.remove("hidden");
+  bar.className = `status-bar ${isBarExpanded ? 'is-expanded' : 'is-collapsed'}`;
+  
+  // 2. Gán dữ liệu cho các nút bấm
+  btnToggle.dataset.action = "toggle_status";
+  btnToggle.dataset.value = String(isBarExpanded);
+  
+  btnCheck.dataset.action = "open-overlay";
+  btnCheck.dataset.value = "orderTrackerPage";
+  btnCheck.textContent = translate("order.button");
 
+  // 3. Hiển thị nội dung chính
   if (actionableOrders.length > 0) {
     const priorityOrder = getPriorityOrder(actionableOrders);
     const status = priorityOrder?.status || "SYNCING";
 
     countEl.textContent = String(actionableOrders.length);
+    
+    // Xóa class cũ và thêm class trạng thái mới (để CSS đổi màu nâu/xanh)
+    bar.className = bar.className.replace(/\bis-\S+/g, '');
     bar.classList.add(`is-${String(status).toLowerCase()}`);
 
     if (status === "SYNCING") {
       textEl.textContent = translate("order.check");
     } else {
-      textEl.innerHTML = renderStepper(status);
+      // Lấy câu thông báo tương ứng (Bếp đang chuẩn bị...) và render Stepper
+      const statusMsg = STRINGS.status[`msg_${status}`]?.[lang] || "";
+      textEl.innerHTML = `
+        <div class="status-msg">${statusMsg}</div>
+        ${renderStepper(status)}
+      `;
     }
-
-    return;
+  } else {
+    // Trường hợp giỏ hàng có món nhưng chưa gửi đơn
+    const { placeName } = getLocationInfo();
+    countEl.textContent = String(totalQty);
+    textEl.textContent = placeName;
+    bar.classList.add("is-idle");
   }
-  const { hasPlace, placeName } = getLocationInfo();
-  
-
-  countEl.textContent = totalQty;
-  textEl.textContent = hasPlace
-    ? `${placeName} • ${totalQtyFormat}`
-    : `${translate("cart_bar.cart_title")}: • ${totalQtyFormat}`;
-
-  bar.classList.add("is-idle");
 }
