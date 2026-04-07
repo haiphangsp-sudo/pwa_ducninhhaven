@@ -7,8 +7,7 @@ export function renderStepper(currentStatus) {
     { key: 'NEW', label: translate('status.NEW') },
     { key: 'COOKING', label: translate('status.COOKING') },
     { key: 'DELIVERING', label: translate('status.DELIVERING') },
-    { key: 'DONE', label: translate('status.DONE') },
-    { key: 'RECOVERING', label: translate('status.RECOVERING') }
+    { key: 'DONE', label: translate('status.DONE') }
   ];
 
   const statusOrder = ['NEW', 'COOKING', 'DELIVERING', 'DONE', 'RECOVERING'];
