@@ -3,8 +3,6 @@
 import { translate } from "../../ui/utils/translate.js";
 
 export function renderStepper(currentStatus) {
-  if (!currentStatus || currentStatus === "SYNCING") return "";
-
   const steps = [
     { key: 'NEW', label: translate('status.NEW') },
     { key: 'COOKING', label: translate('status.COOKING') },
@@ -13,18 +11,34 @@ export function renderStepper(currentStatus) {
   ];
 
   const currentIndex = steps.findIndex(s => s.key === currentStatus);
-  if (currentIndex < 0) return "";
 
   return `
     <div class="stepper">
       ${steps.map((step, index) => {
-        let cls = "is-pending";
-        if (index < currentIndex) cls = "is-complete";
-        else if (index === currentIndex) cls = "is-active";
+        let stateClass = "";
+
+        // 1. Trường hợp ĐẶC BIỆT: Nếu là bước cuối RECOVERING -> Tích xanh tất cả
+        if (currentStatus === 'DONE') {
+          stateClass = "is-complete";
+        } 
+        // 2. Nếu bước này nằm TRƯỚC bước hiện tại trên GS -> Hiện dấu ✓
+        else if (index < currentIndex) {
+          stateClass = "is-complete";
+        } 
+        // 3. Nếu bước này CHÍNH LÀ bước hiện tại trên GS -> Hiện màu Nâu (Active)
+        else if (index === currentIndex) {
+          stateClass = "is-active";
+        } 
+        // 4. Còn lại là đang chờ
+        else {
+          stateClass = "is-pending";
+        }
 
         return `
-          <div class="step ${cls}">
-            <div class="step-dot">${index < currentIndex ? '✓' : ''}</div>
+          <div class="step ${stateClass}">
+            <div class="step-dot">
+              ${stateClass === "is-complete" ? '✓' : ''}
+            </div>
             <div class="step-label">${step.label}</div>
             ${index < steps.length - 1 ? '<div class="step-line"></div>' : ''}
           </div>
@@ -33,7 +47,6 @@ export function renderStepper(currentStatus) {
     </div>
   `;
 }
-
 function updateStepperUI(itemId, qty) {
   // 1. Tìm tất cả các chỗ hiển thị số lượng của món này (trong Menu và trong Drawer)
   const qtyDisplays = document.querySelectorAll(`[data-qty-id="${itemId}"]`);
