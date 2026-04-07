@@ -1,141 +1,174 @@
-// core/orders.js
 import { getState, setState } from './state.js';
 import { CONFIG } from '../config.js';
 
 const SCRIPT_URL = CONFIG.API_ENDPOINT;
 const STORAGE_KEY = "haven_active_order_ids";
 
-/* =========================
-   PUBLIC API (SERVICE)
-========================= */
+const TERMINAL_STATUSES = ['DONE', 'RECOVERING', 'CANCELED'];
+const ACTIONABLE_STATUSES = ['NEW', 'COOKING', 'DELIVERING', 'SYNCING'];
 
-/**
- * Thêm một đơn hàng mới vào hệ thống theo dõi
- */
-export function addOrderToTracking(orderId, items) {
+function normalizeOrder(order = {}) {
+  return {
+    id: order.id || "",
+    status: order.status || "NEW",
+    items: Array.isArray(order.items) ? order.items : [],
+    time: order.time || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    totalQty: Number(order.totalQty || 0),
+    totalPrice: Number(order.totalPrice || 0),
+    mode: order.mode || "",
+    placeLabel: order.placeLabel || "",
+    type: order.type || "",
+    device: order.device || ""
+  };
+}
 
-    const newOrder = {
-        id: orderId,
-        status: 'NEW', // Khớp với nhãn trong Google Sheets
-        items: items,
-        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-    };
+function dedupeOrders(orders = []) {
+  const map = new Map();
 
-    // 1. Cập nhật State
-    const { active } = getState().orders;
-    setState({ 
-        orders: { 
-            active: [...(active || []), newOrder] 
-        } 
+  orders.forEach(raw => {
+    const order = normalizeOrder(raw);
+    if (!order.id) return;
+
+    const prev = map.get(order.id);
+
+    if (!prev) {
+      map.set(order.id, order);
+      return;
+    }
+
+    map.set(order.id, {
+      ...prev,
+      ...order,
+      items: order.items?.length ? order.items : prev.items
     });
+  });
 
-    // 2. Cập nhật LocalStorage để lưu vết khi F5 trang
-    const savedIds = _getSavedIds();
-    if (!savedIds.includes(orderId)) {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify([...savedIds, orderId]));
-    }
+  return Array.from(map.values());
 }
 
-/**
- * Đồng bộ trạng thái từ Server về Client
- */
-export async function syncOrdersWithServer() {
-    const savedIds = _getSavedIds();
-    if (savedIds.length === 0) return;
+function persistActiveIds(orders = []) {
+  const ids = orders
+    .filter(order => order.id && !TERMINAL_STATUSES.includes(order.status))
+    .map(order => order.id);
 
-    try {
-        const response = await fetch(`${SCRIPT_URL}?action=getStatuses&ids=${savedIds.join(",")}`);
-        if (!response.ok) throw new Error("Network response was not ok");
-
-        const updates = await response.json();
-        console.log("[Haven Sync] Dữ liệu từ Server:", updates);
-
-        const { active = [] } = getState().orders || {};
-
-        // index nhanh theo id từ state hiện tại
-        const activeMap = new Map(active.map(order => [order.id, order]));
-
-        // dựng lại danh sách theo savedIds, không phụ thuộc active đang có hay không
-        const rebuiltOrders = savedIds.map(id => {
-            const existing = activeMap.get(id);
-
-            return {
-                id,
-                status: updates[id] || existing?.status || "SYNCING",
-                items: existing?.items || [],
-                time: existing?.time || ""
-            };
-        });
-
-        // bỏ các terminal state khỏi storage nếu muốn giữ sạch
-        const terminalStates = ['DONE', 'RECOVERING', 'CANCELED'];
-        const stillActive = rebuiltOrders.filter(order => !terminalStates.includes(order.status));
-
-        setState({
-            orders: {
-                active: stillActive
-            }
-        });
-
-        localStorage.setItem(
-            STORAGE_KEY,
-            JSON.stringify(stillActive.map(order => order.id))
-        );
-
-    } catch (error) {
-        console.error("Haven Service Error [Sync]:", error);
-    }
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(ids));
 }
-/**
- * Dọn dẹp các đơn hàng đã hoàn tất (DONE) khỏi danh sách theo dõi
- */
-// core/orders.js
-export function clearCompletedOrders() {
-    const { active } = getState().orders;
-    
-    // Xóa sạch các đơn "đầu cuối": Xong, Hoàn tất, hoặc Đã hủy
-    const terminalStates = ['DONE', 'RECOVERING', 'CANCELED'];
-    const stillActive = active.filter(order => !terminalStates.includes(order.status));
-    
-    setState({ orders: { active: stillActive } });
-    
-    const activeIds = stillActive.map(o => o.id);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(activeIds));
-}
-
-/* =========================
-   PRIVATE HELPERS
-========================= */
 
 function _getSavedIds() {
-    try {
-        return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-    } catch (e) {
-        return [];
-    }
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+  } catch {
+    return [];
+  }
 }
 
+export function addOrderToTracking(orderId, items = [], meta = {}) {
+  if (!orderId) return;
+
+  const state = getState();
+  const currentActive = state.orders?.active || [];
+
+  const incoming = normalizeOrder({
+    id: orderId,
+    status: 'NEW',
+    items,
+    ...meta
+  });
+
+  const merged = dedupeOrders([...currentActive, incoming])
+    .filter(order => !TERMINAL_STATUSES.includes(order.status));
+
+  setState({
+    orders: {
+      active: merged
+    }
+  });
+
+  persistActiveIds(merged);
+}
+
+export async function syncOrdersWithServer() {
+  const savedIds = _getSavedIds();
+  if (savedIds.length === 0) return;
+
+  try {
+    const response = await fetch(`${SCRIPT_URL}?action=getStatuses&ids=${savedIds.join(",")}`);
+    if (!response.ok) throw new Error("Network response was not ok");
+
+    const updates = await response.json();
+    const currentActive = getState().orders?.active || [];
+    const currentMap = new Map(currentActive.map(order => [order.id, order]));
+
+    const rebuilt = savedIds.map(id => {
+      const existing = currentMap.get(id);
+      const incoming = updates[id];
+
+      if (typeof incoming === "string") {
+        return normalizeOrder({
+          ...existing,
+          id,
+          status: incoming
+        });
+      }
+
+      return normalizeOrder({
+        ...existing,
+        ...(incoming || {}),
+        id
+      });
+    });
+
+    const nextActive = dedupeOrders(rebuilt)
+      .filter(order => !TERMINAL_STATUSES.includes(order.status));
+
+    setState({
+      orders: {
+        active: nextActive
+      }
+    });
+
+    persistActiveIds(nextActive);
+  } catch (error) {
+    console.error("Haven Service Error [Sync]:", error);
+  }
+}
+
+export function clearCompletedOrders() {
+  const active = getState().orders?.active || [];
+  const stillActive = active.filter(order => !TERMINAL_STATUSES.includes(order.status));
+
+  setState({
+    orders: {
+      active: stillActive
+    }
+  });
+
+  persistActiveIds(stillActive);
+}
 
 export function hydrateOrdersFromStorage() {
-    const savedIds = _getSavedIds(); // Lấy danh sách ID từ localStorage
-    
-    if (savedIds.length > 0) {
-        // Tạo các đơn hàng "chờ" (placeholder) để UI biết là có đơn cần hiện
-        const placeholderOrders = savedIds.map(id => ({
-            id: id,
-            status: 'SYNCING', // Trạng thái tạm thời khi đang đợi server
-            items: []
-        }));
+  const savedIds = _getSavedIds();
+  if (savedIds.length === 0) return false;
 
-        // Đẩy vào State ngay lập tức
-        setState({ 
-            orders: { 
-                active: placeholderOrders,
-                isBarExpanded: false // Hoặc lấy từ một key khác trong storage nếu muốn
-            } 
-        });
-        
-        return true;
+  const placeholderOrders = savedIds.map(id =>
+    normalizeOrder({
+      id,
+      status: 'SYNCING',
+      items: []
+    })
+  );
+
+  setState({
+    orders: {
+      active: placeholderOrders,
+      isBarExpanded: false
     }
-    return false;
+  });
+
+  return true;
+}
+
+export function getActionableOrders() {
+  const active = getState().orders?.active || [];
+  return active.filter(order => ACTIONABLE_STATUSES.includes(order.status));
 }

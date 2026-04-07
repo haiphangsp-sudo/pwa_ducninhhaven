@@ -52,7 +52,6 @@ export async function updateCartQuantity(itemId, delta) {
  * @param {Object|Error} response - Kết quả từ sendRequest hoặc Error bị catch
  * @param {Object} payload - Dữ liệu đơn hàng gốc (để lấy danh sách món)
  */
-
 export function notifyResponse(response) {
   if (response.success) {
     if (response.duplicate) {
@@ -65,43 +64,47 @@ export function notifyResponse(response) {
 
   if (response.fatal) {
     const fatalMessages = {
-      unauthorized: "Lỗi xác thực.",
-      invalid: "Dữ liệu không hợp lệ."
+      unauthorized: "Lỗi xác thực: Secret key không chính xác.",
+      invalid: "Dữ liệu đơn hàng không hợp lệ."
     };
-    showToast(fatalMessages[response.message] || "Lỗi hệ thống.", "error");
+    showToast(fatalMessages[response.message] || "Lỗi hệ thống nghiêm trọng.", "error");
     return;
   }
 
   const errorKey = response instanceof Error ? response.message : response.message;
 
   const errorMap = {
-    offline: "Bạn đang offline.",
-    network: "Timeout.",
-    server: "Server lỗi.",
-    retry: "Đang thử lại...",
-    invalid_json: "Response lỗi."
+    offline: "Bạn đang ngoại tuyến. Vui lòng kiểm tra Wi-Fi/4G.",
+    network: "Yêu cầu bị quá hạn. Vui lòng thử lại.",
+    server: "Máy chủ đang gặp sự cố.",
+    retry: "Hệ thống đang bận. Đang tự động xếp hàng gửi lại...",
+    invalid_json: "Phản hồi từ máy chủ không hợp lệ."
   };
 
-  showToast(errorMap[errorKey] || "Lỗi không xác định.", "error");
+  showToast(errorMap[errorKey] || "Đã xảy ra lỗi không xác định.", "error");
 }
-
 /**
  * FINAL ACTION: Dọn dẹp và thông báo sau khi đơn hàng thành công
  * @param {string} type - Loại đơn ('cart', 'instant', 'recovery')
  */
-
 export function finalizeOrderSuccess(type, payload) {
   const feedbackMap = {
-    send_cart: { title: "Thành công", msg: "Giỏ hàng đã gửi!" },
-    buy_now: { title: "Đã gửi", msg: "Đang chuẩn bị..." },
-    recovery: { title: "Đã phục hồi", msg: "Đã gửi lại đơn cũ!" }
+    send_cart: { title: "Thành công", msg: "Giỏ hàng của bạn đã được gửi tới bếp!" },
+    buy_now: { title: "Đã gửi đơn", msg: "Món ăn đang được chuẩn bị, xin chờ giây lát!" },
+    recovery: { title: "Đã phục hồi", msg: "Các đơn hàng cũ đã được gửi bù thành công!" }
   };
 
   const feedback = feedbackMap[type] || feedbackMap.send_cart;
 
-  // ✅ CHỈ 1 nơi add order
   if (payload?.id) {
-    addOrderToTracking(payload.id, payload.items);
+    addOrderToTracking(payload.id, payload.items, {
+      totalQty: payload.totalQty,
+      totalPrice: payload.totalPrice,
+      mode: payload.mode,
+      placeLabel: payload.placeLabel,
+      type: payload.type,
+      device: payload.device
+    });
   }
 
   const patch = {
@@ -111,16 +114,19 @@ export function finalizeOrderSuccess(type, payload) {
       title: feedback.title,
       message: feedback.msg
     },
-    overlay: { view: null }
+    overlay: { view: null },
+    order: { status: "success" }
   };
 
   if (type === "send_cart") {
-    patch.cart = { items: [], status: "idle" };
+    patch.cart = { items: [], status: "idle", at: Date.now() };
   }
 
   setState(patch);
 
   setTimeout(() => {
-    setState({ ack: { visible: false } });
+    setState({
+      ack: { visible: false }
+    });
   }, 3500);
 }
