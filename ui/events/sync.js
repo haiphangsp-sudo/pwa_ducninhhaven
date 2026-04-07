@@ -97,10 +97,10 @@ async function syncUI(state) {
   }
 
   const ordersChanged =
-    JSON.stringify(state.orders.active || []) !==
-      JSON.stringify(prevState.orders.active || []) ||
-    state.orders.isBarExpanded !== prevState.orders.isBarExpanded;
-
+  state.orders.active.length !== prevState.orders.active.length ||
+  state.orders.isBarExpanded !== prevState.orders.isBarExpanded ||
+  state.order.status !== prevState.order.status;
+  
   if (ordersChanged) {
     renderStatusBar(state);
 
@@ -120,17 +120,15 @@ function syncLanguage(state) {
   renderStatusBar(state);
   renderHub(state);
 }
+async function handleOrderLogic(state) {
+  const { action, at, status } = state.order;
 
-async function handleOrderLogic(state, prevState) {
-  const { action, at } = state.order;
-
-  const isNewCommand =
-    !!action &&
-    !!at &&
-    at !== prevState.order.at &&
+  const isNew =
+    action &&
+    at &&
     at !== lastHandledOrderAt;
 
-  if (!isNewCommand || isProcessingOrder) return;
+  if (!isNew || isProcessingOrder) return;
 
   lastHandledOrderAt = at;
   isProcessingOrder = true;
@@ -145,12 +143,8 @@ async function handleOrderLogic(state, prevState) {
       case "send_cart":
         await runSubmitOrderEffect(action);
         break;
-
-      default:
-        break;
     }
   } finally {
     isProcessingOrder = false;
-    syncStepperStates(getState(), prevState);
   }
 }

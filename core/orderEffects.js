@@ -99,25 +99,31 @@ export async function runSubmitOrderEffect(action) {
     order: {
       status: "sending"
     }
-  });
+    });
 
-  try {
-    const res = await sendRequest(payload);
+    try {
+        const res = await sendRequest(payload);
 
-    if (!res?.success) {
-      throw new Error(res?.message || "API_FAIL");
+        if (!res?.success) {
+        throw new Error(res?.message || "API_FAIL");
+        }
+
+        finalizeOrderSuccess(action, payload);
+
+        if (res.duplicate) {
+        showToast({ type: "info", message: "cart_bar.duplicate", duration: 2500 });
+        }
+
+        return true;
+    } catch (error) {
+        
+        resetOrderCommand("error");
+        showToast({ type: "error", message: "cart_bar.error", duration: 2500 });
+        return false;
+        
+    } finally {
+        
+        resetOrderCommand("idle");
+        
     }
-
-    finalizeOrderSuccess(action, payload);
-
-    if (res.duplicate) {
-      showToast({ type: "info", message: "cart_bar.duplicate", duration: 2500 });
-    }
-
-    return true;
-  } catch (error) {
-    resetOrderCommand("error");
-    showToast({ type: "error", message: "cart_bar.error", duration: 2500 });
-    return false;
-  }
 }
