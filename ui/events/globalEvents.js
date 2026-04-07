@@ -1,6 +1,5 @@
 // ui/events/globalEvents.js
 import { setState, getState } from "../../core/state.js";
-import { queueOrderCommand } from "../../core/events.js";
 import { updateCartQuantity } from "../../core/action.js";
 import { applyPlaceById, syncContextToState } from "../../core/context.js";
 import { animateFlyToCart } from "../../ui/interactions/animateFlyToCart.js";
@@ -108,16 +107,37 @@ function handleGlobalClick(e) {
       break;
 
     case "add_cart":
-      queueOrderCommand("add_cart", cmd.value);
+      setState({
+          order: {
+            action: cmd.action,
+            line: cmd.value,
+            status: "pending",
+            at: Date.now()
+          }
+        });
       animateFlyToCart(target);
       break;
 
     case "buy_now":
-      queueOrderCommand("buy_now", cmd.value);
+      setState({
+          order: {
+            action: cmd.action,
+            line: cmd.value,
+            status: "pending",
+            at: Date.now()
+          }
+        });
       break;
 
     case "send_cart":
-      queueOrderCommand("send_cart");
+        setState({
+          order: {
+            action: cmd.action,
+            line: cmd.value,
+            status: "pending",
+            at: Date.now()
+          }
+        });
       break;
 
     case "update-qty":
