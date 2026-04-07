@@ -96,10 +96,12 @@ async function boot() {
     normalizeContext();
     applyURLContext();
     syncContextToState();
-    attachUI(); // Gắn các listener cho state
+
+    renderApp();
+    attachUI();
+    
     attachAppEvents();
     
-    renderApp();
     detectRecovery();
     
   } catch (criticalError) {
