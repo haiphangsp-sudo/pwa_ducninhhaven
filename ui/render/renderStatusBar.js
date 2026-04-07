@@ -50,6 +50,8 @@ export function renderStatusBar(state) {
 
   btnCheck.dataset.action = "open-overlay";
   btnCheck.dataset.value = "orderTrackerPage";
+  btnCheck.textContent = translate("order.check");
+
 
   if (actionableOrders.length === 0 && totalQty === 0) {
     bar.className = "status-bar hidden";
