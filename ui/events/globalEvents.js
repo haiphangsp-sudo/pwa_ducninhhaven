@@ -59,7 +59,7 @@ export function attachAppEvents() {
       const { active } = getState().orders || {};
 
       const hasActive = active?.some(
-        o => !['DONE', 'RECOVERING', 'CANCELED'].includes(o.status)
+        o => !['RECOVERING', 'CANCELED'].includes(o.status)
       );
 
       if (hasActive) {
@@ -88,7 +88,6 @@ function handleGlobalClick(e) {
     option: target.dataset.option,
     extra: target.dataset.extra
   };
-  const sou = cmd.action;
 
 
   switch (cmd.action) {

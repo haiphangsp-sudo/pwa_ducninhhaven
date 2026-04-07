@@ -10,6 +10,7 @@ const TERMINAL_STATUSES = ['RECOVERING', 'CANCELED'];
 
 // Thứ tự ưu tiên hiển thị nếu khách có nhiều đơn hàng cùng lúc
 const ORDER_PRIORITY = {
+  RECOVERING: 6,
   DONE: 5,
   DELIVERING: 4,
   COOKING: 3,
