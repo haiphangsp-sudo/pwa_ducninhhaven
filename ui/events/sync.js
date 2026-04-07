@@ -10,9 +10,9 @@ import { renderStatusBar } from "../render/renderStatusBar.js";
 import { renderHub, eventHub } from "../render/renderHub.js";
 import { renderPanel } from "../render/renderPanel.js";
 import { syncStepperStates } from "../render/renderStepper.js";
+import { submitOrder, addToCart } from "../../core/events.js";
 import { renderAck } from "../render/renderAck.js";
 import { openOrderTracker } from "../components/orderTracker.js";
-import { runAddToCartEffect, runSubmitOrderEffect } from "../../core/orderEffects.js";
 
 let lastState = null;
 let isProcessingOrder = false;
@@ -136,12 +136,12 @@ async function handleOrderLogic(state) {
   try {
     switch (action) {
       case "add_cart":
-        await runAddToCartEffect();
+        addToCart();
         break;
 
       case "buy_now":
       case "send_cart":
-        await runSubmitOrderEffect(action);
+        await submitOrder(action);
         break;
     }
   } finally {

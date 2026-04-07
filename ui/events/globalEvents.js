@@ -1,20 +1,23 @@
 // ui/events/globalEvents.js
-import { setState, getState } from "../../core/state.js";
+
+import { setState } from "../../core/state.js";
 import { updateCartQuantity } from "../../core/action.js";
 import { applyPlaceById, syncContextToState } from "../../core/context.js";
 import { animateFlyToCart } from "../../ui/interactions/animateFlyToCart.js";
 import { applyScrollUI } from "./scrollBehavior.js";
 import { syncOrdersWithServer } from "../../core/orders.js";
+import { getState } from "../../core/state.js";
 import { attachRuntimeRefresh } from "../../core/runtimeRefresh.js";
 
+
+
+/* =========================
+   MAIN EVENTS
+========================= */
 let orderPollingStarted = false;
 let fastSyncTimer = null;
-let appEventsAttached = false;
 
 export function attachAppEvents() {
-  if (appEventsAttached) return;
-  appEventsAttached = true;
-
   document.addEventListener("click", handleGlobalClick);
 
   window.addEventListener("contextchange", () => {
@@ -35,10 +38,13 @@ export function attachAppEvents() {
   if (!orderPollingStarted) {
     orderPollingStarted = true;
 
+    // 1. gọi ngay
     syncOrdersWithServer();
 
+    // 2. FAST RETRY cho SYNCING (5s)
     fastSyncTimer = setInterval(() => {
       const { active } = getState().orders || {};
+
       const hasSyncing = active?.some(o => o.status === "SYNCING");
 
       if (hasSyncing) {
@@ -48,10 +54,12 @@ export function attachAppEvents() {
       }
     }, 5000);
 
+    // 3. POLLING CHẬM (45s)
     setInterval(() => {
       const { active } = getState().orders || {};
+
       const hasActive = active?.some(
-        o => !["DONE", "RECOVERING", "CANCELED"].includes(o.status)
+        o => !['DONE', 'RECOVERING', 'CANCELED'].includes(o.status)
       );
 
       if (hasActive) {
@@ -66,6 +74,10 @@ export function attachAppEvents() {
   });
 }
 
+/* =========================
+   GLOBAL CLICK
+========================= */
+
 function handleGlobalClick(e) {
   const target = e.target.closest("[data-action]");
   if (!target) return;
@@ -76,8 +88,13 @@ function handleGlobalClick(e) {
     option: target.dataset.option,
     extra: target.dataset.extra
   };
+  const sou = cmd.action;
+
 
   switch (cmd.action) {
+
+    /* ---------- NAV ---------- */
+
     case "open-panel":
       setState({
         panel: {
@@ -98,7 +115,7 @@ function handleGlobalClick(e) {
         overlay: { view: null }
       });
       break;
-
+    
     case "select-place":
       setState({
         overlay: { view: null }
@@ -106,60 +123,53 @@ function handleGlobalClick(e) {
       applyPlaceById(cmd.value);
       break;
 
+    /* ---------- CART / ORDER ---------- */
     case "add_cart":
-      setState({
-          order: {
-            action: cmd.action,
-            line: cmd.value,
-            status: "pending",
-            at: Date.now()
-          }
-        });
+      setOrder( cmd )
       animateFlyToCart(target);
       break;
 
     case "buy_now":
-      setState({
-          order: {
-            action: cmd.action,
-            line: cmd.value,
-            status: "pending",
-            at: Date.now()
-          }
-        });
+      setOrder(cmd);
       break;
 
     case "send_cart":
-        setState({
-          order: {
-            action: cmd.action,
-            line: cmd.value,
-            status: "pending",
-            at: Date.now()
-          }
-        });
+      setOrder(cmd);
       break;
-
+    
     case "update-qty":
-      updateCartQuantity(cmd.value, parseInt(cmd.option, 10));
+      const delta = parseInt(cmd.option);
+      updateCartQuantity(cmd.value, delta);
       break;
-
+    
     case "toggle_status":
       setState({
         orders: {
-          isBarExpanded: cmd.value !== "true"
+          isBarExpanded: cmd.value !== "true"? true : false
         }
-      });
-      e.stopPropagation();
+    });
+       e.stopPropagation();
       break;
 
+    /* ---------- LANGUAGE ---------- */
+
     case "change-lang":
-      setState({
-        lang: { current: cmd.value }
-      });
+      setState({ lang: { current: cmd.value } });
       break;
 
     default:
       break;
   }
+}
+
+function setOrder(cmd) {
+  setState({
+    order: {
+      action: cmd.action,
+      line: cmd.value,
+      status: cmd.extra,
+      at: Date.now()
+    }
+  });
+  // Cập nhật trạng thái 'sending' để renderStatusBar hiện spinner
 }
