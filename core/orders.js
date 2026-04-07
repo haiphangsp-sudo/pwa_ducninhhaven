@@ -1,5 +1,5 @@
 // ui/components/orderTracker.js
-import { renderStepper } from "../render/renderStepper.js";
+import { renderStepper } from "../ui/render/renderStepper.js";
 
 export function openOrderTracker(state) {
   const active = state.orders?.active || [];
