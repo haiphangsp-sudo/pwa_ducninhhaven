@@ -2,7 +2,6 @@
 
 import { getState } from "./state.js";
 import { translate } from "../ui/utils/translate.js";
-import { getCurrentPlaceType } from "./placesQuery.js";
 
 /* =======================================================
    PUBLIC

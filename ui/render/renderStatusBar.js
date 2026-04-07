@@ -34,7 +34,7 @@ export function renderStatusBar(state) {
   const activeOrders = state.orders?.active || [];
   const isBarExpanded = !!state.orders?.isBarExpanded;
 
-  const totalCartQty = getDrawerExtended().totalQtyFormat;
+  const { totalQty,totalQtyFormat,isEmpty } = getDrawerExtended();
 
 
   const actionableOrders = activeOrders.filter(
@@ -49,7 +49,7 @@ export function renderStatusBar(state) {
     btnCheck.textContent=translate("order.check_detail")
 
   // Không có gì → ẩn
-  if (actionableOrders.length === 0 && totalCartQty === 0) {
+  if (actionableOrders.length === 0 && isEmpty) {
     bar.className = "status-bar hidden";
     return;
   }
@@ -84,10 +84,10 @@ export function renderStatusBar(state) {
     const locationName = getLocationInfo()?.placeName;
     getDrawerExtended();
 
-  countEl.textContent = String(totalCartQty);
+  countEl.textContent = totalQty;
   textEl.textContent = locationName
-    ? `${locationName} • ${totalCartQty}`
-    : `Giỏ hàng • ${totalCartQty}`;
+    ? `${locationName} • ${totalQtyFormat}`
+    : `${translate("cart_bar.cart_title")}: • ${totalQtyFormat}`;
 
   bar.classList.add("is-idle");
 }

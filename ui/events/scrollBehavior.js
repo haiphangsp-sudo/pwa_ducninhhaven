@@ -15,7 +15,7 @@ export function applyScrollUI() {
     lastY = y;
     return;
   }
-
+  
   if (Math.abs(delta) < 6) return;
 
   if (delta > 0) {
