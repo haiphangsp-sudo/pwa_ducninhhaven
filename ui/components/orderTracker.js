@@ -13,7 +13,11 @@ export function openOrderTracker(state) {
   }
 
   listContainer.innerHTML = active.map(order => {
-    // BƯỚC QUAN TRỌNG: Chuyển chuỗi JSON từ Sheets thành Mảng để loop
+    // 1. XỬ LÝ ID AN TOÀN: Ép kiểu String để không bị lỗi split
+    const safeId = order.id ? String(order.id) : "0000";
+    const shortId = safeId.includes('-') ? safeId.split('-')[1] : safeId;
+
+    // 2. GIẢI MÃ ITEMS: Đảm bảo không bị lỗi map trên String
     let itemsArray = [];
     try {
       itemsArray = typeof order.items === 'string' ? JSON.parse(order.items) : (order.items || []);
@@ -30,12 +34,12 @@ export function openOrderTracker(state) {
     return `
       <div class="order-card p-m mb-m border radius-m bg-white shadow-sm">
         <div class="row justify-between mb-s border-b pb-s">
-          <span class="text-bold">#${order.id.split('-')[1] || order.id}</span>
-          <span class="status-badge is-${order.status.toLowerCase()}">${order.status}</span>
+          <span class="text-bold">#${shortId}</span>
+          <span class="status-badge is-${(order.status || 'NEW').toLowerCase()}">${order.status || 'NEW'}</span>
         </div>
-        <div class="mb-m">${itemsHtml}</div>
+        <div class="mb-m">${itemsHtml || "Yêu cầu phục vụ"}</div>
         <div class="stepper-wrapper">
-          ${renderStepper(order.status)}
+          ${renderStepper(order.status || 'NEW')}
         </div>
       </div>`;
   }).join("");
