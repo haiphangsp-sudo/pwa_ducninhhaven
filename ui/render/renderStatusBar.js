@@ -74,7 +74,7 @@ export function renderStatusBar(state) {
     bar.classList.add(`is-${String(status).toLowerCase()}`);
 
     if (status === "SYNCING") {
-      textEl.textContent = translate("order.check");
+      textEl.textContent = translate("order.current_status");
     } else {
       // Lấy câu thông báo tương ứng (Bếp đang chuẩn bị...) và render Stepper
       const statusMsg = STRINGS.status[`msg_${status}`]?.[lang] || "";

@@ -60,8 +60,8 @@ export const STRINGS = {
     NEW: { vi: "Tiếp nhận", en: "Received" },
     COOKING: { vi: "Chuẩn bị", en: "Preparing" },
     DELIVERING: { vi: "Đang tới", en: "Delivering" },
-    DONE: { vi: "Hoàn tất", en: "Completed" },
-    RECOVERING: { vi: "Đang dọn dẹp", en: "Recovering" },
+    DONE: { vi: "Xong", en: "Completed" },
+    RECOVERING: { vi: "Dọn dẹp", en: "Recovering" },
     // Tin nhắn thông báo nhanh trên Status Bar
     msg_NEW: { vi: "Tiếp nhận yêu cầu...", en: "Receiving your request..." },
     msg_COOKING: { vi: "Chuẩn bị món...", en: "Kitchen is preparing..." },
