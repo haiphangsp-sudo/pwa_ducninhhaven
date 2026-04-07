@@ -121,5 +121,4 @@ export function notifyResponse(res, payload) {
 
     // 5. Trường hợp LỖI HỆ THỐNG CHUNG
     showToast("Không thể gửi đơn. Vui lòng kiểm tra kết nối mạng.", "error");
-    console.error("GAS Error:", res.message);
 }
