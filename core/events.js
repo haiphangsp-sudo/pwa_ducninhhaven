@@ -48,7 +48,7 @@ function buildPayload(state, action) {
 
   const formattedItems = formatItemsForGAS(rawItems);
   if (formattedItems.length === 0) return null;
-  const {totalQtyFormat,totalPrice} = getDrawerExtended();
+  const {totalQty,totalPrice} = getDrawerExtended();
 
   return {
     id: `H-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
@@ -57,7 +57,7 @@ function buildPayload(state, action) {
     place: placeId,
     placeLabel: placeName,
     mode: mode,
-    totalQty: totalQtyFormat,
+    totalQty: totalQty,
     totalPrice: totalPrice,
     items: formattedItems,
     device: navigator.userAgent

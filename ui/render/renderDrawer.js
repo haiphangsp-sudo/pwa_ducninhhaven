@@ -17,7 +17,7 @@ export function renderDrawer(state) {
   const summaryEl = drawer.querySelector(".drawer-summary");
   const sendBtn = document.getElementById("drawerSend");
 
-  const { items, totalQtyFormat, itemUnique, isEmpty, totalPrice } = getDrawerExtended();
+  const { items, totalQtyFormat, itemUnique, isEmpty, totalPriceFormat } = getDrawerExtended();
 
   if (isEmpty) {
     if (summaryEl) summaryEl.classList.add("hidden");
@@ -41,7 +41,7 @@ export function renderDrawer(state) {
   drawerHeader.textContent = translate("cart_bar.cart_title");
   
   if (summaryEl) summaryEl.classList.remove("hidden");
-  totalEl.textContent = totalPrice;
+  totalEl.textContent = totalPriceFormat;
   countEl.textContent = totalQtyFormat;
   uniqueEl.textContent = itemUnique;
 

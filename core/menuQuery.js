@@ -122,7 +122,8 @@ export function getDrawerExtended() {
     totalQtyFormat: totalQ > 1
       ? `${totalQ} ${translate("cart_bar.items")}`
       : `${totalQ} ${translate("cart_bar.item")}`,
-    totalPrice: new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(totalP)
+    totalPrice: totalP,
+    totalPriceFormat: new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(totalP)
   };
 }
 /* =======================================================
