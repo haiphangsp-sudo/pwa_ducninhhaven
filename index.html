@@ -77,23 +77,17 @@
             </div>
             <button id="btnToggleBar" class="btn-toggle-status">❯</button>
         </div>
-        <div id="orderTrackerPage" class="overlay__panel hidden">
-  <div class="tracker-container p-m">
-    
-    <div class="tracker-header mb-l text-center">
-      <h2 class="text-xl text-bold">Theo dõi đơn hàng</h2>
-      <p class="text-s opacity-70">Trạng thái phục vụ tại Đức Ninh Haven</p>
-    </div>
-
-    <div id="orderTrackerList" class="stack gap-m">
-       </div>
-
-    <div class="tracker-footer mt-xl text-center">
-      <button class="btn-secondary" data-action="close-overlay">Quay lại thực đơn</button>
-    </div>
-
-  </div>
-</div>
+       <div id="orderTrackerPage" class="overlay__panel hidden">
+            <div class="p-m">
+                <h3 class="mb-l text-center">Trạng thái đơn hàng</h3>
+                
+                <div id="orderTrackerList"></div> 
+                
+                <div class="text-center mt-xl">
+                    <button class="btn-secondary" data-action="close-overlay">Đóng</button>
+                </div>
+            </div>
+        </div>
         <div id="optionSheet" class="overlay__panel option-sheet hidden"></div>
         <div id="cartDrawer" class="overlay__panel overlay__panel--bottom overlay-drawer hidden">
             <div class="drawer-panel">
