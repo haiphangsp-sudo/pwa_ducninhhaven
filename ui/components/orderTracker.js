@@ -1,49 +1,66 @@
 // ui/components/orderTracker.js
 import { renderStepper } from "../render/renderStepper.js";
 import { translate } from "../utils/translate.js";
+import { STRINGS } from "../../data/i18n.js";
+import { getState } from "../../core/state.js";
 
 export function openOrderTracker(state) {
-    const active = state.orders?.active || []; // Chặn lỗi nếu state.orders chưa init
+    const active = state.orders?.active || [];
+    const lang = state.lang?.current || 'vi';
     
     const trackerPage = document.getElementById("orderTrackerPage");
     const listContainer = document.getElementById("orderTrackerList");
-    if (!trackerPage || !listContainer) return;
 
+    if (!trackerPage || !listContainer) {
+        console.error("Không tìm thấy Element orderTrackerPage!");
+        return;
+    }
 
-    // 1. Hiển thị Overlay (Phải gọi ID của Panel/Page)
-   
-
-    // 2. Kiểm tra nếu không có đơn (Chặn lỗi map trên mảng rỗng)
+    // 1. CHỐT CHẶN: Nếu không có đơn hàng nào
     if (active.length === 0) {
         listContainer.innerHTML = `
-            <div class="p-xl center text-muted stack items-center gap-m">
+            <div class="p-xl center text-muted stack items-center gap-m" style="margin-top: 40px;">
                 <div class="text-xxl">🍃</div>
-                <div>${translate('order.no_active_order') || "Bạn chưa có đơn hàng nào."}</div>
+                <div>${translate('order.no_active_order') || "Bạn chưa có đơn hàng nào đang xử lý."}</div>
             </div>`;
         return;
     }
 
-    // 3. Render danh sách đơn hàng
+    // 2. RENDER danh sách đơn hàng
     listContainer.innerHTML = active.map(order => {
-        // CHỐT CHẶN: Nếu vì lý do nào đó order.items bị undefined
-        const itemsList = order.items || [];
-        const itemsNames = itemsList.map(i => i.item || i.name).join(", ");
+        // Xử lý nếu items bị lưu dưới dạng chuỗi JSON từ Google Sheets
+        let itemsList = [];
+        try {
+            itemsList = typeof order.items === 'string' ? JSON.parse(order.items) : (order.items || []);
+        } catch (e) {
+            itemsList = [];
+        }
+
+        const itemsNames = itemsList.length > 0 
+            ? itemsList.map(i => `${i.qty}x ${i.item || i.name}`).join(", ")
+            : "Yêu cầu dịch vụ";
+
+        const statusKey = order.status || "NEW";
+        const statusMsg = STRINGS.status[`msg_${statusKey}`]?.[lang] || "";
 
         return `
             <div class="order-card p-m radius-m bg-white mb-m shadow-sm border">
                 <div class="row justify-between items-center mb-s">
                     <span class="text-bold text-s opacity-70">#${order.id}</span>
-                    <span class="text-xs text-muted">${order.time || ''}</span>
+                    <span class="status-badge is-${statusKey.toLowerCase()}">${statusKey}</span>
                 </div>
                 
                 <div class="order-items-summary mb-m text-m color-brand text-bold">
-                    ${itemsNames || "Yêu cầu dịch vụ"}
+                    ${itemsNames}
                 </div>
                 
-                <div class="stepper-container">
-                    ${renderStepper(order.status)}
+                <div class="status-message-small mb-s text-xs opacity-80">
+                    ${statusMsg}
                 </div>
-            </div>
-        `;
+
+                <div class="stepper-container">
+                    ${renderStepper(statusKey)}
+                </div>
+            </div>`;
     }).join("");
 }
