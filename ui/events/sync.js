@@ -30,24 +30,26 @@ export function attachUI() {
 /* =======================================================
    MAIN SYNC
 ======================================================= */
-
 async function syncUI(state) {
 
-
-  // Deep copy để so sánh
   const prevState = lastState
     ? JSON.parse(JSON.stringify(lastState))
-    : { order: {}, cart: { items: [] } };
-  
-  lastState = JSON.parse(JSON.stringify(state));
-  
+    : {
+        overlay: {},
+        context: {},
+        panel: {},
+        cart: { items: [] },
+        lang: {},
+        ack: {},
+        orders: { active: [], isBarExpanded: false },
+        order: {}
+      };
 
   /* ---------- OVERLAY ---------- */
-  const activeId = state.overlay.view;
+  const activeId = state.overlay?.view;
   if (activeId !== prevState.overlay?.view) {
-        
+
     switch (activeId) {
-        
       case "cartDrawer":
         renderDrawer(state);
         break;
@@ -55,56 +57,76 @@ async function syncUI(state) {
       case "placePicker":
         renderPlacePicker(state);
         break;
+
       case "orderTrackerPage":
         openOrderTracker(state);
         break;
-      
-      default:
-        break;
     }
+
     syncOverlay(activeId);
   }
 
   /* ---------- CONTEXT ---------- */
-  
-  if (state.context !== prevState.context) {
+  if (JSON.stringify(state.context || {}) !== JSON.stringify(prevState.context || {})) {
     renderNavBar(state);
     renderDrawer(state);
   }
 
   /* ---------- PANEL ---------- */
-
-  if (state.panel.view !== prevState.panel?.view) {
+  if (state.panel?.view !== prevState.panel?.view) {
     renderPanel(state);
     eventHub(state);
   }
-  
-  /* ---------- CART ---------- */
 
-  if (state.cart !== lastState.cart ) {
+  /* ---------- CART ---------- */
+  const cartChanged =
+    JSON.stringify(state.cart?.items || []) !==
+    JSON.stringify(prevState.cart?.items || []);
+
+  if (cartChanged) {
     renderCartBar(state);
     renderDrawer(state);
-    
-    localStorage.setItem(CONFIG.CART_KEY, JSON.stringify(state.cart.items || []));
+
+    localStorage.setItem(
+      CONFIG.CART_KEY,
+      JSON.stringify(state.cart.items || [])
+    );
   }
 
-
   /* ---------- LANGUAGE ---------- */
-
-  if (state.lang.current !== prevState.lang?.current) {
+  if (state.lang?.current !== prevState.lang?.current) {
     localStorage.setItem(CONFIG.LANG_KEY, state.lang.current);
     syncLanguage(state);
   }
 
-  if (state.ack.visible !== prevState.ack?.visible) {
+  /* ---------- ACK ---------- */
+  if (
+    state.ack?.visible !== prevState.ack?.visible ||
+    state.ack?.message !== prevState.ack?.message ||
+    state.ack?.status !== prevState.ack?.status
+  ) {
     renderAck(state);
   }
-  if (state.orders.isBarExpanded !== prevState.orders?.isBarExpanded || state.orders.active !== prevState.orders?.active) {
+
+  /* ---------- ORDERS ---------- */
+  const ordersChanged =
+    JSON.stringify(state.orders?.active || []) !==
+      JSON.stringify(prevState.orders?.active || []) ||
+    state.orders?.isBarExpanded !== prevState.orders?.isBarExpanded;
+
+  if (ordersChanged) {
     renderStatusBar(state);
+
+    if (state.overlay?.view === "orderTrackerPage") {
+      openOrderTracker(state);
+    }
   }
 
-  handleOrderLogic(state, prevState);
-  
+  /* ---------- ORDER LOGIC ---------- */
+  await handleOrderLogic(state, prevState);
+
+  // QUAN TRỌNG: cập nhật cuối cùng
+  lastState = JSON.parse(JSON.stringify(state));
 }
 
 function syncLanguage(state) {

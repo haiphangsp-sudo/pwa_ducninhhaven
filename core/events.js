@@ -78,14 +78,21 @@ function buildPayload(state, action) {
     device: navigator.userAgent
   };
 }
-
 export async function submitOrder(action) {
   const state = getState();
   const payload = buildPayload(state, action);
 
   if (!payload) return false;
 
-  setState({ order: { status: "sending" } });
+  setState({
+    order: {
+      action,
+      line: state.order?.line || null,
+      status: "sending",
+      at: Date.now()
+    }
+  });
+
   showToast({ type: "sending", message: "cart_bar.sending" });
 
   try {
@@ -93,16 +100,33 @@ export async function submitOrder(action) {
 
     if (res?.success) {
       finalizeOrderSuccess(action, payload);
-      notifyResponse(res, payload);
-      showToast({ type: "success", message: "cart_bar.success", duration: 3000 });
+      notifyResponse(res);
+      showToast({
+        type: "success",
+        message: "cart_bar.success",
+        duration: 3000
+      });
       return true;
     }
 
     throw new Error(res?.message || "API_FAIL");
   } catch (error) {
-    setState({ order: { status: "error" } });
-    showToast({ type: "error", message: "cart_bar.error", duration: 2500 });
-    notifyResponse(error, payload);
+    setState({
+      order: {
+        action,
+        line: state.order?.line || null,
+        status: "error",
+        at: Date.now()
+      }
+    });
+
+    showToast({
+      type: "error",
+      message: "cart_bar.error",
+      duration: 2500
+    });
+
+    notifyResponse(error);
     return false;
   }
 }

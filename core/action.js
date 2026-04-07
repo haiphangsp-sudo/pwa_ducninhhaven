@@ -67,7 +67,11 @@ export function notifyResponse(response) {
       unauthorized: "Lỗi xác thực: Secret key không chính xác.",
       invalid: "Dữ liệu đơn hàng không hợp lệ."
     };
-    showToast(fatalMessages[response.message] || "Lỗi hệ thống nghiêm trọng.", "error");
+
+    showToast(
+      fatalMessages[response.message] || "Lỗi hệ thống nghiêm trọng.",
+      "error"
+    );
     return;
   }
 
@@ -89,13 +93,23 @@ export function notifyResponse(response) {
  */
 export function finalizeOrderSuccess(type, payload) {
   const feedbackMap = {
-    send_cart: { title: "Thành công", msg: "Giỏ hàng của bạn đã được gửi tới bếp!" },
-    buy_now: { title: "Đã gửi đơn", msg: "Món ăn đang được chuẩn bị, xin chờ giây lát!" },
-    recovery: { title: "Đã phục hồi", msg: "Các đơn hàng cũ đã được gửi bù thành công!" }
+    send_cart: {
+      title: "Thành công",
+      msg: "Giỏ hàng của bạn đã được gửi tới bếp!"
+    },
+    buy_now: {
+      title: "Đã gửi đơn",
+      msg: "Món ăn đang được chuẩn bị, xin chờ giây lát!"
+    },
+    recovery: {
+      title: "Đã phục hồi",
+      msg: "Các đơn hàng cũ đã được gửi bù thành công!"
+    }
   };
 
   const feedback = feedbackMap[type] || feedbackMap.send_cart;
 
+  // 1. Chỉ add tracking tại đúng một nơi
   if (payload?.id) {
     addOrderToTracking(payload.id, payload.items, {
       totalQty: payload.totalQty,
@@ -107,26 +121,46 @@ export function finalizeOrderSuccess(type, payload) {
     });
   }
 
+  // 2. Patch chuẩn sau khi gửi thành công
   const patch = {
     ack: {
       visible: true,
       status: "success",
       title: feedback.title,
-      message: feedback.msg
+      message: feedback.msg,
+      at: Date.now()
     },
-    overlay: { view: null },
-    order: { status: "success" }
+
+    overlay: {
+      view: null
+    },
+
+    order: {
+      action: null,
+      line: null,
+      status: "idle",
+      at: Date.now()
+    }
   };
 
+  // 3. Chỉ clear cart với send_cart
   if (type === "send_cart") {
-    patch.cart = { items: [], status: "idle", at: Date.now() };
+    patch.cart = {
+      items: [],
+      status: "idle",
+      at: Date.now()
+    };
   }
 
   setState(patch);
 
+  // 4. Ẩn ack đúng key
   setTimeout(() => {
     setState({
-      ack: { visible: false }
+      ack: {
+        visible: false,
+        at: Date.now()
+      }
     });
   }, 3500);
 }

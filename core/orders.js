@@ -61,30 +61,43 @@ function _getSavedIds() {
     return [];
   }
 }
-
 export function addOrderToTracking(orderId, items = [], meta = {}) {
   if (!orderId) return;
 
   const state = getState();
-  const currentActive = state.orders?.active || [];
+  const active = state.orders?.active || [];
 
-  const incoming = normalizeOrder({
+  const exists = active.find(o => o.id === orderId);
+  if (exists) return;
+
+  const newOrder = {
     id: orderId,
-    status: 'NEW',
-    items,
-    ...meta
-  });
+    status: "NEW",
+    items: Array.isArray(items) ? items : [],
+    time: new Date().toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit"
+    }),
+    totalQty: Number(meta.totalQty || 0),
+    totalPrice: Number(meta.totalPrice || 0),
+    mode: meta.mode || "",
+    placeLabel: meta.placeLabel || "",
+    type: meta.type || "",
+    device: meta.device || ""
+  };
 
-  const merged = dedupeOrders([...currentActive, incoming])
-    .filter(order => !TERMINAL_STATUSES.includes(order.status));
+  const nextActive = [...active, newOrder];
 
   setState({
     orders: {
-      active: merged
+      active: nextActive
     }
   });
 
-  persistActiveIds(merged);
+  const savedIds = _getSavedIds();
+  if (!savedIds.includes(orderId)) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify([...savedIds, orderId]));
+  }
 }
 
 export async function syncOrdersWithServer() {
