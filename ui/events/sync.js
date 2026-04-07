@@ -1,7 +1,7 @@
+// ui/sync.js
 import { subscribe, getState } from "../../core/state.js";
 import { CONFIG } from "../../config.js";
 import { syncOverlay } from "../../ui/interactions/backdropManager.js";
-import { addToCart, submitOrder } from "../../core/events.js";
 import { renderPlacePicker } from "../render/renderPlacePicker.js";
 import { renderDrawer } from "../render/renderDrawer.js";
 import { renderNavBar } from "../render/renderNavBar.js";
@@ -12,11 +12,25 @@ import { renderPanel } from "../render/renderPanel.js";
 import { syncStepperStates } from "../render/renderStepper.js";
 import { renderAck } from "../render/renderAck.js";
 import { openOrderTracker } from "../components/orderTracker.js";
+import { runAddToCartEffect, runSubmitOrderEffect } from "../../core/orderEffects.js";
 
 let lastState = null;
 let isProcessingOrder = false;
 let lastHandledOrderAt = null;
 let uiAttached = false;
+
+function createPrevState() {
+  return {
+    overlay: { view: null },
+    context: {},
+    panel: { view: null, option: null },
+    cart: { items: [] },
+    lang: { current: "vi" },
+    ack: { visible: false, status: null, message: "" },
+    orders: { active: [], isBarExpanded: false },
+    order: { action: null, line: null, status: "idle", at: null }
+  };
+}
 
 export function attachUI() {
   if (uiAttached) return;
@@ -29,19 +43,10 @@ export function attachUI() {
 async function syncUI(state) {
   const prevState = lastState
     ? JSON.parse(JSON.stringify(lastState))
-    : {
-        overlay: {},
-        context: {},
-        panel: {},
-        cart: { items: [] },
-        lang: {},
-        ack: {},
-        orders: { active: [], isBarExpanded: false },
-        order: {}
-      };
+    : createPrevState();
 
-  const activeId = state.overlay?.view;
-  if (activeId !== prevState.overlay?.view) {
+  const activeId = state.overlay.view;
+  if (activeId !== prevState.overlay.view) {
     switch (activeId) {
       case "cartDrawer":
         renderDrawer(state);
@@ -58,19 +63,19 @@ async function syncUI(state) {
     syncOverlay(activeId);
   }
 
-  if (JSON.stringify(state.context || {}) !== JSON.stringify(prevState.context || {})) {
+  if (JSON.stringify(state.context) !== JSON.stringify(prevState.context)) {
     renderNavBar(state);
     renderDrawer(state);
   }
 
-  if (state.panel?.view !== prevState.panel?.view) {
+  if (state.panel.view !== prevState.panel.view) {
     renderPanel(state);
     eventHub(state);
   }
 
   const cartChanged =
-    JSON.stringify(state.cart?.items || []) !==
-    JSON.stringify(prevState.cart?.items || []);
+    JSON.stringify(state.cart.items || []) !==
+    JSON.stringify(prevState.cart.items || []);
 
   if (cartChanged) {
     renderCartBar(state);
@@ -78,28 +83,28 @@ async function syncUI(state) {
     localStorage.setItem(CONFIG.CART_KEY, JSON.stringify(state.cart.items || []));
   }
 
-  if (state.lang?.current !== prevState.lang?.current) {
+  if (state.lang.current !== prevState.lang.current) {
     localStorage.setItem(CONFIG.LANG_KEY, state.lang.current);
     syncLanguage(state);
   }
 
   if (
-    state.ack?.visible !== prevState.ack?.visible ||
-    state.ack?.message !== prevState.ack?.message ||
-    state.ack?.status !== prevState.ack?.status
+    state.ack.visible !== prevState.ack.visible ||
+    state.ack.message !== prevState.ack.message ||
+    state.ack.status !== prevState.ack.status
   ) {
     renderAck(state);
   }
 
   const ordersChanged =
-    JSON.stringify(state.orders?.active || []) !==
-      JSON.stringify(prevState.orders?.active || []) ||
-    state.orders?.isBarExpanded !== prevState.orders?.isBarExpanded;
+    JSON.stringify(state.orders.active || []) !==
+      JSON.stringify(prevState.orders.active || []) ||
+    state.orders.isBarExpanded !== prevState.orders.isBarExpanded;
 
   if (ordersChanged) {
     renderStatusBar(state);
 
-    if (state.overlay?.view === "orderTrackerPage") {
+    if (state.overlay.view === "orderTrackerPage") {
       openOrderTracker(state);
     }
   }
@@ -117,12 +122,12 @@ function syncLanguage(state) {
 }
 
 async function handleOrderLogic(state, prevState) {
-  const { action, at } = state.order || {};
+  const { action, at } = state.order;
 
   const isNewCommand =
     !!action &&
     !!at &&
-    at !== prevState.order?.at &&
+    at !== prevState.order.at &&
     at !== lastHandledOrderAt;
 
   if (!isNewCommand || isProcessingOrder) return;
@@ -133,12 +138,12 @@ async function handleOrderLogic(state, prevState) {
   try {
     switch (action) {
       case "add_cart":
-        addToCart();
+        await runAddToCartEffect();
         break;
 
       case "buy_now":
       case "send_cart":
-        await submitOrder(action);
+        await runSubmitOrderEffect(action);
         break;
 
       default:
