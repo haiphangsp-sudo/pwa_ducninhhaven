@@ -51,11 +51,11 @@ async function syncUI(state) {
     renderStatusBar(state);
   }
 
-  const activeId = state.overlay.view;
+  const activeOverlayId = state.overlay.view;
   const overlayChanged = activeOverlayId !== prevState.overlay?.view;
   const ordersChanged = JSON.stringify(state.orders.active) !== JSON.stringify(prevState.orders?.active);
   if (overlayChanged) {
-    switch (activeId) {
+    switch (activeOverlayId) {
       case "cartDrawer":
         renderDrawer(state);
         break;
@@ -68,7 +68,7 @@ async function syncUI(state) {
       default:
         break;
     }
-    syncOverlay(activeId);
+    syncOverlay(activeOverlayId);
   }
   if (activeOverlayId === "orderTrackerPage" && (overlayChanged || ordersChanged)) {
     openOrderTracker(state);
