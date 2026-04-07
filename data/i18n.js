@@ -63,10 +63,11 @@ export const STRINGS = {
     DONE: { vi: "Hoàn tất", en: "Completed" },
     RECOVERING: { vi: "Đang dọn dẹp", en: "Recovering" },
     // Tin nhắn thông báo nhanh trên Status Bar
-    msg_NEW: { vi: "Đang tiếp nhận yêu cầu...", en: "Receiving your request..." },
-    msg_COOKING: { vi: "Bếp đang chuẩn bị món...", en: "Kitchen is preparing..." },
+    msg_NEW: { vi: "Tiếp nhận yêu cầu...", en: "Receiving your request..." },
+    msg_COOKING: { vi: "Chuẩn bị món...", en: "Kitchen is preparing..." },
     msg_DELIVERING: { vi: "Đang mang tới phòng của bạn...", en: "On the way to your room..." },
-    msg_RECOVERING: { vi: "Đang phục hồi sự tĩnh lặng...", en: "Restoring the serenity..." }
+    msg_DONE: { vi: "Đã hoàn tất!", en: "Completed!" },
+    msg_RECOVERING: { vi: "Phục hồi sự tĩnh lặng...", en: "Restoring the serenity..." }
   },
   place: {
     button_nav:{ vi: "Chọn vị trí", en: "Select a place"},
