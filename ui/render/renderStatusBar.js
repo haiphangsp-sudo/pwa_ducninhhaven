@@ -42,12 +42,12 @@ export function renderStatusBar(state) {
   const { totalQty } = getDrawerExtended();
 
   // Lọc các đơn chưa kết thúc
-  const actionableOrders = activeOrders.filter(
+  const actionableOrders = (state.orders?.active || []).filter(
     order => !TERMINAL_STATUSES.includes(order.status)
   );
 
   // 1. Logic Ẩn/Hiện thanh Bar
-  if (actionableOrders.length === 0 && totalQty === 0) {
+  if (actionableOrders.length === 0 && getDrawerExtended().totalQty === 0) {
     bar.className = "status-bar hidden";
     return;
   }
