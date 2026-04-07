@@ -50,7 +50,7 @@ export function renderStatusBar(state) {
 
   btnCheck.dataset.action = "open-overlay";
   btnCheck.dataset.value = "orderTrackerPage";
-  btnCheck.textContent = translate("order.check");
+  btnCheck.textContent = translate("order.button");
 
 
   if (actionableOrders.length === 0 && totalQty === 0) {
@@ -71,7 +71,7 @@ export function renderStatusBar(state) {
     bar.classList.add(`is-${String(status).toLowerCase()}`);
 
     if (status === "SYNCING") {
-      textEl.textContent = translate("order.button");
+      textEl.textContent = translate("order.check");
     } else {
       textEl.innerHTML = renderStepper(status);
     }
