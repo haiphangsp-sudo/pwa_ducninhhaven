@@ -86,10 +86,7 @@ export async function submitOrder(action) {
 
   setState({
     order: {
-      action,
-      line: state.order?.line || null,
-      status: "sending",
-      at: Date.now()
+      status: "sending"
     }
   });
 
@@ -113,10 +110,7 @@ export async function submitOrder(action) {
   } catch (error) {
     setState({
       order: {
-        action,
-        line: state.order?.line || null,
-        status: "error",
-        at: Date.now()
+        status: "error"
       }
     });
 
