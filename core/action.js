@@ -49,70 +49,79 @@ export function resetOrderCommand(status = "idle") {
   });
 }
 
+// core/action.js (hoặc events.js)
+import { setState, getState } from "./state.js";
+import { addOrderToTracking } from "./orders.js";
+
+/**
+ * Xử lý sau khi đơn hàng được gửi lên Google Sheets thành công
+ */
 export function finalizeOrderSuccess(type, payload) {
-  const feedbackMap = {
-    send_cart: {
-      title: "Thành công",
-      msg: "Giỏ hàng của bạn đã được gửi tới bếp!"
-    },
-    buy_now: {
-      title: "Đã gửi đơn",
-      msg: "Món ăn đang được chuẩn bị, xin chờ giây lát!"
-    },
-    recovery: {
-      title: "Đã phục hồi",
-      msg: "Các đơn hàng cũ đã được gửi bù thành công!"
-    }
-  };
-
-  const feedback = feedbackMap[type] || feedbackMap.send_cart;
-
-  if (payload?.id) {
-    addOrderToTracking(payload.id, payload.items, {
-      totalQty: payload.totalQty,
-      totalPrice: payload.totalPrice,
-      mode: payload.mode,
-      placeLabel: payload.placeLabel,
-      type: payload.type,
-      device: payload.device
-    });
+  // 1. Lưu ID đơn hàng vào danh sách theo dõi (LocalStorage & State)
+  // payload.id thường là mã H-1775... mà bạn tạo ra
+  if (payload && payload.id) {
+    addOrderToTracking(payload.id, payload.items);
   }
 
-  const patch = {
+  // 2. Cập nhật State tổng thể:
+  // - Xóa giỏ hàng (Đặt về mảng rỗng)
+  // - Đóng màn hình thanh toán (Overlay)
+  // - Hiển thị hộp thoại xác nhận (Ack)
+  setState({
+    cart: { items: [] }, 
+    overlay: { view: null },
     ack: {
       visible: true,
-      status: "success",
-      title: feedback.title,
-      message: feedback.msg,
-      at: Date.now()
-    },
-    overlay: {
-      view: null
-    },
-    order: {
-      action: null,
-      line: null,
-      status: "idle",
-      at: null
+      title: "Đặt món thành công!",
+      message: "Yêu cầu của bạn đã được gửi tới bếp của Đức Ninh Haven.",
+      type: "success"
     }
-  };
+  });
 
-  if (type === "send_cart") {
-    patch.cart = {
-      items: [],
-      status: "idle",
-      at: Date.now()
-    };
-  }
-
-  setState(patch);
-
+  // 3. (Tùy chọn) Tự động đóng thông báo xác nhận sau 3 giây
   setTimeout(() => {
-    setState({
-      ack: {
-        visible: false,
-        at: Date.now()
-      }
-    });
+    const currentState = getState();
+    if (currentState.ack.visible) {
+      setState({ ack: { ...currentState.ack, visible: false } });
+    }
   }, 3500);
+}
+/**
+ * Xử lý phản hồi từ Google Apps Script và cập nhật UI/State tương ứng
+ * @param {Object} res - Kết quả trả về từ fetch (đã .json())
+ * @param {Object} payload - Dữ liệu đơn hàng gốc đã gửi đi
+ */
+export function notifyResponse(res, payload) {
+    // 1. Trường hợp THÀNH CÔNG
+    if (res.status === "ok" || res.status === "success") {
+        // Gọi hàm để xóa giỏ hàng và hiện thanh trạng thái
+        finalizeOrderSuccess('CHECKOUT_SUCCESS', payload);
+        
+        // Hiện thông báo thành công (Toast hoặc Alert)
+        showToast("Đã gửi đơn thành công! Bếp đang chuẩn bị món cho bạn.", "success");
+        return;
+    }
+
+    // 2. Trường hợp BỊ TRÙNG (Duplicate)
+    if (res.status === "duplicate") {
+        showToast("Đơn hàng này đã được gửi trước đó rồi nhé!", "warning");
+        return;
+    }
+
+    // 3. Trường hợp QUÁ TẢI (Rate Limited)
+    if (res.status === "rate_limited") {
+        showToast("Bạn thao tác hơi nhanh, vui lòng đợi 5 giây rồi thử lại.", "info");
+        return;
+    }
+
+    // 4. Trường hợp LỖI DỮ LIỆU hoặc BẢO MẬT
+    if (res.status === "invalid" || res.status === "unauthorized") {
+        console.error("Lỗi xác thực hệ thống:", res.message);
+        showToast("Có lỗi kỹ thuật (Mã: Security). Vui lòng báo nhân viên.", "error");
+        return;
+    }
+
+    // 5. Trường hợp LỖI HỆ THỐNG CHUNG
+    showToast("Không thể gửi đơn. Vui lòng kiểm tra kết nối mạng.", "error");
+    console.error("GAS Error:", res.message);
 }
