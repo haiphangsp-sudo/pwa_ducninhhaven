@@ -59,7 +59,7 @@ export function renderStatusBar(state) {
   btnToggle.dataset.value = String(isBarExpanded);
   
   btnCheck.dataset.action = "open-overlay";
-  btnCheck.dataset.value = "orderTrackerPage";
+  btnCheck.dataset.value = "trackerPage";
   btnCheck.textContent = translate("order.button");
 
   // 3. Hiển thị nội dung chính
