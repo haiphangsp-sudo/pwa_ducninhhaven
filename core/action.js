@@ -49,10 +49,6 @@ export function resetOrderCommand(status = "idle") {
   });
 }
 
-// core/action.js (hoặc events.js)
-import { setState, getState } from "./state.js";
-import { addOrderToTracking } from "./orders.js";
-
 /**
  * Xử lý sau khi đơn hàng được gửi lên Google Sheets thành công
  */
