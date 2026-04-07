@@ -7,29 +7,30 @@ export function renderStepper(currentStatus) {
     { key: 'NEW', label: translate('status.NEW') },
     { key: 'COOKING', label: translate('status.COOKING') },
     { key: 'DELIVERING', label: translate('status.DELIVERING') },
-    { key: 'DONE', label: translate('status.DONE') }
+    { key: 'DONE', label: translate('status.DONE') },
+    { key: 'RECOVERING', label: translate('status.RECOVERING') }
   ];
 
-  const currentIndex = steps.findIndex(s => s.key === currentStatus);
+  const statusOrder = ['NEW', 'COOKING', 'DELIVERING', 'DONE', 'RECOVERING'];
+  const currentIndex = statusOrder.indexOf(currentStatus);
 
   return `
     <div class="stepper">
       ${steps.map((step, index) => {
         let stateClass = "";
 
-        // 1. Trường hợp ĐẶC BIỆT: Nếu là bước cuối RECOVERING -> Tích xanh tất cả
-        if (currentStatus === 'DONE') {
+        // Nếu status là RECOVERING (thứ 5) -> Tích xanh tất cả 4 dot
+        if (currentStatus === 'RECOVERING') {
           stateClass = "is-complete";
         } 
-        // 2. Nếu bước này nằm TRƯỚC bước hiện tại trên GS -> Hiện dấu ✓
-        else if (index < currentIndex) {
+        // Nếu vị trí của status hiện tại trong mảng lớn hơn index của dot -> Dot đã xong
+        else if (currentIndex > index) {
           stateClass = "is-complete";
         } 
-        // 3. Nếu bước này CHÍNH LÀ bước hiện tại trên GS -> Hiện màu Nâu (Active)
-        else if (index === currentIndex) {
+        // Nếu vị trí status bằng đúng index của dot -> Dot đó đang Nâu (Active)
+        else if (currentIndex === index) {
           stateClass = "is-active";
         } 
-        // 4. Còn lại là đang chờ
         else {
           stateClass = "is-pending";
         }

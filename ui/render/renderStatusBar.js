@@ -6,6 +6,7 @@ import { translate } from "../utils/translate.js";
 const TERMINAL_STATUSES = ['DONE', 'RECOVERING', 'CANCELED'];
 
 const ORDER_PRIORITY = {
+  DONE: 5,
   DELIVERING: 4,
   COOKING: 3,
   NEW: 2,
