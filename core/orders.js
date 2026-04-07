@@ -15,13 +15,9 @@ function normalizeOrder(order = {}) {
   return {
     id: order.id || "",
     status: order.status || "NEW",
-    items: Array.isArray(order.items) ? order.items : [],
-    time:
-      order.time ||
-      new Date().toLocaleTimeString([], {
-        hour: '2-digit',
-        minute: '2-digit'
-      }),
+    // CHỈNH SỬA: Cho phép giữ lại String để parse sau này
+    items: order.items || [], 
+    time: order.time || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     totalQty: Number(order.totalQty || 0),
     totalPrice: Number(order.totalPrice || 0),
     mode: order.mode || "",

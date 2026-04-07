@@ -1,5 +1,6 @@
 // ui/components/orderTracker.js
 import { renderStepper } from "../render/renderStepper.js";
+import { translate } from "../utils/translate.js";
 
 export function openOrderTracker(state) {
   const active = state.orders?.active || [];
@@ -7,40 +8,54 @@ export function openOrderTracker(state) {
 
   if (!listContainer) return;
 
+  // 1. Kiểm tra nếu thực sự không có đơn
   if (active.length === 0) {
-    listContainer.innerHTML = `<div class="p-xl text-center opacity-50">🍃 Chưa có đơn hàng nào.</div>`;
+    listContainer.innerHTML = `<div class="p-xl text-center opacity-50">🍃 ${translate('order.no_active_order') || "Chưa có đơn hàng nào."}</div>`;
     return;
   }
 
+  // 2. Render danh sách
   listContainer.innerHTML = active.map(order => {
-    // 1. XỬ LÝ ID AN TOÀN: Ép kiểu String để không bị lỗi split
-    const safeId = order.id ? String(order.id) : "0000";
+    // Ép kiểu ID và xử lý hiển thị
+    const safeId = String(order.id || "");
     const shortId = safeId.includes('-') ? safeId.split('-')[1] : safeId;
 
-    // 2. GIẢI MÃ ITEMS: Đảm bảo không bị lỗi map trên String
+    // GIẢI MÃ ITEMS (Cực kỳ quan trọng)
     let itemsArray = [];
     try {
-      itemsArray = typeof order.items === 'string' ? JSON.parse(order.items) : (order.items || []);
+      if (typeof order.items === 'string' && order.items.trim() !== "") {
+        itemsArray = JSON.parse(order.items);
+      } else if (Array.isArray(order.items)) {
+        itemsArray = order.items;
+      }
     } catch (e) {
+      console.error("Lỗi parse JSON món ăn:", e);
       itemsArray = [];
     }
 
-    const itemsHtml = itemsArray.map(i => `
-      <div class="row justify-between mb-xs">
-        <span>${i.qty}x ${i.item}</span>
-      </div>
-    `).join("");
+    // Tạo HTML danh sách món
+    const itemsHtml = itemsArray.length > 0 
+      ? itemsArray.map(i => `<div class="text-m mb-xs">● ${i.qty}x ${i.item || i.name}</div>`).join("")
+      : `<div class="opacity-50 italic">Yêu cầu phục vụ</div>`;
 
     return `
-      <div class="order-card p-m mb-m border radius-m bg-white shadow-sm">
-        <div class="row justify-between mb-s border-b pb-s">
-          <span class="text-bold">#${shortId}</span>
-          <span class="status-badge is-${(order.status || 'NEW').toLowerCase()}">${order.status || 'NEW'}</span>
+      <div class="order-card p-m mb-m border radius-m bg-white shadow-sm" style="color: #333;">
+        <div class="row justify-between items-center mb-m border-b pb-s">
+          <span class="text-bold color-brand">#${shortId}</span>
+          <span class="status-badge is-${(order.status || 'NEW').toLowerCase()}" 
+                style="font-size: 10px; padding: 2px 8px; border-radius: 10px; background: #f0f0f0;">
+            ${order.status || 'NEW'}
+          </span>
         </div>
-        <div class="mb-m">${itemsHtml || "Yêu cầu phục vụ"}</div>
-        <div class="stepper-wrapper">
+        
+        <div class="order-details mb-l">
+          ${itemsHtml}
+        </div>
+        
+        <div class="stepper-wrapper" style="margin-top: 15px;">
           ${renderStepper(order.status || 'NEW')}
         </div>
-      </div>`;
+      </div>
+    `;
   }).join("");
 }

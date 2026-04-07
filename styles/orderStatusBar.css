@@ -331,3 +331,22 @@
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
 }
+/* Đảm bảo danh sách có thể cuộn và hiển thị rõ ràng */
+#orderTrackerList {
+    display: block !important;
+    min-height: 100px;
+    padding-bottom: 30px;
+}
+
+.order-card {
+    background: #ffffff !important;
+    color: #333333 !important;
+    border: 1px solid #eeeeee;
+    display: flex;
+    flex-direction: column;
+}
+
+.stepper-wrapper {
+    width: 100%;
+    padding-top: 10px;
+}
