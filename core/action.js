@@ -52,86 +52,75 @@ export async function updateCartQuantity(itemId, delta) {
  * @param {Object|Error} response - Kết quả từ sendRequest hoặc Error bị catch
  * @param {Object} payload - Dữ liệu đơn hàng gốc (để lấy danh sách món)
  */
-export function notifyResponse(response, payload) {
-  
-  // 1. XỬ LÝ KHI THÀNH CÔNG (success: true)
+
+export function notifyResponse(response) {
   if (response.success) {
     if (response.duplicate) {
       showToast("Đơn hàng này đã được gửi trước đó.", "info");
     } else {
       showToast("Đơn hàng đã được gửi thành công!", "success");
     }
-
-    // Gọi hàm hậu mãi: xóa giỏ, lưu đơn vào StatusBar
-    // Lưu ý: response.orderId nên được trả về từ server (GAS)
-    addOrderToTracking(response.orderId || Date.now(), payload.items);
     return;
   }
 
-  // 2. XỬ LÝ LỖI HỆ THỐNG (Fatal - Không nên thử lại ngay)
   if (response.fatal) {
     const fatalMessages = {
-      unauthorized: "Lỗi xác thực: Secret key không chính xác.",
-      invalid: "Dữ liệu đơn hàng không hợp lệ."
+      unauthorized: "Lỗi xác thực.",
+      invalid: "Dữ liệu không hợp lệ."
     };
-    showToast(fatalMessages[response.message] || "Lỗi hệ thống nghiêm trọng.", "error");
+    showToast(fatalMessages[response.message] || "Lỗi hệ thống.", "error");
     return;
   }
 
-  // 3. XỬ LÝ CÁC LỖI THROW (Error Object - Có thể thử lại)
-  // Lấy message từ Error object hoặc từ response.message
   const errorKey = response instanceof Error ? response.message : response.message;
-  
+
   const errorMap = {
-    offline: "Bạn đang ngoại tuyến. Vui lòng kiểm tra Wi-Fi/4G.",
-    network: "Yêu cầu bị quá hạn (Timeout). Vui lòng thử lại.",
-    server: "Máy chủ đang gặp sự cố. Hãy thử lại sau ít phút.",
-    retry: "Hệ thống đang bận. Đang tự động xếp hàng gửi lại...",
-    invalid_json: "Phản hồi từ máy chủ không hợp lệ."
+    offline: "Bạn đang offline.",
+    network: "Timeout.",
+    server: "Server lỗi.",
+    retry: "Đang thử lại...",
+    invalid_json: "Response lỗi."
   };
 
-  showToast(errorMap[errorKey] || "Đã xảy ra lỗi không xác định.", "error");
+  showToast(errorMap[errorKey] || "Lỗi không xác định.", "error");
 }
-
-
 
 /**
  * FINAL ACTION: Dọn dẹp và thông báo sau khi đơn hàng thành công
  * @param {string} type - Loại đơn ('cart', 'instant', 'recovery')
  */
-export function finalizeOrderSuccess(type,payload) {
-  // 1. Bản đồ thông báo theo loại đơn hàng
+
+export function finalizeOrderSuccess(type, payload) {
   const feedbackMap = {
-    send_cart: { title: "Thành công", msg: "Giỏ hàng của bạn đã được gửi tới bếp!" },
-    buy_now: { title: "Đã gửi đơn", msg: "Món ăn đang được chuẩn bị, xin chờ giây lát!" },
-    recovery: { title: "Đã phục hồi", msg: "Các đơn hàng cũ đã được gửi bù thành công!" }
+    send_cart: { title: "Thành công", msg: "Giỏ hàng đã gửi!" },
+    buy_now: { title: "Đã gửi", msg: "Đang chuẩn bị..." },
+    recovery: { title: "Đã phục hồi", msg: "Đã gửi lại đơn cũ!" }
   };
 
-  const feedback = feedbackMap[type] || feedbackMap.cart;
-  if (payload && payload.id) {
+  const feedback = feedbackMap[type] || feedbackMap.send_cart;
+
+  // ✅ CHỈ 1 nơi add order
+  if (payload?.id) {
     addOrderToTracking(payload.id, payload.items);
   }
-  // 2. Chuẩn bị bản cập nhật State
+
   const patch = {
-    ack: { 
-      visible: true, 
+    ack: {
+      visible: true,
       status: "success",
       title: feedback.title,
       message: feedback.msg
     },
-    overlay: { view: null } // Đóng mọi cửa sổ (Drawer/Picker)
+    overlay: { view: null }
   };
 
-  // 3. Chỉ xóa giỏ hàng nếu là đơn từ giỏ
   if (type === "send_cart") {
-    patch.cart = { items: [], status: 'idle' };
+    patch.cart = { items: [], status: "idle" };
   }
 
-  // Thực thi cập nhật State
   setState(patch);
 
-  // 4. Tự động ẩn thông báo sau 3.5 giây
   setTimeout(() => {
-    setState({ ack: { state: "hidden" } });
+    setState({ ack: { visible: false } });
   }, 3500);
 }
