@@ -1,6 +1,7 @@
 import { renderStepper } from './renderStepper.js';
 import { getLocationInfo } from '../../core/placesQuery.js';
 import { getDrawerExtended } from "../../core/menuQuery.js";
+import { translate } from "../utils/translate.js";
 
 const TERMINAL_STATUSES = ['DONE', 'RECOVERING', 'CANCELED'];
 
