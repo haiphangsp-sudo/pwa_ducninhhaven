@@ -30,17 +30,23 @@ export function attachUI() {
 /* =======================================================
    MAIN SYNC
 ======================================================= */
+
 async function syncUI(state) {
 
+
+  // Deep copy để so sánh
   const prevState = lastState
     ? JSON.parse(JSON.stringify(lastState))
-    : { orders: { active: [], isBarExpanded: false }, cart: { items: [] } };
+    : { orders: {}, cart: { items: [] } };
+  
+  
 
   /* ---------- OVERLAY ---------- */
-  const activeId = state.overlay?.view;
+  const activeId = state.overlay.view;
   if (activeId !== prevState.overlay?.view) {
-
+        
     switch (activeId) {
+        
       case "cartDrawer":
         renderDrawer(state);
         break;
@@ -48,76 +54,59 @@ async function syncUI(state) {
       case "placePicker":
         renderPlacePicker(state);
         break;
-
       case "orderTrackerPage":
         openOrderTracker(state);
         break;
+      
+      default:
+        break;
     }
-
     syncOverlay(activeId);
   }
 
   /* ---------- CONTEXT ---------- */
-  if (JSON.stringify(state.context || {}) !== JSON.stringify(prevState.context || {})) {
+  
+  if (state.context !== prevState.context) {
     renderNavBar(state);
     renderDrawer(state);
   }
 
   /* ---------- PANEL ---------- */
-  if (state.panel?.view !== prevState.panel?.view) {
+
+  if (state.panel.view !== prevState.panel?.view) {
     renderPanel(state);
     eventHub(state);
   }
-
+  
   /* ---------- CART ---------- */
-  const cartChanged =
-    JSON.stringify(state.cart?.items || []) !==
-    JSON.stringify(prevState.cart?.items || []);
 
-  if (cartChanged) {
+  if (state.cart !== lastState.cart ) {
     renderCartBar(state);
     renderDrawer(state);
-
-    localStorage.setItem(
-      CONFIG.CART_KEY,
-      JSON.stringify(state.cart.items || [])
-    );
+    
+    localStorage.setItem(CONFIG.CART_KEY, JSON.stringify(state.cart.items || []));
   }
 
+
   /* ---------- LANGUAGE ---------- */
-  if (state.lang?.current !== prevState.lang?.current) {
+
+  if (state.lang.current !== prevState.lang?.current) {
     localStorage.setItem(CONFIG.LANG_KEY, state.lang.current);
     syncLanguage(state);
   }
 
-  /* ---------- ACK ---------- */
-  if (
-    state.ack?.visible !== prevState.ack?.visible ||
-    state.ack?.message !== prevState.ack?.message ||
-    state.ack?.status !== prevState.ack?.status
-  ) {
+  if (state.ack.visible !== prevState.ack?.visible) {
     renderAck(state);
   }
-
-  /* ---------- ORDERS ---------- */
-  const ordersChanged =
-    JSON.stringify(state.orders?.active || []) !==
-      JSON.stringify(prevState.orders?.active || []) ||
-    state.orders?.isBarExpanded !== prevState.orders?.isBarExpanded;
-
-  if (ordersChanged) {
+  if (state.orders.isBarExpanded !== prevState.orders?.isBarExpanded || state.orders.active !== prevState.orders?.active) {
     renderStatusBar(state);
-
-    if (state.overlay?.view === "orderTrackerPage") {
-      openOrderTracker(state);
-    }
   }
 
-  /* ---------- ORDER LOGIC ---------- */
-  await handleOrderLogic(state, prevState);
-
-  // QUAN TRỌNG: cập nhật cuối cùng
+  handleOrderLogic(state, prevState);
+  
   lastState = JSON.parse(JSON.stringify(state));
+  
+  
 }
 
 function syncLanguage(state) {
@@ -132,35 +121,32 @@ function syncLanguage(state) {
 /* --- 1. Xử lý luồng Đặt hàng --- */
 async function handleOrderLogic(state, prevState) {
   const { action, at } = state.order || {};
+  if (!action || !at || at === prevState.order?.at || isProcessingOrder) return;
 
-  const isNewCommand =
-    !!action &&
-    !!at &&
-    at !== prevState.order?.at &&
-    at !== lastHandledOrderAt;
-
-  if (!isNewCommand || isProcessingOrder) return;
-
-  // Đánh dấu đã xử lý command này
-  lastHandledOrderAt = at;
   isProcessingOrder = true;
-
   try {
     switch (action) {
+      //bounceCartBar();
+
       case "add_cart":
         addToCart();
         break;
-
+      
       case "buy_now":
-      case "send_cart":
-        await submitOrder(action);
+          await submitOrder(action);
         break;
-
+      
+      case "send_cart":
+          await submitOrder(action);
+        break;
+      
       default:
         break;
     }
+
   } finally {
     isProcessingOrder = false;
-    syncStepperStates(getState(), prevState);
+    syncStepperStates(state, prevState);
+
   }
 }
