@@ -199,7 +199,6 @@
     justify-content: space-between;
     align-items: center;
     transition: opacity 0.3s;
-    gap: 15px;
 }
 
 .status-bar.hidden {
