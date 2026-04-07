@@ -5,7 +5,7 @@ import { translate } from "../utils/translate.js";
 export function openOrderTracker(state) {
   const active = state.orders?.active || [];
   const listContainer = document.getElementById("orderTrackerList");
-
+    console.log(state.orders.active);
   if (!listContainer) return;
 
   // 1. Kiểm tra nếu thực sự không có đơn
