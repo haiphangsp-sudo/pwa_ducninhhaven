@@ -34,16 +34,7 @@ async function syncUI(state) {
 
   const prevState = lastState
     ? JSON.parse(JSON.stringify(lastState))
-    : {
-        overlay: {},
-        context: {},
-        panel: {},
-        cart: { items: [] },
-        lang: {},
-        ack: {},
-        orders: { active: [], isBarExpanded: false },
-        order: {}
-      };
+    : { orders: { active: [], isBarExpanded: false }, cart: { items: [] } };
 
   /* ---------- OVERLAY ---------- */
   const activeId = state.overlay?.view;
