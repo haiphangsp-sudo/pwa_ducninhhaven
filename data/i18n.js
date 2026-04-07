@@ -44,6 +44,7 @@ export const STRINGS = {
 
   order: {
     other: { vi: "Đơn hàng khác", en: "Other orders" },
+    button: { vi: "Xem đơn", en: "View orders" },
     check: { vi: "Kiểm tra đơn hàng...", en: "Check order..." },
     confirm: { vi: "Xác nhận", en: "Confirm" },
     cancel: { vi: "Hủy", en: "Cancel" },

@@ -71,7 +71,7 @@ export function renderStatusBar(state) {
     bar.classList.add(`is-${String(status).toLowerCase()}`);
 
     if (status === "SYNCING") {
-      textEl.textContent = translate("order.check");
+      textEl.textContent = translate("order.button");
     } else {
       textEl.innerHTML = renderStepper(status);
     }
