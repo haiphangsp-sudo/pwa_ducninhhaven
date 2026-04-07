@@ -40,9 +40,9 @@ export function attachUI() {
 }
 
 async function syncUI(state) {
-  const prevState = lastState
-    ? JSON.parse(JSON.stringify(lastState))
-    : createPrevState();
+  const prevState = lastState 
+    ? JSON.parse(JSON.stringify(lastState)) 
+    : { orders: { active: [], isBarExpanded: false }, overlay: {}, lang: {}, ack: {} };
 
   const hasOrderChange = JSON.stringify(state.orders.active) !== JSON.stringify(prevState.orders?.active);
   const hasExpandChange = state.orders.isBarExpanded !== prevState.orders?.isBarExpanded;
@@ -52,7 +52,9 @@ async function syncUI(state) {
   }
 
   const activeId = state.overlay.view;
-  if (activeId !== prevState.overlay.view) {
+  const overlayChanged = activeOverlayId !== prevState.overlay?.view;
+  const ordersChanged = JSON.stringify(state.orders.active) !== JSON.stringify(prevState.orders?.active);
+  if (overlayChanged) {
     switch (activeId) {
       case "cartDrawer":
         renderDrawer(state);
@@ -60,7 +62,7 @@ async function syncUI(state) {
       case "placePicker":
         renderPlacePicker(state);
         break;
-      case "orderTrackerPage":
+      case "trackerPage":
         openOrderTracker(state);
         break;
       default:
@@ -68,7 +70,12 @@ async function syncUI(state) {
     }
     syncOverlay(activeId);
   }
-
+  if (activeOverlayId === "orderTrackerPage" && (overlayChanged || ordersChanged)) {
+    openOrderTracker(state);
+  }
+  if (ordersChanged || state.orders.isBarExpanded !== prevState.orders?.isBarExpanded) {
+    renderStatusBar(state);
+  }
   if (JSON.stringify(state.context) !== JSON.stringify(prevState.context)) {
     renderNavBar(state);
     renderDrawer(state);
@@ -101,12 +108,7 @@ async function syncUI(state) {
   ) {
     renderAck(state);
   }
-
-  if (state.overlay.view === "orderTrackerPage") {
-    openOrderTracker(state);
-  }
   
-
   await handleOrderLogic(state, prevState);
 
   lastState = JSON.parse(JSON.stringify(getState()));
