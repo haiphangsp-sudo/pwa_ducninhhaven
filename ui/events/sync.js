@@ -80,7 +80,7 @@ async function syncUI(state) {
   
   /* ---------- CART ---------- */
 
-  if (state.cart !== lastState.cart ) {
+  if (state.cart !== lastState?.cart ) {
     renderCartBar(state);
     renderDrawer(state);
     
@@ -103,7 +103,7 @@ async function syncUI(state) {
   }
 
   handleOrderLogic(state, prevState);
-  
+
   lastState = JSON.parse(JSON.stringify(state));
   
   
