@@ -4,12 +4,11 @@ import { CONFIG } from '../config.js';
 const SCRIPT_URL = CONFIG.API_ENDPOINT;
 const STORAGE_KEY = "haven_active_order_ids";
 
-const TERMINAL_STATUSES = ['DONE', 'RECOVERING', 'CANCELED'];
-const ACTIONABLE_STATUSES = ['NEW', 'COOKING', 'DELIVERING', 'SYNCING'];
+const TERMINAL_STATUSES = ['RECOVERING', 'CANCELED'];
+const ACTIONABLE_STATUSES = ['NEW', 'COOKING', 'DELIVERING', 'DONE', 'SYNCING'];
 const MAX_INACTIVE_ORDERS = 10;
 
 /* =========================
-   NORMALIZE
 ========================= */
 
 function normalizeOrder(order = {}) {
