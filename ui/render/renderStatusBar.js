@@ -34,30 +34,31 @@ export function renderStatusBar(state) {
   const status = priorityOrder?.status || "SYNCING";
   const statusMsg = STRINGS.status[`msg_${status}`]?.[lang] || "";
 
-  bar.innerHTML = `
-    <div class="bar-inner">
-      <div class="bar-left-circle" data-action="toggle_status" data-value="${isExpanded}">
-        <span class="count-num">${actionableOrders.length || totalQty}</span>
-      </div>
+  // ui/render/renderStatusBar.js
 
-      <div class="bar-content-slide">
-        <div class="status-stack">
-          <div class="msg-top">${statusMsg}</div>
-          <div class="stepper-mini">${renderStepper(status)}</div>
-          <div class="status-bottom">${status}</div>
-        </div>
-        
-        <div class="bar-actions">
-          <button class="btn-haven-mini" data-action="open-overlay" data-value="orderTrackerPage">
-            ${translate("order.button")}
-          </button>
-          <div class="arrow-icon" data-action="toggle_status" data-value="${isExpanded}">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3">
-              <polyline points="9 18 15 12 9 6"></polyline>
-            </svg>
-          </div>
-        </div>
+bar.innerHTML = `
+    <div class="bar-left">
+      <div class="order-count-badge">${actionableOrders.length || totalQty}</div>
+    </div>
+
+    <div class="bar-center">
+      <div class="status-stack">
+        <div class="status-msg-top">${statusMsg}</div>
+        <div class="stepper-mini-wrap">${renderStepper(status)}</div>
+        <div class="status-label-bottom">${status}</div>
       </div>
     </div>
-  `;
+
+    <div class="bar-right">
+      <button class="btn-check-haven" data-action="open-overlay" data-value="orderTrackerPage">
+        ${translate("order.button")}
+      </button>
+      
+      <div class="toggle-arrow" data-action="toggle_status" data-value="${isExpanded}">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="3">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </div>
+    </div>
+`;
 }
