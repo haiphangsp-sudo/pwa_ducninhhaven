@@ -48,7 +48,7 @@ export let UI = {
 
   panel: {
     view: "drink",   // menu, intro, drink...
-    option: "article",
+    option: "cart",
     mode: "grid"     // Kiểu hiển thị (grid, list)
   },
   /* ---------------- OVERLAY ---------------- */
