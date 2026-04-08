@@ -146,6 +146,98 @@
     color: #2f5d46; /* Màu xanh đặc trưng của Duc Ninh Haven */
 }
 
+/* --- TRẠNG THÁI MỞ (Mặc định) --- */
+.status-bar {
+    position: fixed;
+    bottom: 10px;
+    right: 20px; /* Neo cố định ở lề phải */
+    width: calc(100% - 40px);
+    max-width: 420px;
+    height: 60px;
+    background: white;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    padding: 0 5px 0 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    z-index: 90;
+    gap: 20px;
+
+    /* Hiệu ứng thu từ trái sang phải: Chỉ thay đổi width */
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+}
+
+/* Ẩn nội dung chữ khi thu nhỏ */
+.status-bar.is-collapsed .bar-expanded {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* --- TRẠNG THÁI THU NHỎ (is-collapsed) --- */
+.status-bar.is-collapsed {
+    width: 60px; /* Thu lại thành hình tròn */
+    background: #6b8e23; /* Đổi sang màu xanh Sage cho "xịn" */
+}
+
+/* Ẩn chữ khi co lại */
+.status-bar.is-collapsed .bar-expanded {
+    opacity: 0;
+    pointer-events: none;
+}
+.status-bar.is-collapsed .bar-content {
+    display:none;
+}
+
+/* Đổi chiều mũi tên khi thu nhỏ */
+.status-bar.is-collapsed #btnToggleBar {
+    transform: rotate(180deg); /* Xoay ngược lại thành dấu < */
+    color: white;
+}
+.bar-expanded {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: opacity 0.3s;
+}
+
+.status-bar.hidden {
+    transform: translate(-50%, 150%);
+    opacity: 0;
+}
+
+/* Nội dung bên trong */
+.bar-content {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+}
+
+/* Phần Mini (Icon & Badge) */
+.bar-mini {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.bar-mini .icon {
+    font-size: 20px;
+}
+
+.bar-mini .count {
+    position: absolute;
+    top: -8px;
+    right: -10px;
+    background: #6b8e23; /* Sage Green đậm */
+    color: white;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-weight: bold;
+    min-width: 18px;
+    text-align: center;
+
+}
 
 /* Trạng thái Nhắc nhở (ví dụ: chưa chọn phòng) */
 .status-bar.is-warning {
@@ -230,6 +322,10 @@
     to { opacity: 1; transform: translateY(0); }
 }
 
+.stepper-wrapper {
+    width: 100%;
+    padding-top: 10px;
+}
 /* Đảm bảo danh sách đơn hàng có khoảng cách và hiển thị rõ */
 #orderTrackerList {
     display: flex;
@@ -252,7 +348,11 @@
     animation: slideUp 0.4s ease-out;
 }
 
-
+/* Stepper bên trong danh sách chi tiết */
+.stepper-container {
+    margin-top: 20px;
+    width: 100%;
+}
 /* --- Khung Status Bar 60px --- */
 .status-bar {
     height: 60px;
@@ -293,7 +393,7 @@
     align-items: center;
     justify-content: center;
     padding: 0 10px;
-    max-width: 180px; /* Chặn text tràn ra 2 bên */
+    max-width: 320px; /* Chặn text tràn ra 2 bên */
 }
 
 .status-stack {
