@@ -12,7 +12,7 @@ function getMenuData() {
 
 export function getCategory(key) {
   const menuData = getMenuData();
-  return menuData[key] || null;
+  return menuData[key] || {};
 }
 
 
