@@ -9,20 +9,30 @@
   z-index: 9999;
 
   height: 56px;
-  display: flex;
-  align-items: center;
+  border-radius: 28px;
   overflow: hidden;
 
-  border-radius: 28px;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
 
   transition:
-    width 0.42s cubic-bezier(0.4, 0, 0.2, 1),
-    transform 0.32s ease,
-    background 0.32s ease,
-    box-shadow 0.32s ease,
-    border-color 0.32s ease;
+    width 0.35s ease,
+    background-color 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
+}
+
+/* ===============================
+   EXPANDED
+================================= */
+.status-bar.is-expanded {
+  width: calc(100% - 40px);
+  padding: 0 12px;
+  justify-content: space-between;
+
+  background: #fdfcf9;
+  border: 1px solid rgba(47, 93, 70, 0.10);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.10);
 }
 
 /* ===============================
@@ -32,13 +42,15 @@
   left: auto;
   right: 20px;
   width: 56px;
+  padding: 0;
   justify-content: center;
 
   background: #2f5d46;
   border: 1px solid rgba(255,255,255,0.10);
-  box-shadow: 0 8px 22px rgba(0,0,0,0.18);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.18);
 }
 
+/* Khi thu gọn: chỉ còn mũi tên */
 .status-bar.is-collapsed .bar-left,
 .status-bar.is-collapsed .bar-center,
 .status-bar.is-collapsed .btn-check-haven {
@@ -46,55 +58,29 @@
 }
 
 .status-bar.is-collapsed .bar-right {
-  width: 100%;
-  height: 100%;
+  width: 56px;
+  height: 56px;
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-/* collapsed: mũi tên quay sang trái */
-.status-bar.is-collapsed .toggle-arrow {
-  color: #ffffff;
-  transform: rotate(180deg);
-  background: transparent;
+  gap: 0;
 }
 
 /* ===============================
-   EXPANDED
-================================= */
-.status-bar.is-expanded {
-  width: calc(100% - 40px);
-  padding: 0 12px;
-
-  background: rgba(253, 252, 249, 0.96);
-  border: 1px solid rgba(47, 93, 70, 0.10);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.10);
-
-  justify-content: space-between;
-}
-
-/* expanded: mũi tên quay sang phải */
-.status-bar.is-expanded .toggle-arrow {
-  color: #2f5d46;
-  transform: rotate(0deg);
-}
-
-/* ===============================
-   SECTIONS
+   LAYOUT
 ================================= */
 .bar-left {
   flex: 0 0 auto;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 28px;
 }
 
 .bar-center {
   flex: 1 1 auto;
   min-width: 0;
   padding: 0 10px;
+
   display: flex;
   align-items: center;
   justify-content: center;
@@ -104,6 +90,7 @@
   flex: 0 0 auto;
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   gap: 8px;
 }
 
@@ -120,132 +107,54 @@
   justify-content: center;
 
   background: #2f5d46;
-  color: #ffffff;
+  color: #fff;
 
   font-size: 12px;
   font-weight: 700;
   line-height: 1;
-  box-shadow: 0 2px 8px rgba(47, 93, 70, 0.18);
 }
 
 /* ===============================
-   STATUS STACK
+   CENTER STACK
 ================================= */
 .status-stack {
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-
   gap: 1px;
-  width: 100%;
   line-height: 1.08;
 }
 
 .status-msg-top {
   font-size: 13px;
   font-weight: 500;
-  color: #3b3b36;
+  color: #3d3d38;
   white-space: nowrap;
 }
 
 .status-label-bottom {
   font-size: 10px;
   font-weight: 600;
-  letter-spacing: 0.04em;
-  color: #8b8b84;
+  color: #8a8a84;
   text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 /* ===============================
-   MINI STEPPER WRAP
+   MINI STEPPER
 ================================= */
 .stepper-mini-wrap {
   display: flex;
   align-items: center;
   justify-content: center;
-
   width: 100%;
   margin: -2px 0;
-
-  transform: scale(0.80);
+  transform: scale(0.78);
   transform-origin: center;
 }
 
-/* ===============================
-   CHECK BUTTON
-================================= */
-.btn-check-haven {
-  height: 30px;
-  padding: 0 12px;
-  border: none;
-  border-radius: 999px;
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  background: #2f5d46;
-  color: #ffffff;
-
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  white-space: nowrap;
-  cursor: pointer;
-
-  box-shadow: 0 3px 10px rgba(47, 93, 70, 0.16);
-  transition:
-    background 0.22s ease,
-    transform 0.18s ease,
-    box-shadow 0.22s ease;
-}
-
-.btn-check-haven:hover {
-  background: #274d3b;
-  box-shadow: 0 6px 14px rgba(47, 93, 70, 0.20);
-}
-
-.btn-check-haven:active {
-  transform: scale(0.98);
-}
-
-/* ===============================
-   TOGGLE ARROW
-================================= */
-.toggle-arrow {
-  width: 28px;
-  height: 28px;
-  border-radius: 999px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  cursor: pointer;
-  transition:
-    transform 0.28s ease,
-    background 0.22s ease,
-    color 0.22s ease;
-}
-
-.status-bar.is-expanded .toggle-arrow {
-  background: rgba(47, 93, 70, 0.08);
-}
-
-.status-bar.is-expanded .toggle-arrow:hover {
-  background: rgba(47, 93, 70, 0.14);
-}
-
-.status-bar.is-collapsed .toggle-arrow:hover {
-  background: rgba(255,255,255,0.08);
-}
-
-/* ===============================
-   MINI STEPPER TUNING
-   Áp dụng nếu renderStepper tạo ra
-   .stepper / .step / .step-dot / .step-line / .step-label
-================================= */
 .stepper-mini-wrap .stepper {
   display: flex;
   align-items: center;
@@ -268,7 +177,7 @@
 }
 
 .stepper-mini-wrap .step-line {
-  width: 18px;
+  width: 16px;
   height: 2px;
   border-radius: 999px;
 }
@@ -278,7 +187,57 @@
 }
 
 /* ===============================
-   ACTIVE / COMPLETE STATES
+   BUTTON
+================================= */
+.btn-check-haven {
+  height: 30px;
+  padding: 0 12px;
+  border: none;
+  border-radius: 999px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #2f5d46;
+  color: #fff;
+
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+/* ===============================
+   TOGGLE ARROW
+================================= */
+.toggle-arrow {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+  transition: transform 0.25s ease, background-color 0.2s ease;
+}
+
+.status-bar.is-expanded .toggle-arrow {
+  color: #2f5d46;
+  background: rgba(47, 93, 70, 0.08);
+  transform: rotate(0deg);
+}
+
+.status-bar.is-collapsed .toggle-arrow {
+  color: #fff;
+  background: transparent;
+  transform: rotate(180deg);
+}
+
+/* ===============================
+   STEPPER ACTIVE STATES
 ================================= */
 .step.is-active .step-dot {
   background-color: #8b5a2b;
@@ -287,15 +246,9 @@
   animation: pulse-brown 1.8s infinite;
 }
 
-.step.is-active .step-label {
-  color: #8b5a2b;
-  font-weight: 600;
-}
-
 .step.is-complete .step-dot {
   background-color: #22c55e;
   border-color: #22c55e;
-  color: #ffffff;
 }
 
 @keyframes pulse-brown {
@@ -304,35 +257,6 @@
   100% { transform: scale(1); }
 }
 
-/* ===============================
-   SHOW / HIDE SAFETY
-================================= */
 .status-bar.hidden {
   display: none !important;
-}
-
-/* ===============================
-   RESPONSIVE
-================================= */
-@media (max-width: 480px) {
-  .status-bar.is-expanded {
-    padding: 0 10px;
-  }
-
-  .bar-center {
-    padding: 0 8px;
-  }
-
-  .status-msg-top {
-    font-size: 12px;
-  }
-
-  .btn-check-haven {
-    padding: 0 10px;
-    font-size: 10px;
-  }
-
-  .stepper-mini-wrap {
-    transform: scale(0.75);
-  }
 }
