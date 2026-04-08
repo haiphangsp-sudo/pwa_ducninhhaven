@@ -1,0 +1,168 @@
+/* --- Order Tracker Aesthetic --- */
+
+#orderTrackerList {
+    padding: 10px 0 40px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.order-card {
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: 20px; /* Góc bo tròn lớn tạo cảm giác thân thiện, hiện đại */
+    padding: 20px;
+    box-shadow: 0 10px 25px rgba(47, 93, 70, 0.05); /* Shadow xanh rêu rất nhẹ */
+    transition: transform 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Hiệu ứng viền trang trí nhỏ ở đầu thẻ */
+.order-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: #2f5d46; /* Màu xanh thương hiệu của Haven */
+    opacity: 0.8;
+}
+
+/* Mã đơn hàng và Thời gian */
+.order-card .text-bold.color-brand {
+    color: #2f5d46;
+    letter-spacing: 1px;
+    font-size: 1.1rem;
+}
+
+/* Danh sách món ăn */
+.order-items-detail {
+    margin: 15px 0;
+    color: #4a4a4a;
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
+
+.order-items-detail div {
+    padding: 4px 0;
+    border-bottom: 1px dashed #f0f0f0;
+}
+
+.order-items-detail div:last-child {
+    border-bottom: none;
+}
+
+/* Badge Trạng thái sang trọng */
+.status-badge {
+    text-transform: uppercase;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 50px;
+    letter-spacing: 0.5px;
+}
+
+.status-badge.is-new { background: #e8f5e9; color: #2e7d32; }
+.status-badge.is-cooking { background: #fff3e0; color: #ef6c00; }
+.status-badge.is-delivering { background: #e3f2fd; color: #1565c0; }
+.status-badge.is-done { background: #efebe9; color: #8b4513; } /* Tông nâu cho DONE */
+
+/* --- Stepper Boutique Style --- */
+
+.stepper {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-top: 25px;
+    padding-top: 15px;
+    border-top: 1px solid #f5f5f5;
+}
+
+.step {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+
+.step-dot {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    z-index: 2;
+    transition: all 0.4s ease;
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 1px #eee;
+}
+
+.step-label {
+    font-size: 10px;
+    margin-top: 8px;
+    color: #999;
+    font-weight: 500;
+    text-align: center;
+}
+
+/* Trạng thái đang hoạt động (Active - Màu Nâu đặc trưng) */
+.step.is-active .step-dot {
+    background: #8b4513;
+    color: #fff;
+    box-shadow: 0 0 0 4px rgba(139, 69, 19, 0.1);
+}
+
+.step.is-active .step-label {
+    color: #8b4513;
+    font-weight: 700;
+}
+
+/* Trạng thái hoàn thành (Complete - Tích xanh) */
+.step.is-complete .step-dot {
+    background: #2f5d46;
+    color: #fff;
+}
+
+.step.is-complete .step-label {
+    color: #2f5d46;
+}
+
+/* Đường kẻ nối các điểm */
+.step-line {
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    width: 100%;
+    height: 2px;
+    background: #f0f0f0;
+    z-index: 1;
+}
+
+.step.is-complete .step-line {
+    background: #2f5d46;
+}
+
+@keyframes slideUpFade {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.order-card {
+    animation: slideUpFade 0.5s ease forwards;
+}
+
+/* Tạo độ trễ cho từng đơn hàng (nếu có nhiều đơn) */
+.order-card:nth-child(2) { animation-delay: 0.1s; }
+.order-card:nth-child(3) { animation-delay: 0.2s; }
