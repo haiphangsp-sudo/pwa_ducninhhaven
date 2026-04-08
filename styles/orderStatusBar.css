@@ -353,15 +353,6 @@
     margin-top: 20px;
     width: 100%;
 }
-/* --- Khung Status Bar 60px --- */
-.status-bar {
-    height: 60px;
-    padding: 0 15px;
-    background: #fdfcf9; /* Màu kem Haven */
-    border-top: 1px solid rgba(47, 93, 70, 0.1);
-    box-shadow: 0 -4px 15px rgba(0,0,0,0.03);
-    overflow: hidden;
-}
 
 .bar-layout {
     display: flex;
@@ -426,7 +417,6 @@
     margin: -2px 0;
 }
 
-.stepper-mini-wrap .step-label { display: none; } /* Ẩn nhãn từng bước để tiết kiệm chỗ */
 .stepper-mini-wrap .step-dot { width: 10px; height: 10px; font-size: 7px; }
 
 /* --- Cụm hành động bên phải --- */
@@ -450,8 +440,4 @@
     color: #2f5d46;
     transition: transform 0.3s ease;
     cursor: pointer;
-}
-
-.status-bar.is-expanded .toggle-arrow {
-    transform: rotate(90deg); /* Xoay khi mở rộng */
 }
