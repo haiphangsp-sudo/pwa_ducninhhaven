@@ -1,52 +1,69 @@
-/* --- TRẠNG THÁI GỐC (Capsule) --- */
+/* --- TRẠNG THÁI GỐC (Kén Capsule) --- */
 .status-bar {
     position: fixed;
     bottom: 20px;
     left: 20px;
-    height: 60px;
-    border-radius: 30px; /* Bo tròn hoàn toàn */
-    background: #fdfcf9;
-    border: 1px solid rgba(47, 93, 70, 0.1);
+    height: 56px;
+    background: #2f5d46; /* Màu xanh Haven */
+    border-radius: 28px;
     display: flex;
     align-items: center;
+    justify-content: center; /* Căn giữa nội dung bên trong */
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
     z-index: 9999;
-    
-    /* QUAN TRỌNG: Hiệu ứng trượt mượt mà */
-    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1), 
-                background 0.3s ease, 
-                box-shadow 0.3s ease;
-    overflow: hidden; /* Cắt phần thừa khi thu lại */
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.1);
 }
 
-/* --- KHI THU VÀO (Hình tròn/Badge) --- */
+/* --- KHI THU LẠI (Chỉ còn nút mũi tên) --- */
 .status-bar.is-collapsed {
-    width: 60px; /* Bằng đúng chiều cao để tạo hình tròn */
-    background: #2f5d46; /* Màu xanh Haven khi thu gọn */
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    width: 56px; /* Hình tròn hoàn hảo */
+    padding: 0;
 }
 
+/* Ẩn tất cả ngoại trừ cụm chứa mũi tên */
+.status-bar.is-collapsed .bar-left,
 .status-bar.is-collapsed .bar-center,
-.status-bar.is-collapsed .bar-right .btn-check-haven {
-    opacity: 0;
-    visibility: hidden;
-    width: 0;
+.status-bar.is-collapsed .btn-check-haven {
+    display: none !important; /* Xóa bỏ hoàn toàn không gian của chúng */
 }
 
-/* --- KHI MỞ RA (Thanh dài) --- */
+/* Đưa mũi tên vào chính giữa khi thu lại */
+.status-bar.is-collapsed .bar-right {
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+/* --- KHI MỞ RỘNG --- */
 .status-bar.is-expanded {
-    width: calc(100% - 40px); /* Dài gần hết màn hình */
-    background: #fdfcf9;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+    width: calc(100% - 40px);
+    background: #fdfcf9; /* Chuyển sang nền sáng khi mở */
+    padding: 0 15px;
+    justify-content: space-between; /* Đưa các thành phần về 2 đầu */
+    border: 1px solid rgba(47, 93, 70, 0.1);
 }
 
-.status-bar.is-expanded .bar-center {
-    opacity: 1;
-    width: auto;
-    flex: 1;
-    transition: opacity 0.4s ease 0.2s; /* Hiện chữ sau khi thanh đã dài ra */
+.status-bar.is-expanded .toggle-arrow {
+    transform: rotate(180deg); /* Quay ngược lại */
+    color: #2f5d46;
 }
 
-/* Giữ nội dung trên 1 dòng để không bị giật khi trượt */
-.status-stack {
-    white-space: nowrap; 
+.status-bar.is-collapsed .toggle-arrow {
+    color: #ffffff; /* Mũi tên trắng trên nền xanh khi thu gọn */
+    transform: rotate(0deg);
+}
+
+/* Mũi tên to rõ và căn giữa */
+.toggle-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    transition: all 0.4s ease;
+    cursor: pointer;
 }
