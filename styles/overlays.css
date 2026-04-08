@@ -309,19 +309,22 @@
 }
 
 .overlay__ack.ack--success {
-  background: #2f5d46;
+  background: var(--success);
 }
 
 .overlay__ack.ack--error {
-  background: #a14a3f;
+  background: var(--error);
 }
 
 .overlay__ack.ack--info {
-  background: #4e6a63;
+  background: var(--info);
 }
 
 .overlay__ack.ack--sending {
-  background: #5d665f;
+  background: var(--brand);
+}
+.overlay__ack.ack--warning {
+  background: var(--warning);
 }
 
 .overlay__ack.ack--sending .ack__icon {
