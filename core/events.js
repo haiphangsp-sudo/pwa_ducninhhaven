@@ -9,9 +9,7 @@ export function addToCart() {
   const state = getState();
   const itemId = state.order?.line;
   if (!itemId) return;
-
   updateCartQuantity(itemId, 1);
-  showToast({ type: "success", message: "cart_bar.added" });
 }
 
 function getSourceItems(state, action) {
@@ -84,41 +82,31 @@ export async function submitOrder(action) {
 
   if (!payload) return false;
 
-  setState({
-    order: {
-      status: "sending"
-    }
-  });
-
-  showToast({ type: "sending", message: "cart_bar.sending" });
-
+  setState({order: {status: "sending"}});
   try {
     const res = await sendRequest(payload);
 
     if (res?.success) {
       finalizeOrderSuccess(action, payload);
       notifyResponse(res);
-      showToast({
-        type: "success",
-        message: "cart_bar.success",
-        duration: 3000
-      });
+      setState({order: {status: "success"}});
+      
+      return true;
+    }
+    if(res?.duplicate) {
+      setState({order: {status: "duplicate"}});
+      notifyResponse(res);
+      return true;
+    }
+    if(res?.rate_limited) {
+      setState({order: {status: "rate_limited"}});
+      notifyResponse(res);
       return true;
     }
 
     throw new Error(res?.message || "API_FAIL");
   } catch (error) {
-    setState({
-      order: {
-        status: "error"
-      }
-    });
-
-    showToast({
-      type: "error",
-      message: "cart_bar.error",
-      duration: 2500
-    });
+    setState({order: {status: "error"}});
 
     notifyResponse(error);
     return false;

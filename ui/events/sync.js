@@ -111,6 +111,44 @@ async function syncUI(state) {
   
   await handleOrderLogic(state, prevState);
 
+  const orderStatusChanged = state.order.status !== prevState.order?.status;
+  const orderActionChanged = state.order.action !== prevState.order?.action;
+  const orderLineChanged = state.order.line !== prevState.order?.line;
+  const orderAtChanged = state.order.at !== prevState.order?.at;
+
+  if (orderStatusChanged || orderActionChanged || orderLineChanged || orderAtChanged) {
+    const type = state.order.status;
+    switch (type) {
+
+      case "error":
+        showToast({type: "error",message: "cart_bar.error",duration: 2500});
+        break;
+      
+      case "duplicate":
+        showToast({type: "info",message: "cart_bar.duplicate",duration: 2500});
+        break;
+
+      case "success": 
+        showToast({type: "success", message: "cart_bar.success",duration: 2500});
+        break;  
+      
+      case "sending":
+          showToast({ type: "sending", message: "cart_bar.sending" });
+        break;
+      
+      case "added":
+          showToast({ type: "success", message: "cart_bar.added" });
+        break;
+      
+      case "idle":
+        showToast({ type: "idle", message: "cart_bar.idle" });
+        break;
+
+      default:  
+        break;
+      
+    }
+  }
   lastState = JSON.parse(JSON.stringify(getState()));
 }
 
@@ -121,7 +159,7 @@ function syncLanguage(state) {
   renderHub(state);
 }
 async function handleOrderLogic(state) {
-  const { action, at, status } = state.order;
+  const { action, at } = state.order;
 
   const isNew =
     action &&

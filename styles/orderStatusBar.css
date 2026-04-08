@@ -316,37 +316,40 @@
     background: #ef4444;
     color: white;
 }
-#orderTrackerList {
-    max-height: 70vh; /* Giới hạn chiều cao để cuộn nếu khách đặt nhiều đơn */
-    overflow-y: auto;
-    padding-bottom: 20px;
-}
-
-.order-card {
-    transition: all 0.3s ease;
-    animation: slideUp 0.4s ease-out;
-}
 
 @keyframes slideUp {
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
 }
-/* Đảm bảo danh sách có thể cuộn và hiển thị rõ ràng */
-#orderTrackerList {
-    display: block !important;
-    min-height: 100px;
-    padding-bottom: 30px;
-}
-
-.order-card {
-    background: #ffffff !important;
-    color: #333333 !important;
-    border: 1px solid #eeeeee;
-    display: flex;
-    flex-direction: column;
-}
 
 .stepper-wrapper {
     width: 100%;
     padding-top: 10px;
+}
+/* Đảm bảo danh sách đơn hàng có khoảng cách và hiển thị rõ */
+#orderTrackerList {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 10px 0;
+     max-height: 70vh; /* Giới hạn chiều cao để cuộn nếu khách đặt nhiều đơn */
+    overflow-y: auto;
+    padding-bottom: 20px;
+}
+
+/* Kiểu dáng cho từng thẻ đơn hàng trong danh sách */
+.order-card {
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    padding: 16px;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+    animation: slideUp 0.4s ease-out;
+}
+
+/* Stepper bên trong danh sách chi tiết */
+.stepper-container {
+    margin-top: 20px;
+    width: 100%;
 }

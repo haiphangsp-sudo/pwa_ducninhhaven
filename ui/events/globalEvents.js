@@ -166,7 +166,7 @@ function setOrder(cmd) {
     order: {
       action: cmd.action,
       line: cmd.value,
-      status: cmd.extra,
+      status: cmd.option,
       at: Date.now()
     }
   });
