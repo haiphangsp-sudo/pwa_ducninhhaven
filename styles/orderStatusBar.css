@@ -273,3 +273,23 @@
 .step.is-complete .step-line {
     background: #2f5d46;
 }
+.step-status-msg {
+    display: none;
+    font-size: 9px;
+    font-weight: 700;
+    margin-top: 2px;
+    white-space: nowrap;
+}
+.step.is-active .step-status-msg {
+    display: block; /* Hiện ra */
+    color: #8b4513;  /* Đổi thành màu NÂU GỖ đặc trưng */
+    animation: fadeIn 0.3s ease; /* Thêm hiệu ứng hiện hình mượt mà */
+}
+.step.is-active .step-label {
+    display: none;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-2px); }
+    to { opacity: 1; transform: translateY(0); }
+}
