@@ -4,28 +4,29 @@ import { getDrawerExtended } from "../../core/menuQuery.js";
 import { translate } from "../utils/translate.js";
 import { STRINGS } from "../../data/i18n.js";
 
+const TERMINAL_STATUSES = ['RECOVERING', 'CANCELED'];
+
 export function renderStatusBar(state) {
   const bar = document.getElementById("orderStatusBar");
-  if (!bar) return;
+  if (!bar) return; // Chỉ cần giữ lại ID cha duy nhất này
 
   const isExpanded = !!state.orders?.isBarExpanded;
-  const activeOrders = state.orders?.active || [];
+  const activeOrders = (state.orders?.active || []).filter(
+    order => !TERMINAL_STATUSES.includes(order.status)
+  );
   const { totalQty } = getDrawerExtended();
   const lang = state.lang?.current || 'vi';
 
-  // Lọc các đơn đang xử lý
-  const actionableOrders = activeOrders.filter(o => !['RECOVERING', 'CANCELED'].includes(o.status));
-
-  // 1. Logic Ẩn/Hiện: Chỉ hiện khi có đơn hoặc có giỏ hàng
+  // 1. Logic Ẩn/Hiện
   if (actionableOrders.length === 0 && totalQty === 0) {
-    bar.classList.add("hidden");
+    bar.className = "status-bar hidden";
     return;
   }
-  bar.classList.remove("hidden");
 
-  // 2. Thiết lập trạng thái hiển thị
+  // 2. Thiết lập trạng thái hiển thị (Capsule)
   bar.className = `status-bar ${isExpanded ? 'is-expanded' : 'is-collapsed'}`;
 
+  // 3. Xác định dữ liệu ưu tiên
   const priorityOrder = actionableOrders.reduce((best, current) => {
     const scores = { DONE: 5, DELIVERING: 4, COOKING: 3, NEW: 2, SYNCING: 1 };
     return (scores[current.status] || 0) > (scores[best?.status] || 0) ? current : best;
@@ -33,26 +34,26 @@ export function renderStatusBar(state) {
 
   const status = priorityOrder?.status || "SYNCING";
   const statusMsg = STRINGS.status[`msg_${status}`]?.[lang] || "";
+  const displayQty = actionableOrders.length || totalQty;
 
-  // 3. RENDER TOÀN PHẦN: Dựng lại cấu trúc từ đầu để đảm bảo chính xác
+  // 4. RENDER TOÀN PHẦN (The Upgrade)
+  // Không còn countEl hay textEl, mọi thứ được dựng mới hoàn toàn
   bar.innerHTML = `
     <div class="bar-layout">
       <div class="bar-left">
-        <div class="order-count-badge">${actionableOrders.length || totalQty}</div>
+        <div class="order-count-badge">${displayQty}</div>
       </div>
 
       <div class="bar-center">
         <div class="status-stack">
           <div class="status-msg-top">${statusMsg}</div>
-          <div class="stepper-mini-container">
-            ${renderStepper(status)}
-          </div>
+          <div class="stepper-mini-wrap">${renderStepper(status)}</div>
           <div class="status-label-bottom">${status}</div>
         </div>
       </div>
 
       <div class="bar-right">
-        <button class="btn-check-haven" data-action="open-overlay" data-value="orderTrackerPage">
+        <button class="btn-check-haven" data-action="open-overlay" data-value="trackerPage">
           ${translate("order.button")}
         </button>
         <div class="toggle-arrow" data-action="toggle_status" data-value="${isExpanded}">
