@@ -11,14 +11,15 @@ export function renderMenu(categoryKey,ui) {
 
   return products.map(product => {
     const productKey = product.key;
-    
+    const optionsHtml = categoryOpt(categoryKey, product.key, ui);
+    if(!optionsHtml) return "";
     return `
         <section class="menu-group">
           <h2 class="menu-group-title">
             ${translate(product.label)}
           </h2>
           <div class="menu-grid grid">
-            ${categoryOpt(categoryKey, productKey, ui)}
+            ${optionsHtml}
           </div>
         </section>
       `;

@@ -9,7 +9,6 @@ import { getVariants } from "../../core/menuQuery.js";
 
 export function categoryOpt(categoryKey, productKey, ui) {
     const variants = getVariants(categoryKey, productKey);
-    console.log("Variants found:", variants)
     return variants.map(variant => {       
         const isRecommend = variant.recommend;
         return `
