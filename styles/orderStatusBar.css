@@ -197,7 +197,15 @@
   50% { transform: scale(1.5); opacity: 0.6; }
   100% { transform: scale(1.2); opacity: 1; }
 }
-
+.status-bar .stepper {
+    display: flex;
+    justify-content: space-between; /* Ép các dot dãn đều ra 2 đầu */
+    align-items: flex-start;
+    width: 200px; /* KHÓA CHIỀU RỘNG: Chống việc dots tụ lại khi mất chữ */
+    position: relative;
+    margin: 0 auto;
+    padding-top: 5px;
+}
 .stepper {
     display: flex;
     justify-content: space-between;
