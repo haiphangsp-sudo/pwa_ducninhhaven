@@ -13,9 +13,10 @@ export function renderStepper(currentStatus) {
 
   const statusOrder = ['NEW', 'COOKING', 'DELIVERING', 'DONE', 'RECOVERING'];
   const currentIndex = statusOrder.indexOf(currentStatus);
-
+  const currentMsg = steps[currentIndex]?.msg || ""; 
   return `
     <div class="stepper">
+      ${currentMsg ? `<div class="step-status-msg">${currentMsg}</div>` : ''}
       ${steps.map((step, index) => {
         let stateClass = "";
         if (currentStatus === 'RECOVERING') stateClass = "is-complete";
@@ -25,7 +26,6 @@ export function renderStepper(currentStatus) {
 
         return `
           <div class="step ${stateClass}">
-           ${currentIndex === index ? `<div class="step-status-msg">${step.msg}</div>` : ''}
             <div class="step-dot">${stateClass === "is-complete" ? '✓' : ''}</div>
             <div class="step-label">${step.label}</div>
             ${index < steps.length - 1
