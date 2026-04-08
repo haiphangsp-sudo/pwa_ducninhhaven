@@ -238,7 +238,6 @@
     align-items: center;
     justify-content: center;
     padding: 0 10px;
-    max-width: 180px; /* Chặn text tràn ra 2 bên */
 }
 
 .status-stack {
