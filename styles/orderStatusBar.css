@@ -1,74 +1,226 @@
-/* --- TỔNG THỂ THANH BAR --- */
+/* --- TRẠNG THÁI GỐC: Nút tròn xanh khi thu gọn --- */
 .status-bar {
     position: fixed;
     bottom: 25px;
     left: 20px;
     height: 56px;
+    width: 56px;
     background: #2f5d46;
     border-radius: 28px;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); /* Hiệu ứng bung nén */
+    box-shadow: 0 12px 24px rgba(0,0,0,0.15);
     z-index: 9999;
     overflow: hidden;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    border: none;
 }
 
-/* THU NHỎ: Chỉ để lại nút mũi tên nằm chính giữa tâm */
-.status-bar.is-collapsed {
-    width: 56px;
-    padding: 0;
-}
-
-.status-bar.is-collapsed .bar-left,
-.status-bar.is-collapsed .bar-center,
-.status-bar.is-collapsed .btn-check-haven {
-    display: none !important; /* Xóa bỏ hoàn toàn để không gây lệch */
-}
-
-/* MỞ RỘNG: Bung dải kén màu trắng kem */
+/* --- KHI MỞ RỘNG: Dải kén trắng kem --- */
 .status-bar.is-expanded {
     width: calc(100% - 40px);
     background: #fdfcf9;
-    border: 1px solid rgba(47, 93, 70, 0.1);
+    border: 1px solid rgba(47, 93, 70, 0.08);
     justify-content: space-between;
-    padding: 0 12px;
+    padding: 0 10px;
 }
 
-/* --- LÀM ĐẸP THANH TIẾN TRÌNH (STEPPER MINI) --- */
-/* Ẩn triệt để các text "DONE", "checkmark" gây vỡ layout trong ảnh */
-.status-bar .step-label, 
-.status-bar .step-check-icon,
-.status-bar .step-content { 
-    display: none !important; 
-}
-
-.status-bar .stepper {
+/* --- BỐ CỤC 3 TẦNG TRUNG TÂM --- */
+.bar-center {
+    flex: 1;
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.is-expanded .bar-center { opacity: 1; transition-delay: 0.2s; }
+
+.status-msg-top {
+    font-size: 9px;
+    font-weight: 800;
+    color: #2f5d46;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 2px;
+}
+
+.status-label-bottom {
+    font-size: 8px;
+    font-weight: 700;
+    color: #8b4513;
+    opacity: 0.8;
+    margin-top: 2px;
+}
+
+/* --- STEPPER MINI (Sửa lỗi chồng chéo) --- */
+.stepper-mini-wrap {
     width: 100px;
-    height: 10px;
-    margin: 4px 0;
+    height: 12px;
+    display: flex;
+    align-items: center;
     position: relative;
 }
 
-.status-bar .step-dot {
-    width: 6px;
-    height: 6px;
-    background: #ccc;
-    border-radius: 50%;
-    z-index: 2;
+/* Quan trọng: Ẩn toàn bộ nhãn chữ và dấu tích trong thanh bar */
+.stepper-mini-wrap .step-label, 
+.stepper-mini-wrap .step-check-icon { 
+    display: none !important; 
 }
 
-.status-bar .step.is-active .step-dot { background: #8b4513; transform: scale(1.4); }
-.status-bar .step.is-complete .step-dot { background: #2f5d46; }
+.stepper-mini-wrap .step-dot {
+    width: 6px;
+    height: 6px;
+    border: 1px solid #fff;
+}
 
-/* --- PHÂN TẦNG 3 LỚP CHỮ --- */
-.status-stack { display: flex; flex-direction: column; align-items: center; }
-.status-msg-top { font-size: 9px; font-weight: 700; color: #2f5d46; text-transform: uppercase; }
-.status-label-bottom { font-size: 8px; font-weight: 800; color: #8b4513; opacity: 0.7; }
+.stepper-mini-wrap .step-line {
+    top: 50%;
+    transform: translateY(-50%);
+    height: 1px;
+}
 
-/* MŨI TÊN */
-.toggle-arrow { transition: transform 0.4s; color: #fff; }
-.is-expanded .toggle-arrow { color: #2f5d46; transform: rotate(180deg); }
+/* --- UI ELEMENTS --- */
+.order-count-badge {
+    min-width: 32px;
+    height: 32px;
+    background: #2f5d46;
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.is-expanded .order-count-badge { transform: scale(0.9); }
+
+.btn-check-haven {
+    background: #2f5d46;
+    color: #fff;
+    border: none;
+    padding: 7px 15px;
+    border-radius: 18px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-right: 5px;
+}
+
+.toggle-arrow {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    transition: transform 0.4s;
+}
+
+.is-expanded .toggle-arrow {
+    color: #2f5d46;
+    transform: rotate(180deg);
+}
+
+/* Ẩn nội dung khi thu gọn để không bị lệch tâm mũi tên */
+.is-collapsed .bar-center, 
+.is-collapsed .btn-check-haven,
+.is-collapsed .order-count-badge {
+    display: none !important;
+}
+/* --- STEPPER MINI TRONG STATUS BAR --- */
+/* --- STEPPER MINI TRONG STATUS BAR --- */
+
+/* Khung chứa stepper */
+.stepper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100px; /* Độ rộng cố định để nằm giữa 2 hàng chữ */
+    margin: 4px auto; /* Căn giữa */
+    position: relative;
+    height: 12px;
+}
+
+/* Các chấm tròn */
+.step {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.step-dot {
+    width: 6px;
+    height: 6px;
+    background: #e0e0e0;
+    border-radius: 50%;
+    border: 1px solid #fff;
+    transition: all 0.3s ease;
+}
+
+/* Chấm đang hoạt động (Màu nâu gỗ) */
+.step.is-active .step-dot {
+    background: #8b4513;
+    transform: scale(1.4);
+}
+
+/* Chấm đã hoàn thành (Màu xanh Haven) */
+.step.is-complete .step-dot {
+    background: #2f5d46;
+}
+
+/* Đường nối giữa các chấm */
+.step-line {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100px; /* Khớp với chiều rộng stepper */
+    height: 1px;
+    background: #eee;
+    z-index: 1;
+    transform: translateY(-50%);
+}
+
+.step.is-complete .step-line {
+    background: #2f5d46;
+}
+
+/* ẨN TOÀN BỘ CHỮ VÀ DẤU TÍCH TRONG STATUS BAR */
+.status-bar .step-label, 
+.status-bar .step-check-icon,
+.status-bar .step-content b { 
+    display: none !important; 
+}
+/* Màu nâu đặc trưng cho bước đang xử lý */
+.step.is-active .step-dot {
+    background-color: #8B4513; /* Màu nâu (SaddleBrown) hoặc mã màu thương hiệu của bạn */
+    border-color: #8B4513;
+    box-shadow: 0 0 0 3px rgba(139, 69, 19, 0.2); /* Hiệu ứng tỏa sáng nhẹ */
+}
+
+.step.is-active .step-label {
+    color: #8B4513;
+    font-weight: 600;
+}
+
+/* Hiệu ứng nhấp nháy cho Dot màu nâu để khách biết đang được xử lý */
+.step.is-active .step-dot {
+    animation: pulse-brown 2s infinite;
+}
+
+@keyframes pulse-brown {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+/* Dấu tích xanh cho các bước đã qua */
+.step.is-complete .step-dot {
+    background-color: #22c55e; /* Màu xanh lá */
+    color: white;
+}
