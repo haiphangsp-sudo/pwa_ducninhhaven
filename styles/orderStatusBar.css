@@ -230,49 +230,8 @@
   gap: 0;
 }
 
-/* DOT */
-.stepper-mini-wrap .step-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 999px;
-
-  background: #d6d3cd;
-  flex: 0 0 6px;
-}
-
-/* LINE */
-.stepper-mini-wrap .step-line {
-  width: 22px;
-  height: 2px;
-  border-radius: 999px;
-
-  background: #e5e2db;
-}
 
 
-/* ===============================
-   STATES
-================================= */
-
-/* completed */
-.step.is-complete .step-dot {
-  background: #2f5d46;
-}
-
-.step.is-complete + .step .step-line {
-  background: #2f5d46;
-}
-
-/* active */
-.step.is-active .step-dot {
-  background: #8b5a2b;
-  transform: scale(1.4);
-}
-
-/* optional: pulse nhẹ */
-.step.is-active .step-dot {
-  animation: dotPulse 1.6s infinite;
-}
 
 @keyframes dotPulse {
   0% { transform: scale(1.2); opacity: 1; }
