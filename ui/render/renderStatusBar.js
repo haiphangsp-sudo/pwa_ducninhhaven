@@ -34,7 +34,7 @@ export function renderStatusBar(state) {
   }, null);
 
   const status = priorityOrder?.status || "SYNCING";
-  const statusMsg = STRINGS.status[`msg_${status}`]?.[lang] || "";
+  const statusMsg = STRINGS.status[`msg_${status}`];
 
   bar.innerHTML = `
     <div class="bar-layout">
@@ -44,7 +44,7 @@ export function renderStatusBar(state) {
 
       <div class="bar-center">
         <div class="status-stack">
-          <div class="status-msg-top">${statusMsg}</div>
+          <div class="status-msg-top">${translate(statusMsg)}</div>
           <div class="stepper-mini-wrap">${renderStepper(status)}</div>
           <div class="status-label-bottom">${status}</div>
         </div>
