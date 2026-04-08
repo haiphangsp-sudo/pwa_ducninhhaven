@@ -79,3 +79,29 @@
 .status-bar.is-expanded .toggle-arrow {
     transform: rotate(180deg); /* Quay ngược lại để chỉ vào nút đóng */
 }
+.status-bar {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    height: 60px;
+    border-radius: 30px; /* Bo tròn kén */
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); /* Hiệu ứng trượt */
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    z-index: 9999;
+}
+
+/* KHI THU VÀO: Hình tròn Badge */
+.status-bar.is-collapsed {
+    width: 60px;
+    background: #2f5d46;
+    border-color: transparent;
+}
+
+/* KHI MỞ RA: Thanh dài capsule */
+.status-bar.is-expanded {
+    width: calc(100% - 40px);
+    background: #fdfcf9;
+    padding: 0 15px;
+}
