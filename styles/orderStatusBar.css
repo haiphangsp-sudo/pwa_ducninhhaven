@@ -211,7 +211,6 @@
     display: flex;
     align-items: center;
     flex-grow: 1;
-    gap: 15px;
 }
 
 /* Phần Mini (Icon & Badge) */
@@ -272,6 +271,7 @@
 }
 .status-text .status-msg{
     color:#6b8e23;
+    white-space: nowrap;
 }
 /* Các chấm tiến trình (Steps) */
 .step-dot {
