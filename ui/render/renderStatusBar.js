@@ -34,9 +34,7 @@ export function renderStatusBar(state) {
       <div class="order-count-badge">${actionableOrders.length}</div>
     </div>
     <div class="bar-center">
-      <div class="status-stack">
         <div class="stepper-mini-wrap">${renderStepper(status)}</div>
-      </div>
     </div>
     <div class="bar-right">
       <button class="btn-check-haven" data-action="open-overlay" data-value="orderTrackerPage">
