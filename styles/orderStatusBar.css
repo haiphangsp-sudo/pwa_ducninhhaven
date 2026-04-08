@@ -146,6 +146,61 @@
     color: #2f5d46; /* Màu xanh đặc trưng của Duc Ninh Haven */
 }
 
+
+/* Trạng thái Nhắc nhở (ví dụ: chưa chọn phòng) */
+.status-bar.is-warning {
+    background-color: #fff9eb; /* Vàng kem rất nhẹ */
+    border: 1px solid #ffcc00;
+    box-shadow: 0 5px 15px rgba(255, 204, 0, 0.1);
+}
+
+.status-bar.is-warning .order-status-text {
+    color: #856404; /* Chữ màu nâu đậm cho dễ đọc trên nền vàng */
+    font-weight: 500;
+}
+
+/* Hiệu ứng rung nhẹ một lần duy nhất khi xuất hiện để gây chú ý */
+.status-bar.is-warning {
+    animation: soft-shake 0.4s ease-out;
+}
+
+@keyframes soft-shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-3px); }
+    75% { transform: translateX(3px); }
+}
+/* order-status-bar.css */
+
+/* Nội dung văn bản */
+.status-text {
+    font-size: var(--font-s);
+    color: var(--text-main);
+    font-weight: 500;
+}
+.status-text .status-msg{
+    color:#6b8e23;
+    white-space: nowrap;
+}
+/* Các chấm tiến trình (Steps) */
+.step-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--border-strong);
+}
+
+/* Trạng thái Đã hoàn thành - Dùng màu Brand (Xanh Haven) */
+.step.is-complete .step-dot {
+    background: var(--brand);
+    color: #ffffff;
+}
+
+/* Trạng thái Đang xử lý - Dùng màu Accent (Vàng đồng) */
+.step.is-active .step-dot {
+    background: var(--accent);
+    box-shadow: 0 0 0 4px var(--accent-soft);
+}
+
 /* Trạng thái Cảnh báo - Dùng biến Warning */
 .order-status-bar.is-warning {
     background-color: var(--warning-soft, #fff9eb);
@@ -238,6 +293,7 @@
     align-items: center;
     justify-content: center;
     padding: 0 10px;
+    max-width: 180px; /* Chặn text tràn ra 2 bên */
 }
 
 .status-stack {
