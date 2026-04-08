@@ -129,3 +129,32 @@
     color: #2f5d46;
     padding: 4px;
 }
+/* --- TRẠNG THÁI MỞ RỘNG (Mặc định 60px) --- */
+.status-bar.is-expanded {
+    height: 60px;
+}
+
+/* --- TRẠNG THÁI THU GỌN (Ví dụ 32px) --- */
+.status-bar.is-collapsed {
+    height: 35px; /* Thu nhỏ chiều cao */
+}
+
+/* Ẩn các chi tiết khi thu gọn */
+.status-bar.is-collapsed .bar-center,
+.status-bar.is-collapsed .btn-check-haven {
+    display: none;
+}
+
+/* Xoay dấu > khi mở rộng */
+.status-bar.is-expanded .toggle-arrow {
+    transform: rotate(90deg);
+}
+
+.status-bar.is-collapsed .toggle-arrow {
+    transform: rotate(-90deg); /* Chỉ lên trên báo hiệu có thể mở rộng */
+}
+
+/* Animation mượt mà khi co giãn */
+.status-bar {
+    transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s ease;
+}
