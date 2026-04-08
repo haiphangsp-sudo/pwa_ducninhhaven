@@ -15,7 +15,6 @@ import { attachRuntimeRefresh } from "../../core/runtimeRefresh.js";
    MAIN EVENTS
 ========================= */
 let orderPollingStarted = false;
-let fastSyncTimer = null;
 
 export function attachAppEvents() {
   document.addEventListener("click", handleGlobalClick);
@@ -52,7 +51,7 @@ export function attachAppEvents() {
       if (hasActive) {
         syncOrdersWithServer();
       }
-    }, 450000);
+    }, 45000);
   }
 
   attachRuntimeRefresh({
