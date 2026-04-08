@@ -12,6 +12,7 @@ import { renderPanel } from "../render/renderPanel.js";
 import { submitOrder, addToCart } from "../../core/events.js";
 import { renderAck } from "../render/renderAck.js";
 import { openOrderTracker } from "../components/orderTracker.js";
+import { showToast } from "../render/renderAck.js";
 
 let lastState = null;
 let isProcessingOrder = false;
