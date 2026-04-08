@@ -1,9 +1,6 @@
 // ui/render/renderStatusBar.js
 import { renderStepper } from './renderStepper.js';
 import { getDrawerExtended } from "../../core/menuQuery.js";
-import { translate } from "../utils/translate.js";
-import { STRINGS } from "../../data/i18n.js";
-import { getState } from "../../core/state.js";
 
 export function renderStatusBar(state) {
   const bar = document.getElementById("orderStatusBar");
@@ -12,7 +9,6 @@ export function renderStatusBar(state) {
   const isExpanded = !!state.orders?.isBarExpanded;
   const activeOrders = state.orders?.active || [];
   const { totalQty } = getDrawerExtended();
-  const lang = state.lang?.current || 'vi';
 
   // Lọc đơn hàng đang xử lý
   const actionableOrders = activeOrders.filter(o => !['RECOVERING', 'CANCELED'].includes(o.status));
@@ -32,7 +28,6 @@ export function renderStatusBar(state) {
   }, null);
 
   const status = priorityOrder?.status || "SYNCING";
-  const statusMsg = STRINGS.status[`msg_${status}`]?.[lang] || "";
 
   bar.innerHTML = `
     <div class="bar-left">
@@ -40,9 +35,7 @@ export function renderStatusBar(state) {
     </div>
     <div class="bar-center">
       <div class="status-stack">
-        <div class="status-msg-top">${statusMsg}</div>
         <div class="stepper-mini-wrap">${renderStepper(status)}</div>
-        <div class="status-label-bottom">${status}</div>
       </div>
     </div>
     <div class="bar-right">
