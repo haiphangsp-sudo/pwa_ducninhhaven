@@ -230,7 +230,11 @@
   gap: 0;
 }
 
-
+.status-bar .step.is-active .step-dot {
+    background: #8b4513; /* Màu nâu gỗ hiện tại */
+    animation: dotPulse 2s infinite ease-in-out; /* Ghép hiệu ứng vào đây */
+    box-shadow: 0 0 10px rgba(139, 69, 19, 0.4);
+}
 
 
 @keyframes dotPulse {
