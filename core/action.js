@@ -38,6 +38,7 @@ export async function updateCartQuantity(itemId, delta) {
       at: Date.now()
     }
   });
+  
 }
 
 export function resetOrderCommand(status = "idle") {

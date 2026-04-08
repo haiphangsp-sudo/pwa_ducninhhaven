@@ -147,7 +147,6 @@ function handleGlobalClick(e) {
           isBarExpanded: cmd.value !== "true"? true : false
         }
     });
-       e.stopPropagation();
       break;
 
     /* ---------- LANGUAGE ---------- */
