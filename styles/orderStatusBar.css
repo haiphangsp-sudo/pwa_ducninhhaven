@@ -353,3 +353,105 @@
     margin-top: 20px;
     width: 100%;
 }
+/* --- Khung Status Bar 60px --- */
+.status-bar {
+    height: 60px;
+    padding: 0 15px;
+    background: #fdfcf9; /* Màu kem Haven */
+    border-top: 1px solid rgba(47, 93, 70, 0.1);
+    box-shadow: 0 -4px 15px rgba(0,0,0,0.03);
+    overflow: hidden;
+}
+
+.bar-layout {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    width: 100%;
+}
+
+/* --- Badge bên trái --- */
+.order-count-badge {
+    width: 26px;
+    height: 26px;
+    background: #2f5d46;
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+/* --- Cụm trung tâm (Trọng tâm) --- */
+.bar-center {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 10px;
+    max-width: 180px; /* Chặn text tràn ra 2 bên */
+}
+
+.status-stack {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1px; /* Khoảng cách siêu mỏng */
+}
+
+.status-msg-top {
+    font-size: 9px;
+    font-weight: 600;
+    color: #2f5d46;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+}
+
+.status-label-bottom {
+    font-size: 8px;
+    font-weight: 700;
+    color: #8b4513; /* Màu gỗ */
+    opacity: 0.7;
+}
+
+/* --- Thu nhỏ Stepper --- */
+.stepper-mini-wrap {
+    width: 100%;
+    transform: scale(0.8); /* Thu nhỏ cả cụm dot để vừa 60px */
+    margin: -2px 0;
+}
+
+.stepper-mini-wrap .step-label { display: none; } /* Ẩn nhãn từng bước để tiết kiệm chỗ */
+.stepper-mini-wrap .step-dot { width: 10px; height: 10px; font-size: 7px; }
+
+/* --- Cụm hành động bên phải --- */
+.bar-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.btn-check-haven {
+    background: #8b4513;
+    color: #fff;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.toggle-arrow {
+    color: #2f5d46;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+}
+
+.status-bar.is-expanded .toggle-arrow {
+    transform: rotate(90deg); /* Xoay khi mở rộng */
+}
