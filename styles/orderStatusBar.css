@@ -205,15 +205,6 @@
     padding-top: 5px;
 }
 
-.status-bar .step {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
-    z-index: 2;
-    flex: 1;
-}
-
 .step-dot {
     width: 24px;
     height: 24px;
@@ -273,18 +264,51 @@
 .step.is-complete .step-line {
     background: #2f5d46;
 }
-.step-status-msg {
-    font-weight: 700;
-    margin-top: 2px;
-    white-space: nowrap;
-
-    display: block; /* Hiện ra */
-    color: #8b4513;  /* Đổi thành màu NÂU GỖ đặc trưng */
-    animation: fadeIn 0.3s ease; /* Thêm hiệu ứng hiện hình mượt mà */
-}
-
 
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(-2px); }
     to { opacity: 1; transform: translateY(0); }
+}
+/* 1. Khung cha phải có relative để làm mốc tọa độ */
+.status-bar .stepper {
+    position: relative; 
+    display: flex;
+    justify-content: space-between;
+    width: 220px; /* Hoặc chiều rộng cố định của bạn */
+    margin: 20px auto 0; /* Tạo khoảng trống phía trên cho thông báo */
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+    flex: 1;
+}
+/* 2. Căn giữa thông báo theo toàn bộ stepper */
+.step-status-msg {
+    position: absolute;
+    
+    /* Căn giữa theo khung .stepper */
+    left: 50%;
+    transform: translateX(-50%);
+    
+    /* Đẩy lên phía trên các dấu dot */
+    top: -22px; 
+    
+    /* Thiết lập cho thông báo dài */
+    white-space: nowrap;      /* Không cho xuống dòng nếu muốn một hàng dài */
+    font-size: 10px;
+    font-weight: 800;
+    color: #8b4513;           /* Màu nâu gỗ active */
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    
+    /* Đảm bảo không bị các phần tử khác che khuất */
+    z-index: 10;
+    
+    /* Hiệu ứng xuất hiện cho sang */
+    animation: slideDownFade 0.4s ease-out;
+}
+
+@keyframes slideDownFade {
+    from { opacity: 0; transform: translate(-50%, -5px); }
+    to { opacity: 1; transform: translate(-50%, 0); }
 }
