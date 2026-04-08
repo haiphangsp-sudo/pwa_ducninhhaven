@@ -211,6 +211,7 @@
     display: flex;
     align-items: center;
     flex-grow: 1;
+    gap: 15px;
 }
 
 /* Phần Mini (Icon & Badge) */
@@ -271,7 +272,6 @@
 }
 .status-text .status-msg{
     color:#6b8e23;
-    white-space: nowrap;
 }
 /* Các chấm tiến trình (Steps) */
 .step-dot {
@@ -316,11 +316,23 @@
     background: #ef4444;
     color: white;
 }
+#orderTrackerList {
+    max-height: 70vh; /* Giới hạn chiều cao để cuộn nếu khách đặt nhiều đơn */
+    overflow-y: auto;
+    padding-bottom: 20px;
+}
+
+.order-card {
+    transition: all 0.3s ease;
+    animation: slideUp 0.4s ease-out;
+}
 
 @keyframes slideUp {
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
 }
+
+
 
 .stepper-wrapper {
     width: 100%;
@@ -332,9 +344,6 @@
     flex-direction: column;
     gap: 16px;
     padding: 10px 0;
-     max-height: 70vh; /* Giới hạn chiều cao để cuộn nếu khách đặt nhiều đơn */
-    overflow-y: auto;
-    padding-bottom: 20px;
 }
 
 /* Kiểu dáng cho từng thẻ đơn hàng trong danh sách */
@@ -344,100 +353,10 @@
     padding: 16px;
     border-radius: 12px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    transition: all 0.3s ease;
-    animation: slideUp 0.4s ease-out;
 }
 
 /* Stepper bên trong danh sách chi tiết */
 .stepper-container {
     margin-top: 20px;
     width: 100%;
-}
-
-.bar-layout {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 100%;
-    width: 100%;
-}
-
-/* --- Badge bên trái --- */
-.order-count-badge {
-    width: 26px;
-    height: 26px;
-    background: #2f5d46;
-    color: #fff;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 11px;
-    font-weight: 700;
-}
-
-/* --- Cụm trung tâm (Trọng tâm) --- */
-.bar-center {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 0 10px;
-    max-width: 320px; /* Chặn text tràn ra 2 bên */
-}
-
-.status-stack {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1px; /* Khoảng cách siêu mỏng */
-}
-
-.status-msg-top {
-    font-size: 9px;
-    font-weight: 600;
-    color: #2f5d46;
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
-    white-space: nowrap;
-}
-
-.status-label-bottom {
-    font-size: 8px;
-    font-weight: 700;
-    color: #8b4513; /* Màu gỗ */
-    opacity: 0.7;
-}
-
-/* --- Thu nhỏ Stepper --- */
-.stepper-mini-wrap {
-    width: 100%;
-    transform: scale(0.8); /* Thu nhỏ cả cụm dot để vừa 60px */
-    margin: -2px 0;
-}
-
-.stepper-mini-wrap .step-dot { width: 10px; height: 10px; font-size: 7px; }
-
-/* --- Cụm hành động bên phải --- */
-.bar-right {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.btn-check-haven {
-    background: #8b4513;
-    color: #fff;
-    border: none;
-    padding: 6px 14px;
-    border-radius: 20px;
-    font-size: 11px;
-    font-weight: 600;
-}
-
-.toggle-arrow {
-    color: #2f5d46;
-    transition: transform 0.3s ease;
-    cursor: pointer;
 }
