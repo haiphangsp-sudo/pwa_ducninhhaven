@@ -1,4 +1,12 @@
 // ui/render/renderStatusBar.js
+import { STRINGS } from "../../data/i18n.js";
+import { translate } from "../utils/translate.js";
+import { getDrawerExtended } from "../../core/menuQuery.js";
+import { renderStepper } from "../render/renderStepper.js";
+
+/* =========================
+   PUBLIC
+========================= */
 export function renderStatusBar(state) {
   const bar = document.getElementById("orderStatusBar");
   if (!bar) return;
