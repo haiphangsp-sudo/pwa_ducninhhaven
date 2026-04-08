@@ -47,7 +47,7 @@ export let UI = {
   /* ---------------- NAVIGATION ---------------- */
 
   panel: {
-    view: "intro",   // menu, article, ...
+    view: "drink",   // menu, article, ...
     option: "article",
     mode: "grid"     // Kiểu hiển thị (grid, list)
   },
