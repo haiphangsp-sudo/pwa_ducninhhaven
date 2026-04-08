@@ -24,8 +24,9 @@ export function renderStepper(currentStatus) {
         else stateClass = "is-pending";
 
         return `
+          ${currentIndex === index ? `<div class="step-status-msg">${step.msg}</div>` : ''}
+
           <div class="step ${stateClass}">
-            ${currentIndex === index? `<div class="step-status-msg">${step.msg}</div>` : ''}
             <div class="step-dot">${stateClass === "is-complete" ? '✓' : ''}</div>
             <div class="step-label">${step.label}</div>
             ${index < steps.length - 1
