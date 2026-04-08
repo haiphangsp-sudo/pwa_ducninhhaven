@@ -21,10 +21,12 @@ export function renderPanel(state) {
     const isActive = el.id === panelId;
     el.classList.toggle("hidden", !isActive);
     el.classList.toggle("animate-fade-in", isActive);
+    if (isActive) {
+      panelEl.innerHTML =
+        ui === "article"
+          ? renderArticle(panelId)
+          : renderMenu(panelId, ui);
+    }
   });
 
-  panelEl.innerHTML =
-    ui === "article"
-      ? renderArticle(panelId)
-      : renderMenu(panelId, ui);
 }
