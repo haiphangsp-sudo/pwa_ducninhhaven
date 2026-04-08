@@ -6,7 +6,7 @@ import { renderNavBar } from "./renderNavBar.js";
 import { hydrateOrdersFromStorage } from "../../core/orders.js";
 
 
-export function renderApp() {
+export async function renderApp() {
     const s = getState();
     
     renderNavBar(s);
