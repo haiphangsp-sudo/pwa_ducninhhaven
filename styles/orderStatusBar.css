@@ -1,363 +1,81 @@
-
-.is-collapsed .bar-content {
-    opacity: 0;
-    width: 0;
-    padding: 0;
-    pointer-events: none;
-}
-
-/* Biểu tượng trạng thái (Chuông hoặc Truck) */
-.bar-icon-mini {
-    display: none; /* Mặc định ẩn */
-    font-size: 20px;
-}
-
-.is-collapsed .bar-icon-mini {
-    display: block;
-}
-
-/* Nút bấm kiểm tra */
-.btn-check-order {
-    background: var(--color-primary, #a88a64);
-    color: white;
-    border: none;
-    padding: 4px 12px;
-    border-radius: 20px;
-    margin-left: 12px;
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: all 0.2s ease;
-}
-
-.btn-check-order:active {
-    transform: scale(0.98);
-}
-
-/* Nút Toggle < > */
-.btn-toggle-status {
-    border: none;
-    background: transparent;
-    color: var(--color-primary);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 18px;
-}
-.stepper {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    padding: 10px 0;
-}
-
-.step {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    flex: 1;
-}
-
-.step-dot {
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    background: #eee;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    z-index: 2;
-    transition: all 0.3s ease;
-}
-
-.step-label {
-    font-size: 10px;
-    margin-top: 8px;
-    color: #2f5d46; 
-}
-
-.step-line {
-    position: absolute;
-    top: 12px;
-    left: 50%;
-    width: 100%;
-    height: 2px;
-    background: #eee;
-    z-index: 1;
-}
-
-
-/* Trạng thái Đang thực hiện */
-.step.is-active .step-dot { 
-    background: #a88a64; 
-    box-shadow: 0 0 0 4px rgba(168, 138, 100, 0.2);
-}
-.step.is-active .step-label { color: #a88a64; font-weight: bold; }
-/* Màu nâu cho Dot đang xử lý */
-.step.is-active .step-dot {
-  background-color: #8B4513; /* SaddleBrown */
-  border-color: #8B4513;
-  animation: pulse-brown 2s infinite; /* Nhấp nháy nhẹ cho sinh động */
-}
-
-.step.is-active .step-label {
-  color: #8B4513;
-  font-weight: bold;
-}
-
-@keyframes pulse-brown {
-  0% { box-shadow: 0 0 0 0 rgba(139, 69, 19, 0.4); }
-  70% { box-shadow: 0 0 0 10px rgba(139, 69, 19, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(139, 69, 19, 0); }
-}
-
-.is-collapsed .bar-expanded { display: none; }
-
-.btn-clear-all {
-    background: transparent;
-    color: #a88a64; /* Màu thương hiệu Haven */
-    border: 1px solid #a88a64;
-    padding: 10px;
-    border-radius: 25px;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.btn-clear-all:active {
-    background: rgba(168, 138, 100, 0.1);
-    transform: scale(0.98);
-}
-
-.border-t {
-    border-top: 1px solid rgba(0,0,0,0.05);
-}
-.order-card {
-    border: 1px solid rgba(0,0,0,0.05);
-    background: #fff;
-    transition: transform 0.2s ease;
-}
-.order-items-summary {
-    color: #2f5d46; /* Màu xanh đặc trưng của Duc Ninh Haven */
-}
-
-/* --- TRẠNG THÁI MỞ (Mặc định) --- */
+/* --- Khung StatusBar cố định 60px --- */
 .status-bar {
     position: fixed;
-    bottom: 10px;
-    right: 20px; /* Neo cố định ở lề phải */
-    width: calc(100% - 40px);
-    max-width: 420px;
+    bottom: 20px; /* Cách đáy một chút cho sang */
+    left: 20px;
     height: 60px;
-    background: white;
-    border-radius: 30px;
+    background: #fdfcf9;
+    border: 1px solid rgba(47, 93, 70, 0.1);
+    z-index: 1000;
     display: flex;
     align-items: center;
-    padding: 0 5px 0 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    z-index: 90;
-    gap: 20px;
-
-    /* Hiệu ứng thu từ trái sang phải: Chỉ thay đổi width */
-    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     overflow: hidden;
+    border-radius: 30px; /* Bo tròn như kén (capsule) */
 }
 
-/* Ẩn nội dung chữ khi thu nhỏ */
-.status-bar.is-collapsed .bar-expanded {
-    opacity: 0;
-    pointer-events: none;
-}
-
-/* --- TRẠNG THÁI THU NHỎ (is-collapsed) --- */
+/* --- TRẠNG THÁI THU VÀO (Giống bản cũ) --- */
 .status-bar.is-collapsed {
-    width: 60px; /* Thu lại thành hình tròn */
-    background: #6b8e23; /* Đổi sang màu xanh Sage cho "xịn" */
+    width: 60px; /* Chỉ bằng chiều rộng của Badge trái */
+    padding: 0;
+    background: #2f5d46; /* Đổi màu xanh Haven khi thu gọn cho nổi bật */
 }
 
-/* Ẩn chữ khi co lại */
-.status-bar.is-collapsed .bar-expanded {
+.status-bar.is-collapsed .bar-center,
+.status-bar.is-collapsed .bar-right {
     opacity: 0;
     pointer-events: none;
-}
-.status-bar.is-collapsed .bar-content {
-    display:none;
+    width: 0;
 }
 
-/* Đổi chiều mũi tên khi thu nhỏ */
-.status-bar.is-collapsed #btnToggleBar {
-    transform: rotate(180deg); /* Xoay ngược lại thành dấu < */
+.status-bar.is-collapsed .order-count-badge {
+    background: transparent;
     color: white;
 }
-.bar-expanded {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    transition: opacity 0.3s;
+
+/* --- TRẠNG THÁI MỞ RỘNG (Dài ra màn hình) --- */
+.status-bar.is-expanded {
+    width: calc(100% - 40px); /* Full chiều ngang trừ lề */
+    padding: 0 12px;
 }
 
-.status-bar.hidden {
-    transform: translate(-50%, 150%);
-    opacity: 0;
+.status-bar.is-expanded .bar-center {
+    flex: 1;
+    opacity: 1;
+    transition: opacity 0.3s 0.2s;
 }
 
-/* Nội dung bên trong */
-.bar-content {
-    display: flex;
-    align-items: center;
-    flex-grow: 1;
-    gap: 15px;
-}
-
-/* Phần Mini (Icon & Badge) */
-.bar-mini {
-    display: flex;
-    align-items: center;
-    position: relative;
-}
-
-.bar-mini .icon {
-    font-size: 20px;
-}
-
-.bar-mini .count {
-    position: absolute;
-    top: -8px;
-    right: -10px;
-    background: #6b8e23; /* Sage Green đậm */
-    color: white;
-    font-size: 10px;
-    padding: 2px 6px;
-    border-radius: 10px;
-    font-weight: bold;
-    min-width: 18px;
-    text-align: center;
-
-}
-
-/* Trạng thái Nhắc nhở (ví dụ: chưa chọn phòng) */
-.status-bar.is-warning {
-    background-color: #fff9eb; /* Vàng kem rất nhẹ */
-    border: 1px solid #ffcc00;
-    box-shadow: 0 5px 15px rgba(255, 204, 0, 0.1);
-}
-
-.status-bar.is-warning .order-status-text {
-    color: #856404; /* Chữ màu nâu đậm cho dễ đọc trên nền vàng */
-    font-weight: 500;
-}
-
-/* Hiệu ứng rung nhẹ một lần duy nhất khi xuất hiện để gây chú ý */
-.status-bar.is-warning {
-    animation: soft-shake 0.4s ease-out;
-}
-
-@keyframes soft-shake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-3px); }
-    75% { transform: translateX(3px); }
-}
-/* order-status-bar.css */
-
-/* Nội dung văn bản */
-.status-text {
-    font-size: var(--font-s);
-    color: var(--text-main);
-    font-weight: 500;
-}
-.status-text .status-msg{
-    color:#6b8e23;
-}
-/* Các chấm tiến trình (Steps) */
-.step-dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: var(--border-strong);
-}
-
-/* Trạng thái Đã hoàn thành - Dùng màu Brand (Xanh Haven) */
-.step.is-complete .step-dot {
-    background: var(--brand);
-    color: #ffffff;
-}
-
-/* Trạng thái Đang xử lý - Dùng màu Accent (Vàng đồng) */
-.step.is-active .step-dot {
-    background: var(--accent);
-    box-shadow: 0 0 0 4px var(--accent-soft);
-}
-
-/* Trạng thái Cảnh báo - Dùng biến Warning */
-.order-status-bar.is-warning {
-    background-color: var(--warning-soft, #fff9eb);
-    border-color: var(--warning, #b98e00);
-}
-
-.is-warning .status-text {
-    color: var(--warning, #856404);
-}
-/* Trạng thái lỗi/hủy */
-.status-bar.is-CANCELED {
-    background-color: #fef2f2; /* Nền hồng nhạt */
-    border: 1px solid #ef4444; /* Viền đỏ */
-}
-
-.is-CANCELED .status-text {
-    color: #b91c1c; /* Chữ đỏ đậm */
-}
-
-.is-CANCELED .step-dot {
-    background: #ef4444;
-    color: white;
-}
-#orderTrackerList {
-    max-height: 70vh; /* Giới hạn chiều cao để cuộn nếu khách đặt nhiều đơn */
-    overflow-y: auto;
-    padding-bottom: 20px;
-}
-
-.order-card {
-    transition: all 0.3s ease;
-    animation: slideUp 0.4s ease-out;
-}
-
-@keyframes slideUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-
-
-.stepper-wrapper {
-    width: 100%;
-    padding-top: 10px;
-}
-/* Đảm bảo danh sách đơn hàng có khoảng cách và hiển thị rõ */
-#orderTrackerList {
+/* --- CHI TIẾT 3 TẦNG TRONG 60PX --- */
+.status-stack {
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    padding: 10px 0;
+    align-items: center;
+    gap: 2px;
 }
 
-/* Kiểu dáng cho từng thẻ đơn hàng trong danh sách */
-.order-card {
-    background: #ffffff;
-    border: 1px solid #e0e0e0;
-    padding: 16px;
-    border-radius: 12px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+.status-msg-top { font-size: 9px; font-weight: 700; color: #2f5d46; text-transform: uppercase; }
+.status-label-bottom { font-size: 8px; color: #8b4513; font-weight: 800; }
+
+.stepper-mini-wrap { transform: scale(0.8); margin: -2px 0; }
+.stepper-mini-wrap .step-label { display: none; } /* Ẩn để nhường chỗ cho Msg và Status */
+
+/* --- NÚT BẤM & ICON --- */
+.btn-check-haven {
+    background: #2f5d46;
+    color: white;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 15px;
+    font-size: 11px;
+    white-space: nowrap;
 }
 
-/* Stepper bên trong danh sách chi tiết */
-.stepper-container {
-    margin-top: 20px;
-    width: 100%;
+.toggle-arrow {
+    transition: transform 0.4s;
+    color: #2f5d46;
 }
 
+.status-bar.is-expanded .toggle-arrow {
+    transform: rotate(180deg); /* Quay ngược lại để chỉ vào nút đóng */
+}
