@@ -52,7 +52,7 @@ export function attachAppEvents() {
       } else {
         clearInterval(fastSyncTimer);
       }
-    }, 5000);
+    }, 500000);
 
     // 3. POLLING CHẬM (45s)
     setInterval(() => {
