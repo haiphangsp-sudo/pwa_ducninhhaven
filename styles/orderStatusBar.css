@@ -67,3 +67,31 @@
     transition: all 0.4s ease;
     cursor: pointer;
 }
+/* Màu nâu đặc trưng cho bước đang xử lý */
+.step.is-active .step-dot {
+    background-color: #8B4513; /* Màu nâu (SaddleBrown) hoặc mã màu thương hiệu của bạn */
+    border-color: #8B4513;
+    box-shadow: 0 0 0 3px rgba(139, 69, 19, 0.2); /* Hiệu ứng tỏa sáng nhẹ */
+}
+
+.step.is-active .step-label {
+    color: #8B4513;
+    font-weight: 600;
+}
+
+/* Hiệu ứng nhấp nháy cho Dot màu nâu để khách biết đang được xử lý */
+.step.is-active .step-dot {
+    animation: pulse-brown 2s infinite;
+}
+
+@keyframes pulse-brown {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+/* Dấu tích xanh cho các bước đã qua */
+.step.is-complete .step-dot {
+    background-color: #22c55e; /* Màu xanh lá */
+    color: white;
+}
