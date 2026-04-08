@@ -34,13 +34,10 @@ export function renderStatusBar(state) {
   const status = priorityOrder?.status || "SYNCING";
   const statusMsg = STRINGS.status[`msg_${status}`]?.[lang] || "";
 
-  // ui/render/renderStatusBar.js
-
-bar.innerHTML = `
+  bar.innerHTML = `
     <div class="bar-left">
-      <div class="order-count-badge">${actionableOrders.length || totalQty}</div>
+      <div class="order-count-badge">${actionableOrders.length}</div>
     </div>
-
     <div class="bar-center">
       <div class="status-stack">
         <div class="status-msg-top">${statusMsg}</div>
@@ -48,12 +45,10 @@ bar.innerHTML = `
         <div class="status-label-bottom">${status}</div>
       </div>
     </div>
-
     <div class="bar-right">
       <button class="btn-check-haven" data-action="open-overlay" data-value="orderTrackerPage">
-        ${translate("order.button")}
+        KIỂM TRA
       </button>
-      
       <div class="toggle-arrow" data-action="toggle_status" data-value="${isExpanded}">
         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="3">
           <polyline points="9 18 15 12 9 6"></polyline>
