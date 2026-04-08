@@ -35,28 +35,24 @@ export function renderStatusBar(state) {
   const status = priorityOrder?.status || "SYNCING";
   const statusMsg = STRINGS.status[`msg_${status}`]?.[lang] || "";
 
-  bar.innerHTML = `
-    <div class="bar-left">
-      <div class="order-count-badge">${actionableOrders.length || totalQty}</div>
-    </div>
-
-    <div class="bar-center">
-        <div class="status-msg-top">${statusMsg}</div>
-        <div class="stepper-mini-wrap">
-            ${renderStepper(status)}
+if (status === "SYNCING") {
+    textEl.innerHTML = `<div class="status-msg">${translate("order.current_status")}</div>`;
+} else {
+    const statusMsg = STRINGS.status[`msg_${status}`]?.[lang] || "";
+    
+    // Tạo cấu trúc 3 tầng: Thông báo - Chấm tiến trình - Tên trạng thái
+    textEl.innerHTML = `
+        <div class="status-stack" style="display: flex; flex-direction: column; align-items: center;">
+            <div class="status-msg-top" style="font-size: 9px; font-weight: 700; color: #2f5d46; text-transform: uppercase; margin-bottom: 2px;">
+                ${statusMsg}
+            </div>
+            <div class="stepper-mini-wrap">
+                ${renderStepper(status)}
+            </div>
+            <div class="status-label-bottom" style="font-size: 8px; font-weight: 800; color: #8b4513; margin-top: 2px;">
+                ${status}
+            </div>
         </div>
-        <div class="status-label-bottom">${status}</div>
-    </div>
-
-    <div class="bar-right row items-center no-wrap">
-      <button class="btn-check-haven" data-action="open-overlay" data-value="orderTrackerPage">
-        ${translate("order.button")}
-      </button>
-      <div class="toggle-arrow" data-action="toggle_status" data-value="${isExpanded}">
-        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="3">
-          <polyline points="9 18 15 12 9 6"></polyline>
-        </svg>
-      </div>
-    </div>
-  `;
+    `;
+}
 }
