@@ -41,19 +41,6 @@ export function attachAppEvents() {
     // 1. gọi ngay
     syncOrdersWithServer();
 
-    // 2. FAST RETRY cho SYNCING (5s)
-    fastSyncTimer = setInterval(() => {
-      const { active } = getState().orders || {};
-
-      const hasSyncing = active?.some(o => o.status === "SYNCING");
-
-      if (hasSyncing) {
-        syncOrdersWithServer();
-      } else {
-        clearInterval(fastSyncTimer);
-      }
-    }, 500000);
-
     // 3. POLLING CHẬM (45s)
     setInterval(() => {
       const { active } = getState().orders || {};
@@ -65,7 +52,7 @@ export function attachAppEvents() {
       if (hasActive) {
         syncOrdersWithServer();
       }
-    }, 45000);
+    }, 450000);
   }
 
   attachRuntimeRefresh({
