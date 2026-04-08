@@ -36,12 +36,12 @@ export function renderStatusBar(state) {
   const statusMsg = STRINGS.status[`msg_${status}`]?.[lang] || "";
 
 if (status === "SYNCING") {
-    textEl.innerHTML = `<div class="status-msg">${translate("order.current_status")}</div>`;
+    bar.innerHTML = `<div class="status-msg">${translate("order.current_status")}</div>`;
 } else {
     const statusMsg = STRINGS.status[`msg_${status}`]?.[lang] || "";
     
     // Tạo cấu trúc 3 tầng: Thông báo - Chấm tiến trình - Tên trạng thái
-    textEl.innerHTML = `
+    bar.innerHTML = `
         <div class="status-stack" style="display: flex; flex-direction: column; align-items: center;">
             <div class="status-msg-top" style="font-size: 9px; font-weight: 700; color: #2f5d46; text-transform: uppercase; margin-bottom: 2px;">
                 ${statusMsg}
