@@ -17,16 +17,9 @@ export function renderPanel(state) {
     panelEl = document.getElementById(panelId);
   }
 
-  document.querySelectorAll(".category-panel").forEach(el => {
-    const isActive = el.id === panelId;
-    el.classList.toggle("hidden", !isActive);
-    el.classList.toggle("animate-fade-in", isActive);
-    if (isActive) {
-      panelEl.innerHTML =
+  panelEl.innerHTML =
         ui === "article"
           ? renderArticle(panelId)
           : renderMenu(panelId, ui);
-    }
-  });
-
+    
 }
