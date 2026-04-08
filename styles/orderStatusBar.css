@@ -1,212 +1,74 @@
-/* --- TRẠNG THÁI GỐC: Nút tròn xanh khi thu gọn --- */
+/* --- TỔNG THỂ THANH BAR --- */
 .status-bar {
     position: fixed;
     bottom: 25px;
     left: 20px;
     height: 56px;
-    width: 56px;
     background: #2f5d46;
     border-radius: 28px;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); /* Hiệu ứng bung nén */
-    box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 9999;
     overflow: hidden;
-    border: none;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
 }
 
-/* --- KHI MỞ RỘNG: Dải kén trắng kem --- */
+/* THU NHỎ: Chỉ để lại nút mũi tên nằm chính giữa tâm */
+.status-bar.is-collapsed {
+    width: 56px;
+    padding: 0;
+}
+
+.status-bar.is-collapsed .bar-left,
+.status-bar.is-collapsed .bar-center,
+.status-bar.is-collapsed .btn-check-haven {
+    display: none !important; /* Xóa bỏ hoàn toàn để không gây lệch */
+}
+
+/* MỞ RỘNG: Bung dải kén màu trắng kem */
 .status-bar.is-expanded {
     width: calc(100% - 40px);
     background: #fdfcf9;
-    border: 1px solid rgba(47, 93, 70, 0.08);
+    border: 1px solid rgba(47, 93, 70, 0.1);
     justify-content: space-between;
-    padding: 0 10px;
+    padding: 0 12px;
 }
 
-/* --- BỐ CỤC 3 TẦNG TRUNG TÂM --- */
-.bar-center {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: opacity 0.3s;
-}
-
-.is-expanded .bar-center { opacity: 1; transition-delay: 0.2s; }
-
-.status-msg-top {
-    font-size: 9px;
-    font-weight: 800;
-    color: #2f5d46;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    margin-bottom: 2px;
-}
-
-.status-label-bottom {
-    font-size: 8px;
-    font-weight: 700;
-    color: #8b4513;
-    opacity: 0.8;
-    margin-top: 2px;
-}
-
-/* --- STEPPER MINI (Sửa lỗi chồng chéo) --- */
-.stepper-mini-wrap {
-    width: 100px;
-    height: 12px;
-    display: flex;
-    align-items: center;
-    position: relative;
-}
-
-/* Quan trọng: Ẩn toàn bộ nhãn chữ và dấu tích trong thanh bar */
-.stepper-mini-wrap .step-label, 
-.stepper-mini-wrap .step-check-icon { 
-    display: none !important; 
-}
-
-.stepper-mini-wrap .step-dot {
-    width: 6px;
-    height: 6px;
-    border: 1px solid #fff;
-}
-
-.stepper-mini-wrap .step-line {
-    top: 50%;
-    transform: translateY(-50%);
-    height: 1px;
-}
-
-/* --- UI ELEMENTS --- */
-.order-count-badge {
-    min-width: 32px;
-    height: 32px;
-    background: #2f5d46;
-    color: #fff;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 13px;
-    font-weight: bold;
-}
-
-.is-expanded .order-count-badge { transform: scale(0.9); }
-
-.btn-check-haven {
-    background: #2f5d46;
-    color: #fff;
-    border: none;
-    padding: 7px 15px;
-    border-radius: 18px;
-    font-size: 11px;
-    font-weight: 600;
-    margin-right: 5px;
-}
-
-.toggle-arrow {
-    width: 24px;
-    height: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    transition: transform 0.4s;
-}
-
-.is-expanded .toggle-arrow {
-    color: #2f5d46;
-    transform: rotate(180deg);
-}
-
-/* Ẩn nội dung khi thu gọn để không bị lệch tâm mũi tên */
-.is-collapsed .bar-center, 
-.is-collapsed .btn-check-haven,
-.is-collapsed .order-count-badge {
-    display: none !important;
-}
-
-/* --- PHONG CÁCH TỐI GIẢN CHO THANH TIẾN TRÌNH --- */
-
-/* Ẩn các nhãn chữ và dấu tích gây vỡ layout trong Status Bar */
+/* --- LÀM ĐẸP THANH TIẾN TRÌNH (STEPPER MINI) --- */
+/* Ẩn triệt để các text "DONE", "checkmark" gây vỡ layout trong ảnh */
 .status-bar .step-label, 
 .status-bar .step-check-icon,
 .status-bar .step-content { 
     display: none !important; 
 }
 
-/* Khung chứa các chấm */
 .status-bar .stepper {
     display: flex;
     justify-content: space-between;
-    align-items: center;
     width: 100px;
     height: 10px;
-    margin: 4px auto;
+    margin: 4px 0;
     position: relative;
-    padding: 0;
 }
 
-/* Các chấm tròn */
 .status-bar .step-dot {
     width: 6px;
     height: 6px;
-    background: #d1d1d1;
+    background: #ccc;
     border-radius: 50%;
     z-index: 2;
-    transition: all 0.3s ease;
-    border: 1px solid #fff;
 }
 
-.status-bar .step.is-active .step-dot {
-    background: #8b4513; /* Màu nhấn trạng thái hiện tại */
-    transform: scale(1.4);
-}
+.status-bar .step.is-active .step-dot { background: #8b4513; transform: scale(1.4); }
+.status-bar .step.is-complete .step-dot { background: #2f5d46; }
 
-.status-bar .step.is-complete .step-dot {
-    background: #2f5d46; /* Màu hoàn thành */
-}
+/* --- PHÂN TẦNG 3 LỚP CHỮ --- */
+.status-stack { display: flex; flex-direction: column; align-items: center; }
+.status-msg-top { font-size: 9px; font-weight: 700; color: #2f5d46; text-transform: uppercase; }
+.status-label-bottom { font-size: 8px; font-weight: 800; color: #8b4513; opacity: 0.7; }
 
-/* Đường nối */
-.status-bar .step-line {
-    position: absolute;
-    top: 50%;
-    left: 0;
-    width: 100%;
-    height: 1px;
-    background: #eee;
-    z-index: 1;
-    transform: translateY(-50%);
-}
-
-.status-bar .step.is-complete .step-line {
-    background: #2f5d46;
-}
-
-/* --- CĂN CHỈNH 3 TẦNG THÔNG TIN --- */
-.status-stack {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    line-height: 1.2;
-}
-
-.status-msg-top {
-    font-size: 9px;
-    font-weight: 700;
-    color: #2f5d46;
-    text-transform: uppercase;
-}
-
-.status-label-bottom {
-    font-size: 8px;
-    font-weight: 800;
-    color: #8b4513;
-    opacity: 0.8;
-}
+/* MŨI TÊN */
+.toggle-arrow { transition: transform 0.4s; color: #fff; }
+.is-expanded .toggle-arrow { color: #2f5d46; transform: rotate(180deg); }
