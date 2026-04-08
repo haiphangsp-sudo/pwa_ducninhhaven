@@ -1,93 +1,65 @@
 // ui/render/renderStatusBar.js
 import { renderStepper } from './renderStepper.js';
-import { getLocationInfo } from '../../core/placesQuery.js';
 import { getDrawerExtended } from "../../core/menuQuery.js";
 import { translate } from "../utils/translate.js";
 import { STRINGS } from "../../data/i18n.js";
 
-// RECOVERING và CANCELED sẽ làm thanh bar ẩn đi (hoặc vào kho lưu trữ)
 const TERMINAL_STATUSES = ['RECOVERING', 'CANCELED'];
-
-// Thứ tự ưu tiên hiển thị nếu khách có nhiều đơn hàng cùng lúc
-const ORDER_PRIORITY = {
-  RECOVERING: 6,
-  DONE: 5,
-  DELIVERING: 4,
-  COOKING: 3,
-  NEW: 2,
-  SYNCING: 1
-};
-
-function getPriorityOrder(orders = []) {
-  return orders.reduce((best, current) => {
-    if (!best) return current;
-    const bestScore = ORDER_PRIORITY[best.status] || 0;
-    const currentScore = ORDER_PRIORITY[current.status] || 0;
-    return currentScore > bestScore ? current : best;
-  }, null);
-}
 
 export function renderStatusBar(state) {
   const bar = document.getElementById("orderStatusBar");
-  const countEl = document.getElementById("orderActiveCount");
-  const textEl = document.getElementById("orderStatusText");
-  const btnCheck = document.getElementById("btnCheckOrders");
-  const btnToggle = document.getElementById("btnToggleBar");
+  if (!bar) return;
 
-  if (!bar || !countEl || !textEl || !btnCheck || !btnToggle) return;
-
-  const lang = state.lang?.current || 'vi';
   const activeOrders = state.orders?.active || [];
-  const isBarExpanded = !!state.orders?.isBarExpanded;
+  const isExpanded = !!state.orders?.isBarExpanded; // Trạng thái đóng/mở từ State
   const { totalQty } = getDrawerExtended();
 
-  // Lọc các đơn chưa kết thúc
-  const actionableOrders = (state.orders?.active || []).filter(
+  const actionableOrders = activeOrders.filter(
     order => !TERMINAL_STATUSES.includes(order.status)
   );
 
-  // 1. Logic Ẩn/Hiện thanh Bar
-  if (actionableOrders.length === 0 && getDrawerExtended().totalQty === 0) {
-    bar.className = "status-bar hidden";
+  // Chỉ ẩn khi không có gì để hiện
+  if (actionableOrders.length === 0 && totalQty === 0) {
+    bar.classList.add("hidden");
     return;
   }
+  bar.classList.remove("hidden");
 
-  bar.className = `status-bar ${isBarExpanded ? 'is-expanded' : 'is-collapsed'}`;
-  
-  // 2. Gán dữ liệu cho các nút bấm
-  btnToggle.dataset.action = "toggle_status";
-  btnToggle.dataset.value = String(isBarExpanded);
-  
-  btnCheck.dataset.action = "open-overlay";
-  btnCheck.dataset.value = "trackerPage";
-  btnCheck.textContent = translate("order.button");
+  // Gán class để CSS điều khiển hình dáng
+  bar.className = `status-bar ${isExpanded ? 'is-expanded' : 'is-collapsed'}`;
 
-  // 3. Hiển thị nội dung chính
-  if (actionableOrders.length > 0) {
-    const priorityOrder = getPriorityOrder(actionableOrders);
-    const status = priorityOrder?.status || "SYNCING";
+  const priorityOrder = actionableOrders.reduce((best, current) => {
+    const scores = { DONE: 5, DELIVERING: 4, COOKING: 3, NEW: 2, SYNCING: 1 };
+    return (scores[current.status] || 0) > (scores[best?.status] || 0) ? current : best;
+  }, null);
 
-    countEl.textContent = String(actionableOrders.length);
-    
-    // Xóa class cũ và thêm class trạng thái mới (để CSS đổi màu nâu/xanh)
-    bar.className = bar.className.replace(/\bis-\S+/g, '');
-    bar.classList.add(`is-${String(status).toLowerCase()}`);
+  const status = priorityOrder?.status || "SYNCING";
+  const statusMsg = STRINGS.status[`msg_${status}`];
 
-    if (status === "SYNCING") {
-      textEl.textContent = translate("order.current_status");
-    } else {
-      // Lấy câu thông báo tương ứng (Bếp đang chuẩn bị...) và render Stepper
-      const statusMsg = STRINGS.status[`msg_${status}`]?.[lang] || "";
-      textEl.innerHTML = `
-        <div class="status-msg">${statusMsg}</div>
-        ${renderStepper(status)}
-      `;
-    }
-  } else {
-    // Trường hợp giỏ hàng có món nhưng chưa gửi đơn
-    const { placeName } = getLocationInfo();
-    countEl.textContent = String(totalQty);
-    textEl.textContent = placeName;
-    bar.classList.add("is-idle");
-  }
+  bar.innerHTML = `
+    <div class="bar-layout">
+      <div class="bar-left" data-action="toggle_status" data-value="${isExpanded}">
+        <div class="order-count-badge">${actionableOrders.length || totalQty}</div>
+      </div>
+
+      <div class="bar-center">
+        <div class="status-stack">
+          <div class="status-msg-top">${translate(statusMsg)}</div>
+          <div class="stepper-mini-wrap">${renderStepper(status)}</div>
+          <div class="status-label-bottom">${status}</div>
+        </div>
+      </div>
+
+      <div class="bar-right">
+        <button class="btn-check-haven" data-action="open-overlay" data-value="orderTrackerPage">
+          ${translate("order.button")}
+        </button>
+        <div class="toggle-arrow" data-action="toggle_status" data-value="${isExpanded}">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="3">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </div>
+      </div>
+    </div>
+  `;
 }

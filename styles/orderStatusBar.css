@@ -105,3 +105,84 @@
     background: #fdfcf9;
     padding: 0 15px;
 }
+/* --- Khung StatusBar cố định 60px --- */
+.status-bar {
+    position: fixed;
+    bottom: 20px; /* Cách đáy một chút cho sang */
+    left: 20px;
+    height: 60px;
+    background: #fdfcf9;
+    border: 1px solid rgba(47, 93, 70, 0.1);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+    border-radius: 30px; /* Bo tròn như kén (capsule) */
+}
+
+/* --- TRẠNG THÁI THU VÀO (Giống bản cũ) --- */
+.status-bar.is-collapsed {
+    width: 60px; /* Chỉ bằng chiều rộng của Badge trái */
+    padding: 0;
+    background: #2f5d46; /* Đổi màu xanh Haven khi thu gọn cho nổi bật */
+}
+
+.status-bar.is-collapsed .bar-center,
+.status-bar.is-collapsed .bar-right {
+    opacity: 0;
+    pointer-events: none;
+    width: 0;
+}
+
+.status-bar.is-collapsed .order-count-badge {
+    background: transparent;
+    color: white;
+}
+
+/* --- TRẠNG THÁI MỞ RỘNG (Dài ra màn hình) --- */
+.status-bar.is-expanded {
+    width: calc(100% - 40px); /* Full chiều ngang trừ lề */
+    padding: 0 12px;
+}
+
+.status-bar.is-expanded .bar-center {
+    flex: 1;
+    opacity: 1;
+    transition: opacity 0.3s 0.2s;
+}
+
+/* --- CHI TIẾT 3 TẦNG TRONG 60PX --- */
+.status-stack {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+}
+
+.status-msg-top { font-size: 9px; font-weight: 700; color: #2f5d46; text-transform: uppercase; }
+.status-label-bottom { font-size: 8px; color: #8b4513; font-weight: 800; }
+
+.stepper-mini-wrap { transform: scale(0.8); margin: -2px 0; }
+.stepper-mini-wrap .step-label { display: none; } /* Ẩn để nhường chỗ cho Msg và Status */
+
+/* --- NÚT BẤM & ICON --- */
+.btn-check-haven {
+    background: #2f5d46;
+    color: white;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 15px;
+    font-size: 11px;
+    white-space: nowrap;
+}
+
+.toggle-arrow {
+    transition: transform 0.4s;
+    color: #2f5d46;
+}
+
+.status-bar.is-expanded .toggle-arrow {
+    transform: rotate(180deg); /* Quay ngược lại để chỉ vào nút đóng */
+}
