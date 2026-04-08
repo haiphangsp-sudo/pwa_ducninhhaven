@@ -18,7 +18,7 @@ export function renderStatusBar(state) {
   const lang = state.lang?.current || 'vi';
 
   // 1. Logic Ẩn/Hiện
-  if (actionableOrders.length === 0 && totalQty === 0) {
+  if (activeOrders.length === 0 && totalQty === 0) {
     bar.className = "status-bar hidden";
     return;
   }
@@ -27,14 +27,14 @@ export function renderStatusBar(state) {
   bar.className = `status-bar ${isExpanded ? 'is-expanded' : 'is-collapsed'}`;
 
   // 3. Xác định dữ liệu ưu tiên
-  const priorityOrder = actionableOrders.reduce((best, current) => {
+  const priorityOrder = activeOrders.reduce((best, current) => {
     const scores = { DONE: 5, DELIVERING: 4, COOKING: 3, NEW: 2, SYNCING: 1 };
     return (scores[current.status] || 0) > (scores[best?.status] || 0) ? current : best;
   }, null);
 
   const status = priorityOrder?.status || "SYNCING";
   const statusMsg = STRINGS.status[`msg_${status}`]?.[lang] || "";
-  const displayQty = actionableOrders.length || totalQty;
+  const displayQty = activeOrders.length || totalQty;
 
   // 4. RENDER TOÀN PHẦN (The Upgrade)
   // Không còn countEl hay textEl, mọi thứ được dựng mới hoàn toàn
