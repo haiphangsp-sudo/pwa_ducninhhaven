@@ -3,7 +3,6 @@ import { renderStepper } from './renderStepper.js';
 import { getDrawerExtended } from "../../core/menuQuery.js";
 import { translate } from "../utils/translate.js";
 import { STRINGS } from "../../data/i18n.js";
-import { getState } from "../../core/state.js";
 
 const TERMINAL_STATUSES = ['RECOVERING', 'CANCELED'];
 
@@ -14,7 +13,6 @@ export function renderStatusBar(state) {
   const activeOrders = state.orders?.active || [];
   const isExpanded = !!state.orders?.isBarExpanded; // Trạng thái đóng/mở từ State
   const { totalQty } = getDrawerExtended();
-  const lang = state.lang?.current || 'vi';
 
   const actionableOrders = activeOrders.filter(
     order => !TERMINAL_STATUSES.includes(order.status)
