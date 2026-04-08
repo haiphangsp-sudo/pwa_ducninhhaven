@@ -9,8 +9,7 @@ import { attachAppEvents } from "./ui/events/globalEvents.js";
 import { attachUI } from "./ui/events/sync.js";
 import { renderApp } from "./ui/render/renderApp.js";
 import { setState } from "./core/state.js";
-
-
+import { bootstrapApp } from "./core/bootstrap.js";
 
 boot();
 /* ---------- VERSION ---------- */
@@ -99,7 +98,7 @@ async function boot() {
 
     
     attachUI();
-    
+    bootstrapApp();
     attachAppEvents();
     renderApp();
     detectRecovery();
