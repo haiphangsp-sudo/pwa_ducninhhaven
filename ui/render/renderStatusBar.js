@@ -51,7 +51,7 @@ export function renderStatusBar(state) {
       </button>
       <div class="toggle-arrow" data-action="toggle_status" data-value="${isExpanded}">
         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="3">
-          <polyline points="9 18 15 12 9 6"></polyline>
+          <polyline points="8 18 16 12 8 6"></polyline>
         </svg>
       </div>
     </div>
