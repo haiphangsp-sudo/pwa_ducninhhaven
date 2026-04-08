@@ -3,6 +3,8 @@ import { renderStepper } from './renderStepper.js';
 import { getDrawerExtended } from "../../core/menuQuery.js";
 import { translate } from "../utils/translate.js";
 import { STRINGS } from "../../data/i18n.js";
+import { getState } from "../../core/state.js";
+
 
 const TERMINAL_STATUSES = ['RECOVERING', 'CANCELED'];
 // ui/render/renderStatusBar.js
