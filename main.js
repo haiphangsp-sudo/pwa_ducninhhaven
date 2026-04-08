@@ -97,11 +97,11 @@ async function boot() {
     applyURLContext();
     syncContextToState();
 
-    renderApp();
+    
     attachUI();
     
     attachAppEvents();
-    
+    renderApp();
     detectRecovery();
     
   } catch (criticalError) {
