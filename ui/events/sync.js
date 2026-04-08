@@ -83,8 +83,8 @@ async function syncUI(state) {
   }
 
   if (state.panel.view !== prevState.panel?.view) {
-    renderPanel(state);
     eventHub(state);
+    renderPanel(state);
   }
 
   const cartChanged =
