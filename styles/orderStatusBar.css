@@ -1,97 +1,162 @@
-/* --- TRẠNG THÁI GỐC (Kén Capsule) --- */
+/* =======================================================
+   DUC NINH HAVEN - STATUS BAR (CAPSULE STYLE)
+======================================================= */
+
 .status-bar {
     position: fixed;
     bottom: 20px;
     left: 20px;
     height: 56px;
-    background: #2f5d46; /* Màu xanh Haven */
+    background: #2f5d46; /* Xanh thương hiệu */
     border-radius: 28px;
     display: flex;
     align-items: center;
-    justify-content: center; /* Căn giữa nội dung bên trong */
-    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    justify-content: center;
     z-index: 9999;
     overflow: hidden;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
     border: 1px solid rgba(255,255,255,0.1);
 }
 
-/* --- KHI THU LẠI (Chỉ còn nút mũi tên) --- */
+/* KHI THU GỌN: Chỉ hiện mũi tên trắng ở giữa */
 .status-bar.is-collapsed {
-    width: 56px; /* Hình tròn hoàn hảo */
+    width: 56px;
     padding: 0;
 }
 
-/* Ẩn tất cả ngoại trừ cụm chứa mũi tên */
 .status-bar.is-collapsed .bar-left,
 .status-bar.is-collapsed .bar-center,
 .status-bar.is-collapsed .btn-check-haven {
-    display: none !important; /* Xóa bỏ hoàn toàn không gian của chúng */
+    display: none !important;
 }
 
-/* Đưa mũi tên vào chính giữa khi thu lại */
-.status-bar.is-collapsed .bar-right {
-    margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-}
-
-/* --- KHI MỞ RỘNG --- */
+/* KHI MỞ RỘNG: Trượt dài ra và hiện 3 tầng thông tin */
 .status-bar.is-expanded {
     width: calc(100% - 40px);
-    background: #fdfcf9; /* Chuyển sang nền sáng khi mở */
-    padding: 0 15px;
-    justify-content: space-between; /* Đưa các thành phần về 2 đầu */
+    background: #fdfcf9; /* Nền kem sang trọng */
+    padding: 0 12px;
+    justify-content: space-between;
     border: 1px solid rgba(47, 93, 70, 0.1);
 }
 
-.status-bar.is-expanded .toggle-arrow {
-    transform: rotate(180deg); /* Quay ngược lại */
+/* --- BỐ CỤC 3 TẦNG TRUNG TÂM --- */
+.bar-center {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 8px;
+}
+
+.status-stack {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1px;
+}
+
+.status-msg-top {
+    font-size: 9px;
+    font-weight: 700;
     color: #2f5d46;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
-.status-bar.is-collapsed .toggle-arrow {
-    color: #ffffff; /* Mũi tên trắng trên nền xanh khi thu gọn */
-    transform: rotate(0deg);
+.status-label-bottom {
+    font-size: 8px;
+    color: #8b4513; /* Màu nâu gỗ */
+    font-weight: 800;
 }
 
-/* Mũi tên to rõ và căn giữa */
+/* --- MINI STEPPER (Hệ thống chấm tiến trình) --- */
+.stepper {
+    display: flex;
+    width: 100px; /* Độ rộng vừa phải để kẹp giữa 2 hàng chữ */
+    justify-content: space-between;
+    position: relative;
+    margin: 3px 0;
+}
+
+.step {
+    position: relative;
+    z-index: 2;
+}
+
+.step-dot {
+    width: 8px;
+    height: 8px;
+    background: #e0e0e0;
+    border-radius: 50%;
+    border: 1px solid #fff;
+    transition: all 0.3s ease;
+}
+
+.step.is-active .step-dot {
+    background: #8b4513;
+    transform: scale(1.3);
+    box-shadow: 0 0 5px rgba(139, 69, 19, 0.3);
+}
+
+.step.is-complete .step-dot {
+    background: #2f5d46;
+}
+
+.step-line {
+    position: absolute;
+    top: 4px;
+    left: 50%;
+    width: 100px;
+    height: 1px;
+    background: #eee;
+    z-index: 1;
+}
+
+.step.is-complete .step-line {
+    background: #2f5d46;
+}
+
+/* Ẩn chữ của từng bước trong bar (đã có Msg và Label lo) */
+.stepper .step-label {
+    display: none;
+}
+
+/* --- UI ELEMENTS (Badge & Buttons) --- */
+.order-count-badge {
+    width: 24px;
+    height: 24px;
+    background: #2f5d46;
+    color: white;
+    border-radius: 50%;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+}
+
+.btn-check-haven {
+    background: #2f5d46;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 15px;
+    font-size: 10px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
 .toggle-arrow {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 24px;
-    height: 24px;
-    transition: all 0.4s ease;
-    cursor: pointer;
-}
-/* Màu nâu đặc trưng cho bước đang xử lý */
-.step.is-active .step-dot {
-    background-color: #8B4513; /* Màu nâu (SaddleBrown) hoặc mã màu thương hiệu của bạn */
-    border-color: #8B4513;
-    box-shadow: 0 0 0 3px rgba(139, 69, 19, 0.2); /* Hiệu ứng tỏa sáng nhẹ */
+    color: white; /* Mặc định trắng khi thu gọn */
+    transition: transform 0.4s ease;
 }
 
-.step.is-active .step-label {
-    color: #8B4513;
-    font-weight: 600;
-}
-
-/* Hiệu ứng nhấp nháy cho Dot màu nâu để khách biết đang được xử lý */
-.step.is-active .step-dot {
-    animation: pulse-brown 2s infinite;
-}
-
-@keyframes pulse-brown {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.1); }
-    100% { transform: scale(1); }
-}
-
-/* Dấu tích xanh cho các bước đã qua */
-.step.is-complete .step-dot {
-    background-color: #22c55e; /* Màu xanh lá */
-    color: white;
+.is-expanded .toggle-arrow {
+    color: #2f5d46; /* Chuyển xanh khi nền sáng */
+    transform: rotate(180deg);
 }
