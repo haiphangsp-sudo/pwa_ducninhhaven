@@ -52,6 +52,9 @@
 }
 
 .drawer-title {
+  font-size: var(--font-l);
+  font-weight: 600;
+  line-height: 1.2;
   color: var(--text-main);
   margin: 0;
   letter-spacing: -0.02em;
