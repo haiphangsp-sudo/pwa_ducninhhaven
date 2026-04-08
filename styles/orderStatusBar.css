@@ -200,20 +200,15 @@
     opacity: 1;
   }
 }
-/* ===============================
-   MINI STEPPER – CLEAN VERSION
-================================= */
+
 .stepper-mini-wrap {
   display: flex;
   align-items: center;
   justify-content: center;
-
   width: 100%;
   margin: 2px 0 0;
-
-  transform: scale(0.9);
+  transform: scale(0.8);
 }
-
 
 @keyframes dotPulse {
   0% { transform: scale(1.2); opacity: 1; }
