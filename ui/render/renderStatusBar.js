@@ -5,10 +5,8 @@ import { getDrawerExtended } from "../../core/menuQuery.js";
 import { translate } from "../utils/translate.js";
 import { STRINGS } from "../../data/i18n.js";
 
-// RECOVERING và CANCELED sẽ làm thanh bar ẩn đi (hoặc vào kho lưu trữ)
 const TERMINAL_STATUSES = ['RECOVERING', 'CANCELED'];
 
-// Thứ tự ưu tiên hiển thị nếu khách có nhiều đơn hàng cùng lúc
 const ORDER_PRIORITY = {
   RECOVERING: 6,
   DONE: 5,
@@ -29,65 +27,80 @@ function getPriorityOrder(orders = []) {
 
 export function renderStatusBar(state) {
   const bar = document.getElementById("orderStatusBar");
-  const countEl = document.getElementById("orderActiveCount");
-  const textEl = document.getElementById("orderStatusText");
-  const btnCheck = document.getElementById("btnCheckOrders");
-  const btnToggle = document.getElementById("btnToggleBar");
-
-  if (!bar || !countEl || !textEl || !btnCheck || !btnToggle) return;
+  if (!bar) return;
 
   const lang = state.lang?.current || 'vi';
   const activeOrders = state.orders?.active || [];
   const isBarExpanded = !!state.orders?.isBarExpanded;
   const { totalQty } = getDrawerExtended();
 
-  // Lọc các đơn chưa kết thúc
-  const actionableOrders = (state.orders?.active || []).filter(
+  const actionableOrders = activeOrders.filter(
     order => !TERMINAL_STATUSES.includes(order.status)
   );
 
-  // 1. Logic Ẩn/Hiện thanh Bar
-  if (actionableOrders.length === 0 && getDrawerExtended().totalQty === 0) {
+  // 1. Logic ẩn thanh bar
+  if (actionableOrders.length === 0 && totalQty === 0) {
     bar.className = "status-bar hidden";
     return;
   }
 
-  bar.className = `status-bar ${isBarExpanded ? 'is-expanded' : 'is-collapsed'}`;
-  
-  // 2. Gán dữ liệu cho các nút bấm
-  btnToggle.dataset.action = "toggle_status";
-  btnToggle.dataset.value = String(isBarExpanded);
-  
-  btnCheck.dataset.action = "open-overlay";
-  btnCheck.dataset.value = "trackerPage";
-  btnCheck.textContent = translate("order.button");
+  // Cập nhật class trạng thái
+  const priorityOrder = getPriorityOrder(actionableOrders);
+  const status = priorityOrder?.status || "SYNCING";
+  bar.className = `status-bar is-${status.toLowerCase()} ${isBarExpanded ? 'is-expanded' : 'is-collapsed'}`;
 
-  // 3. Hiển thị nội dung chính
+  // 2. Chuẩn bị nội dung hiển thị
+  let contentHtml = "";
+
   if (actionableOrders.length > 0) {
-    const priorityOrder = getPriorityOrder(actionableOrders);
-    const status = priorityOrder?.status || "SYNCING";
-
-    countEl.textContent = String(actionableOrders.length);
+    const statusMsg = STRINGS.status[`msg_${status}`]?.[lang] || "";
     
-    // Xóa class cũ và thêm class trạng thái mới (để CSS đổi màu nâu/xanh)
-    bar.className = bar.className.replace(/\bis-\S+/g, '');
-    bar.classList.add(`is-${String(status).toLowerCase()}`);
+    contentHtml = `
+      <div class="bar-layout">
+        <div class="bar-left">
+          <div class="order-count-badge">${actionableOrders.length}</div>
+        </div>
 
-    if (status === "SYNCING") {
-      textEl.textContent = translate("order.current_status");
-    } else {
-      // Lấy câu thông báo tương ứng (Bếp đang chuẩn bị...) và render Stepper
-      const statusMsg = STRINGS.status[`msg_${status}`]?.[lang] || "";
-      textEl.innerHTML = `
-        <div class="status-msg">${statusMsg}</div>
-        ${renderStepper(status)}
-      `;
-    }
+        <div class="bar-center">
+          <div class="status-stack">
+            <div class="status-msg-top">${statusMsg}</div>
+            <div class="stepper-mini-wrap">
+              ${renderStepper(status)}
+            </div>
+            <div class="status-label-bottom">${status}</div>
+          </div>
+        </div>
+
+        <div class="bar-right">
+          <button id="btnCheckOrders" class="btn-check-haven" 
+                  data-action="open-overlay" data-value="orderTrackerPage">
+            ${translate("order.button")}
+          </button>
+          <div id="btnToggleBar" class="toggle-arrow" data-action="toggle_status" data-value="${isBarExpanded}">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </div>
+        </div>
+      </div>
+    `;
   } else {
-    // Trường hợp giỏ hàng có món nhưng chưa gửi đơn
+    // Trạng thái chờ (Idle) khi chỉ có giỏ hàng
     const { placeName } = getLocationInfo();
-    countEl.textContent = String(totalQty);
-    textEl.textContent = placeName;
-    bar.classList.add("is-idle");
+    contentHtml = `
+      <div class="bar-layout is-idle">
+        <div class="bar-left">
+          <div class="order-count-badge is-cart">${totalQty}</div>
+        </div>
+        <div class="bar-center">
+          <div class="place-name-display">${placeName}</div>
+        </div>
+        <div class="bar-right">
+          <div id="btnToggleBar" class="toggle-arrow" data-action="toggle_status">
+             <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </div>
+        </div>
+      </div>
+    `;
   }
+
+  bar.innerHTML = contentHtml;
 }
