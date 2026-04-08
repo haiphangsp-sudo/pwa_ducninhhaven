@@ -134,19 +134,20 @@
 
 /* --- STEPPER MINI: PHONG CÁCH HIDEAWAY --- */
 
-/* 1. Ép chiều rộng và ẩn mọi chi tiết thừa */
+/* --- STEPPER MINI: PHONG CÁCH HIDEAWAY --- */
+
+/* 1. Chỉ tác động khi stepper nằm trong status-bar */
 .status-bar .stepper {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 110px; /* Độ rộng vừa vặn cho 4 chấm */
+    width: 100px; /* Độ rộng vừa vặn cho 4 chấm */
     height: 8px;   /* Cực mỏng */
-    margin: 4px 0; /* Khoảng cách với 2 hàng chữ */
+    margin: 4px auto; /* Căn giữa */
     position: relative;
-    padding: 0;
 }
 
-/* 2. ẨN TRIỆT ĐỂ: Chữ, dấu tích, và nội dung text bên trong */
+/* 2. ẨN TRIỆT ĐỂ: Chữ, dấu tích và nội dung thừa gây vỡ layout trong ảnh */
 .status-bar .step-label, 
 .status-bar .step-check-icon,
 .status-bar .step-content,
@@ -154,29 +155,28 @@
     display: none !important; 
 }
 
-/* 3. Tạo hình chấm tròn tinh tế */
+/* 3. Chấm tròn tinh tế */
 .status-bar .step-dot {
     width: 6px !important;
     height: 6px !important;
-    background: #d1d1d1; /* Màu xám nhạt khi chưa tới */
+    background: #d1d1d1;
     border-radius: 50%;
-    border: none !important; /* Bỏ viền để trông mượt hơn */
+    border: none !important;
     z-index: 2;
     transition: all 0.3s ease;
 }
 
-/* 4. Hiệu ứng cho bước hiện tại và bước đã qua */
+/* 4. Màu sắc thương hiệu Duc Ninh Haven */
 .status-bar .step.is-active .step-dot {
-    background: #8b4513; /* Màu nâu gỗ Haven */
+    background: #8b4513; /* Màu nâu gỗ */
     transform: scale(1.4);
-    box-shadow: 0 0 8px rgba(139, 69, 19, 0.4);
 }
 
 .status-bar .step.is-complete .step-dot {
-    background: #2f5d46; /* Màu xanh lá Haven */
+    background: #2f5d46; /* Màu xanh lá */
 }
 
-/* 5. Đường kẻ nối các chấm (mỏng và tinh tế) */
+/* 5. Đường kẻ nối các chấm */
 .status-bar .step-line {
     position: absolute;
     top: 50%;
@@ -189,5 +189,5 @@
 }
 
 .status-bar .step.is-complete .step-line {
-    background: #2f5d46; /* Đường line xanh khi đã qua */
+    background: #2f5d46;
 }
