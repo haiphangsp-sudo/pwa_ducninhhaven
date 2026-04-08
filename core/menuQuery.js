@@ -40,7 +40,8 @@ export function getVariants(categoryKey, productKey) {
 
 export function getProducts(categoryKey) {
   if (!categoryKey) return [];
-  const category = getCategory[categoryKey];
+  const menuData = getMenuData();
+  const category = menuData[categoryKey];
   if (!category || category.active === false) return [];
   const products = category.products || {};
 
