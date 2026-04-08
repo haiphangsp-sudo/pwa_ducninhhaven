@@ -3,29 +3,27 @@ import { renderStepper } from './renderStepper.js';
 import { getDrawerExtended } from "../../core/menuQuery.js";
 import { translate } from "../utils/translate.js";
 import { STRINGS } from "../../data/i18n.js";
-
-const TERMINAL_STATUSES = ['RECOVERING', 'CANCELED'];
+import { getState } from "../../core/state.js";
 
 export function renderStatusBar(state) {
   const bar = document.getElementById("orderStatusBar");
   if (!bar) return;
 
+  const isExpanded = !!state.orders?.isBarExpanded;
   const activeOrders = state.orders?.active || [];
-  const isExpanded = !!state.orders?.isBarExpanded; // Trạng thái đóng/mở từ State
   const { totalQty } = getDrawerExtended();
+  const lang = state.lang?.current || 'vi';
 
-  const actionableOrders = activeOrders.filter(
-    order => !TERMINAL_STATUSES.includes(order.status)
-  );
+  // Lọc đơn hàng đang xử lý
+  const actionableOrders = activeOrders.filter(o => !['RECOVERING', 'CANCELED'].includes(o.status));
 
-  // Chỉ ẩn khi không có gì để hiện
   if (actionableOrders.length === 0 && totalQty === 0) {
     bar.classList.add("hidden");
     return;
   }
   bar.classList.remove("hidden");
 
-  // Gán class để CSS điều khiển hình dáng
+  // Gán class để trượt
   bar.className = `status-bar ${isExpanded ? 'is-expanded' : 'is-collapsed'}`;
 
   const priorityOrder = actionableOrders.reduce((best, current) => {
@@ -34,30 +32,30 @@ export function renderStatusBar(state) {
   }, null);
 
   const status = priorityOrder?.status || "SYNCING";
-  const statusMsg = STRINGS.status[`msg_${status}`];
+  const statusMsg = STRINGS.status[`msg_${status}`]?.[lang] || "";
 
   bar.innerHTML = `
-    <div class="bar-layout">
-      <div class="bar-left" data-action="toggle_status" data-value="${isExpanded}">
-        <div class="order-count-badge">${actionableOrders.length || totalQty}</div>
+    <div class="bar-inner">
+      <div class="bar-left-circle" data-action="toggle_status" data-value="${isExpanded}">
+        <span class="count-num">${actionableOrders.length || totalQty}</span>
       </div>
 
-      <div class="bar-center">
+      <div class="bar-content-slide">
         <div class="status-stack">
-          <div class="status-msg-top">${translate(statusMsg)}</div>
-          <div class="stepper-mini-wrap">${renderStepper(status)}</div>
-          <div class="status-label-bottom">${status}</div>
+          <div class="msg-top">${statusMsg}</div>
+          <div class="stepper-mini">${renderStepper(status)}</div>
+          <div class="status-bottom">${status}</div>
         </div>
-      </div>
-
-      <div class="bar-right">
-        <button class="btn-check-haven" data-action="open-overlay" data-value="orderTrackerPage">
-          ${translate("order.button")}
-        </button>
-        <div class="toggle-arrow" data-action="toggle_status" data-value="${isExpanded}">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="3">
-            <polyline points="9 18 15 12 9 6"></polyline>
-          </svg>
+        
+        <div class="bar-actions">
+          <button class="btn-haven-mini" data-action="open-overlay" data-value="orderTrackerPage">
+            ${translate("order.button")}
+          </button>
+          <div class="arrow-icon" data-action="toggle_status" data-value="${isExpanded}">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </div>
         </div>
       </div>
     </div>
