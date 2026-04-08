@@ -274,6 +274,7 @@
 
 .step.is-complete .step-label {
     color: #2f5d46;
+    display: none;
 }
 
 .step-line {
