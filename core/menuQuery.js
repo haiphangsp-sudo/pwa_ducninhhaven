@@ -19,7 +19,7 @@ export function getCategory(key) {
 export function getVariants(categoryKey, productKey) {
   const menuData = getMenuData();
   const product = menuData[categoryKey].products?.[productKey];
-  if (product?.active===false) return [];
+  if (!product || product.active === false) return [];
 
   return Object.entries(product.variants || {})
     .filter(([, variant]) => variant.active !== false)
