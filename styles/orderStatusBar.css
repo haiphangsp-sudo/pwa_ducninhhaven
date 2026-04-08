@@ -90,24 +90,6 @@
   justify-content: center;
 }
 
-.status-stack {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-}
-
-.status-msg-top {
-  font-size: 13px;
-  color: #2f5d46;
-  font-weight: 600;
-}
-
-.status-label-bottom {
-  font-size: 11px;
-  color: #888;
-}
-
 
 /* ===============================
    RIGHT (QUAN TRỌNG)
