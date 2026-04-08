@@ -215,34 +215,12 @@
   transform: scale(0.9);
 }
 
-/* container */
-.stepper-mini-wrap .stepper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0; /* bỏ gap để line nối liền */
-}
-
-/* từng step */
-.stepper-mini-wrap .step {
-  display: flex;
-  align-items: center;
-  gap: 0;
-}
-
-.status-bar .step.is-active .step-dot {
-    background: #8b4513; /* Màu nâu gỗ hiện tại */
-    animation: dotPulse 2s infinite ease-in-out; /* Ghép hiệu ứng vào đây */
-    box-shadow: 0 0 10px rgba(139, 69, 19, 0.4);
-}
-
 
 @keyframes dotPulse {
   0% { transform: scale(1.2); opacity: 1; }
   50% { transform: scale(1.5); opacity: 0.6; }
   100% { transform: scale(1.2); opacity: 1; }
 }
-/* --- Stepper Boutique Style --- */
 
 .stepper {
     display: flex;
@@ -284,11 +262,12 @@
     text-align: center;
 }
 
-/* Trạng thái đang hoạt động (Active - Màu Nâu đặc trưng) */
 .step.is-active .step-dot {
     background: #8b4513;
     color: #fff;
     box-shadow: 0 0 0 4px rgba(139, 69, 19, 0.1);
+    animation: dotPulse 2s infinite ease-in-out;
+
 }
 
 .step.is-active .step-label {
@@ -296,7 +275,6 @@
     font-weight: 700;
 }
 
-/* Trạng thái hoàn thành (Complete - Tích xanh) */
 .step.is-complete .step-dot {
     background: #2f5d46;
     color: #fff;
@@ -306,7 +284,6 @@
     color: #2f5d46;
 }
 
-/* Đường kẻ nối các điểm */
 .step-line {
     position: absolute;
     top: 12px;
