@@ -7,7 +7,7 @@ export function renderPanel(state) {
   const container = document.querySelector(".category-panel");
   if (!container || !panelId) return;
   container.innerHTML =
-        ui === "article"
+        panelId === "intro"
           ? renderArticle(panelId)
           : renderMenu(panelId, ui);
     
