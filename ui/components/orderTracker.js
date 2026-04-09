@@ -76,13 +76,16 @@ function renderOrderItem(item = {}) {
   const qty = Number(item.qty || 1);
   const name = item.item || item.name || translate("order.unnamed_item") || "Mục chưa tên";
   const price = item.price || 0;
-
+  const option = item.option;
 
   return `
     <div class="tracker-item">
       <span class="tracker-item__qty">${qty}×</span>
-      <span class="tracker-item__name">${escapeHtml(name)}</span>
-      <span class="tracker-item__name">${formatPrice(price)}</span>
+      <div class="tracker-item__content">
+        <span class="tracker-item__name">${escapeHtml(name)}</span>
+        <span class="tracker-item__option">${escapeHtml(option)}</span>
+      </div>
+      <span class="tracker-item__price">${formatPrice(price)}</span>
     </div>
   `;
 }
