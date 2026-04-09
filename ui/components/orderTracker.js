@@ -39,7 +39,7 @@ export function openOrderTracker(state) {
       : `<div class="opacity-50 italic">Yêu cầu phục vụ</div>`;
 
     return `
-      <div class="order-card p-m mb-m border radius-m bg-white shadow-sm" style="color: #333;">
+      <div class="order-card>"
         <div class="row justify-between items-center mb-m border-b pb-s">
           <span class="text-bold color-brand">#${shortId}</span>
           <span class="status-badge is-${(order.status || 'NEW').toLowerCase()}" 
@@ -53,7 +53,7 @@ export function openOrderTracker(state) {
         </div>
         
         <div class="stepper-wrapper" style="margin-top: 15px;">
-          ${renderStepper(order.status || 'NEW')}
+          ${renderStepper(order.status || "NEW", { longMessage: true })}
         </div>
       </div>
     `;

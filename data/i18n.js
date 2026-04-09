@@ -58,18 +58,69 @@ export const STRINGS = {
     no_active_order: { vi: "Bạn không có đơn hàng nào đang xử lý.", en: "No active orders at the moment." }
   },
   status: {
-    NEW: { vi: "Tiếp nhận", en: "Received" },
-    COOKING: { vi: "Chuẩn bị", en: "Preparing" },
-    DELIVERING: { vi: "Đang tới", en: "Delivering" },
-    DONE: { vi: "Xong", en: "Completed" },
-    RECOVERING: { vi: "Dọn dẹp", en: "Recovering" },
-    // Tin nhắn thông báo nhanh trên Status Bar
-    msg_NEW: { vi: "Tiếp nhận yêu cầu...", en: "Receiving your request..." },
-    msg_COOKING: { vi: "Chuẩn bị món...", en: "Kitchen is preparing..." },
-    msg_DELIVERING: { vi: "Đang mang tới phòng của bạn...", en: "On the way to your room..." },
-    msg_DONE: { vi: "Đã hoàn tất!", en: "Completed!" },
-    msg_RECOVERING: { vi: "Phục hồi sự tĩnh lặng...", en: "Restoring the serenity..." }
+  NEW: {
+    vi: "Tiếp nhận",
+    en: "Received"
   },
+  COOKING: {
+    vi: "Chuẩn bị",
+    en: "Preparing"
+  },
+  DELIVERING: {
+    vi: "Đang tới",
+    en: "Delivering"
+  },
+  DONE: {
+    vi: "Hoàn tất",
+    en: "Completed"
+  },
+  RECOVERING: {
+    vi: "Khôi phục",
+    en: "Recovering"
+  },
+
+  msg_NEW: {
+    vi: "Tiếp nhận yêu cầu...",
+    en: "Receiving your request..."
+  },
+  msg_COOKING: {
+    vi: "Đang chuẩn bị...",
+    en: "Preparing your request..."
+  },
+  msg_DELIVERING: {
+    vi: "Đang mang tới...",
+    en: "On the way..."
+  },
+  msg_DONE: {
+    vi: "Đã hoàn tất",
+    en: "Completed"
+  },
+  msg_RECOVERING: {
+    vi: "Đang khôi phục...",
+    en: "Restoring..."
+  },
+
+  msg_long_NEW: {
+    vi: "Yêu cầu của bạn đã được ghi nhận và đang được chuyển tới bộ phận phụ trách.",
+    en: "Your request has been received and is being routed to the appropriate team."
+  },
+  msg_long_COOKING: {
+    vi: "Bộ phận phục vụ đang chuẩn bị yêu cầu của bạn. Thời gian xử lý có thể thay đổi tùy theo loại dịch vụ.",
+    en: "Our team is preparing your request. Timing may vary depending on the type of service."
+  },
+  msg_long_DELIVERING: {
+    vi: "Yêu cầu của bạn đang được mang tới vị trí phục vụ. Vui lòng chờ trong giây lát.",
+    en: "Your request is on the way to your selected location. Please allow us a few moments."
+  },
+  msg_long_DONE: {
+    vi: "Yêu cầu đã được hoàn tất. Nếu bạn cần thêm hỗ trợ, Haven luôn sẵn sàng phục vụ.",
+    en: "Your request has been completed. If you need anything else, Haven is always ready to assist."
+  },
+  msg_long_RECOVERING: {
+    vi: "Hệ thống đang khôi phục thông tin đơn hàng để tiếp tục theo dõi chính xác hơn.",
+    en: "The system is restoring your order information so tracking can continue more accurately."
+  }
+},
   place: {
     button_nav:{ vi: "Chọn vị trí", en: "Select a place"},
     select: { vi: "Chọn nơi phục vụ?", en: "Where would you like to be served?" },
