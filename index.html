@@ -65,16 +65,12 @@
     <div id="overlayBackdrop" class="overlay-backdrop hidden" data-action="close-overlay"></div>
     <div id="overlay" class="overlay">
         <div id="orderStatusBar" class="order-status-bar hidden"></div>
-       <div id="orderTrackerPage" class="overlay__panel overlay__panel--center hidden">
-            <div class="p-m">
-                <h3 class="mb-l text-center">Trạng thái đơn hàng</h3>
-                
-                <div id="orderTrackerList"></div> 
-                
-                <div class="text-center mt-xl">
-                    <button class="btn-secondary" data-action="close-overlay">Đóng</button>
+            <div id="orderTrackerPage" class="overlay__panel overlay__panel--cente overlay__panel--tracker hidden">
+                <div class="tracker-header">
+                    <div class="tracker-title">Trạng thái đơn hàng</div>
+                    <div class="tracker-close" data-action="close-overlay">✕</div>
                 </div>
-            </div>
+            <div id="orderTrackerList"></div>
         </div>
         <div id="optionSheet" class="overlay__panel option-sheet hidden"></div>
         <div id="cartDrawer" class="overlay__panel overlay__panel--bottom overlay-drawer hidden">
