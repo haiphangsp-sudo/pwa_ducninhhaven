@@ -34,12 +34,12 @@ export function renderStatusBar(state) {
       <div class="order-count-badge">${actionableOrders.length}</div>
     </div>
     <div class="bar-center">
-        <div class="stepper-mini-wrap">${renderStepper(status)}</div>
-    </div>
-    <div class="bar-right">
+      <div class="stepper-mini-wrap">${renderStepper(status)}</div>
       <button class="btn-check-haven" data-action="open-overlay" data-value="orderTrackerPage">
         KIỂM TRA
       </button>
+    </div>
+    <div class="bar-right">
       <div class="toggle-arrow" data-action="toggle_status" data-value="${isExpanded}">
         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="3">
           <polyline points="8 18 16 12 8 6"></polyline>
