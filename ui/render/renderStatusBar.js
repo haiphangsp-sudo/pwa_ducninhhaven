@@ -15,7 +15,10 @@ export function renderStatusBar(state) {
     o => !['RECOVERING', 'CANCELED'].includes(o.status)
   );
 
-  if (actionableOrders.length === 0) {
+  const hasActive = activeOrders.length > 0;
+  const hasRecent = (state.orders?.inactive || []).length > 0;
+
+  if (!hasActive && !hasRecent) {
     bar.classList.add("hidden");
     return;
   }
