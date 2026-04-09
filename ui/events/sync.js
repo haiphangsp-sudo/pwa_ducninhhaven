@@ -63,7 +63,7 @@ async function syncUI(state) {
       case "placePicker":
         renderPlacePicker(state);
         break;
-      case "trackerPage":
+      case "orderTrackerPage":
         openOrderTracker(state);
         break;
       default:
