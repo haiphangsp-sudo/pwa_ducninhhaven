@@ -205,7 +205,7 @@
 .step-status-msg {
   position: absolute;
   left: 50%;
-  top: -22px;
+  top: -15px;
   transform: translateX(-50%);
 
   white-space: nowrap;
