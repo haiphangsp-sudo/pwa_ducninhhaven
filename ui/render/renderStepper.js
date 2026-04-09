@@ -35,7 +35,10 @@ export function renderStepper(currentStatus) {
           </div>`;
       }).join("")}
     </div>
-    <button class="btn-check-oders" data-action="open-overlay" data-value="orderTrackerPage">
-          ${translate("order.button")}
-    </button>`;
+    <div class="check-oders">
+      <button class="btn-check-oders" data-action="open-overlay" data-value="orderTrackerPage">
+            ${translate("order.button")}
+      </button>
+    </div>
+  `;
 }
