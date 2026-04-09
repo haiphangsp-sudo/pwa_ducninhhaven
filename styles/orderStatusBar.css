@@ -114,10 +114,9 @@
   align-items: center;
   justify-content: center;
   gap: 0;
-
   width: 100%;
   max-width: 260px;
-  margin: 0 auto;
+  margin-top: 10px;
 }
 
 /* ===============================
@@ -169,6 +168,7 @@
   color: #999;
   font-weight: 500;
   text-align: center;
+  opacity: 0.6;
 }
 
 /* ===============================
@@ -188,6 +188,8 @@
   color: #fff;
   box-shadow: 0 0 0 4px rgba(168, 138, 100, 0.2);
   animation: pulse-brown 2s infinite ease-in-out;
+  transform: scale(1.15);
+  box-shadow: 0 0 0 4px rgba(194,139,92,0.18);
 }
 
 .step.is-active .step-label {
@@ -207,14 +209,15 @@
   left: 50%;
   top: -15px;
   transform: translateX(-50%);
-
   white-space: nowrap;
-  font-size: 10px;
   font-weight: 800;
-  letter-spacing: 0.4px;
   text-transform: uppercase;
-  color: #8b4513;
+  font-size: 12px;
+  font-weight: 600;
+  color: #8a5a2b;
+  letter-spacing: 0.3px;
 }
+
 
 .check-orders {
   display: flex;
@@ -226,23 +229,19 @@
 
 .btn-check-orders {
   height: 30px;
-  padding: 0 12px;
+  padding: 10px 12px;
   border: none;
   border-radius: 999px;
-
   display: inline-flex;
   align-items: center;
   justify-content: center;
-
-  background: var(--warning-soft);
-  color: var(--brand-contrast);
-
   font-size: 12px;
   font-weight: 600;
   white-space: nowrap;
   cursor: pointer;
-
   transition: background-color 0.2s ease, transform 0.15s ease;
+  background: #d8c2a8;
+  color: #3a2a1a;
 }
 
 .btn-check-orders:hover {
