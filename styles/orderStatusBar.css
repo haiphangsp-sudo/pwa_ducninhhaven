@@ -149,7 +149,6 @@
     flex-shrink: 0;
 }
 
-
 .toggle-arrow {
   border-radius: 50%;
   display: flex;
@@ -267,6 +266,7 @@
     align-items: center;
     z-index: 2;
     flex: 1;
+    transform: scale(0.8);
 }
 
 .step-status-msg {
