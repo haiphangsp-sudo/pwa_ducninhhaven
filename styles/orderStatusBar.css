@@ -4,14 +4,14 @@
 .status-bar {
   position: fixed;
   bottom: 15px;
-  left: 20px;
+  left: auto;
   right: 20px;
   z-index: 90;
 
   height: 60px;
   border-radius: 30px;
   overflow: hidden;
-
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1),background-color 0.3s ease;
   display: flex;
   align-items: center;
 
@@ -19,14 +19,7 @@
   border: 1px solid var(--border-strong);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-
-  transition:
-    width 0.35s ease,
-    background-color 0.25s ease,
-    box-shadow 0.25s ease,
-    border-color 0.25s ease;
 }
-
 /* ===============================
    COLLAPSED
 ================================ */
