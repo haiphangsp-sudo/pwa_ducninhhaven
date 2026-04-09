@@ -142,14 +142,14 @@
 }
 
 .toggle-arrow {
-  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   background: var(--brand-soft);
-    width: 40px;
-    height: 40px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
     transition: transform 0.5s ease;
 }
 .status-bar.is-collapsed .toggle-arrow {
