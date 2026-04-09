@@ -119,6 +119,14 @@ export const STRINGS = {
   msg_long_RECOVERING: {
     vi: "Hệ thống đang khôi phục thông tin đơn hàng để tiếp tục theo dõi chính xác hơn.",
     en: "The system is restoring your order information so tracking can continue more accurately."
+    },
+  tracker_note: {
+    vi: "Tiến độ được cập nhật theo từng bước phục vụ.",
+    en: "Progress is updated as your request moves through service."
+  },
+  support_note: {
+    vi: "Nếu cần điều chỉnh đơn hàng, vui lòng liên hệ bộ phận hỗ trợ.",
+    en: "If you need to adjust your request, please contact support."
   }
 },
   place: {

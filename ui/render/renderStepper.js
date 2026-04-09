@@ -5,10 +5,10 @@ import { getState } from "../../core/state.js";
 export function renderStepper(currentStatus) {
   const lang = getState().lang.current;
   const steps = [
-    { key: 'NEW', label: STRINGS.status.NEW["en"],msg: STRINGS.status.msg_NEW[lang]},
-    { key: 'COOKING', label: STRINGS.status.COOKING["en"],msg: STRINGS.status.msg_COOKING[lang]},
-    { key: 'DELIVERING', label: STRINGS.status.DELIVERING["en"],msg: STRINGS.status.msg_DELIVERING[lang]},
-    { key: 'DONE', label: STRINGS.status.DONE["en"],msg: STRINGS.status.msg_DONE[lang]},
+    { key: 'NEW', label: STRINGS.status.NEW["en"],msg: STRINGS.status.msg_NEW[lang],mgs_long: STRINGS.status.msg_long_NEW[lang]},
+    { key: 'COOKING', label: STRINGS.status.COOKING["en"],msg: STRINGS.status.msg_COOKING[lang],mgs_long: STRINGS.status.msg_long_COOKING[lang]},
+    { key: 'DELIVERING', label: STRINGS.status.DELIVERING["en"],msg: STRINGS.status.msg_DELIVERING[lang],mgs_long: STRINGS.status.msg_long_DELIVERING[lang]},
+    { key: 'DONE', label: STRINGS.status.DONE["en"],msg: STRINGS.status.msg_DONE[lang],mgs_long: STRINGS.status.msg_long_DONE[lang]},
   ];
 
   const statusOrder = ['NEW', 'COOKING', 'DELIVERING', 'DONE', 'RECOVERING'];
