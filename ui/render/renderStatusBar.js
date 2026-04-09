@@ -38,7 +38,7 @@ export function renderStatusBar(state) {
   bar.innerHTML = `
     <div class="bar-center">
       <div class="stepper">
-        ${renderStepper(status)}
+        ${renderStepper(status, false )}
       </div>
       <div class="check-orders">
         <button class="btn-check-orders" data-action="open-overlay" data-value="orderTrackerPage">

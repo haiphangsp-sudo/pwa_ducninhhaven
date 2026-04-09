@@ -2,7 +2,7 @@
 import { STRINGS } from "../../data/i18n.js";
 import { getState } from "../../core/state.js";
 
-export function renderStepper(currentStatus) {
+export function renderStepper(currentStatus, longMsg) {
   const lang = getState().lang.current;
   const steps = [
     { key: 'NEW', label: STRINGS.status.NEW["en"],msg: STRINGS.status.msg_NEW[lang],mgs_long: STRINGS.status.msg_long_NEW[lang]},
@@ -14,8 +14,9 @@ export function renderStepper(currentStatus) {
   const statusOrder = ['NEW', 'COOKING', 'DELIVERING', 'DONE', 'RECOVERING'];
   const currentIndex = statusOrder.indexOf(currentStatus);
   const currentMsg = steps[currentIndex]?.msg || ""; 
+  const currentMsgLong = steps[currentIndex]?.mgs_long || ""; 
   return `
-      ${currentMsg ? `<div class="step-status-msg">${currentMsg}</div>` : ''}
+      <div class="step-status-msg">${!longMsg ? currentMsg : currentMsgLong}</div>}
       ${steps.map((step, index) => {
         let stateClass = "";
         if (currentStatus === 'RECOVERING') stateClass = "is-complete";
