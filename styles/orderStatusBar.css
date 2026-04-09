@@ -213,7 +213,6 @@
     box-shadow: 0 0 0 4px var(--accent-soft);
     color: #fff;
     animation: pulse-brown 2s infinite ease-in-out;
-    background: #a88a64; 
     box-shadow: 0 0 0 4px rgba(168, 138, 100, 0.2);
 }
 .step.is-complete .step-dot {
