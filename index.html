@@ -50,7 +50,7 @@
                 </div>
             </section>
         </div>
-       
+        <div id="orderStatusBar" class="order-status-bar hidden"></div>
         <div id="cartBar" class="row cart-bar center hidden">
             <div class="cart-info">
                 <span class="cart-bar__icon">🛒</span>
@@ -64,13 +64,12 @@
         <!-- Overlay layer -->
     <div id="overlayBackdrop" class="overlay-backdrop hidden" data-action="close-overlay"></div>
     <div id="overlay" class="overlay">
-        <div id="orderStatusBar" class="order-status-bar hidden"></div>
-            <div id="orderTrackerPage" class="overlay__panel overlay__panel--tracker hidden">
-                <div class="tracker-header">
-                    <div class="tracker-title">Trạng thái đơn hàng</div>
-                    <div class="tracker-close" data-action="close-overlay">✕</div>
-                </div>
-            <div id="orderTrackerList"></div>
+        <div id="orderTrackerPage" class="overlay__panel overlay__panel--tracker hidden">
+            <div class="tracker-header">
+                <div class="tracker-title">Trạng thái đơn hàng</div>
+                <div class="tracker-close" data-action="close-overlay">✕</div>
+            </div>
+        <div id="orderTrackerList"></div>
         </div>
         <div id="optionSheet" class="overlay__panel option-sheet hidden"></div>
         <div id="cartDrawer" class="overlay__panel overlay__panel--bottom overlay-drawer hidden">
@@ -102,7 +101,7 @@
             </div>
         </div>
         <div id="placePicker" class="overlay__panel overlay__panel--center overlay-picker hidden"></div>
-     </div>
+    </div>
     <!-- System feedback -->
     <div id="ackOverlay" class="overlay__ack hidden"></div>
     <div id="deliveryStatus" class="delivery-banner hidden"></div>
