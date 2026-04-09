@@ -2,7 +2,7 @@
 
 import { getState } from "./state.js";
 import { translate } from "../ui/utils/translate.js";
-
+import { formatPrice } from "../ui/utils/formatPrice.js"
 /* =======================================================
    PUBLIC
 ======================================================= */
@@ -27,7 +27,7 @@ export function getVariants(categoryKey, productKey) {
       key,
       ...variant,
       price: variant.price > 0
-                ? variant.price.toLocaleString("vi-VN") + " đ"
+                ? formatPrice(variant.price)
                 : variant.price === 0 ? translate("cart_bar.free")
                 : translate("cart_bar.instant"),
       recommend: (product.recommend || []).includes(key)
@@ -77,7 +77,7 @@ export function getVariantById(id) {
             productLabel: translate(prod.label),
             variantLabel: translate(variant.label),
             price: Number(variant.price || 0),
-            priceFormat: new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(variant.price),
+            priceFormat: formatPrice(variant.price),
             unit: variant.unit,
             ui: cat.ui || "cart"
           };
@@ -109,7 +109,7 @@ export function getDrawerExtended() {
         ...cartItem, 
         ...info, 
         linePrice,
-        linePriceFormat: new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(linePrice)
+        linePriceFormat: formatPrice(linePrice)
     };
   }).filter(Boolean);
 
@@ -122,7 +122,7 @@ export function getDrawerExtended() {
       ? `${totalQ} ${translate("cart_bar.items")}`
       : `${totalQ} ${translate("cart_bar.item")}`,
     totalPrice: totalP,
-    totalPriceFormat: new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(totalP)
+    totalPriceFormat: formatPrice(totalP)
   };
 }
 /* =======================================================

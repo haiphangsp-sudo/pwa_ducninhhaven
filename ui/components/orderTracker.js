@@ -1,5 +1,6 @@
 import { renderStepper } from "../render/renderStepper.js";
 import { translate } from "../utils/translate.js";
+import { formatPrice } from "../utils/formatPrice.js";
 
 export function openOrderTracker(state) {
   const active = state.orders?.active || [];
@@ -81,7 +82,7 @@ function renderOrderItem(item = {}) {
     <div class="tracker-item">
       <span class="tracker-item__qty">${qty}×</span>
       <span class="tracker-item__name">${escapeHtml(name)}</span>
-      <span class="tracker-item__name">${price}</span>
+      <span class="tracker-item__name">${formatPrice(price)}</span>
     </div>
   `;
 }
