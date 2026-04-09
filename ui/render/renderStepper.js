@@ -1,7 +1,6 @@
 // ui/render/renderStepper.js
 import { STRINGS } from "../../data/i18n.js";
 import { getState } from "../../core/state.js";
-import { translate } from "../utils/translate.js";
 
 export function renderStepper(currentStatus) {
   const lang = getState().lang.current;
