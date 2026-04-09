@@ -132,7 +132,17 @@
   to { transform: rotate(360deg); }
 }
 
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
 
+@keyframes bounceIn {
+    0% { transform: scale(0.3); opacity: 0; }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); opacity: 1; }
+}
 /* Hiệu ứng khi món ăn bị xóa */
 .item-exit {
     animation: itemExit 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
