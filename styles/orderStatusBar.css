@@ -18,7 +18,7 @@
 
   transition: all 0.45s cubic-bezier(0.4, 0, 0.2, 1);
 
-  z-index: 90;
+  z-index: 9999;
   overflow: hidden;
 }
 
@@ -36,31 +36,26 @@
   box-shadow: 0 6px 20px rgba(0,0,0,0.2);
 }
 
-.status-bar .bar-left,
-.status-bar .bar-center,
-.status-bar .btn-check-haven {
-    transition: opacity 0.3s ease, transform 0.3s ease;
-    opacity: 1;
-    pointer-events: auto;
-}
+/* Ẩn toàn bộ content */
 .status-bar.is-collapsed .bar-left,
 .status-bar.is-collapsed .bar-center,
 .status-bar.is-collapsed .btn-check-haven {
-    opacity: 0;
-    pointer-events: none;
-    transform: translateX(20px);
+  display: none;
 }
+
 /* ===============================
    EXPANDED
 ================================ */
 .status-bar.is-expanded {
+  background: rgba(253, 252, 249, 0.92);
+  border: 1px solid rgba(47, 93, 70, 0.08);
+
   padding: 0 14px;
   justify-content: space-between;
+
   box-shadow: 0 10px 30px rgba(0,0,0,0.12);
-    width: calc(100% - 40px);
-    background: #fdfcf9;
-    border: 1px solid rgba(47, 93, 70, 0.1);
 }
+
 /* ===============================
    LEFT
 ================================ */
@@ -106,7 +101,7 @@
 }
 
 .btn-check-haven {
-  background: #a68b5b;
+  background: #2f5d46;
   color: #fff;
 
   border-radius: 20px;
@@ -271,17 +266,17 @@
     from { opacity: 0; transform: translateY(-2px); }
     to { opacity: 1; transform: translateY(0); }
 }
-
 .status-bar .stepper {
     position: relative; 
     display: flex;
-    flex-direction: row;
     justify-content: space-between;
-    align-items: center;
     width: 160px;
-    margin: 25px auto 0;
+    margin: 20px auto 0; 
+    align-items: center;
     z-index: 2;
+    flex: 1;
 }
+
 .step-status-msg {
     position: absolute;
     left: 50%;
