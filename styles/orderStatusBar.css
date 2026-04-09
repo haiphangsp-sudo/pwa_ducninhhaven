@@ -182,7 +182,9 @@
 .step.is-complete .step-line {
   background: #2f5d46;
 }
-
+.step.is-active .step-line {
+  background: #c28b5c;
+}
 .step.is-active .step-dot {
   background: var(--accent);
   color: #fff;
