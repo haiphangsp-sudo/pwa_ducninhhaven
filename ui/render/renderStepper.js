@@ -16,7 +16,7 @@ export function renderStepper(currentStatus, longMsg) {
   const currentMsg = steps[currentIndex]?.msg || ""; 
   const currentMsgLong = steps[currentIndex]?.mgs_long || ""; 
   return `
-      <div class="step-status-msg">${!longMsg ? currentMsg : currentMsgLong}</div>}
+      <div class="step-status-msg">${!longMsg ? currentMsg : currentMsgLong}</div>
       ${steps.map((step, index) => {
         let stateClass = "";
         if (currentStatus === 'RECOVERING') stateClass = "is-complete";
