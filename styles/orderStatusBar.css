@@ -36,26 +36,31 @@
   box-shadow: 0 6px 20px rgba(0,0,0,0.2);
 }
 
-/* Ẩn toàn bộ content */
+.status-bar .bar-left,
+.status-bar .bar-center,
+.status-bar .btn-check-haven {
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    opacity: 1;
+    pointer-events: auto;
+}
 .status-bar.is-collapsed .bar-left,
 .status-bar.is-collapsed .bar-center,
 .status-bar.is-collapsed .btn-check-haven {
-  display: none !important;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(20px);
 }
-
 /* ===============================
    EXPANDED
 ================================ */
 .status-bar.is-expanded {
-  background: rgba(253, 252, 249, 0.92);
-  border: 1px solid rgba(47, 93, 70, 0.08);
-
   padding: 0 14px;
   justify-content: space-between;
-
   box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+    width: calc(100% - 40px);
+    background: #fdfcf9;
+    border: 1px solid rgba(47, 93, 70, 0.1);
 }
-
 /* ===============================
    LEFT
 ================================ */
