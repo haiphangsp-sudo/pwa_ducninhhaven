@@ -35,7 +35,7 @@ export function renderStatusBar(state) {
     </div>
     <div class="bar-center">
       <div class="stepper-mini-wrap">${renderStepper(status)}</div>
-      <button class="btn-check-haven" data-action="open-overlay" data-value="orderTrackerPage">
+      <button class="btn-check-oders" data-action="open-overlay" data-value="orderTrackerPage">
         KIỂM TRA
       </button>
     </div>
