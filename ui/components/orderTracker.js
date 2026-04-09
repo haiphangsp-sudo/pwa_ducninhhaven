@@ -17,7 +17,7 @@ export function openOrderTracker(state) {
       <div class="tracker-empty">
         <div class="tracker-empty__icon">🍃</div>
         <div class="tracker-empty__text">
-          ${translate("order.no_active_order") || "Bạn không có đơn hàng nào đang xử lý."}
+          ${translate("order.no_active_order")}
         </div>
       </div>
     `;
@@ -38,7 +38,7 @@ function renderOrderCard(order) {
   const items = parseItems(order.items);
   const itemsHtml = items.length
     ? items.map(renderOrderItem).join("")
-    : `<div class="tracker-order__empty">${translate("order.service_request") || "Yêu cầu phục vụ"}</div>`;
+    : `<div class="tracker-order__empty">${translate("order.service_request")}</div>`;
 
   return `
     <article class="tracker-order">
