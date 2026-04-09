@@ -182,6 +182,7 @@
   white-space: nowrap;
   font-weight: 600;
   color: #2f5d46;
+  font-variant-numeric: tabular-nums;
 }
 .tracker-order__empty {
   color: #8f8f88;
