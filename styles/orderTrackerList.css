@@ -1,4 +1,10 @@
 .overlay__panel--tracker {
+  position: fixed;
+
+  left: 0;
+  right: 0;
+  bottom: 0;
+
   width: 100%;
   max-width: 520px;
   height: 100%;
