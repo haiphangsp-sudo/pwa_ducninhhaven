@@ -19,6 +19,7 @@
   border: 1px solid var(--border-strong);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
+   box-shadow: var(--shadow-soft);
 }
 /* ===============================
    COLLAPSED
@@ -26,9 +27,8 @@
 .status-bar.is-collapsed {
   width: 70px;
   justify-content: center;
-
   background: #2f5d46;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.18);
+ 
 }
 
 .status-bar.is-collapsed .bar-center {
@@ -51,10 +51,8 @@
   width: calc(100% - 40px);
   padding: 0 12px;
   justify-content: space-between;
-
   background: rgba(253, 252, 249, 0.95);
   border: 1px solid rgba(47, 93, 70, 0.08);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.10);
 }
 
 /* ===============================
