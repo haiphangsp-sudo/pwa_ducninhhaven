@@ -110,6 +110,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
+
 }
 .is-expanded .bar-center { opacity: 1; transition-delay: 0.2s; }
 .bar-right {
@@ -133,6 +135,7 @@
   cursor: pointer;
   transition: all 0.25s ease;
     color: var(--brand-contrast);
+    margin-left: 40px;
 }
 
 .btn-check-oders:hover {
