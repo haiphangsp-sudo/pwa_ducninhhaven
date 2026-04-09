@@ -22,8 +22,8 @@ export function renderDrawer(state) {
   if (isEmpty) {
     if (summaryEl) summaryEl.classList.add("hidden");
     itemsEl.innerHTML = `
-    <div class="p-xl center text-muted stack items-center">
-        <div class="text-xxl mb-m">🛒</div>
+    <div class="center text-muted stack items-center">
+        <div class="text-xxl">🛒</div>
         <p>${translate("cart_bar.empty")}</p>
     </div>
     `
