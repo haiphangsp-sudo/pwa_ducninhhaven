@@ -16,7 +16,6 @@ export function renderStepper(currentStatus) {
   const currentIndex = statusOrder.indexOf(currentStatus);
   const currentMsg = steps[currentIndex]?.msg || ""; 
   return `
-    <div class="stepper">
       ${currentMsg ? `<div class="step-status-msg">${currentMsg}</div>` : ''}
       ${steps.map((step, index) => {
         let stateClass = "";
@@ -34,11 +33,5 @@ export function renderStepper(currentStatus) {
               : ''}
           </div>`;
       }).join("")}
-    </div>
-    <div class="check-oders">
-      <button class="btn-check-oders" data-action="open-overlay" data-value="orderTrackerPage">
-            ${translate("order.button")}
-      </button>
-    </div>
   `;
 }

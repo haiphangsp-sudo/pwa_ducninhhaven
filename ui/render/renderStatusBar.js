@@ -30,7 +30,14 @@ export function renderStatusBar(state) {
 
   bar.innerHTML = `
     <div class="bar-center">
-      ${renderStepper(status)}
+      <div class="stepper">
+        ${renderStepper(status)}
+      </div>
+      <div class="check-oders">
+        <button class="btn-check-oders" data-action="open-overlay" data-value="orderTrackerPage">
+          ${translate("order.button")}
+        </button>
+      </div>
     </div>
     <div class="bar-right">
       <div class="toggle-arrow" data-action="toggle_status" data-value="${isExpanded}">
