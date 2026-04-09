@@ -11,6 +11,7 @@
 
   display: flex;
   flex-direction: column;
+  min-height: 0;
   overflow: hidden;
 
   background: #fdfcf9;
@@ -52,10 +53,13 @@
 }
 
 #orderTrackerList {
-  flex: 1;
+  flex: 1 1 auto;
+  min-height: 0;
   overflow-y: auto;
-  padding: 14px 16px 20px;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 
+  padding: 14px 16px 20px;
   display: flex;
   flex-direction: column;
   gap: 14px;
@@ -78,7 +82,7 @@
 
 .tracker-order {
   position: relative;
-  overflow: hidden;
+  overflow: visible;
 
   background: #fff;
   border: 1px solid rgba(0, 0, 0, 0.05);
@@ -94,6 +98,7 @@
   width: 4px;
   background: #2f5d46;
   opacity: 0.9;
+  border-radius: 18px 0 0 18px;
 }
 
 .tracker-order__head {
@@ -165,62 +170,110 @@
   gap: 12px;
 }
 
-.tracker-progress {
+.tracker-order__stepper {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #f2efe9;
+}
+
+/* tracker-scoped stepper */
+.tracker-order__stepper .step-status-msg {
+  position: static;
+  transform: none;
+  top: auto;
+  left: auto;
+  white-space: normal;
+
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+  font-weight: 600;
+  color: #7b5a36;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.tracker-order__stepper .stepper-track {
+  display: flex;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 0;
-  padding-right: 10px;
+  width: 100%;
 }
 
-.tracker-progress__step {
+.tracker-order__stepper .step {
   position: relative;
   flex: 1;
   display: flex;
+  flex-direction: column;
   align-items: center;
 }
 
-.tracker-progress__dot {
-  width: 10px;
-  height: 10px;
+.tracker-order__stepper .step-dot {
+  width: 18px;
+  height: 18px;
   border-radius: 999px;
-  background: #d8d5ce;
-  position: relative;
-  z-index: 2;
-}
 
-.tracker-progress__line {
-  height: 2px;
-  flex: 1;
-  background: #ebe7df;
-}
-
-.tracker-progress__step.is-complete .tracker-progress__dot {
-  background: #2f5d46;
-}
-
-.tracker-progress__step.is-complete .tracker-progress__line {
-  background: #2f5d46;
-}
-
-.tracker-progress__step.is-active .tracker-progress__dot {
-  background: #8b5a2b;
-  box-shadow: 0 0 0 4px rgba(139, 90, 43, 0.14);
-}
-
-.tracker-order__actions {
   display: flex;
-  justify-content: flex-end;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 10px;
+  font-weight: 700;
+  z-index: 2;
+
+  background: #d8d5ce;
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 1px #ebe7df;
+  color: transparent;
 }
 
-.btn-cancel-order {
-  border: 1px solid rgba(140, 52, 41, 0.18);
-  color: #8c3429;
-  background: #fff8f7;
-  border-radius: 999px;
-  padding: 8px 12px;
-  font-size: 12px;
-  font-weight: 600;
+.tracker-order__stepper .step-line {
+  position: absolute;
+  top: 9px;
+  left: 50%;
+  width: 100%;
+  height: 2px;
+  background: #ebe7df;
+  z-index: 1;
+}
+
+.tracker-order__stepper .step-label {
+  margin-top: 8px;
+  font-size: 10px;
+  line-height: 1.2;
+  text-align: center;
+  color: #9a9488;
+}
+
+.tracker-order__stepper .step.is-complete .step-dot {
+  background: #2f5d46;
+  color: #fff;
+}
+
+.tracker-order__stepper .step.is-complete .step-line {
+  background: #2f5d46;
+}
+
+.tracker-order__stepper .step.is-complete .step-label {
+  color: #2f5d46;
+}
+
+.tracker-order__stepper .step.is-active .step-dot {
+  background: #c28b5c;
+  color: #fff;
+  box-shadow: 0 0 0 4px rgba(194, 139, 92, 0.16);
+}
+
+.tracker-order__stepper .step.is-active .step-label {
+  color: #8b5a2b;
+  font-weight: 700;
+}
+
+.tracker-order__stepper .step.is-pending .step-label {
+  opacity: 0.55;
 }
 
 .status-badge {

@@ -87,7 +87,10 @@ export const STRINGS = {
     vi: "Khôi phục",
     en: "Recovering"
   },
-
+  SYNCING: {
+    vi: "Đang đồng bộ",
+    en: "Syncing"
+  },
   msg_NEW: {
     vi: "Tiếp nhận yêu cầu...",
     en: "Receiving your request..."
@@ -107,8 +110,12 @@ export const STRINGS = {
   msg_RECOVERING: {
     vi: "Đang khôi phục...",
     en: "Restoring..."
+    },
+  msg_SYNCING: {
+    vi: "Đang đồng bộ trạng thái...",
+    en: "Syncing status..."
   },
-
+  
   msg_long_NEW: {
     vi: "Yêu cầu của bạn đã được ghi nhận và đang được chuyển tới bộ phận phụ trách.",
     en: "Your request has been received and is being routed to the appropriate team."
@@ -129,6 +136,11 @@ export const STRINGS = {
     vi: "Hệ thống đang khôi phục thông tin đơn hàng để tiếp tục theo dõi chính xác hơn.",
     en: "The system is restoring your order information so tracking can continue more accurately."
     },
+
+  msg_long_SYNCING: {
+    vi: "Đơn hàng đang được đồng bộ với hệ thống để hiển thị trạng thái chính xác hơn.",
+    en: "Your order is being synced with the system so progress can be shown accurately."
+  },
   tracker_note: {
     vi: "Tiến độ được cập nhật theo từng bước phục vụ.",
     en: "Progress is updated as your request moves through service."
