@@ -1,4 +1,8 @@
 import { renderStepper } from './renderStepper.js';
+import { translate } from '../ui/utils/translate.js';
+
+// ui/render/renderStatusBar.js
+
 
 export function renderStatusBar(state) {
   const bar = document.getElementById("orderStatusBar");
