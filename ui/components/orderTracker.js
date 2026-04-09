@@ -74,11 +74,14 @@ function renderOrderCard(order) {
 function renderOrderItem(item = {}) {
   const qty = Number(item.qty || 1);
   const name = item.item || item.name || translate("order.unnamed_item") || "Mục chưa tên";
+  const price = item.price || 0;
+
 
   return `
     <div class="tracker-item">
       <span class="tracker-item__qty">${qty}×</span>
       <span class="tracker-item__name">${escapeHtml(name)}</span>
+      <span class="tracker-item__name">${price}</span>
     </div>
   `;
 }
