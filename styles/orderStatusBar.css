@@ -27,7 +27,7 @@
 
   background: #2f5d46;
   justify-content: center;
-
+   animation: slideDown 0.4s ease;
   box-shadow: 0 6px 20px rgba(0,0,0,0.2);
 }
 
@@ -64,6 +64,20 @@
     transform: translateY(0);
     opacity: 1;
   }
+}
+@keyframes slideDown {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(10px); /* Trượt xuống lại */
+    opacity: 0;
+  }
+}
+
+.element-exit {
+    animation: slideDown 0.3s ease-in forwards;
 }
 /* ===============================
    LEFT
