@@ -83,14 +83,14 @@
     animation: slideDown 0.3s ease-in forwards;
 }
 
-.bar-left 
-.bar-right
+.bar-left,
+.bar-right,
 .bar-center{
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.bar-left 
+.bar-left,
 .bar-right{
   width: 60px;
 }
@@ -98,7 +98,7 @@
   flex: 1;
   width: 100%;
 }
-.is-expanded .bar-center { 
+.is-expanded .bar-center {
   opacity: 1; 
   transition-delay: 0.2s; 
 }
