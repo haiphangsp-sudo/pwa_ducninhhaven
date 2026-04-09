@@ -1,6 +1,4 @@
-// ui/render/renderStatusBar.js
 import { renderStepper } from './renderStepper.js';
-import { getDrawerExtended } from "../../core/menuQuery.js";
 
 export function renderStatusBar(state) {
   const bar = document.getElementById("orderStatusBar");
@@ -8,31 +6,29 @@ export function renderStatusBar(state) {
 
   const isExpanded = !!state.orders?.isBarExpanded;
   const activeOrders = state.orders?.active || [];
-  const { totalQty } = getDrawerExtended();
 
-  // Lọc đơn hàng đang xử lý
-  const actionableOrders = activeOrders.filter(o => !['RECOVERING', 'CANCELED'].includes(o.status));
+  const actionableOrders = activeOrders.filter(
+    o => !['RECOVERING', 'CANCELED'].includes(o.status)
+  );
 
-  if (actionableOrders.length === 0 && totalQty === 0) {
+  if (actionableOrders.length === 0) {
     bar.classList.add("hidden");
     return;
   }
   bar.classList.remove("hidden");
 
-  // Gán class để trượt
   bar.className = `status-bar ${isExpanded ? 'is-expanded' : 'is-collapsed'}`;
 
   const priorityOrder = actionableOrders.reduce((best, current) => {
     const scores = { DONE: 5, DELIVERING: 4, COOKING: 3, NEW: 2, SYNCING: 1 };
-    return (scores[current.status] || 0) > (scores[best?.status] || 0) ? current : best;
+    return (scores[current.status] || 0) > (scores[best?.status] || 0)
+      ? current
+      : best;
   }, null);
 
   const status = priorityOrder?.status || "SYNCING";
 
   bar.innerHTML = `
-    <div class="bar-left">
-      <div class="order-count-badge">${actionableOrders.length}</div>
-    </div>
     <div class="bar-center">
       ${renderStepper(status)}
     </div>
@@ -43,5 +39,5 @@ export function renderStatusBar(state) {
         </svg>
       </div>
     </div>
-`;
+  `;
 }

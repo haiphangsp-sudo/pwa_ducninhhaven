@@ -1,18 +1,25 @@
+/* ===============================
+   BASE
+================================ */
 .status-bar {
   position: fixed;
   bottom: 20px;
   left: 20px;
   right: 20px;
+  z-index: 90;
+
   height: 60px;
   border-radius: 30px;
-  border: 1px solid var(--border-strong);
+  overflow: hidden;
+
   display: flex;
   align-items: center;
-  overflow: hidden;
-  z-index: 90;
-  background: rgba(255, 255, 255, 0.85);
+
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid var(--border-strong);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
+
   transition:
     width 0.35s ease,
     background-color 0.25s ease,
@@ -20,131 +27,111 @@
     border-color 0.25s ease;
 }
 
+/* ===============================
+   COLLAPSED
+================================ */
 .status-bar.is-collapsed {
   width: 60px;
   left: auto;
   right: 20px;
   justify-content: center;
+
   background: #2f5d46;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.18);
 }
 
+.status-bar.is-collapsed .bar-center {
+  opacity: 0;
+  width: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.status-bar.is-collapsed .bar-right {
+  width: 60px;
+  justify-content: center;
+}
+
+/* ===============================
+   EXPANDED
+================================ */
 .status-bar.is-expanded {
   width: calc(100% - 40px);
-  padding: 0 14px;
+  padding: 0 12px;
   justify-content: space-between;
-  background: rgba(253, 252, 249, 0.92);
+
+  background: rgba(253, 252, 249, 0.95);
   border: 1px solid rgba(47, 93, 70, 0.08);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.12);
-  animation: slideUp 0.25s ease;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.10);
 }
 
-@keyframes slideUp {
-  from {
-    transform: translateY(8px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-.bar-left,
-.bar-right,
-.bar-center {
+/* ===============================
+   LAYOUT
+================================ */
+.bar-center,
+.bar-right {
   display: flex;
   align-items: center;
-  justify-content: center;
-  white-space: nowrap;
-  transition: opacity 0.25s ease, transform 0.25s ease;
-}
-
-.bar-left,
-.bar-right {
-  width: 60px;
 }
 
 .bar-center {
   flex: 1;
   min-width: 0;
-}
-
-.status-bar.is-collapsed .bar-left,
-.status-bar.is-collapsed .bar-center {
-  opacity: 0;
-  width: 0;
-  margin: 0;
-  pointer-events: none;
-  overflow: hidden;
-}
-
-.order-count-badge {
-  min-width: 28px;
-  height: 28px;
-  border-radius: 14px;
-  background: #2f5d46;
-  color: #fff;
-  font-size: 13px;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
   justify-content: center;
 }
 
-.check-oders {
-  width: 104px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.bar-right {
+  flex: 0 0 auto;
+  width: 40px;
+  justify-content: flex-end;
 }
 
-.btn-check-oders {
-  background: var(--accent);
-  color: var(--brand-contrast);
-  border-radius: 20px;
-  padding: 6px 12px;
-  margin-left: 16px;
-  font-size: 12px;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.15s ease;
-}
-
-.btn-check-oders:hover {
-  background: #264c39;
-}
-
+/* ===============================
+   TOGGLE
+================================ */
 .toggle-arrow {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  transition: transform 0.3s ease;
-}
 
-.status-bar.is-collapsed .toggle-arrow {
-  color: #fff;
-  transform: rotate(180deg);
+  cursor: pointer;
+  transition: transform 0.28s ease, background-color 0.2s ease;
 }
 
 .status-bar.is-expanded .toggle-arrow {
   color: #2f5d46;
+  background: rgba(47, 93, 70, 0.08);
   transform: rotate(0deg);
 }
 
+.status-bar.is-collapsed .toggle-arrow {
+  color: #fff;
+  background: transparent;
+  transform: rotate(180deg);
+}
+
+/* ===============================
+   STEPPER WRAP
+================================ */
 .status-bar .stepper {
   position: relative;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  width: 160px;
+  justify-content: center;
+  gap: 0;
+
+  width: 100%;
+  max-width: 260px;
   margin: 0 auto;
-  flex: 1;
-  transform: scale(0.82);
 }
 
+/* ===============================
+   STEP ITEM
+================================ */
 .status-bar .step {
   position: relative;
   flex: 1;
@@ -156,16 +143,33 @@
 .step-dot {
   width: 18px;
   height: 18px;
-  border-radius: 50%;
+  border-radius: 999px;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   font-size: 10px;
   z-index: 2;
+
+  background: var(--border-strong);
   border: 2px solid #fff;
   box-shadow: 0 0 0 1px #eee;
-  background: var(--border-strong);
-  transition: transform 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
+
+  transition:
+    transform 0.25s ease,
+    background-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.step-line {
+  position: absolute;
+  top: 9px;
+  left: 50%;
+  width: 100%;
+  height: 2px;
+  background: #ece9e2;
+  z-index: 1;
 }
 
 .step-label {
@@ -176,16 +180,9 @@
   text-align: center;
 }
 
-.step-line {
-  position: absolute;
-  top: 9px;
-  left: 50%;
-  width: 100%;
-  height: 2px;
-  background: #f0f0f0;
-  z-index: 1;
-}
-
+/* ===============================
+   STEP STATES
+================================ */
 .step.is-complete .step-dot {
   background: var(--brand);
   color: #fff;
@@ -211,24 +208,66 @@
   color: #2f5d46;
 }
 
-@keyframes pulse-brown {
-  0% { box-shadow: 0 0 0 0 rgba(139, 69, 19, 0.4); }
-  70% { box-shadow: 0 0 0 8px rgba(139, 69, 19, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(139, 69, 19, 0); }
-}
-
+/* ===============================
+   STATUS MESSAGE
+================================ */
 .step-status-msg {
   position: absolute;
   left: 50%;
   top: -18px;
   transform: translateX(-50%);
+
   white-space: nowrap;
   font-size: 10px;
   font-weight: 800;
-  color: #8b4513;
-  text-transform: uppercase;
   letter-spacing: 0.4px;
-  z-index: 10;
+  text-transform: uppercase;
+  color: #8b4513;
+}
+
+/* ===============================
+   CHECK BUTTON (nằm trong renderStepper)
+================================ */
+.check-oders {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 16px;
+  flex: 0 0 auto;
+}
+
+.btn-check-oders {
+  height: 30px;
+  padding: 0 12px;
+  border: none;
+  border-radius: 999px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  background: var(--accent);
+  color: var(--brand-contrast);
+
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+
+  transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+.btn-check-oders:hover {
+  background: #264c39;
+}
+
+/* ===============================
+   ANIMATION
+================================ */
+@keyframes pulse-brown {
+  0% { box-shadow: 0 0 0 0 rgba(139, 69, 19, 0.35); }
+  70% { box-shadow: 0 0 0 8px rgba(139, 69, 19, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(139, 69, 19, 0); }
 }
 
 /* Trạng thái lỗi/hủy */
