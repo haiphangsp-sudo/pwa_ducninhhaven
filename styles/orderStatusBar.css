@@ -292,3 +292,17 @@
     from { opacity: 0; transform: translate(-50%, -5px); }
     to { opacity: 1; transform: translate(-50%, 0); }
 }
+/* Trạng thái lỗi/hủy */
+.status-bar.is-CANCELED {
+    background-color: #fef2f2; /* Nền hồng nhạt */
+    border: 1px solid #ef4444; /* Viền đỏ */
+}
+
+.is-CANCELED .status-text {
+    color: #b91c1c; /* Chữ đỏ đậm */
+}
+
+.is-CANCELED .step-dot {
+    background: #ef4444;
+    color: white;
+}
