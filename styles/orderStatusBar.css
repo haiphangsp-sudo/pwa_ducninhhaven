@@ -176,11 +176,6 @@
   transform: scale(0.8);
 }
 
-@keyframes dotPulse {
-  0% { transform: scale(1.2); opacity: 1; }
-  50% { transform: scale(1.5); opacity: 0.6; }
-  100% { transform: scale(1.2); opacity: 1; }
-}
 .status-bar .step {
     display: flex;
     flex-direction: column;
@@ -215,9 +210,21 @@
     background: #8b4513;
     color: #fff;
     box-shadow: 0 0 0 4px rgba(139, 69, 19, 0.1);
-    animation: dotPulse 2s infinite ease-in-out;
+    animation: pulse-brown 2s infinite ease-in-out;
 
 }
+
+@keyframes dotPulse {
+  0% { transform: scale(1.2); opacity: 1; }
+  50% { transform: scale(1.5); opacity: 0.6; }
+  100% { transform: scale(1.2); opacity: 1; }
+}
+@keyframes pulse-brown {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.12); }
+  100% { transform: scale(1); }
+}
+
 
 .step.is-active .step-label {
     color: #8b4513;
