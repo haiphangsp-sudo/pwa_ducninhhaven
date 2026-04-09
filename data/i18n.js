@@ -17,6 +17,7 @@ export const STRINGS = {
   },
   
   cart_bar: {
+    idle:{ vi: "Giỏ hàng trống", en: "Cart is empty"},
     cart_title: { vi: "Giỏ hàng", en: "View cart" },
     unique: { vi: "món", en: "dishes" },
     item: { vi: "phần", en: "item" },

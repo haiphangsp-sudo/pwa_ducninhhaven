@@ -3,7 +3,7 @@
 ================================ */
 .status-bar {
   position: fixed;
-  bottom: 20px;
+  bottom: 15px;
   left: 20px;
   right: 20px;
   z-index: 90;
