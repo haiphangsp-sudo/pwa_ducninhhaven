@@ -91,19 +91,19 @@
 }
 
 /* Danh sách món ăn */
-.order-items-detail {
+.order-detail {
     margin: 15px 0;
     color: #4a4a4a;
     line-height: 1.6;
     font-size: 0.95rem;
 }
 
-.order-items-detail div {
+.order-detail div {
     padding: 4px 0;
     border-bottom: 1px dashed #f0f0f0;
 }
 
-.order-items-detail div:last-child {
+.order-detail div:last-child {
     border-bottom: none;
 }
 
