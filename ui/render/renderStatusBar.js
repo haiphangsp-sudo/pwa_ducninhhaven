@@ -1,6 +1,7 @@
 // ui/render/renderStatusBar.js
 import { renderStepper } from './renderStepper.js';
 import { getDrawerExtended } from "../../core/menuQuery.js";
+import { translate } from '../utils/translate.js';
 
 export function renderStatusBar(state) {
   const bar = document.getElementById("orderStatusBar");
@@ -34,10 +35,12 @@ export function renderStatusBar(state) {
       <div class="order-count-badge">${actionableOrders.length}</div>
     </div>
     <div class="bar-center">
-      <div class="stepper-mini-wrap">${renderStepper(status)}</div>
-      <button class="btn-check-oders" data-action="open-overlay" data-value="orderTrackerPage">
-        KIỂM TRA
-      </button>
+      <div class="stepper-wrap">${renderStepper(status)}</div>
+      <div class="stepper-wrap">
+        <button class="btn-check-oders" data-action="open-overlay" data-value="orderTrackerPage">
+          ${translate("order.button")}
+        </button>
+      </div>
     </div>
     <div class="bar-right">
       <div class="toggle-arrow" data-action="toggle_status" data-value="${isExpanded}">
