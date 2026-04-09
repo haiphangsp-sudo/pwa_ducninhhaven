@@ -45,20 +45,26 @@
     pointer-events: none;
     overflow: hidden;
 }
-/* ===============================
-   EXPANDED
-================================ */
+
 .status-bar.is-expanded {
   background: rgba(253, 252, 249, 0.92);
   border: 1px solid rgba(47, 93, 70, 0.08);
-
   padding: 0 14px;
   justify-content: space-between;
-
   box-shadow: 0 10px 30px rgba(0,0,0,0.12);
   width: calc(100% - 40px);
+  animation: slideUp 0.4s ease;
 }
-
+@keyframes slideUp {
+  0% {
+    transform: translateY(10px); 
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
 /* ===============================
    LEFT
 ================================ */
@@ -146,21 +152,6 @@
 /* hover */
 .toggle-arrow:hover {
   background: rgba(0,0,0,0.08);
-}
-
-.status-bar.is-expanded {
-  animation: slideUp 0.4s ease;
-}
-
-@keyframes slideUp {
-  from {
-    transform: translateY(20px);
-    opacity: 0.7;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
 }
 
 .stepper-mini-wrap {
