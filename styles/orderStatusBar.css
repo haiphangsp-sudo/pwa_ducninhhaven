@@ -87,9 +87,6 @@
   justify-content: center;
 }
 
-/* ===============================
-   CENTER
-================================ */
 .bar-center {
   flex: 1;
   display: flex;
@@ -97,15 +94,16 @@
   justify-content: center;
 }
 
-
-/* ===============================
-   RIGHT (QUAN TRỌNG)
-================================ */
 .bar-right {
   display: flex;
   align-items: center;
   gap: 10px;
+  width: 60px;
+    height: 60px;
+    justify-content: center;
+    flex-shrink: 0;
 }
+
 
 .btn-check-haven {
   background: #ff9800;
@@ -127,9 +125,6 @@
   background: #264c39;
 }
 
-/* ===============================
-   TOGGLE ARROW (MŨI TÊN)
-================================ */
 .toggle-arrow {
   width: 34px;
   height: 34px;
