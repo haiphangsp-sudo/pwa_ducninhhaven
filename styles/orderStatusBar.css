@@ -34,13 +34,13 @@
 }
 
 
-.bar-left, .bar-center, .btn-check-haven {
+.bar-left, 
+.bar-center {
     transition: opacity 0.3s ease, transform 0.3s ease;
     white-space: nowrap;
 }
 .status-bar.is-collapsed .bar-left,
-.status-bar.is-collapsed .bar-center,
-.status-bar.is-collapsed .btn-check-haven {
+.status-bar.is-collapsed .bar-center{
     opacity: 0;
     width: 0;
     margin: 0;
@@ -73,7 +73,7 @@
     opacity: 1;
   }
   to {
-    transform: translateY(10px); /* Trượt xuống lại */
+    transform: translateY(10px); 
     opacity: 0;
   }
 }
@@ -113,17 +113,15 @@
   width: 100%;
 
 }
-.is-expanded .bar-center { opacity: 1; transition-delay: 0.2s; }
-.bar-right {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  width: 60px;
-    height: 60px;
-    justify-content: center;
-    flex-shrink: 0;
+.is-expanded .bar-center { 
+  opacity: 1; 
+  transition-delay: 0.2s; 
 }
-
+.check-oders{
+  width: 110px;
+  align-items: center;
+  justify-content: center;
+}
 
 .btn-check-oders {
   background: var(--accent);
@@ -141,6 +139,16 @@
 .btn-check-oders:hover {
   background: #264c39;
 }
+.bar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 60px;
+    height: 60px;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
 
 .toggle-arrow {
   border-radius: 50%;
@@ -164,17 +172,8 @@
    transform: rotate(0deg);
 }
 
-/* hover */
 .toggle-arrow:hover {
   background: rgba(0,0,0,0.08);
-}
-
-.stepper-wrap {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 2px 0 0;
-  transform: scale(0.9);
 }
 
 .status-bar .step {
@@ -283,13 +282,8 @@
     text-transform: uppercase;
     letter-spacing: 0.5px;
     z-index: 10;
-    animation: slideDownFade 0.4s ease-out;
 }
 
-@keyframes slideDownFade {
-    from { opacity: 0; transform: translate(-50%, -5px); }
-    to { opacity: 1; transform: translate(-50%, 0); }
-}
 /* Trạng thái lỗi/hủy */
 .status-bar.is-CANCELED {
     background-color: #fef2f2; /* Nền hồng nhạt */
