@@ -134,10 +134,12 @@
 .status-bar.is-collapsed .toggle-arrow {
   background: transparent;
   color: #fff;
+  transform: rotate(180deg);
 }
 
 .status-bar.is-expanded .toggle-arrow {
   color: #2f5d46;
+   transform: rotate(0deg);
 }
 
 /* hover */
@@ -145,18 +147,6 @@
   background: rgba(0,0,0,0.08);
 }
 
-/* rotation */
-.status-bar.is-expanded .toggle-arrow {
-  transform: rotate(0deg);
-}
-
-.status-bar.is-collapsed .toggle-arrow {
-  transform: rotate(180deg);
-}
-
-/* ===============================
-   MICRO-ANIMATION
-================================ */
 .status-bar.is-expanded {
   animation: slideUp 0.4s ease;
 }
