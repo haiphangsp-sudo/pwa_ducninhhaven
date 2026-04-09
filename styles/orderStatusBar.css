@@ -89,7 +89,7 @@
   align-items: center;
   justify-content: center;
 }
-
+.is-expanded .bar-center { opacity: 1; transition-delay: 0.2s; }
 .bar-right {
   display: flex;
   align-items: center;
