@@ -72,9 +72,12 @@ async function syncUI(state) {
     syncOverlay(activeOverlayId);
   }
   if (activeOverlayId === "orderTrackerPage" && (overlayChanged || ordersChanged)) {
+    renderStatusBar(state);
     openOrderTracker(state);
   }
-  if (ordersChanged || state.orders.isBarExpanded !== prevState.orders?.isBarExpanded) {
+  if (ordersChanged ||
+    state.orders.isBarExpanded !== prevState.orders?.isBarExpanded
+  ) {
     renderStatusBar(state);
   }
   if (JSON.stringify(state.context) !== JSON.stringify(prevState.context)) {
