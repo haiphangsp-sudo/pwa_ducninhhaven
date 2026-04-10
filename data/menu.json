@@ -161,7 +161,7 @@
     "allow": ["room", "table", "area"],
     "ui": "cart",
     "active": true,
-    "icon": "drink",
+    "icon": "drinks",
     "items": {
       "blackcoffee": {
         "label": { "vi": "Cà phê đen", "en": "Black Coffee" },
