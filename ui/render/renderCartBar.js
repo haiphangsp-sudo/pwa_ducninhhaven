@@ -22,9 +22,9 @@ export function renderCartBar(state) {
     cartBar.classList.add("cart-bar--hidden");
   } else {
     cartBar.classList.remove("cart-bar--hidden");
-    btn.textContent = translate("cart_bar.cart_title");
-    countEl.textContent = cart.totalQtyFormat;
   }
+  btn.textContent = translate("cart_bar.cart_title");
+  countEl.textContent = cart.totalQtyFormat;
 }
 
 /* =========================
