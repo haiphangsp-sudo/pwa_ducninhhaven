@@ -19,7 +19,7 @@ export function renderStatusBar(state) {
   }
 
   bar.classList.remove("hidden");
-  bar.className = `status-bar ${isExpanded ? "is-expanded" : "is-collapsed"}`;
+  bar.className = `order-status-bar ${isExpanded ? "is-expanded" : "is-collapsed"}`;
 
   const visibleOrders = (state.orders?.active || [])
   .filter(o => !["DONE", "CANCELED"].includes(o.status))

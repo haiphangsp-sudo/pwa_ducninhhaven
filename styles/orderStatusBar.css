@@ -1,7 +1,7 @@
 /* ===============================
    BASE
 ================================ */
-.status-bar {
+.order-status-bar {
   position: fixed;
   bottom: 15px;
   left: auto;
@@ -24,14 +24,14 @@
 /* ===============================
    COLLAPSED
 ================================ */
-.status-bar.is-collapsed {
+.order-status-bar.is-collapsed {
   width: 70px;
   justify-content: center;
   background: #2f5d46;
  
 }
 
-.status-bar.is-collapsed .bar-center {
+.order-status-bar.is-collapsed .bar-center {
   opacity: 0;
   width: 0;
   overflow: hidden;
@@ -39,7 +39,7 @@
   display: none;
 }
 
-.status-bar.is-collapsed .bar-right {
+.order-status-bar.is-collapsed .bar-right {
   width: 60px;
   justify-content: center;
 }
@@ -47,7 +47,7 @@
 /* ===============================
    EXPANDED
 ================================ */
-.status-bar.is-expanded {
+.order-status-bar.is-expanded {
   width: calc(100% - 40px);
   padding: 0 12px;
   justify-content: space-between;
@@ -92,13 +92,13 @@
   transition: transform 0.28s ease, background-color 0.2s ease;
 }
 
-.status-bar.is-expanded .toggle-arrow {
+.order-status-bar.is-expanded .toggle-arrow {
   color: #2f5d46;
   background: rgba(47, 93, 70, 0.08);
   transform: rotate(0deg);
 }
 
-.status-bar.is-collapsed .toggle-arrow {
+.order-status-bar.is-collapsed .toggle-arrow {
   color: #fff;
   background: transparent;
   transform: rotate(180deg);
@@ -107,7 +107,7 @@
 /* ===============================
    STEPPER WRAP
 ================================ */
-.status-bar .stepper {
+.order-status-bar .stepper {
   position: relative;
   display: flex;
   align-items: center;
@@ -117,7 +117,7 @@
   max-width: 260px;
   margin-top: 10px;
 }
-.status-bar .step-container {
+.order-status-bar .step-container {
   position: relative;
   display: flex;
   align-items: center;
@@ -130,7 +130,7 @@
 /* ===============================
    STEP ITEM
 ================================ */
-.status-bar .step {
+.order-status-bar .step {
   position: relative;
   flex: 1;
   display: flex;
@@ -268,7 +268,7 @@
 }
 
 /* Trạng thái lỗi/hủy */
-.status-bar.is-CANCELED {
+.order-status-bar.is-CANCELED {
     background-color: #fef2f2; /* Nền hồng nhạt */
     border: 1px solid #ef4444; /* Viền đỏ */
 }
@@ -292,7 +292,7 @@
 
 
 /* Trạng thái Cảnh báo - Dùng biến Warning */
-.status-bar.is-warning {
+.order-status-bar.is-warning {
     background-color: var(--warning-soft, #fff9eb);
     border-color: var(--warning, #b98e00);
 }

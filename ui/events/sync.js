@@ -10,9 +10,7 @@ import { renderStatusBar } from "../render/renderStatusBar.js";
 import { renderHub, eventHub } from "../render/renderHub.js";
 import { renderPanel } from "../render/renderPanel.js";
 import { submitOrder, addToCart } from "../../core/events.js";
-import { renderAck } from "../render/renderAck.js";
-import { openOrderTracker } from "../components/orderTracker.js";
-import { showToast } from "../render/renderAck.js";
+import { renderAck, showToast } from "../render/renderAck.js";
 
 let lastState = null;
 let isProcessingOrder = false;
@@ -27,9 +25,19 @@ function createPrevState() {
     cart: { items: [] },
     lang: { current: "vi" },
     ack: { visible: false, status: null, message: "" },
-    orders: { active: [], isBarExpanded: false },
+    orders: { active: [], inactive: [], isBarExpanded: false },
     order: { action: null, line: null, status: "idle", at: null }
   };
+}
+
+function isEqual(a, b) {
+  return JSON.stringify(a) === JSON.stringify(b);
+}
+
+function getPrevState() {
+  return lastState
+    ? JSON.parse(JSON.stringify(lastState))
+    : createPrevState();
 }
 
 export function attachUI() {
@@ -41,137 +49,112 @@ export function attachUI() {
 }
 
 async function syncUI(state) {
-  const prevState = lastState 
-    ? JSON.parse(JSON.stringify(lastState)) 
-    : { orders: { active: [], isBarExpanded: false }, overlay: {}, lang: {}, ack: {} };
+  const prevState = getPrevState();
 
-  const hasOrderChange = JSON.stringify(state.orders.active) !== JSON.stringify(prevState.orders?.active);
-  const hasExpandChange = state.orders.isBarExpanded !== prevState.orders?.isBarExpanded;
+  const overlayChanged = state.overlay?.view !== prevState.overlay?.view;
+  const contextChanged = !isEqual(state.context, prevState.context);
+  const panelChanged =
+    state.panel?.view !== prevState.panel?.view ||
+    state.panel?.option !== prevState.panel?.option;
+  const cartChanged = !isEqual(state.cart?.items || [], prevState.cart?.items || []);
+  const langChanged = state.lang?.current !== prevState.lang?.current;
+  const ackChanged =
+    state.ack?.visible !== prevState.ack?.visible ||
+    state.ack?.message !== prevState.ack?.message ||
+    state.ack?.status !== prevState.ack?.status;
+  const ordersChanged = !isEqual(state.orders?.active || [], prevState.orders?.active || []);
+  const statusBarExpandedChanged =
+    state.orders?.isBarExpanded !== prevState.orders?.isBarExpanded;
 
-  if (hasOrderChange || hasExpandChange) {
-    renderStatusBar(state);
-  }
+  syncOverlayIfNeeded(state, overlayChanged);
+  syncContextIfNeeded(state, contextChanged);
+  syncPanelIfNeeded(state, panelChanged);
+  syncCartIfNeeded(state, cartChanged);
+  syncLanguageIfNeeded(state, langChanged);
+  syncAckIfNeeded(state, ackChanged);
+  syncStatusBarIfNeeded(state, ordersChanged, statusBarExpandedChanged, overlayChanged);
 
-  const activeOverlayId = state.overlay.view;
-  const overlayChanged = activeOverlayId !== prevState.overlay?.view;
-  const ordersChanged = JSON.stringify(state.orders.active) !== JSON.stringify(prevState.orders?.active);
-  if (overlayChanged) {
-    switch (activeOverlayId) {
-      case "cartDrawer":
-        renderDrawer(state);
-        break;
-      case "placePicker":
-        renderPlacePicker(state);
-        break;
-      case "orderTrackerPage":
-        openOrderTracker(state);
-        break;
-      default:
-        break;
-    }
-    syncOverlay(activeOverlayId);
-  }
-  if (activeOverlayId === "orderTrackerPage" && (overlayChanged || ordersChanged)) {
-    renderStatusBar(state);
-    openOrderTracker(state);
-  }
-  if (ordersChanged ||
-    state.orders.isBarExpanded !== prevState.orders?.isBarExpanded
-  ) {
-    renderStatusBar(state);
-  }
-  if (JSON.stringify(state.context) !== JSON.stringify(prevState.context)) {
-    renderNavBar(state);
-    renderDrawer(state);
-  }
+  await handleOrderLogic(state);
+  syncOrderFeedback(state, prevState);
 
-  if (state.panel.view !== prevState.panel?.view) {
-    eventHub(state);
-    renderPanel(state);
-  }
-
-  const cartChanged =
-    JSON.stringify(state.cart.items || []) !==
-    JSON.stringify(prevState.cart?.items || []);
-
-  if (cartChanged) {
-    renderCartBar(state);
-    renderDrawer(state);
-    localStorage.setItem(CONFIG.CART_KEY, JSON.stringify(state.cart.items || []));
-  }
-
-  if (state.lang.current !== prevState.lang?.current) {
-    localStorage.setItem(CONFIG.LANG_KEY, state.lang.current);
-    syncLanguage(state);
-  }
-
-  if (
-    state.ack.visible !== prevState.ack?.visible ||
-    state.ack.message !== prevState.ack?.message ||
-    state.ack.status !== prevState.ack?.status
-  ) {
-    renderAck(state);
-  }
-  
-  await handleOrderLogic(state, prevState);
-
-  const orderStatusChanged = state.order.status !== prevState.order?.status;
-  const orderActionChanged = state.order.action !== prevState.order?.action;
-  const orderLineChanged = state.order.line !== prevState.order?.line;
-  const orderAtChanged = state.order.at !== prevState.order?.at;
-
-  if (orderStatusChanged || orderActionChanged || orderLineChanged || orderAtChanged) {
-    const type = state.order.status;
-    switch (type) {
-
-      case "error":
-        showToast({type: "error",message: "cart_bar.error",duration: 2500});
-        break;
-      
-      case "duplicate":
-        showToast({type: "info",message: "cart_bar.duplicate",duration: 2500});
-        break;
-
-      case "success": 
-        showToast({type: "success", message: "cart_bar.success",duration: 2500});
-        break;  
-      
-      case "sending":
-          showToast({ type: "sending", message: "cart_bar.sending" });
-        break;
-      
-      case "added":
-          showToast({ type: "success", message: "cart_bar.added" });
-        break;
-      
-      case "idle":
-        showToast({ type: "idle", message: "cart_bar.idle" });
-        break;
-
-      default:  
-        break;
-      
-    }
-  }
   lastState = JSON.parse(JSON.stringify(getState()));
 }
 
-function syncLanguage(state) {
+function syncOverlayIfNeeded(state, overlayChanged) {
+  if (!overlayChanged) return;
+
+  switch (state.overlay?.view) {
+    case "cartDrawer":
+      renderDrawer(state);
+      break;
+    case "placePicker":
+      renderPlacePicker(state);
+      break;
+    case "orderTrackerPage":
+      renderStatusBar(state);
+      break;
+    default:
+      break;
+  }
+
+  syncOverlay(state.overlay?.view || null);
+}
+
+function syncContextIfNeeded(state, contextChanged) {
+  if (!contextChanged) return;
+
+  renderNavBar(state);
+  renderDrawer(state);
+}
+
+function syncPanelIfNeeded(state, panelChanged) {
+  if (!panelChanged) return;
+
+  eventHub(state);
+  renderPanel(state);
+}
+
+function syncCartIfNeeded(state, cartChanged) {
+  if (!cartChanged) return;
+
+  renderCartBar(state);
+  renderDrawer(state);
+  localStorage.setItem(CONFIG.CART_KEY, JSON.stringify(state.cart?.items || []));
+}
+
+function syncLanguageIfNeeded(state, langChanged) {
+  if (!langChanged) return;
+
+  localStorage.setItem(CONFIG.LANG_KEY, state.lang.current);
   renderNavBar(state);
   renderCartBar(state);
   renderStatusBar(state);
   renderHub(state);
   renderPanel(state);
 }
+
+function syncAckIfNeeded(state, ackChanged) {
+  if (!ackChanged) return;
+  renderAck(state);
+}
+
+function syncStatusBarIfNeeded(state, ordersChanged, statusBarExpandedChanged, overlayChanged) {
+  const trackerOpen = state.overlay?.view === "orderTrackerPage";
+  const shouldRenderStatusBar =
+    ordersChanged ||
+    statusBarExpandedChanged ||
+    (trackerOpen && overlayChanged);
+
+  if (!shouldRenderStatusBar) return;
+
+  renderStatusBar(state);
+}
+
 async function handleOrderLogic(state) {
-  const { action, at } = state.order;
+  const { action, at } = state.order || {};
 
-  const isNew =
-    action &&
-    at &&
-    at !== lastHandledOrderAt;
-
-  if (!isNew || isProcessingOrder) return;
+  const isNewCommand = action && at && at !== lastHandledOrderAt;
+  if (!isNewCommand || isProcessingOrder) return;
 
   lastHandledOrderAt = at;
   isProcessingOrder = true;
@@ -186,8 +169,50 @@ async function handleOrderLogic(state) {
       case "send_cart":
         await submitOrder(action);
         break;
+
+      default:
+        break;
     }
   } finally {
     isProcessingOrder = false;
+  }
+}
+
+function syncOrderFeedback(state, prevState) {
+  const orderChanged =
+    state.order?.status !== prevState.order?.status ||
+    state.order?.action !== prevState.order?.action ||
+    state.order?.line !== prevState.order?.line ||
+    state.order?.at !== prevState.order?.at;
+
+  if (!orderChanged) return;
+
+  switch (state.order?.status) {
+    case "error":
+      showToast({ type: "error", message: "cart_bar.error", duration: 2500 });
+      break;
+
+    case "duplicate":
+      showToast({ type: "info", message: "cart_bar.duplicate", duration: 2500 });
+      break;
+
+    case "success":
+      showToast({ type: "success", message: "cart_bar.success", duration: 2500 });
+      break;
+
+    case "sending":
+      showToast({ type: "sending", message: "cart_bar.sending" });
+      break;
+
+    case "added":
+      showToast({ type: "success", message: "cart_bar.added" });
+      break;
+
+    case "idle":
+      showToast({ type: "idle", message: "cart_bar.idle" });
+      break;
+
+    default:
+      break;
   }
 }
