@@ -3,7 +3,7 @@ import { sendRequest } from "../services/api.js";
 import { getVariantById } from "./menuQuery.js";
 import { getLocationInfo } from "./placesQuery.js";
 import { addOrderToTracking } from "./orders.js";
-import { notifyResponse, updateCartQuantity } from "./action.js";
+import { updateCartQuantity } from "./action.js";
 
 export function addToCart() {
   const state = getState();
@@ -90,27 +90,21 @@ export async function submitOrder(action) {
 
     if (res?.success) {
       addOrderToTracking(payload);
-      notifyResponse(res);
       setState({order: {status: "success"}});
-      
       return true;
     }
     if(res?.duplicate) {
       setState({order: {status: "duplicate"}});
-      notifyResponse(res);
       return true;
     }
     if(res?.rate_limited) {
       setState({order: {status: "rate_limited"}});
-      notifyResponse(res);
       return true;
     }
 
     throw new Error(res?.message || "API_FAIL");
   } catch (error) {
     setState({order: {status: "error"}});
-
-    notifyResponse(error);
     return false;
   }
 }
