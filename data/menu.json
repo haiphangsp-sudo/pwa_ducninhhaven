@@ -9,21 +9,22 @@
       "welcome": {
         "label": { "vi": "Chào mừng", "en": "Welcome" },
         "content": {
-          "vi": "Chào mừng bạn đến với Duc Ninh Haven! Chúng tôi hy vọng bạn có những giây phút thư giãn.",
-          "en": "Welcome to Duc Ninh Haven! We hope you have a relaxing time here."
+          "vi": "Chào mừng bạn đến với Duc Ninh Haven. Đây là một nơi nhỏ, yên và vừa đủ. Chúng tôi hy vọng bạn có thể ở chậm lại một chút trong thời gian ở đây.",
+          "en": "Welcome to Duc Ninh Haven. This is a small, quiet place with just enough space to slow down. We hope your time here feels a little calmer."
         },
         "active": true
       },
       "about": {
         "label": { "vi": "Về chúng tôi", "en": "About Us" },
         "content": {
-          "vi": "Chúng tôi không cố trở thành một nơi ai cũng thích.\n\nChúng tôi chỉ cố trở thành một nơi mà một số người cần.",
-          "en": "We're not trying to be a place everyone likes.\n\nWe're just trying to be a place that some people need."
+          "vi": "Chúng tôi không cố trở thành một nơi ai cũng thích.\n\nChúng tôi chỉ cố giữ nơi này đủ chân thật, đủ yên và đủ tử tế để một số người muốn quay lại.",
+          "en": "We are not trying to be a place for everyone.\n\nWe only want to keep this place honest, quiet, and thoughtful enough that some people may wish to return."
         },
         "active": true
       }
     }
   },
+
   "food": {
     "label": { "vi": "Bữa ăn", "en": "Food" },
     "allow": ["room", "table"],
@@ -46,7 +47,8 @@
               "vi": "Phở gà được phục vụ nóng với nước dùng trong và rau thơm ăn kèm. Đây là lựa chọn phù hợp nếu bạn muốn bắt đầu ngày mới bằng một món quen thuộc, nhẹ và dễ dùng.",
               "en": "Chicken pho served hot with a clear broth and fresh herbs. A suitable choice if you prefer a familiar, light start to the day."
             },
-            "price": 55000,
+            "price": 50000,
+            "unit": "item",
             "active": true
           },
           "bread": {
@@ -59,129 +61,345 @@
               "vi": "Bánh mì chảo dùng kèm trứng, pate và xúc xích. Phần ăn được chuẩn bị theo cách đơn giản, phù hợp cho buổi sáng khi bạn muốn một bữa ăn quen thuộc và đủ đầy.",
               "en": "Pan bread served with egg, pate, and sausage. Prepared simply, suited to a morning when you want something familiar and satisfying."
             },
-            "price": 45000,
+            "price": 55000,
+            "unit": "item",
             "active": true
           },
           "broken_rice": {
-            "label": { "vi": "Cơm tấm", "en": "Broken Rice" },
+            "label": { "vi": "Cơm tấm sườn", "en": "Broken Rice" },
             "description": {
-              "vi": "Cơm tấm với sườn nướng và trứng ốp la. Một bữa sáng truyền thống, chắc bụng.",
-              "en": "Broken rice with grilled pork chop and a fried egg. A traditional, hearty breakfast."
+              "vi": "Cơm tấm với sườn nướng và trứng. Đậm vị, quen thuộc và phù hợp nếu bạn muốn một bữa sáng chắc bụng hơn.",
+              "en": "Broken rice with grilled pork and egg. Familiar, savory, and better suited to a heartier breakfast."
             },
             "description_long": {
-              "vi": "Cơm tấm phục vụ kèm sườn nướng và trứng ốp la. Đây là món ăn truyền thống dành cho những ai cần một bữa sáng no lâu và giàu năng lượng.",
-              "en": "Broken rice served with a grilled pork chop and fried egg. A traditional dish for those seeking a long-lasting, high-energy breakfast."
+              "vi": "Cơm tấm phục vụ cùng sườn nướng và trứng, theo kiểu quen thuộc, dễ ăn và đủ no. Phù hợp khi bạn muốn một bữa sáng rõ vị hơn thay vì món nước.",
+              "en": "Broken rice served with grilled pork and egg. Familiar, straightforward, and filling enough for a slower morning."
             },
-            "price": 50000,
+            "price": 55000,
+            "unit": "item",
             "active": true
           }
         }
       },
+
       "lunch": {
         "label": { "vi": "Bữa trưa", "en": "Lunch" },
-        "description": {
-          "vi": "Bữa cơm gia đình với các món theo mùa. Thực đơn thay đổi mỗi ngày để đảm bảo sự tươi mới.",
-          "en": "Family-style lunch with seasonal dishes. The menu changes daily to ensure freshness."
-        },
-        "description_long": {
-          "vi": "Bữa cơm gia đình được chuẩn bị với các món ăn nấu theo mùa. Thực đơn sẽ thay đổi mỗi ngày dựa trên nguyên liệu tươi ngon nhất có sẵn, mang lại trải nghiệm ăn uống mộc mạc và gần gũi.",
-          "en": "A family-style meal prepared with seasonal dishes. The menu changes daily based on the freshest ingredients available, offering a rustic and intimate dining experience."
-        },
-        "price": 120000,
-        "unit": "pax",
-        "active": true
+        "recommend": ["seafood"],
+        "active": true,
+        "options": {
+          "seafood": {
+            "label": { "vi": "Cơm hải sản", "en": "Seafood Rice" },
+            "description": {
+              "vi": "Cơm nóng dùng kèm hải sản xào nhẹ. Phần ăn gọn, rõ vị và phù hợp cho bữa trưa.",
+              "en": "Steamed rice with lightly sautéed seafood. Compact, balanced, and suitable for lunch."
+            },
+            "description_long": {
+              "vi": "Cơm nóng dùng cùng hải sản xào nhẹ, giữ vị tương đối thanh và dễ ăn. Đây là lựa chọn phù hợp cho bữa trưa khi bạn cần một phần ăn vừa phải, không quá nặng.",
+              "en": "Steamed rice served with lightly sautéed seafood, kept relatively clean in flavor and easy to eat. Suitable for a lunch that feels complete without being too heavy."
+            },
+            "price": 75000,
+            "unit": "item",
+            "active": true
+          },
+          "chicken_rice": {
+            "label": { "vi": "Cơm gà", "en": "Chicken Rice" },
+            "description": {
+              "vi": "Cơm gà đơn giản với rau và nước chấm. Dễ ăn, gọn gàng và phù hợp cho bữa trưa nhẹ.",
+              "en": "Simple chicken rice with vegetables and dipping sauce. Straightforward and suitable for a lighter lunch."
+            },
+            "description_long": {
+              "vi": "Cơm gà được phục vụ theo cách đơn giản, cùng rau và nước chấm đi kèm. Phù hợp khi bạn muốn một phần ăn nhẹ, dễ dùng và không quá nhiều gia vị.",
+              "en": "Chicken rice served simply with vegetables and a dipping sauce. A good fit when you want something light, uncomplicated, and easy to finish."
+            },
+            "price": 70000,
+            "unit": "item",
+            "active": true
+          }
+        }
+      },
+
+      "dinner": {
+        "label": { "vi": "Bữa tối", "en": "Dinner" },
+        "recommend": ["bbq"],
+        "active": true,
+        "options": {
+          "local_rice": {
+            "label": { "vi": "Cơm nhà địa phương", "en": "Home Rice" },
+            "description": {
+              "vi": "Bữa cơm kiểu gia đình, mộc và vừa phải. Phù hợp cho buổi tối cần cảm giác quen thuộc.",
+              "en": "A simple home-style meal. Modest, familiar, and suited to a quieter evening."
+            },
+            "description_long": {
+              "vi": "Bữa cơm theo kiểu gia đình, thiên về cảm giác gần gũi hơn là trình bày cầu kỳ. Phù hợp cho buổi tối khi bạn muốn ăn chậm và dùng một bữa cơm quen thuộc.",
+              "en": "A home-style dinner that leans more toward familiarity than presentation. Suitable for an evening when you want to slow down and eat something grounded."
+            },
+            "price": 90000,
+            "unit": "item",
+            "active": true
+          },
+          "bbq": {
+            "label": { "vi": "BBQ sân vườn", "en": "Garden BBQ" },
+            "description": {
+              "vi": "Thịt nướng dùng kèm rau và nước chấm. Phù hợp cho buổi tối thong thả hơn.",
+              "en": "Barbecue served with vegetables and sauces. Better suited to a slower evening."
+            },
+            "description_long": {
+              "vi": "BBQ sân vườn với thịt nướng, rau và nước chấm đi kèm. Đây là lựa chọn phù hợp khi bạn muốn một bữa tối có nhịp chậm hơn và dùng tại chỗ.",
+              "en": "Garden barbecue with grilled meats, vegetables, and dipping sauces. Suitable when you prefer a slower dinner and want to stay where you are."
+            },
+            "price": 120000,
+            "unit": "item",
+            "active": true
+          }
+        }
       }
     }
   },
+
   "drinks": {
     "label": { "vi": "Thức uống", "en": "Drinks" },
     "allow": ["room", "table", "area"],
     "ui": "cart",
     "active": true,
-    "icon": "coffee",
+    "icon": "drink",
     "items": {
-      "coffee": {
-        "label": { "vi": "Cà phê", "en": "Coffee" },
+      "blackcoffee": {
+        "label": { "vi": "Cà phê đen", "en": "Black Coffee" },
+        "recommend": ["hot"],
         "active": true,
         "options": {
-          "black": {
-            "label": { "vi": "Cà phê đen", "en": "Black Coffee" },
-            "description": { "vi": "Cà phê Robusta rang mộc truyền thống.", "en": "Traditional roasted black Robusta coffee." },
-            "description_long": { 
-              "vi": "Được tuyển chọn từ những hạt Robusta chất lượng, rang mộc để giữ trọn vị đắng đậm đà và hương thơm nồng nàn, mang lại sự tỉnh táo tức thì.",
-              "en": "Selected from high-quality Robusta beans, roasted to preserve a bold bitter taste and intense aroma, providing immediate alertness." 
+          "hot": {
+            "label": { "vi": "Cà phê đen nóng", "en": "Hot Black" },
+            "description": {
+              "vi": "Cà phê phin truyền thống, đậm và gọn. Phù hợp cho buổi sáng hoặc khi cần tỉnh táo hơn một chút.",
+              "en": "Traditional Vietnamese drip coffee. Direct, strong, and suited to the morning or a slower pause."
             },
-            "price": 25000,
-            "active": true
-          },
-          "milk": {
-            "label": { "vi": "Cà phê sữa", "en": "Milk Coffee" },
-            "description": { "vi": "Sự kết hợp hoàn hảo giữa cà phê và sữa đặc.", "en": "A perfect blend of coffee and condensed milk." },
-            "description_long": { 
-              "vi": "Vị đắng nhẹ của cà phê hòa quyện cùng sự béo ngậy của sữa đặc, tạo nên một ly cà phê sữa đá đúng chất Việt Nam, ngọt ngào và đầy lôi cuốn.",
-              "en": "The light bitterness of coffee blended with creamy condensed milk creates an authentic Vietnamese milk coffee, sweet and appealing." 
+            "description_long": {
+              "vi": "Cà phê đen pha phin theo cách quen thuộc, vị đậm và rõ. Phù hợp khi bạn muốn một ly cà phê đơn giản, không quá nhiều tầng hương nhưng đủ để làm bạn tỉnh lại.",
+              "en": "Vietnamese black coffee prepared in the familiar drip style. Straightforward and distinct, suited to when you want something simple and awake-making."
             },
             "price": 30000,
+            "unit": "item",
+            "active": true
+          },
+          "iced": {
+            "label": { "vi": "Cà phê đen đá", "en": "Iced Black" },
+            "description": {
+              "vi": "Cà phê đen đá mát và gọn vị. Dễ uống hơn trong thời tiết nóng.",
+              "en": "Iced black coffee, cooler and cleaner in feel. Easier to drink in warmer weather."
+            },
+            "description_long": {
+              "vi": "Cà phê đen đá với cảm giác gọn và mát hơn so với bản nóng. Phù hợp cho những thời điểm bạn muốn cà phê nhưng không muốn vị quá nặng.",
+              "en": "Iced black coffee with a cleaner, cooler feel than the hot version. Suitable when you want coffee without it feeling too heavy."
+            },
+            "price": 35000,
+            "unit": "item",
             "active": true
           }
         }
       },
-      "tea": {
-        "label": { "vi": "Trà", "en": "Tea" },
+
+      "cappuccino": {
+        "label": { "vi": "Cappuccino", "en": "Cappuccino" },
+        "recommend": ["hot"],
         "active": true,
         "options": {
-          "lotus": {
-            "label": { "vi": "Trà sen", "en": "Lotus Tea" },
-            "description": { "vi": "Hương sen thanh khiết trong từng ngụm trà.", "en": "Pure lotus fragrance in every sip." },
-            "description_long": { 
-              "vi": "Trà xanh được ướp hương sen Tây Hồ thanh tao, giúp thư giãn tâm hồn và mang lại cảm giác bình yên trong không gian tĩnh lặng của Haven.",
-              "en": "Green tea scented with elegant lotus fragrance, helping to relax the soul and bring a sense of peace in the quiet space of Haven." 
+          "hot": {
+            "label": { "vi": "Cappuccino nóng", "en": "Hot Cap" },
+            "description": {
+              "vi": "Cappuccino với espresso và sữa nóng. Vị nhẹ hơn cà phê đen, phù hợp để uống chậm.",
+              "en": "Cappuccino with espresso and steamed milk. Softer than black coffee, better for slower drinking."
             },
-            "price": 35000,
+            "description_long": {
+              "vi": "Cappuccino pha từ espresso và sữa nóng, lớp bọt vừa phải, vị êm hơn cà phê đen. Phù hợp cho buổi sáng hoặc khi bạn muốn ngồi yên một lúc với một thức uống nhẹ hơn.",
+              "en": "Cappuccino made with espresso and steamed milk, with a moderate foam layer and a softer profile than black coffee. Suited to the morning or a quiet pause."
+            },
+            "price": 45000,
+            "unit": "item",
             "active": true
           },
-          "ginger": {
-            "label": { "vi": "Trà gừng", "en": "Ginger Tea" },
-            "description": { "vi": "Vị cay nồng ấm áp, tốt cho sức khỏe.", "en": "Warm, spicy, and good for health." },
-            "description_long": { 
-              "vi": "Sử dụng gừng tươi già tuổi, trà gừng mang lại vị cay ấm nồng, giúp làm ấm cơ thể, hỗ trợ tiêu hóa và rất phù hợp cho những buổi sáng se lạnh.",
-              "en": "Using aged fresh ginger, this tea provides a warm, spicy flavor that warms the body, aids digestion, and is perfect for chilly mornings." 
+          "iced": {
+            "label": { "vi": "Cappuccino đá", "en": "Iced Cap" },
+            "description": {
+              "vi": "Cappuccino lạnh, nhẹ và dễ uống. Phù hợp khi bạn muốn cà phê nhưng không quá gắt.",
+              "en": "A chilled cappuccino that stays light and easy. Suitable when you want coffee without too much edge."
             },
-            "price": 30000,
+            "description_long": {
+              "vi": "Phiên bản lạnh của cappuccino, giữ cảm giác nhẹ và dễ dùng hơn. Phù hợp cho thời tiết nóng hoặc khi bạn muốn một ly cà phê ít áp lực hơn loại đen truyền thống.",
+              "en": "The chilled version of cappuccino, kept light and more relaxed in feel. Suitable for warm weather or when you want coffee with less intensity."
+            },
+            "price": 45000,
+            "unit": "item",
+            "active": true
+          }
+        }
+      },
+
+      "saltcoffee": {
+        "label": { "vi": "Cà phê muối", "en": "Salt Coffee" },
+        "recommend": ["hot"],
+        "active": true,
+        "options": {
+          "hot": {
+            "label": { "vi": "Cà phê muối nóng", "en": "Hot Salt" },
+            "description": {
+              "vi": "Cà phê muối với lớp kem nhẹ phía trên. Đậm vừa phải, có độ cân bằng và không quá ngọt.",
+              "en": "Salt coffee with a light cream layer. Balanced, moderately bold, and not overly sweet."
+            },
+            "description_long": {
+              "vi": "Cà phê muối với lớp kem nhẹ phía trên, vị mằn mặn vừa đủ để cân lại độ đậm của cà phê. Phù hợp nếu bạn muốn một ly cà phê khác đôi chút nhưng vẫn dễ uống.",
+              "en": "Salt coffee with a light cream layer, where a mild savory note softens the darker edge of the coffee. Suitable when you want something a little different without it becoming difficult."
+            },
+            "price": 40000,
+            "unit": "item",
+            "active": true
+          },
+          "iced": {
+            "label": { "vi": "Cà phê muối đá", "en": "Iced Salt" },
+            "description": {
+              "vi": "Cà phê muối lạnh, dễ uống hơn trong thời tiết nóng. Vị dịu hơn nhưng vẫn giữ nét riêng.",
+              "en": "An iced version of salt coffee, easier in warmer weather while still keeping its character."
+            },
+            "description_long": {
+              "vi": "Phiên bản lạnh của cà phê muối, nhẹ hơn về cảm giác khi uống nhưng vẫn giữ phần vị đặc trưng. Phù hợp khi bạn muốn một thức uống mát mà không quá ngọt.",
+              "en": "The iced version of salt coffee, lighter in feel while keeping its distinct profile. Suitable when you want something cool without too much sweetness."
+            },
+            "price": 40000,
+            "unit": "item",
+            "active": true
+          }
+        }
+      },
+
+      "tea": {
+        "label": { "vi": "Trà", "en": "Tea" },
+        "recommend": ["hot"],
+        "active": true,
+        "options": {
+          "hot": {
+            "label": { "vi": "Trà nóng", "en": "Hot Tea" },
+            "description": {
+              "vi": "Trà nóng nhẹ và yên. Phù hợp khi bạn muốn một thức uống không quá đậm.",
+              "en": "A warm, quiet cup of tea. Suitable when you want something gentler than coffee."
+            },
+            "description_long": {
+              "vi": "Trà nóng với vị nhẹ, phù hợp cho những lúc bạn muốn ngồi chậm lại hoặc cần một thức uống ít kích thích hơn cà phê.",
+              "en": "A warm tea with a lighter profile, suitable when you want to slow down or prefer something less stimulating than coffee."
+            },
+            "price": 25000,
+            "unit": "item",
+            "active": true
+          },
+          "iced": {
+            "label": { "vi": "Trà đá", "en": "Iced Tea" },
+            "description": {
+              "vi": "Trà đá mát và đơn giản. Phù hợp để dùng cùng bữa ăn hoặc khi thời tiết nóng.",
+              "en": "Simple iced tea. Cooling, direct, and suitable with a meal or on a warm day."
+            },
+            "description_long": {
+              "vi": "Trà đá được phục vụ theo cách đơn giản, mát và dễ dùng. Phù hợp khi bạn chỉ cần một thức uống nhẹ để cân bằng bữa ăn hoặc giải nhiệt.",
+              "en": "Iced tea served simply, cool and easy to drink. Suitable when you only need something light to balance a meal or cool down."
+            },
+            "price": 0,
+            "unit": "item",
             "active": true
           }
         }
       }
     }
   },
-  "foot_bath": {
-    "label": { "vi": "Ngâm chân", "en": "Foot Bath" },
+
+  "service": {
+    "label": { "vi": "Dịch vụ", "en": "Service" },
     "allow": ["room", "area"],
-    "ui": "cart",
+    "ui": "instant",
     "active": true,
-    "icon": "spa",
+    "icon": "service",
     "items": {
-      "herbal": {
-        "label": { "vi": "Thảo dược", "en": "Herbal" },
+      "room_service": {
+        "label": { "vi": "Dịch vụ phòng", "en": "Room Service" },
         "active": true,
         "options": {
+          "cleaning": {
+            "label": { "vi": "Dọn phòng", "en": "Cleaning" },
+            "description": {
+              "vi": "Yêu cầu dọn phòng khi bạn cần làm mới không gian trong thời gian lưu trú.",
+              "en": "Request housekeeping when you need the room refreshed during your stay."
+            },
+            "description_long": {
+              "vi": "Dịch vụ dọn phòng dành cho những lúc bạn muốn không gian được làm mới trong thời gian lưu trú. Thời gian xử lý có thể thay đổi tuỳ theo thời điểm trong ngày.",
+              "en": "Housekeeping for when you want the room refreshed during your stay. Timing may vary depending on the time of day."
+            },
+            "active": true
+          },
+          "laundry": {
+            "label": { "vi": "Giặt và sấy quần áo theo trọng lượng", "en": "Laundry" },
+            "description": {
+              "vi": "Nhận giặt và sấy quần áo theo kg. Phù hợp nếu bạn lưu trú vài ngày hoặc không muốn tự xử lý đồ cá nhân.",
+              "en": "Laundry and drying by weight. Suitable for longer stays or when you prefer not to handle clothing yourself."
+            },
+            "description_long": {
+              "vi": "Nhận giặt và sấy quần áo theo trọng lượng. Phù hợp nếu bạn ở lại vài ngày và muốn giữ lịch sinh hoạt gọn hơn. Thời gian xử lý phụ thuộc vào khối lượng và thời điểm tiếp nhận.",
+              "en": "Laundry and drying are handled by weight. Suitable for longer stays when you want to keep things lighter. Processing time depends on volume and timing."
+            },
+            "price": 30000,
+            "unit": "kg",
+            "active": true
+          }
+        }
+      }
+    }
+  },
+
+  "relax": {
+    "label": { "vi": "Thư giãn", "en": "Relax" },
+    "allow": ["room"],
+    "ui": "cart",
+    "active": true,
+    "icon": "relax",
+    "items": {
+      "footbath": {
+        "label": { "vi": "Ngâm chân thảo dược", "en": "Foot Bath" },
+        "recommend": ["evening"],
+        "active": true,
+        "options": {
+          "morning": {
+            "label": { "vi": "Buổi sáng", "en": "Morning" },
+            "description": {
+              "vi": "Ngâm chân nhẹ vào buổi sáng, phù hợp khi bạn muốn bắt đầu ngày mới chậm hơn một chút.",
+              "en": "A light foot bath in the morning, suitable when you want to begin the day a little slower."
+            },
+            "description_long": {
+              "vi": "Ngâm chân thảo dược buổi sáng với nhịp nhẹ, phù hợp khi bạn muốn cơ thể tỉnh dần thay vì bắt đầu ngày mới quá vội.",
+              "en": "A herbal foot bath in the morning with a lighter pace, suitable when you want to ease into the day rather than start too quickly."
+            },
+            "price": 80000,
+            "unit": "session",
+            "active": true
+          },
           "afternoon": {
             "label": { "vi": "Buổi chiều", "en": "Afternoon" },
-            "description": { "vi": "Thư giãn nhẹ nhàng sau một ngày dài.", "en": "Gentle relaxation after a long day." },
-            "description_long": { 
-              "vi": "Sử dụng các loại thảo mộc tươi hái từ vườn nhà như sả, gừng và muối biển, giúp xua tan mệt mỏi và làm dịu đôi bàn chân.",
-              "en": "Using fresh herbs picked from our garden like lemongrass, ginger, and sea salt to dispel fatigue and soothe your feet." 
+            "description": {
+              "vi": "Ngâm chân buổi chiều, phù hợp để cơ thể dịu lại sau khi di chuyển hoặc hoạt động nhiều.",
+              "en": "An afternoon foot bath, suitable for settling the body after moving around."
+            },
+            "description_long": {
+              "vi": "Ngâm chân thảo dược buổi chiều, thích hợp khi bạn vừa trở về phòng hoặc cần một khoảng nghỉ ngắn trước buổi tối.",
+              "en": "A herbal foot bath in the afternoon, suitable when you have just returned to the room or want a short pause before the evening."
             },
             "price": 80000,
             "unit": "session",
             "active": true
           },
           "evening": {
-            "label": { "vi": "Buổi tối", "en": "Evening" },
-            "description": { "vi": "Chăm sóc chuyên sâu trước khi ngủ.", "en": "Deep care before bedtime." },
-            "description_long": { 
-              "vi": "Liệu trình ngâm chân thảo dược kết hợp tinh dầu ấm, giúp khí huyết lưu thông, làm ấm cơ thể và đưa bạn vào giấc ngủ sâu tại Haven.",
-              "en": "Herbal foot bath combined with warm essential oils helps blood circulation, warms the body, and guides you into a deep sleep at Haven." 
+            "label": { "vi": "Ngâm chân thảo dược thư giãn buổi tối", "en": "Evening Bath" },
+            "description": {
+              "vi": "Ngâm chân buổi tối để cơ thể dễ chịu hơn trước khi nghỉ. Không cầu kỳ, chỉ vừa đủ để thư giãn nhẹ.",
+              "en": "An evening foot bath to help the body settle before rest. Nothing elaborate, just enough to unwind."
+            },
+            "description_long": {
+              "vi": "Ngâm chân thảo dược vào buổi tối, giúp cơ thể dịu lại sau một ngày dài. Không phải liệu trình chuyên sâu, chỉ là một cách nhẹ nhàng để thư giãn trước khi nghỉ.",
+              "en": "A herbal foot bath in the evening to help the body settle after a longer day. Not a deep treatment, just a gentler way to unwind before rest."
             },
             "price": 90000,
             "unit": "session",
@@ -191,6 +409,7 @@
       }
     }
   },
+
   "help": {
     "label": { "vi": "Hỗ trợ", "en": "Support" },
     "allow": ["room", "area", "table"],
@@ -216,9 +435,9 @@
             "active": true
           },
           "pay": {
-            "label": { "vi": "Gọi thanh toán", "en": "Call for bill" },
+            "label": { "vi": "Yêu cầu tính tiền và hỗ trợ thanh toán", "en": "Request Bill" },
             "description": {
-              "vi": "Yêu cầu tính tiền và hỗ trợ thanh toán khi bạn đã sẵn sàng. Bộ phận phụ trách sẽ xử lý theo thứ tự.",
+              "vi": "Gửi yêu cầu tính tiền khi bạn đã sẵn sàng. Bộ phận phụ trách sẽ xử lý theo thứ tự.",
               "en": "Request the bill when you are ready. The team will handle it in order."
             },
             "description_long": {
