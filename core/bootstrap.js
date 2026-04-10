@@ -1,7 +1,7 @@
 // core/bootstrap.js
 
 import { getState, setState } from "./state.js";
-import { getCategory, getCategoriesForCurrentPlace, getVariantById } from "./menuQuery.js";
+import { getCategoriesForCurrentPlace, getVariantById } from "./menuQuery.js";
 
 /* =======================================================
    PUBLIC
@@ -81,21 +81,20 @@ function resolvePanel(state) {
   const categories = getCategoriesForCurrentPlace() || [];
   if (!categories.length) {
     return {
-      view: currentView,
-      option: currentOption
+      view: null,
+      option: null
     };
   }
 
   // 1. Ưu tiên panel hiện tại nếu còn hợp lệ
   let view = categories.find(cat => cat.key === currentView)?.key || null;
+  let option = currentOption;
 
   // 2. Nếu panel cũ không còn hợp lệ thì lấy panel đầu tiên hợp lệ
-  if (!view) {
+  if (!view || !option) {
     view = categories[0].key;
+    option = categories[0].ui;
   }
-
-  const category = getCategory(view);
-  const option = currentOption || category?.ui || "cart";
 
   return {
     view,
