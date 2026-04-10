@@ -1,5 +1,5 @@
 // ui/events/scrollBehavior.js
-import { getState } from "../core/state.js";
+import { getState } from "../../core/state.js";
 
 let lastY = window.scrollY;
 
