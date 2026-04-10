@@ -1,8 +1,11 @@
+// ui/render/renderStatusBar.js
 import { renderStepper } from "../render/renderStepper.js";
 import { translate } from "../utils/translate.js";
 import { formatPrice } from "../utils/formatPrice.js";
+import { getState } from "../../core/state.js";
 
-export function openOrderTracker(state) {
+export function openOrderTracker() {
+  const state = getState();
   const active = state.orders?.active || [];
   const inactive = state.orders?.inactive || [];
   const orders = [...active, ...inactive];
