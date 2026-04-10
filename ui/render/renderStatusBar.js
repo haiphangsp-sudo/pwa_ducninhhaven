@@ -15,7 +15,6 @@ export function renderStatusBar(state) {
   }
 
   bar.classList.remove("hidden");
-  bar.classList.add("order-status-bar");
   bar.classList.toggle("is-expanded", isExpanded);
   bar.classList.toggle("is-collapsed", !isExpanded);
 
