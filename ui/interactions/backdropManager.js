@@ -7,11 +7,11 @@ export function syncOverlay(activeId) {
   Array.from(container.children).forEach(el => {
     const isActive = el.id === activeId;
 
-    el.classList.remove("animate-fade-in", "animate-fade-out");
+    //el.classList.remove("animate-fade-in", "animate-fade-out");
 
     if (isActive) {
       el.classList.remove("hidden");
-      el.classList.add("animate-fade-in");
+      //el.classList.add("animate-fade-in");
     } else {
       el.classList.add("hidden");
     }
