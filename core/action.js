@@ -1,6 +1,5 @@
 // core/action.js
 import { getState, setState } from "./state.js";
-import { addOrderToTracking } from "./orders.js";
 import { showToast } from "../ui/render/renderAck.js";
 
 
@@ -53,48 +52,14 @@ export function resetOrderCommand(status = "idle") {
 }
 
 /**
- * Xử lý sau khi đơn hàng được gửi lên Google Sheets thành công
- */
-export function finalizeOrderSuccess(type, payload) {
-  // 1. Lưu ID đơn hàng vào danh sách theo dõi (LocalStorage & State)
-  // payload.id thường là mã H-1775... mà bạn tạo ra
-  if (payload && payload.id) {
-    addOrderToTracking(payload.id, payload.items);
-  }
-
-  // 2. Cập nhật State tổng thể:
-  // - Xóa giỏ hàng (Đặt về mảng rỗng)
-  // - Đóng màn hình thanh toán (Overlay)
-  // - Hiển thị hộp thoại xác nhận (Ack)
-  setState({
-    cart: { items: [] }, 
-    overlay: { view: null },
-    ack: {
-      visible: true,
-      title: "Đặt món thành công!",
-      message: "Yêu cầu của bạn đã được gửi tới bếp của Đức Ninh Haven.",
-      type: "success"
-    }
-  });
-
-  // 3. (Tùy chọn) Tự động đóng thông báo xác nhận sau 3 giây
-  setTimeout(() => {
-    const currentState = getState();
-    if (currentState.ack.visible) {
-      setState({ ack: { ...currentState.ack, visible: false } });
-    }
-  }, 3500);
-}
-/**
  * Xử lý phản hồi từ Google Apps Script và cập nhật UI/State tương ứng
  * @param {Object} res - Kết quả trả về từ fetch (đã .json())
  * @param {Object} payload - Dữ liệu đơn hàng gốc đã gửi đi
  */
-export function notifyResponse(res, payload) {
+export function notifyResponse(res) {
     // 1. Trường hợp THÀNH CÔNG
     if (res.status === "ok" || res.status === "success") {
         // Gọi hàm để xóa giỏ hàng và hiện thanh trạng thái
-        finalizeOrderSuccess('CHECKOUT_SUCCESS', payload);
         
         // Hiện thông báo thành công (Toast hoặc Alert)
         showToast("Đã gửi đơn thành công! Bếp đang chuẩn bị món cho bạn.", "success");

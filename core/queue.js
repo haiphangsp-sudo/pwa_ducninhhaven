@@ -4,7 +4,6 @@ import { sendRequest } from "../services/api.js";
 import { getRetryDelay } from "../services/retryPolicy.js";
 import { setDeliveryState } from "../ui/render/renderDelivery.js";
 import { setRecoveryState } from "../ui/render/renderRecovery.js";
-import { finalizeOrderSuccess } from "../core/action.js";
 
 /* ---------- CONSTANTS ---------- */
 
@@ -76,7 +75,7 @@ export async function processQueue() {
 
       if (result && result.success === true) {
         if (queue.length === 1) {
-          finalizeOrderSuccess("recovery"); 
+          //finalizeOrderSuccess("recovery"); 
         }
         queue.shift();
         saveQueue(queue);

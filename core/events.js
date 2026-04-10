@@ -2,7 +2,8 @@ import { getState, setState } from "./state.js";
 import { sendRequest } from "../services/api.js";
 import { getVariantById } from "./menuQuery.js";
 import { getLocationInfo } from "./placesQuery.js";
-import { notifyResponse, finalizeOrderSuccess, updateCartQuantity } from "./action.js";
+import { addOrderToTracking } from "./orders.js";
+import { notifyResponse, updateCartQuantity } from "./action.js";
 
 export function addToCart() {
   const state = getState();
@@ -61,12 +62,13 @@ function buildPayload(state, action) {
   if (formattedItems.length === 0) return null;
 
   const { totalQty, totalPrice } = getTotals(formattedItems);
+  const createdAt = new Date();
 
   return {
     id: `H-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
     type: action,
     status: "NEW",
-    timestamp: new Date().toISOString(),
+    timestamp: createdAt,
     place: placeId,
     placeLabel: placeName,
     mode: mode,
@@ -87,7 +89,7 @@ export async function submitOrder(action) {
     const res = await sendRequest(payload);
 
     if (res?.success) {
-      finalizeOrderSuccess(action, payload);
+      addOrderToTracking(payload);
       notifyResponse(res);
       setState({order: {status: "success"}});
       

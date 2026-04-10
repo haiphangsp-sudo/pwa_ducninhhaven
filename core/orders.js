@@ -20,13 +20,13 @@ function normalizeOrder(order = {}) {
     id: order.id || "",
     status: order.status || "NEW",
     items: order.items || [],
-    time: order.time || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     totalQty: Number(order.totalQty || 0),
     totalPrice: Number(order.totalPrice || 0),
     mode: order.mode || "",
     placeLabel: order.placeLabel || "",
     type: order.type || "",
     device: order.device || "",
+    createdAt: order.time || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     updatedAt: Number(order.updatedAt || Date.now()),
     syncedAt: Number(order.syncedAt || 0)
   };
@@ -68,6 +68,7 @@ function dedupeOrders(orders = []) {
       ...order,
       items: order.items.length ? order.items : prev.items,
       updatedAt: Math.max(Number(prev.updatedAt || 0), Number(order.updatedAt || 0)),
+      createdAt: Math.max(Number(prev.createdAt || 0), Number(order.createdAt || 0)),
       syncedAt: Math.max(Number(prev.syncedAt || 0), Number(order.syncedAt || 0))
     });
   });
@@ -89,7 +90,7 @@ function splitOrders(orders = []) {
     }
   });
 
-  inactive.sort((a, b) => Number(b.updatedAt || 0) - Number(a.updatedAt || 0));
+  inactive.sort((a, b) => Number(b.createdAt || 0) - Number(a.createdAt || 0));
 
   return {
     active,
@@ -121,8 +122,7 @@ function getSavedIds() {
    PUBLIC
 ========================= */
 
-export function addOrderToTracking(orderId, items = [], meta = {}) {
-  if (!orderId) return;
+export function addOrderToTracking(meta) {
 
   const state = getState();
   const active = state.orders?.active || [];
@@ -133,8 +133,8 @@ export function addOrderToTracking(orderId, items = [], meta = {}) {
   if (exists) return;
 
   const newOrder = normalizeOrder({
-    id: orderId,
-    status: "NEW",
+    id: meta.id,
+    status: meta.status || "NEW",
     items,
     totalQty: meta.totalQty,
     totalPrice: meta.totalPrice,
@@ -142,6 +142,7 @@ export function addOrderToTracking(orderId, items = [], meta = {}) {
     placeLabel: meta.placeLabel,
     type: meta.type,
     device: meta.device,
+    createdAt: meta.timestamp,
     updatedAt: Date.now(),
     syncedAt: Date.now()
   });
@@ -191,6 +192,7 @@ export async function syncOrdersWithServer() {
           ...existing,
           id,
           status: incoming,
+          createdAt: existing?.createdAt,
           updatedAt: Date.now(),
           syncedAt: Date.now()
         });
@@ -202,6 +204,7 @@ export async function syncOrdersWithServer() {
           ...existing,
           ...incoming,
           id,
+          createdAt: existing?.createdAt,
           updatedAt: Date.now(),
           syncedAt: Date.now()
         });
@@ -212,6 +215,7 @@ export async function syncOrdersWithServer() {
         ...existing,
         id,
         status: existing?.status || "SYNCING",
+        createdAt: existing?.createdAt || 0,
         updatedAt: existing?.updatedAt || Date.now(),
         syncedAt: existing?.syncedAt || 0
       });
@@ -272,6 +276,7 @@ export function hydrateOrdersFromStorage() {
       id,
       status: "SYNCING",
       items: [],
+      createdAt: 0,
       updatedAt: Date.now(),
       syncedAt: 0
     })
