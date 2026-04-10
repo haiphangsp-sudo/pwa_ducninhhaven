@@ -136,12 +136,15 @@
 }
 
 .tracker-item {
-    display: flex;
+  display: flex;
   align-items: flex-start;
   padding-bottom: 10px;
   border-bottom: 1px dashed #efefef;
 }
-
+.tracker-item .total-price {
+  flex: 0 0 auto;
+  border-bottom: none;
+}
 .tracker-item__content {
   flex: 1;
   min-width: 0;
