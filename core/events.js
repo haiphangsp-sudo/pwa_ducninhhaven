@@ -88,7 +88,7 @@ export async function submitOrder(action) {
   try {
     const res = await sendRequest(payload);
 
-    if (res?.success) {
+    if (res?.ok ) {
       addOrderToTracking(payload);
       setState({
         order: { status: "success" },
@@ -97,7 +97,10 @@ export async function submitOrder(action) {
       return true;
     }
     if(res?.duplicate) {
-      setState({order: {status: "duplicate"}});
+      setState({
+        order: { status: "duplicate" },
+        cart: { items: [] }
+      });
       return true;
     }
     if(res?.rate_limited) {
