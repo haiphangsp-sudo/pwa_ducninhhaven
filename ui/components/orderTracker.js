@@ -59,7 +59,12 @@ function renderOrderCard(order) {
           ${itemsHtml}
         </div>
         <div class="tracker-order__items">
-          <span class="tracker-item__price">${formatPrice(order.totalPrice)}</span>
+          <div class="tracker-item">
+            <div class="tracker-item__content">
+              <span class="tracker-item__name">${translate("order.total")}</span>
+              <span class="tracker-item__price">${formatPrice(order.totalPrice)}</span>
+            </div>
+          </div>
         </div>
       </div>
 
