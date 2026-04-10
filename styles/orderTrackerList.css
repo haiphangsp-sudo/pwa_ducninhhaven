@@ -196,7 +196,12 @@
   padding-top: 10px;
   border-top: 1px solid #f2efe9;
 }
-
+.tracker-order__stepper .step-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+}
 /* tracker-scoped stepper */
 .tracker-order__stepper .step-status-msg {
   position: static;
