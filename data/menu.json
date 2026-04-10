@@ -1,360 +1,209 @@
 {
-  "intro":{
-    "label":{"vi":"Giới thiệu","en":"Introduction"},
-    "allow":["room","table","area"],
-    "ui":"article",
-    "active":true,
-    "icon":"info",
-    "items":{
+  "intro": {
+    "label": { "vi": "Giới thiệu", "en": "Introduction" },
+    "allow": ["room", "table", "area"],
+    "ui": "article",
+    "active": true,
+    "icon": "info",
+    "items": {
       "welcome": {
-        "label": {"vi": "Chào mừng", "en": "Welcome"},
+        "label": { "vi": "Chào mừng", "en": "Welcome" },
         "content": {
           "vi": "Chào mừng bạn đến với Duc Ninh Haven! Chúng tôi hy vọng bạn có những giây phút thư giãn.",
           "en": "Welcome to Duc Ninh Haven! We hope you have a relaxing time here."
-        },  
+        },
         "active": true
       },
-      "about":{
-        "label":{"vi":"Về chúng tôi","en":"About Us"},
-        "content":{
-          "vi":"Chúng tôi không cố trở thành một nơi ai cũng thích.\n\nChúng tôi chỉ cố trở thành một nơi mà một số người cần.",
-          "en":"We're not trying to be a place everyone likes.\n\nWe're just trying to be a place that some people need."
+      "about": {
+        "label": { "vi": "Về chúng tôi", "en": "About Us" },
+        "content": {
+          "vi": "Chúng tôi không cố trở thành một nơi ai cũng thích.\n\nChúng tôi chỉ cố trở thành một nơi mà một số người cần.",
+          "en": "We're not trying to be a place everyone likes.\n\nWe're just trying to be a place that some people need."
         },
-        "active":true
+        "active": true
       }
     }
   },
-
-  "food":{
-    "label":{"vi":"Bữa ăn","en":"Food"},
-    "allow":["room","table"],
-    "ui":"cart",
-    "active":true,
-    "icon":"food",
-    "items":{
-      "breakfast":{
-        "label":{"vi":"Bữa sáng","en":"Breakfast"},
-        "recommend":["bread","broken_rice"],
-        "active":true,
-        "options":{
-          "pho":{
-            "label":{"vi":"Phở gà","en":"Chicken Pho"},
-            "description":{
-              "vi":"Phở gà nóng với nước dùng ninh chậm, ăn kèm rau thơm.",
-              "en":"Traditional Vietnamese chicken noodle soup with herbs."
+  "food": {
+    "label": { "vi": "Bữa ăn", "en": "Food" },
+    "allow": ["room", "table"],
+    "ui": "cart",
+    "active": true,
+    "icon": "food",
+    "items": {
+      "breakfast": {
+        "label": { "vi": "Bữa sáng", "en": "Breakfast" },
+        "recommend": ["bread", "broken_rice"],
+        "active": true,
+        "options": {
+          "pho": {
+            "label": { "vi": "Phở gà", "en": "Chicken Pho" },
+            "description": {
+              "vi": "Phở gà nóng với nước dùng trong, ăn kèm rau thơm. Phần ăn nhẹ nhưng đủ đầy cho buổi sáng.",
+              "en": "Chicken pho with a clear broth and fresh herbs. Light, warm, and suitable for a quiet morning."
             },
-            "price":50000,
-            "unit": "item",
-            "active":true
+            "description_long": {
+              "vi": "Phở gà được phục vụ nóng với nước dùng trong và rau thơm ăn kèm. Đây là lựa chọn phù hợp nếu bạn muốn bắt đầu ngày mới bằng một món quen thuộc, nhẹ và dễ dùng.",
+              "en": "Chicken pho served hot with a clear broth and fresh herbs. A suitable choice if you prefer a familiar, light start to the day."
+            },
+            "price": 55000,
+            "active": true
           },
-          "bread":{
-            "label":{"vi":"Bánh mì chảo","en":"Pan Bread"},
-            "description":{
-              "vi":"Bánh mì ăn kèm trứng ốp la, pate và xúc xích.",
-              "en":"Vietnamese pan bread with egg, pate and sausage."
+          "bread": {
+            "label": { "vi": "Bánh mì chảo", "en": "Pan Bread" },
+            "description": {
+              "vi": "Bánh mì chảo với trứng, pate và xúc xích. Phần ăn nóng, đủ no, không cầu kỳ.",
+              "en": "Pan bread with egg, pate, and sausage. Warm, filling, and uncomplicated."
             },
-            "price":55000,
-            "unit": "item",
-            "active":true
+            "description_long": {
+              "vi": "Bánh mì chảo dùng kèm trứng, pate và xúc xích. Phần ăn được chuẩn bị theo cách đơn giản, phù hợp cho buổi sáng khi bạn muốn một bữa ăn quen thuộc và đủ đầy.",
+              "en": "Pan bread served with egg, pate, and sausage. Prepared simply, suited to a morning when you want something familiar and satisfying."
+            },
+            "price": 45000,
+            "active": true
           },
-          "broken_rice":{
-            "label":{"vi":"Cơm tấm sườn","en":"Broken Rice with Pork"},
-            "description":{
-              "vi":"Cơm tấm truyền thống với sườn nướng và trứng.",
-              "en":"Vietnamese broken rice served with grilled pork and egg."
+          "broken_rice": {
+            "label": { "vi": "Cơm tấm", "en": "Broken Rice" },
+            "description": {
+              "vi": "Cơm tấm với sườn nướng và trứng ốp la. Một bữa sáng truyền thống, chắc bụng.",
+              "en": "Broken rice with grilled pork chop and a fried egg. A traditional, hearty breakfast."
             },
-            "price":55000,
-            "unit": "item",
-            "active":true
+            "description_long": {
+              "vi": "Cơm tấm phục vụ kèm sườn nướng và trứng ốp la. Đây là món ăn truyền thống dành cho những ai cần một bữa sáng no lâu và giàu năng lượng.",
+              "en": "Broken rice served with a grilled pork chop and fried egg. A traditional dish for those seeking a long-lasting, high-energy breakfast."
+            },
+            "price": 50000,
+            "active": true
           }
         }
       },
-
-      "lunch":{
-        "label":{"vi":"Bữa trưa","en":"Lunch"},
-        "recommend":["seafood"],
-        "active":true,
-        "options":{
-          "seafood":{
-            "label":{"vi":"Cơm hải sản","en":"Seafood Rice"},
-            "description":{
-              "vi":"Cơm nóng với hải sản xào nhẹ.",
-              "en":"Steamed rice served with sautéed seafood."
-            },
-            "price":75000,
-            "unit": "item",
-            "active":true
-          },
-          "chicken_rice":{
-            "label":{"vi":"Cơm gà","en":"Chicken Rice"},
-            "description":{
-              "vi":"Cơm gà đơn giản với rau và nước chấm.",
-              "en":"Simple chicken rice with vegetables and dipping sauce."
-            },
-            "price":70000,
-            "unit": "item",
-            "active":true
-          }
-        }
-      },
-
-      "dinner":{
-        "label":{"vi":"Bữa tối","en":"Dinner"},
-        "recommend":["bbq"],
-        "active":true,
-        "options":{
-          "local_rice":{
-            "label":{"vi":"Cơm nhà địa phương","en":"Local Home Rice"},
-            "description":{
-              "vi":"Bữa cơm đơn giản kiểu gia đình Việt.",
-              "en":"A simple Vietnamese home-style dinner."
-            },
-            "price":90000,
-            "unit": "item",
-            "active":true
-          },
-          "bbq":{
-            "label":{"vi":"BBQ sân vườn","en":"Garden BBQ"},
-            "description":{
-              "vi":"Thịt nướng ngoài trời dùng kèm rau và nước chấm.",
-              "en":"Outdoor barbecue served with vegetables and sauces."
-            },
-            "price":120000,
-            "unit": "item", 
-            "active":true
-          }
-        }
+      "lunch": {
+        "label": { "vi": "Bữa trưa", "en": "Lunch" },
+        "description": {
+          "vi": "Bữa cơm gia đình với các món theo mùa. Thực đơn thay đổi mỗi ngày để đảm bảo sự tươi mới.",
+          "en": "Family-style lunch with seasonal dishes. The menu changes daily to ensure freshness."
+        },
+        "description_long": {
+          "vi": "Bữa cơm gia đình được chuẩn bị với các món ăn nấu theo mùa. Thực đơn sẽ thay đổi mỗi ngày dựa trên nguyên liệu tươi ngon nhất có sẵn, mang lại trải nghiệm ăn uống mộc mạc và gần gũi.",
+          "en": "A family-style meal prepared with seasonal dishes. The menu changes daily based on the freshest ingredients available, offering a rustic and intimate dining experience."
+        },
+        "price": 120000,
+        "unit": "pax",
+        "active": true
       }
     }
   },
-
-  "drink":{
-    "label":{"vi":"Thức uống","en":"Drinks"},
-    "allow":["room","table","area"],
-    "ui":"cart",
-    "active":true,
-    "icon":"drink",
-    "items":{
-      "blackcoffee":{
-        "label":{"vi":"Cà phê đen","en":"Black Coffee"},
-        "recommend":["hot"],
-        "active":true,
-        "options":{
-          "hot":{
-            "label":{"vi":"Cà phê đen nóng","en":"Hot black coffee"},
-            "description":{
-              "vi":"Cà phê Việt Nam pha phin truyền thống.",
-              "en":"Traditional Vietnamese drip coffee."
-            },
-            "price":30000,
-            "unit": "item",
-            "active":true
+  "drinks": {
+    "label": { "vi": "Thức uống", "en": "Drinks" },
+    "allow": ["room", "table", "area"],
+    "ui": "cart",
+    "active": true,
+    "icon": "coffee",
+    "items": {
+      "coffee": {
+        "label": { "vi": "Cà phê", "en": "Coffee" },
+        "active": true,
+        "options": {
+          "black": {
+            "label": { "vi": "Cà phê đen", "en": "Black Coffee" },
+            "price": 25000,
+            "active": true
           },
-          "iced":{
-            "label":{"vi":"Cà phê đen đá","en":"Iced black coffee"},
-            "description":{
-              "vi":"Cà phê đen đá mát lạnh.",
-              "en":"Vietnamese iced black coffee."
-            },
-            "price":35000,
-            "unit": "item",
-            "active":true
+          "milk": {
+            "label": { "vi": "Cà phê sữa", "en": "Milk Coffee" },
+            "price": 30000,
+            "active": true
           }
         }
       },
-
-      "cappuccino":{
-        "label":{"vi":"Cappuccino","en":"Cappuccino"},
-        "recommend":["hot"],
-        "active":true,
-        "options":{
-          "hot":{
-            "label":{"vi":"Cappuccino nóng","en":"Cappuccino hot"},
-            "description":{
-              "vi":"Cappuccino với lớp bọt sữa mịn.",
-              "en":"Espresso with steamed milk and foam."
-            },
-            "price":45000,
-            "unit": "item",
-            "active":true
+      "tea": {
+        "label": { "vi": "Trà", "en": "Tea" },
+        "active": true,
+        "options": {
+          "lotus": {
+            "label": { "vi": "Trà sen", "en": "Lotus Tea" },
+            "price": 35000,
+            "active": true
           },
-          "iced":{
-            "label":{"vi":"Cappuccino đá","en":"Iced Cappuccino"},
-            "description":{
-              "vi":"Cappuccino lạnh nhẹ nhàng.",
-              "en":"Chilled cappuccino."
-            },
-            "price":45000,
-            "unit": "item",
-            "active":true
-          }
-        }
-      },
-
-      "saltcoffee":{
-        "label":{"vi":"Cà phê muối","en":"Salt Coffee"},
-        "recommend":["hot"],
-        "active":true,
-        "options":{
-          "hot":{
-            "label":{"vi":"Cà phê muối nóng","en":"Hot salted coffee"},
-            "description":{
-              "vi":"Cà phê muối đặc trưng miền Trung.",
-              "en":"Central Vietnam style salted coffee."
-            },
-            "price":40000,
-            "unit": "item",
-            "active":true
-          },
-          "iced":{
-            "label":{"vi":"Cà phê muối đá","en":"Rock salt coffee"},
-            "description":{
-              "vi":"Cà phê muối lạnh.",
-              "en":"Iced salted coffee."
-            },
-            "price":40000,
-            "unit": "item",
-            "active":true
-          }
-        }
-      },
-
-      "tea":{
-        "label":{"vi":"Trà","en":"Tea"},
-        "recommend":["hot"],
-        "active":true,
-        "options":{
-          "hot":{
-            "label":{"vi":"Trà nóng","en":"Hot Tea"},
-            "description":{
-              "vi":"Trà thảo mộc nhẹ nhàng.",
-              "en":"Light herbal tea."
-            },
-            "price":25000,
-            "unit": "item",
-            "active":true
-          },
-          "iced":{
-            "label":{"vi":"Trà đá","en":"Iced Tea"},
-            "description":{
-              "vi":"Trà mát giải khát.",
-              "en":"Refreshing iced tea."
-            },
-            "price":0,
-            "unit": "item",
-            "active":true
+          "ginger": {
+            "label": { "vi": "Trà gừng", "en": "Ginger Tea" },
+            "price": 30000,
+            "active": true
           }
         }
       }
     }
   },
-
-  "service":{
-    "label":{"vi":"Dịch vụ","en":"Service"},
-    "allow":["room","area"],
-    "ui":"instant",
-    "active":true,
-    "icon":"service",
-    "items":{
-      "room_service":{
-        "label":{"vi":"Dịch vụ phòng","en":"Room Service"},
-        "active":true,
-        "options":{
-          "cleaning":{
-            "label":{"vi":"Dọn phòng","en":"Housekeeping"},
-            "description":{
-              "vi":"Yêu cầu dọn phòng.",
-              "en":"Request room cleaning."
+  "foot_bath": {
+    "label": { "vi": "Ngâm chân", "en": "Foot Bath" },
+    "allow": ["room", "area"],
+    "ui": "cart",
+    "active": true,
+    "icon": "spa",
+    "items": {
+      "herbal": {
+        "label": { "vi": "Thảo dược", "en": "Herbal" },
+        "active": true,
+        "options": {
+          "afternoon": {
+            "label": { "vi": "Buổi chiều", "en": "Afternoon" },
+            "description": {
+              "vi": "Thư giãn sau một ngày dài.",
+              "en": "Relaxing herbal foot bath in the afternoon."
             },
-            "active":true
-          },
-          "laundry":{
-            "label":{"vi":"Giặt đồ","en":"Laundry Service"},
-            "description":{
-              "vi":"Dịch vụ giặt ủi và sấy khô được tính phí theo trọng lượng (kg).",
-              "en":"Laundry and drying services are charged by weight (kg)."
-            },
-            "price":30000,
-            "unit": "kg",
-            "active":true
-          }
-        }
-      }
-    }
-  },
-  "relax":{
-    "label":{"vi":"Thư giãn","en":"Relax"},
-    "allow":["room"],
-    "ui":"cart",
-    "active":true,
-    "icon":"relax",
-    "items":{
-      "footbath":{
-        "label":{"vi":"Ngâm chân thảo dược","en":"Herbal Foot Bath"},
-        "recommend":["evening"],
-        "active":true,
-        "options":{
-          "morning":{
-            "label":{"vi":"Buổi sáng","en":"Morning"},
-            "description":{
-              "vi":"Ngâm chân nhẹ nhàng buổi sáng.",
-              "en":"Gentle herbal foot bath in the morning."
-            },
-            "price":80000,
+            "price": 80000,
             "unit": "session",
-            "active":true
+            "active": true
           },
-          "afternoon":{
-            "label":{"vi":"Buổi chiều","en":"Afternoon"},
-            "description":{
-              "vi":"Thư giãn sau một ngày dài.",
-              "en":"Relaxing herbal foot bath in the afternoon."
+          "evening": {
+            "label": { "vi": "Buổi tối", "en": "Evening" },
+            "description": {
+              "vi": "Ngâm chân thư giãn trước khi ngủ.",
+              "en": "Relaxing foot bath before bedtime."
             },
-            "price":80000,
+            "price": 90000,
             "unit": "session",
-            "active":true
-          },
-          "evening":{
-            "label":{"vi":"Buổi tối","en":"Evening"},
-            "description":{
-              "vi":"Ngâm chân thư giãn trước khi ngủ.",
-              "en":"Relaxing foot bath before bedtime."
-            },
-            "price":90000,
-            "unit": "session",
-            "active":true
+            "active": true
           }
         }
       }
     }
   },
-   "help":{
-    "label":{"vi": "Hỗ trợ","en": "Support"},
-    "allow":["room","area","table"],
-    "ui":"instant",
-    "active":true,
-    "icon":"service",
-    "items":{
-      "assistance":{
-        "label":{"vi":"Hỗ trợ","en":"Assistance"},
-        "allow":["room","area"],
-        "active":true,
-        "options":{
-          "reception":{
-            "label":{"vi":"Gọi lễ tân","en":"Contact Host"},
-            "description":{
-              "vi":"Liên hệ chủ nhà nếu bạn cần hỗ trợ.",
-              "en":"Contact the host if you need assistance."
+  "help": {
+    "label": { "vi": "Hỗ trợ", "en": "Support" },
+    "allow": ["room", "area", "table"],
+    "ui": "instant",
+    "active": true,
+    "icon": "service",
+    "items": {
+      "assistance": {
+        "label": { "vi": "Hỗ trợ", "en": "Assistance" },
+        "allow": ["room", "area"],
+        "active": true,
+        "options": {
+          "reception": {
+            "label": { "vi": "Gọi lễ tân", "en": "Contact Host" },
+            "description": {
+              "vi": "Liên hệ khi bạn cần hỗ trợ thêm trong phòng hoặc trong thời gian lưu trú.",
+              "en": "Contact us when you need support in the room or during your stay."
             },
-            "active":true
+            "description_long": {
+              "vi": "Liên hệ bộ phận hỗ trợ khi bạn cần thêm thông tin, cần trợ giúp trong phòng, hoặc có một yêu cầu phát sinh. Chúng tôi sẽ phản hồi sớm nhất có thể theo tình hình thực tế.",
+              "en": "Contact support when you need more information, help in the room, or assistance with an unexpected request. We will respond as soon as practical."
+            },
+            "active": true
           },
-          "pay":{
-            "label":{"vi":"Gọi thanh toán","en":"Call for bill"},
-            "description":{
-              "vi":"Yêu cầu tính tiền và thanh toán.",
-              "en":"Request the bill and payment."
+          "pay": {
+            "label": { "vi": "Gọi thanh toán", "en": "Call for bill" },
+            "description": {
+              "vi": "Yêu cầu tính tiền và hỗ trợ thanh toán khi bạn đã sẵn sàng. Bộ phận phụ trách sẽ xử lý theo thứ tự.",
+              "en": "Request the bill when you are ready. The team will handle it in order."
             },
-            "active":true
+            "description_long": {
+              "vi": "Gửi yêu cầu tính tiền và hỗ trợ thanh toán khi bạn đã sẵn sàng. Hệ thống sẽ ghi nhận trước, sau đó bộ phận phụ trách sẽ xử lý theo thứ tự và thời điểm thực tế.",
+              "en": "Request the bill and payment support when you are ready. The system records the request first, then the team handles it in sequence and according to timing."
+            },
+            "active": true
           }
         }
       }
