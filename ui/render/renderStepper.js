@@ -18,22 +18,21 @@ export function renderStepper(currentStatus, longMsg) {
   return `
       <div class="step-status-msg">${!longMsg ? currentMsg : currentMsgLong}</div>
       <div class="step-container">
-      ${steps.map((step, index) => {
-        let stateClass = "";
-        if (currentStatus === 'RECOVERING') stateClass = "is-complete";
-        else if (currentIndex > index) stateClass = "is-complete";
-        else if (currentIndex === index) stateClass = "is-active";
-        else stateClass = "is-pending";
+        ${steps.map((step, index) => {
+          let stateClass = "";
+          if (currentStatus === 'RECOVERING') stateClass = "is-complete";
+          else if (currentIndex > index) stateClass = "is-complete";
+          else if (currentIndex === index) stateClass = "is-active";
+          else stateClass = "is-pending";
 
-        return `
-          <div class="step ${stateClass}">
-            <div class="step-dot">${stateClass === "is-complete" ? '✓' : ''}</div>
-            <div class="step-label">${step.label}</div>
-            ${index < steps.length - 1
-              ? '<div class="step-line"></div>'
-              : ''}
-          </div>`;
-      }).join("")};
-      </div>
-  `;
+          return `
+            <div class="step ${stateClass}">
+              <div class="step-dot">${stateClass === "is-complete" ? '✓' : ''}</div>
+              <div class="step-label">${step.label}</div>
+              ${index < steps.length - 1
+                ? '<div class="step-line"></div>'
+                : ''}
+            </div>`
+        }).join("")}
+      </div>`
 }
