@@ -106,11 +106,21 @@
         "options": {
           "black": {
             "label": { "vi": "Cà phê đen", "en": "Black Coffee" },
+            "description": { "vi": "Cà phê Robusta rang mộc truyền thống.", "en": "Traditional roasted black Robusta coffee." },
+            "description_long": { 
+              "vi": "Được tuyển chọn từ những hạt Robusta chất lượng, rang mộc để giữ trọn vị đắng đậm đà và hương thơm nồng nàn, mang lại sự tỉnh táo tức thì.",
+              "en": "Selected from high-quality Robusta beans, roasted to preserve a bold bitter taste and intense aroma, providing immediate alertness." 
+            },
             "price": 25000,
             "active": true
           },
           "milk": {
             "label": { "vi": "Cà phê sữa", "en": "Milk Coffee" },
+            "description": { "vi": "Sự kết hợp hoàn hảo giữa cà phê và sữa đặc.", "en": "A perfect blend of coffee and condensed milk." },
+            "description_long": { 
+              "vi": "Vị đắng nhẹ của cà phê hòa quyện cùng sự béo ngậy của sữa đặc, tạo nên một ly cà phê sữa đá đúng chất Việt Nam, ngọt ngào và đầy lôi cuốn.",
+              "en": "The light bitterness of coffee blended with creamy condensed milk creates an authentic Vietnamese milk coffee, sweet and appealing." 
+            },
             "price": 30000,
             "active": true
           }
@@ -122,11 +132,21 @@
         "options": {
           "lotus": {
             "label": { "vi": "Trà sen", "en": "Lotus Tea" },
+            "description": { "vi": "Hương sen thanh khiết trong từng ngụm trà.", "en": "Pure lotus fragrance in every sip." },
+            "description_long": { 
+              "vi": "Trà xanh được ướp hương sen Tây Hồ thanh tao, giúp thư giãn tâm hồn và mang lại cảm giác bình yên trong không gian tĩnh lặng của Haven.",
+              "en": "Green tea scented with elegant lotus fragrance, helping to relax the soul and bring a sense of peace in the quiet space of Haven." 
+            },
             "price": 35000,
             "active": true
           },
           "ginger": {
             "label": { "vi": "Trà gừng", "en": "Ginger Tea" },
+            "description": { "vi": "Vị cay nồng ấm áp, tốt cho sức khỏe.", "en": "Warm, spicy, and good for health." },
+            "description_long": { 
+              "vi": "Sử dụng gừng tươi già tuổi, trà gừng mang lại vị cay ấm nồng, giúp làm ấm cơ thể, hỗ trợ tiêu hóa và rất phù hợp cho những buổi sáng se lạnh.",
+              "en": "Using aged fresh ginger, this tea provides a warm, spicy flavor that warms the body, aids digestion, and is perfect for chilly mornings." 
+            },
             "price": 30000,
             "active": true
           }
@@ -147,9 +167,10 @@
         "options": {
           "afternoon": {
             "label": { "vi": "Buổi chiều", "en": "Afternoon" },
-            "description": {
-              "vi": "Thư giãn sau một ngày dài.",
-              "en": "Relaxing herbal foot bath in the afternoon."
+            "description": { "vi": "Thư giãn nhẹ nhàng sau một ngày dài.", "en": "Gentle relaxation after a long day." },
+            "description_long": { 
+              "vi": "Sử dụng các loại thảo mộc tươi hái từ vườn nhà như sả, gừng và muối biển, giúp xua tan mệt mỏi và làm dịu đôi bàn chân.",
+              "en": "Using fresh herbs picked from our garden like lemongrass, ginger, and sea salt to dispel fatigue and soothe your feet." 
             },
             "price": 80000,
             "unit": "session",
@@ -157,9 +178,10 @@
           },
           "evening": {
             "label": { "vi": "Buổi tối", "en": "Evening" },
-            "description": {
-              "vi": "Ngâm chân thư giãn trước khi ngủ.",
-              "en": "Relaxing foot bath before bedtime."
+            "description": { "vi": "Chăm sóc chuyên sâu trước khi ngủ.", "en": "Deep care before bedtime." },
+            "description_long": { 
+              "vi": "Liệu trình ngâm chân thảo dược kết hợp tinh dầu ấm, giúp khí huyết lưu thông, làm ấm cơ thể và đưa bạn vào giấc ngủ sâu tại Haven.",
+              "en": "Herbal foot bath combined with warm essential oils helps blood circulation, warms the body, and guides you into a deep sleep at Haven." 
             },
             "price": 90000,
             "unit": "session",
