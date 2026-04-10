@@ -90,7 +90,10 @@ export async function submitOrder(action) {
 
     if (res?.success) {
       addOrderToTracking(payload);
-      setState({order: {status: "success"}});
+      setState({
+        order: { status: "success" },
+        cart: { items: [] }
+      });
       return true;
     }
     if(res?.duplicate) {
