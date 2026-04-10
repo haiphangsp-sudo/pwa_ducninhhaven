@@ -6,35 +6,37 @@ import { addOrderToTracking } from "./orders.js";
 import { updateCartQuantity } from "./action.js";
 
 export function addToCart() {
-  const state = getState();
-  const itemId = state.order?.line;
+  const itemId = getState().order?.line;
   if (!itemId) return;
   updateCartQuantity(itemId, 1);
 }
 
-function getSourceItems(state, action) {
-  if (action === "send_cart") return state.cart?.items || [];
-  if (state.order?.line) return [{ id: state.order.line, qty: 1 }];
-  return [];
+function getRawItems(state, action) {
+  if (action === "send_cart") {
+    return state.cart?.items || [];
+  }
+
+  const line = state.order?.line;
+  return line ? [{ id: line, qty: 1 }] : [];
 }
 
-function formatItemsForGAS(rawItems) {
+function normalizeItems(rawItems) {
   return rawItems
-    .map(cartItem => {
-      const info = getVariantById(cartItem.id);
+    .map(({ id, qty = 1 }) => {
+      const info = getVariantById(id);
       if (!info) return null;
 
-      const qty = Number(cartItem.qty || 1);
+      const quantity = Number(qty || 1);
       const price = Number(info.price || 0);
 
       return {
-        id: cartItem.id,
+        id,
         category: info.categoryKey || "",
         item: info.productLabel || "",
         option: info.variantLabel || "",
-        qty,
+        qty: quantity,
         price,
-        subtotal: qty * price
+        subtotal: quantity * price
       };
     })
     .filter(Boolean);
@@ -51,66 +53,70 @@ function getTotals(items) {
   );
 }
 
+function getOrderType(action) {
+  return action === "send_cart" ? "cart" : "instant";
+}
+
 function buildPayload(state, action) {
   const { placeName, placeId, mode } = getLocationInfo();
   if (!placeId) return null;
 
-  const rawItems = getSourceItems(state, action);
-  if (rawItems.length === 0) return null;
+  const items = normalizeItems(getRawItems(state, action));
+  if (!items.length) return null;
 
-  const formattedItems = formatItemsForGAS(rawItems);
-  if (formattedItems.length === 0) return null;
-
-  const { totalQty, totalPrice } = getTotals(formattedItems);
-  const createdAt = new Date();
+  const { totalQty, totalPrice } = getTotals(items);
+  const timestamp = new Date().toISOString();
 
   return {
     id: `H-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
-    type: action,
+    type: getOrderType(action),
     status: "NEW",
-    timestamp: createdAt,
+    timestamp,
     place: placeId,
     placeLabel: placeName,
-    mode: mode,
+    mode,
     totalQty,
     totalPrice,
-    items: formattedItems,
+    items,
     device: navigator.userAgent
   };
 }
+
+function setOrderStatus(status) {
+  const state = getState();
+  setState({
+    order: {
+      ...state.order,
+      status
+    }
+  });
+}
+
 export async function submitOrder(action) {
   const state = getState();
   const payload = buildPayload(state, action);
 
   if (!payload) return false;
 
-  setState({order: {status: "sending"}});
+  setOrderStatus("sending");
+
   try {
     const res = await sendRequest(payload);
 
-    if (res&&res.success ) {
-      addOrderToTracking(payload);
-      setState({
-        order: { status: "success" },
-        cart: { items: [] }
-      });
-      return true;
-    }
-    if(res&&res.duplicate) {
-      setState({
-        order: { status: "duplicate" },
-        cart: { items: [] }
-      });
-      return true;
-    }
-    if(res.rate_limited) {
-      setState({order: {status: "rate_limited"}});
+    if (res?.duplicate) {
+      setOrderStatus("duplicate");
       return true;
     }
 
-    throw new Error(res.message || "API_FAIL");
+    if (!res?.success) {
+      throw new Error(res?.message || "API_FAIL");
+    }
+
+    addOrderToTracking(payload);
+    setOrderStatus("success");
+    return true;
   } catch (error) {
-    setState({order: {status: "error"}});
+    setOrderStatus("error");
     return false;
   }
 }
