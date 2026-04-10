@@ -20,10 +20,8 @@ export function renderCartBar(state) {
   
   if (cart.isEmpty) {
     cartBar.classList.add("cart-bar--hidden");
-    //cartBar.classList.add("hidden");
   } else {
     cartBar.classList.remove("cart-bar--hidden");
-    //cartBar.classList.remove("hidden");
     btn.textContent = translate("cart_bar.cart_title");
     countEl.textContent = cart.totalQtyFormat;
   }
