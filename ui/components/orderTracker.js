@@ -8,10 +8,7 @@ export function openOrderTracker(state) {
   const orders = [...active, ...inactive];
 
   const listContainer = document.getElementById("orderTrackerList");
-  if (!listContainer) {
-    console.warn("orderTrackerList not found");
-    return;
-  }
+  if (!listContainer) return;
 
   if (orders.length === 0) {
     listContainer.innerHTML = `
@@ -61,6 +58,8 @@ function renderOrderCard(order) {
         <div class="tracker-order__items">
           ${itemsHtml}
         </div>
+        <div class="tracker-order__total">
+          <span class="tracker-item__price">${formatPrice("order.total")}</span>
       </div>
 
       <div class="tracker-order__foot">
@@ -83,7 +82,7 @@ function renderOrderItem(item = {}) {
       <span class="tracker-item__qty">${qty}×</span>
       <div class="tracker-item__content">
         <span class="tracker-item__name">${escapeHtml(name)}</span>
-        <span class="tracker-item__option">${escapeHtml(option)}</span>
+        ${option ? `<span class="tracker-item__option">${escapeHtml(option)}</span>` : ""}
       </div>
       <span class="tracker-item__price">${formatPrice(price)}</span>
     </div>
