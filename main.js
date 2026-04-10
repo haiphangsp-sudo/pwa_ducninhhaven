@@ -5,33 +5,35 @@ import { loadMenu } from "./core/menuStore.js";
 import { loadPlaces } from "./core/placesStore.js";
 import { normalizeContext, applyURLContext, syncContextToState } from "./core/context.js";
 import { detectRecovery } from "./core/queue.js";
-import { attachAppEvents } from "./ui/events/globalEvents.js"; 
+import { attachAppEvents } from "./ui/events/globalEvents.js";
 import { attachUI } from "./ui/events/sync.js";
 import { renderApp } from "./ui/render/renderApp.js";
-import { setState, getState as state } from "./core/state.js";
+import { setState, getState } from "./core/state.js";
 import { bootstrapApp } from "./core/bootstrap.js";
 import { hydrateOrdersFromStorage } from "./core/orders.js";
 
 boot();
-/* ---------- VERSION ---------- */
-// - Đảm bảo phiên bản SW khớp với phiên bản app
-function checkVersion(){
+
+function checkVersion() {
   const stored = localStorage.getItem(CONFIG.APP_VERSION_KEY);
 
-  if(stored !== CONFIG.VERSION){
+  if (stored !== CONFIG.VERSION) {
     localStorage.setItem(CONFIG.APP_VERSION_KEY, CONFIG.VERSION);
-    if("caches" in window){
-      caches.keys().then(keys=>{
-        keys.forEach(k=>caches.delete(k));
+
+    if ("caches" in window) {
+      caches.keys().then(keys => {
+        keys.forEach(key => caches.delete(key));
       });
     }
+
     location.reload();
+    return false;
   }
+
   document.querySelector(".app-version").textContent = `v${CONFIG.VERSION}`;
+  return true;
 }
 
-/* ---------- SW ---------- */
-// - Đăng ký Service Worker để hỗ trợ offline và background sync
 function registerSW() {
   if (!("serviceWorker" in navigator)) return;
 
@@ -52,10 +54,7 @@ function registerSW() {
       if (!newSW) return;
 
       newSW.addEventListener("statechange", () => {
-        if (
-          newSW.state === "installed" &&
-          navigator.serviceWorker.controller
-        ) {
+        if (newSW.state === "installed" && navigator.serviceWorker.controller) {
           newSW.postMessage({ type: "SKIP_WAITING" });
         }
       });
@@ -64,49 +63,51 @@ function registerSW() {
     console.error("SW registration failed:", err);
   });
 }
+
 function loadCart() {
   try {
     const items = JSON.parse(localStorage.getItem(CONFIG.CART_KEY) || "[]");
     setState({ cart: { items } });
   } catch {
-    setState({
-        cart: {
-          items: []
-        }
-      });
+    setState({ cart: { items: [] } });
   }
 }
 
-/* ---------- BOOT ---------- */
+function restoreRuntimeState() {
+  loadCart();
+  normalizeContext();
+  applyURLContext();
+  syncContextToState();
+  hydrateOrdersFromStorage();
+}
+
+async function loadAppData() {
+  await Promise.all([
+    loadMenu().catch(err => console.error("Lỗi menu:", err)),
+    loadPlaces().catch(err => console.error("Lỗi vị trí:", err))
+  ]);
+}
+
+function mountApp() {
+  const state = bootstrapApp();
+  renderApp(state);
+  attachUI();
+  attachAppEvents();
+  detectRecovery();
+}
 
 async function boot() {
   try {
-    checkVersion();
-    registerSW();
-    
-    // Chạy song song để tăng tốc độ khởi động
-    await Promise.all([
-      loadMenu().catch(e => console.error("Lỗi menu:", e)),
-      loadPlaces().catch(e => console.error("Lỗi vị trí:", e))
-    ]);
-    
-    
-  
-    loadCart();
-    normalizeContext();
-    applyURLContext();
-    syncContextToState();
+    const shouldContinue = checkVersion();
+    if (!shouldContinue) return;
 
-    bootstrapApp();
-    attachUI();
-    hydrateOrdersFromStorage();
-    
-    attachAppEvents();
-    renderApp(state());
-    detectRecovery();
-    
-  } catch (criticalError) {
-    // Nếu có lỗi cực nặng, hiển thị thông báo cho khách
-    document.body.innerHTML = `<div class="p-xl center">Xin lỗi, ứng dụng Haven đang gặp sự cố kết nối. Vui lòng tải lại trang.</div>`;
+    registerSW();
+    await loadAppData();
+    restoreRuntimeState();
+    mountApp();
+  } catch (error) {
+    console.error("Boot failed:", error);
+    document.body.innerHTML =
+      `<div class="p-xl center">Xin lỗi, ứng dụng Haven đang gặp sự cố kết nối. Vui lòng tải lại trang.</div>`;
   }
 }
