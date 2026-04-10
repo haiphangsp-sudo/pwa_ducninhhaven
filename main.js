@@ -8,8 +8,9 @@ import { detectRecovery } from "./core/queue.js";
 import { attachAppEvents } from "./ui/events/globalEvents.js"; 
 import { attachUI } from "./ui/events/sync.js";
 import { renderApp } from "./ui/render/renderApp.js";
-import { setState } from "./core/state.js";
+import { setState, getState as state } from "./core/state.js";
 import { bootstrapApp } from "./core/bootstrap.js";
+import { hydrateOrdersFromStorage } from "./core/orders.js";
 
 boot();
 /* ---------- VERSION ---------- */
@@ -96,11 +97,12 @@ async function boot() {
     applyURLContext();
     syncContextToState();
 
-    
-    attachUI();
     bootstrapApp();
+    attachUI();
+    hydrateOrdersFromStorage();
+    
     attachAppEvents();
-    renderApp();
+    renderApp(state());
     detectRecovery();
     
   } catch (criticalError) {

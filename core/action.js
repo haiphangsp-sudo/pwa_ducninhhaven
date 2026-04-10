@@ -1,6 +1,13 @@
 // core/action.js
 import { getState, setState } from "./state.js";
 
+async function animateItemExit(itemId) {
+  const el = document.querySelector(`.drawer__item[data-id="${itemId}"]`);
+  if (!el) return;
+  el.classList.add("item-exit");
+  await new Promise(resolve => setTimeout(resolve, 400));
+}
+
 export async function updateCartQuantity(itemId, delta) {
   const state = getState();
   const items = [...(state.cart?.items || [])];
@@ -14,11 +21,7 @@ export async function updateCartQuantity(itemId, delta) {
     const nextQty = (Number(items[idx].qty) || 0) + delta;
 
     if (nextQty <= 0) {
-      const element = document.querySelector(`.drawer__item[data-id="${itemId}"]`);
-      if (element) {
-        element.classList.add("item-exit");
-        await new Promise(res => setTimeout(res, 400));
-      }
+      await animateItemExit(itemId);
       nextItems = items.filter((_, i) => i !== idx);
     } else {
       nextItems[idx] = { ...items[idx], qty: nextQty };
@@ -35,7 +38,6 @@ export async function updateCartQuantity(itemId, delta) {
       at: Date.now()
     }
   });
-  
 }
 
 export function resetOrderCommand(status = "idle") {

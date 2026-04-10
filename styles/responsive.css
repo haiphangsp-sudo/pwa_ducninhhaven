@@ -161,7 +161,7 @@
   #hubMenu{
     gap: 20px;
   }
-};
+}
 
 @media (min-width:900px){
   .menu-grid{
