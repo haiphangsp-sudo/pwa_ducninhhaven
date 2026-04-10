@@ -17,7 +17,7 @@ export function renderDrawer(state) {
   const summaryEl = drawer.querySelector(".drawer-summary");
   const sendBtn = document.getElementById("drawerSend");
 
-  const { items, totalQtyFormat, itemUnique, isEmpty, totalPriceFormat } = getDrawerExtended();
+  const { items, totalQtyFormat, itemUnique, isEmpty, totalPriceFormat } = getDrawerExtended(state);
 
   if (isEmpty) {
     if (summaryEl) summaryEl.classList.add("hidden");
