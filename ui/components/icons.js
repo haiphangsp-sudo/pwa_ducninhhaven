@@ -20,7 +20,7 @@ stroke-linecap="round" stroke-linejoin="round">
 <path d="M16 2v20"/>
 </svg>`,
 
-drink: `
+drinks: `
 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
 stroke-linecap="round" stroke-linejoin="round">
 <path d="M5 3h14l-2 8a5 5 0 0 1-10 0L5 3z"/>
