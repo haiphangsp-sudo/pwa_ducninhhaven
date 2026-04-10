@@ -6,12 +6,9 @@ export function renderStatusBar(state) {
   if (!bar) return;
 
   const isExpanded = !!state.orders?.isBarExpanded;
+  
   const activeOrders = state.orders?.active || [];
   const inactiveOrders = state.orders?.inactive || [];
-
-  const actionableOrders = activeOrders.filter(
-    (o) => !["RECOVERING", "CANCELED"].includes(o.status)
-  );
 
   const hasActive = activeOrders.length > 0;
   const hasRecent = inactiveOrders.length > 0;
@@ -24,21 +21,12 @@ export function renderStatusBar(state) {
   bar.classList.remove("hidden");
   bar.className = `status-bar ${isExpanded ? "is-expanded" : "is-collapsed"}`;
 
-  const priorityOrder = actionableOrders.reduce((best, current) => {
-    const scores = {
-      DONE: 5,
-      DELIVERING: 4,
-      COOKING: 3,
-      NEW: 2,
-      SYNCING: 1
-    };
+  const visibleOrders = (state.orders?.active || [])
+  .filter(o => !["RECOVERING", "CANCELED"].includes(o.status))
+  .sort((a, b) => Number(b.updatedAt || 0) - Number(a.updatedAt || 0));
 
-    return (scores[current.status] || 0) > (scores[best?.status] || 0)
-      ? current
-      : best;
-  }, null);
-
-  const status = priorityOrder?.status || "SYNCING";
+  const currentOrder = visibleOrders[0] || null;
+  const status = currentOrder?.status || "SYNCING";
 
   bar.innerHTML = `
     <div class="bar-center">
