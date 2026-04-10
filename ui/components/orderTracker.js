@@ -77,7 +77,7 @@ function renderOrderCard(order) {
 
 function renderOrderItem(item = {}) {
   const qty = Number(item.qty || 1);
-  const name = item.item || item.name || translate("order.unnamed_item") || "Mục chưa tên";
+  const name = item.item || item.name || translate("order.unnamed_item");
   const price = item.price || 0;
   const option = item.option;
 

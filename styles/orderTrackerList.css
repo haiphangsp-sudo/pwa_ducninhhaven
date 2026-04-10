@@ -153,11 +153,6 @@
   color: #8b8b83;
   margin-top: 2px;
 }
-.tracker-item:last-child {
-  border-bottom: none;
-  padding-bottom: 0;
-}
-
 
 .tracker-item__qty {
   flex: 0 0 auto;
