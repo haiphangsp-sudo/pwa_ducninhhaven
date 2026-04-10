@@ -3,7 +3,6 @@ import { sendRequest } from "../services/api.js";
 import { getVariantById } from "./menuQuery.js";
 import { getLocationInfo } from "./placesQuery.js";
 import { notifyResponse, finalizeOrderSuccess, updateCartQuantity } from "./action.js";
-import { showToast } from "../ui/render/renderAck.js";
 
 export function addToCart() {
   const state = getState();
@@ -66,6 +65,7 @@ function buildPayload(state, action) {
   return {
     id: `H-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
     type: action,
+    status: "NEW",
     timestamp: new Date().toISOString(),
     place: placeId,
     placeLabel: placeName,
