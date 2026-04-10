@@ -319,3 +319,26 @@
 .status-badge.is-done { background: #efebe9; color: #8b4513; }
 .status-badge.is-canceled { background: #fdecec; color: #b42318; }
 .status-badge.is-recovering { background: #f4f1ea; color: #7a6c58; }
+
+.status-badge.is-syncing {
+  background: var(--info-soft);
+  color: var(--info);
+}
+
+.tracker-order__stepper.is-syncing .step-status-msg,
+.step-status-msg.is-syncing {
+  color: var(--info);
+}
+
+.step.is-syncing .step-dot,
+.step-dot.is-syncing {
+  background: var(--info);
+  box-shadow: 0 0 0 4px rgba(107, 124, 111, 0.14);
+  animation: pulse-syncing 1.6s infinite;
+}
+
+@keyframes pulse-syncing {
+  0% { box-shadow: 0 0 0 0 rgba(107, 124, 111, 0.28); }
+  70% { box-shadow: 0 0 0 8px rgba(107, 124, 111, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(107, 124, 111, 0); }
+}
