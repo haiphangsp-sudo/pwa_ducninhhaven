@@ -260,7 +260,6 @@
   height: 2px;
   background: #ebe7df;
   z-index: 1;
-  display: none;
 }
 
 .tracker-order__stepper .step-label {
