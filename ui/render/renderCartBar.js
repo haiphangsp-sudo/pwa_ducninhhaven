@@ -10,8 +10,8 @@ import { getDrawerExtended } from "../../core/menuQuery.js";
 ========================= */
 
 export function renderCartBar(state) {
-  const isEmpty = state?.cart?.items?.length === 0;
-  const cart = getDrawerExtended();
+  const isEmpty = state.cart.items.length === 0;
+  const cart = getDrawerExtended(state);
   const cartBar = document.getElementById("cartBar");
   const btn = document.getElementById("cartOpen");
   const countEl = document.getElementById("cartCount");
