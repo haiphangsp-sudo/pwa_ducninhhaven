@@ -117,7 +117,16 @@
   max-width: 260px;
   margin-top: 10px;
 }
-
+.status-bar .step-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  width: 100%;
+  max-width: 260px;
+  margin-top: 10px;
+}
 /* ===============================
    STEP ITEM
 ================================ */
