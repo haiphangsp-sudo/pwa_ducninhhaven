@@ -22,7 +22,7 @@ export function renderStatusBar(state) {
   bar.className = `status-bar ${isExpanded ? "is-expanded" : "is-collapsed"}`;
 
   const visibleOrders = (state.orders?.active || [])
-  .filter(o => !["RECOVERING", "CANCELED"].includes(o.status))
+  .filter(o => !["DONE", "CANCELED"].includes(o.status))
   .sort((a, b) => Number(b.updatedAt || 0) - Number(a.updatedAt || 0));
 
   const currentOrder = visibleOrders[0] || null;

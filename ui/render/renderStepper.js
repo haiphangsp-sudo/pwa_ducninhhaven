@@ -66,9 +66,6 @@ function getStepState(index, currentStatus) {
     case "DONE":
       return "is-complete is-done";
 
-    case "RECOVERING":
-      return "is-pending";
-
     default:
       return "is-pending";
   }
