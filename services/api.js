@@ -30,7 +30,7 @@ export async function sendRequest(payload) {
         headers: { "Content-Type": "text/plain" },
         body: JSON.stringify(fullPayload)
       },
-      8000
+      15000
     );
   } catch {
     throw new Error("network");
@@ -68,7 +68,7 @@ export async function sendRequest(payload) {
     return { success: true, duplicate: true };
   }
 
-  if (data.status === "ok" || data.status === "success") {
+  if (data.status === "success" || data.success === true) {
     markSuccess();
     return { success: true };
   }

@@ -88,7 +88,7 @@ export async function submitOrder(action) {
   try {
     const res = await sendRequest(payload);
 
-    if (res?.ok ) {
+    if (res?.success ) {
       addOrderToTracking(payload);
       setState({
         order: { status: "success" },
