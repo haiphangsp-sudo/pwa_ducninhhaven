@@ -3,133 +3,109 @@
 import { getState, setState } from "./state.js";
 import { getCategoriesForCurrentPlace, getVariantById } from "./menuQuery.js";
 
-/* =======================================================
-   PUBLIC
-======================================================= */
-
 export function bootstrapApp() {
   const state = getState();
-  const next = {};
-
-  const nextLang = resolveLang(state);
-  if (nextLang !== state.lang?.current) {
-    next.lang = { ...(state.lang || {}), current: nextLang };
-  }
 
   const nextContext = resolveContext(state);
-  if (!isSameContext(nextContext, state.context)) {
-    next.context = {
-      ...(state.context || {}),
-      ...nextContext
-    };
+  const nextState = {
+    lang: resolveLangState(state),
+    context: nextContext,
+    panel: resolvePanelState(state, nextContext),
+    cart: resolveCartState(state)
+  };
+
+  const patch = {};
+
+  if (!isSameLang(nextState.lang, state.lang)) {
+    patch.lang = nextState.lang;
   }
 
-  const nextPanel = resolvePanel({
-    ...state,
-    context: {
-      ...(state.context || {}),
-      ...nextContext
-    }
-  });
-
-  if (!isSamePanel(nextPanel, state.panel)) {
-    next.panel = nextPanel;
+  if (!isSameContext(nextState.context, state.context)) {
+    patch.context = nextState.context;
   }
 
-  const nextCart = resolveCart(state);
-  if (!isSameCart(nextCart, state.cart)) {
-    next.cart = nextCart;
+  if (!isSamePanel(nextState.panel, state.panel)) {
+    patch.panel = nextState.panel;
   }
 
-  if (Object.keys(next).length > 0) {
-    setState(next);
+  if (!isSameCart(nextState.cart, state.cart)) {
+    patch.cart = nextState.cart;
+  }
+
+  if (Object.keys(patch).length) {
+    setState(patch);
   }
 
   return getState();
 }
 
-/* =======================================================
-   RESOLVE
-======================================================= */
+/* =========================
+   RESOLVERS
+========================= */
 
-function resolveLang(state) {
-  const fromCache = readStorage("haven_lang");
-  const current = state.lang?.current;
-
-  return normalizeLang(fromCache || current || "vi");
+function resolveLangState(state) {
+  return {
+    ...(state.lang || {}),
+    current: normalizeLang(
+      readStorage("haven_lang") ||
+      state.lang?.current ||
+      "vi"
+    )
+  };
 }
 
 function resolveContext(state) {
   const current = state.context || {};
   const cached = readStorage("haven_context");
 
-  // Có thể mở rộng thêm TTL sau
-  if (cached && typeof cached === "object") {
-    return {
-      ...current,
-      current: cached.current || current.current || null
-    };
-  }
-
-  return current;
+  return {
+    ...current,
+    current: cached?.current || current.current || null
+  };
 }
 
-function resolvePanel(state) {
+function resolvePanelState(state, nextContext) {
+  const contextState = {
+    ...state,
+    context: nextContext
+  };
+
   const currentView = state.panel?.view || null;
   const currentOption = state.panel?.option || null;
+  const categories = getCategoriesForCurrentPlace(contextState) || [];
 
-  const categories = getCategoriesForCurrentPlace() || [];
   if (!categories.length) {
+    return { view: null, option: null };
+  }
+
+  const currentMatch = categories.find(cat => cat.key === currentView);
+
+  if (currentMatch && currentOption) {
     return {
-      view: null,
-      option: null
+      view: currentMatch.key,
+      option: currentOption
     };
   }
 
-  // 1. Ưu tiên panel hiện tại nếu còn hợp lệ
-  let view = categories.find(cat => cat.key === currentView)?.key || null;
-  let option = currentOption;
-
-  // 2. Nếu panel cũ không còn hợp lệ thì lấy panel đầu tiên hợp lệ
-  if (!view || !option) {
-    view = categories[0].key;
-    option = categories[0].ui;
-  }
-
   return {
-    view,
-    option
+    view: categories[0].key,
+    option: categories[0].ui
   };
 }
 
-function resolveCart(state) {
-  const items = state.cart?.items || [];
-  if (!Array.isArray(items) || items.length === 0) {
-    return {
-      ...(state.cart || {}),
-      items: []
-    };
-  }
-
-  // Chỉ giữ lại item còn tồn tại trong menu
-  const validItems = items.filter(item => {
-    if (!item?.id) return false;
-    return !!getVariantById(item.id);
-  });
+function resolveCartState(state) {
+  const currentCart = state.cart || {};
+  const items = Array.isArray(currentCart.items) ? currentCart.items : [];
 
   return {
-    ...(state.cart || {}),
-    items: validItems
+    ...currentCart,
+    items: items.filter(item => item?.id && getVariantById(item.id))
   };
 }
 
-/* =======================================================
+/* =========================
    HELPERS
-======================================================= */
-
-function normalizeLang(lang) {
-  return lang === "en" ? "en" : "vi";
-}
+========================= */
 
 function readStorage(key) {
   try {
@@ -140,19 +116,22 @@ function readStorage(key) {
   }
 }
 
+function normalizeLang(lang) {
+  return lang === "en" ? "en" : "vi";
+}
+
+function isSameLang(a, b) {
+  return (a?.current || "vi") === (b?.current || "vi");
+}
+
 function isSamePanel(a, b) {
-  return (a?.view || null) === (b?.view || null)
-      && (a?.option || "cart") === (b?.option || "cart");
+  return (a?.view || null) === (b?.view || null) &&
+         (a?.option || null) === (b?.option || null);
 }
 
 function isSameContext(a, b) {
-  const aId = a?.current?.id || null;
-  const aType = a?.current?.type || null;
-
-  const bId = b?.current?.id || null;
-  const bType = b?.current?.type || null;
-
-  return aId === bId && aType === bType;
+  return (a?.current?.id || null) === (b?.current?.id || null) &&
+         (a?.current?.type || null) === (b?.current?.type || null);
 }
 
 function isSameCart(a, b) {
@@ -161,8 +140,8 @@ function isSameCart(a, b) {
 
   if (aItems.length !== bItems.length) return false;
 
-  return aItems.every((item, i) => {
-    const other = bItems[i];
+  return aItems.every((item, index) => {
+    const other = bItems[index];
     return item?.id === other?.id && item?.qty === other?.qty;
   });
 }
