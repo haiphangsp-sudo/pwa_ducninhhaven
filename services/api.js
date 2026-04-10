@@ -4,21 +4,15 @@ import { CONFIG } from "../config.js";
 import { isOnline, fetchWithTimeout } from "./network.js";
 import { markSuccess } from "./health.js";
 
-/*
-**
-** Giao tiếp (API Layer): Chịu trách nhiệm gửi dữ liệu đi và nhận phản hồi từ Google Sheets.
-**
-*/
-
 export async function sendRequest(payload) {
   if (!isOnline()) {
     throw new Error("offline");
   }
 
-  const fullPayload = {
+  const body = JSON.stringify({
     ...payload,
     secret: CONFIG.API_SECRET
-  };
+  });
 
   let res;
 
@@ -28,7 +22,7 @@ export async function sendRequest(payload) {
       {
         method: "POST",
         headers: { "Content-Type": "text/plain" },
-        body: JSON.stringify(fullPayload)
+        body
       },
       15000
     );
@@ -36,7 +30,7 @@ export async function sendRequest(payload) {
     throw new Error("network");
   }
 
-  if (!res || !res.ok) {
+  if (!res?.ok) {
     throw new Error("server");
   }
 
@@ -47,31 +41,32 @@ export async function sendRequest(payload) {
     throw new Error("invalid_json");
   }
 
-  if (data.status === "unauthorized") {
+  const status = data?.status;
+
+  if (status === "unauthorized") {
     return { success: false, fatal: true, message: "unauthorized" };
   }
 
-  if (data.status === "invalid") {
+  if (status === "invalid") {
     return { success: false, fatal: true, message: "invalid" };
   }
 
-  if (data.status === "rate_limited") {
+  if (status === "rate_limited" || status === "retry") {
     throw new Error("retry");
   }
 
-  if (data.status === "retry") {
-    throw new Error("retry");
-  }
-
-  if (data.status === "duplicate") {
+  if (status === "duplicate") {
     markSuccess();
     return { success: true, duplicate: true };
   }
 
-  if (data.status === "success" || data.success === true) {
+  if (status === "ok" || status === "success" || data?.success === true) {
     markSuccess();
     return { success: true };
   }
 
-  return { success: false, message: data?.message || "unknown_response" };
+  return {
+    success: false,
+    message: data?.message || status || "unknown_response"
+  };
 }
