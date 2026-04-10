@@ -45,7 +45,7 @@ function renderOrderCard(order) {
           <div class="tracker-order__code">#${shortId}</div>
           <div class="tracker-order__meta">
             ${order.placeLabel ? `<span>${escapeHtml(order.placeLabel)}</span>` : ""}
-            ${order.time ? `<span>• ${escapeHtml(order.time)}</span>` : ""}
+            ${order.createdAt ? `<span>• ${formatTime(order.createdAt)}</span>` : ""}
           </div>
         </div>
 
@@ -113,4 +113,19 @@ function escapeHtml(value) {
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#39;");
+}
+function formatTime(ts) {
+  if (!ts) return "";
+  const d = new Date(Number(ts));
+  const now = Date.now();
+
+  const diff = now - d.getTime();
+
+  if (diff < 60_000) return "just now";
+  if (diff < 3_600_000) return Math.floor(diff / 60_000) + "m";
+
+  return d.toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit"
+  });
 }
