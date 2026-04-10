@@ -161,6 +161,7 @@ function syncLanguage(state) {
   renderCartBar(state);
   renderStatusBar(state);
   renderHub(state);
+  renderPanel(state);
 }
 async function handleOrderLogic(state) {
   const { action, at } = state.order;
