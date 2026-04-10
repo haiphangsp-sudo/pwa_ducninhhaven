@@ -84,12 +84,22 @@ function buildPayload(state, action) {
 
 function setOrderStatus(status) {
   const state = getState();
-  setState({
+
+  const next = {
     order: {
       ...state.order,
       status
     }
-  });
+  };
+
+  if (status === "success" || status === "duplicate") {
+    next.cart = {
+      ...state.cart,
+      items: []
+    };
+  }
+
+  setState(next);
 }
 
 export async function submitOrder(action) {
