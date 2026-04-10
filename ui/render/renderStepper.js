@@ -1,95 +1,39 @@
-// ui/render/renderStepper.js
 import { STRINGS } from "../../data/i18n.js";
 import { getState } from "../../core/state.js";
 
+const STEP_KEYS = ["NEW", "COOKING", "DELIVERING", "DONE"];
+
+/**
+ * Mapping đã chốt:
+ * SYNCING    -> ● ○ ○ ○
+ * NEW        -> ✔ ● ○ ○
+ * COOKING    -> ✔ ✔ ● ○
+ * DELIVERING -> ✔ ✔ ✔ ●
+ * DONE       -> ✔ ✔ ✔ ✔
+ *
+ * longMsg = false  => dùng msg_*
+ * longMsg = true   => dùng msg_long_*
+ */
 export function renderStepper(currentStatus, longMsg = false) {
   const lang = getState().lang.current || "vi";
 
-  const steps = [
-    {
-      key: "NEW",
-      label: STRINGS.status.NEW?.en || "Received",
-      msg: STRINGS.status.msg_NEW?.[lang] || "",
-      msgLong: STRINGS.status.msg_long_NEW?.[lang] || ""
-    },
-    {
-      key: "COOKING",
-      label: STRINGS.status.COOKING?.en || "Preparing",
-      msg: STRINGS.status.msg_COOKING?.[lang] || "",
-      msgLong: STRINGS.status.msg_long_COOKING?.[lang] || ""
-    },
-    {
-      key: "DELIVERING",
-      label: STRINGS.status.DELIVERING?.en || "Delivering",
-      msg: STRINGS.status.msg_DELIVERING?.[lang] || "",
-      msgLong: STRINGS.status.msg_long_DELIVERING?.[lang] || ""
-    },
-    {
-      key: "DONE",
-      label: STRINGS.status.DONE?.en || "Completed",
-      msg: STRINGS.status.msg_DONE?.[lang] || "",
-      msgLong: STRINGS.status.msg_long_DONE?.[lang] || ""
-    }
-  ];
+  const steps = STEP_KEYS.map((key) => ({
+    key,
+    label: STRINGS.status?.[key]?.en || key,
+  }));
 
-  // thứ tự logic đầy đủ, có SYNCING/RECOVERING
-  const statusOrder = ["SYNCING", "NEW", "COOKING", "DELIVERING", "DONE", "RECOVERING"];
-  const currentIndex = statusOrder.indexOf(currentStatus);
-
-  const getMessage = () => {
-    if (currentStatus === "SYNCING") {
-      return longMsg
-        ? STRINGS.status.msg_long_SYNCING?.[lang] || STRINGS.status.msg_SYNCING?.[lang] || ""
-        : STRINGS.status.msg_SYNCING?.[lang] || "";
-    }
-
-    if (currentStatus === "RECOVERING") {
-      return longMsg
-        ? STRINGS.status.msg_long_RECOVERING?.[lang] || STRINGS.status.msg_RECOVERING?.[lang] || ""
-        : STRINGS.status.msg_RECOVERING?.[lang] || "";
-    }
-
-    const currentStep = steps.find(step => step.key === currentStatus);
-    if (!currentStep) return "";
-
-    return longMsg ? currentStep.msgLong : currentStep.msg;
-  };
-
-  // visual index chỉ áp dụng cho 4 step thật
-  const getVisualIndex = () => {
-    if (currentStatus === "SYNCING") return -1;
-    if (currentStatus === "RECOVERING") return steps.length;
-    return steps.findIndex(step => step.key === currentStatus);
-  };
-
-  const currentMsg = getMessage();
-  const visualIndex = getVisualIndex();
-  const syncingClass = currentStatus === "SYNCING" ? " is-syncing" : "";
+  const message = getStatusMessage(currentStatus, lang, longMsg);
 
   return `
-    ${currentMsg ? `<div class="step-status-msg${syncingClass}">${escapeHtml(currentMsg)}</div>` : ""}
-    <div class="step-container${syncingClass}">
+    ${message ? `<div class="step-status-msg${currentStatus === "SYNCING" ? " is-syncing" : ""}">${escapeHtml(message)}</div>` : ""}
+    <div class="step-container${currentStatus === "SYNCING" ? " is-syncing" : ""}">
       ${steps.map((step, index) => {
-        let stateClass = "is-pending";
-
-        if (currentStatus === "RECOVERING") {
-          stateClass = "is-complete";
-        } else if (currentStatus === "SYNCING") {
-          stateClass = "is-pending";
-        } else if (visualIndex > index) {
-          stateClass = "is-complete";
-        } else if (visualIndex === index) {
-          stateClass = "is-active";
-        }
-
-        const extraSyncingClass =
-          currentStatus === "SYNCING" && index === 0 ? " is-syncing" : "";
+        const stateClass = getStepState(index, currentStatus);
+        const dotContent = stateClass === "is-complete" ? "✓" : "";
 
         return `
-          <div class="step ${stateClass}${extraSyncingClass}">
-            <div class="step-dot${extraSyncingClass}">
-              ${stateClass === "is-complete" ? "✓" : ""}
-            </div>
+          <div class="step ${stateClass}">
+            <div class="step-dot">${dotContent}</div>
             <div class="step-label">${escapeHtml(step.label)}</div>
             ${index < steps.length - 1 ? `<div class="step-line"></div>` : ""}
           </div>
@@ -97,6 +41,43 @@ export function renderStepper(currentStatus, longMsg = false) {
       }).join("")}
     </div>
   `;
+}
+
+function getStepState(index, currentStatus) {
+  switch (currentStatus) {
+    case "SYNCING":
+      return index === 0 ? "is-active is-syncing" : "is-pending";
+
+    case "NEW":
+      if (index === 0) return "is-complete";
+      if (index === 1) return "is-active";
+      return "is-pending";
+
+    case "COOKING":
+      if (index <= 1) return "is-complete";
+      if (index === 2) return "is-active";
+      return "is-pending";
+
+    case "DELIVERING":
+      if (index <= 2) return "is-complete";
+      if (index === 3) return "is-active";
+      return "is-pending";
+
+    case "DONE":
+      return "is-complete is-done";
+
+    case "RECOVERING":
+      return "is-pending";
+
+    default:
+      return "is-pending";
+  }
+}
+
+function getStatusMessage(status, lang, longMsg) {
+  const suffix = longMsg ? "msg_long_" : "msg_";
+  const key = `${suffix}${status}`;
+  return STRINGS.status?.[key]?.[lang] || "";
 }
 
 function escapeHtml(value) {
