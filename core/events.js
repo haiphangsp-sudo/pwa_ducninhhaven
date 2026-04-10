@@ -88,7 +88,7 @@ export async function submitOrder(action) {
   try {
     const res = await sendRequest(payload);
 
-    if (res?.success ) {
+    if (res&&res.success ) {
       addOrderToTracking(payload);
       setState({
         order: { status: "success" },
@@ -96,19 +96,19 @@ export async function submitOrder(action) {
       });
       return true;
     }
-    if(res?.duplicate) {
+    if(res&&res.duplicate) {
       setState({
         order: { status: "duplicate" },
         cart: { items: [] }
       });
       return true;
     }
-    if(res?.rate_limited) {
+    if(res.rate_limited) {
       setState({order: {status: "rate_limited"}});
       return true;
     }
 
-    throw new Error(res?.message || "API_FAIL");
+    throw new Error(res.message || "API_FAIL");
   } catch (error) {
     setState({order: {status: "error"}});
     return false;
