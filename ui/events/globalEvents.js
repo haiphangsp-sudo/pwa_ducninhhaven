@@ -1,159 +1,167 @@
 // ui/events/globalEvents.js
 
-import { setState } from "../../core/state.js";
+import { getState, setState } from "../../core/state.js";
 import { updateCartQuantity } from "../../core/action.js";
 import { applyPlaceById, syncContextToState } from "../../core/context.js";
 import { animateFlyToCart } from "../../ui/interactions/animateFlyToCart.js";
 import { applyScrollUI } from "./scrollBehavior.js";
 import { syncOrdersWithServer } from "../../core/orders.js";
-import { getState } from "../../core/state.js";
 import { attachRuntimeRefresh } from "../../core/runtimeRefresh.js";
 
-
-
-/* =========================
-   MAIN EVENTS
-========================= */
 let orderPollingStarted = false;
 
 export function attachAppEvents() {
   document.addEventListener("click", handleGlobalClick);
 
-  window.addEventListener("contextchange", () => {
-    syncContextToState();
-  });
+  window.addEventListener("contextchange", syncContextToState);
+  window.addEventListener("scroll", handleScroll, { passive: true });
 
-  let ticking = false;
-  window.addEventListener("scroll", () => {
-    if (!ticking) {
-      requestAnimationFrame(() => {
-        applyScrollUI();
-        ticking = false;
-      });
-      ticking = true;
-    }
-  });
-
-  if (!orderPollingStarted) {
-    orderPollingStarted = true;
-
-    // 1. gọi ngay
-    syncOrdersWithServer();
-
-    // 3. POLLING CHẬM (45s)
-    setInterval(() => {
-      const { active } = getState().orders || {};
-
-      const hasActive = active?.some(
-        o => !['DONE', 'CANCELED'].includes(o.status)
-      );
-
-      if (hasActive) {
-        syncOrdersWithServer();
-      }
-    }, 15000);
-  }
- 
+  startOrderPolling();
   attachRuntimeRefresh({
     intervalMs: 60000,
     enableInterval: true
   });
 }
 
-/* =========================
-   GLOBAL CLICK
-========================= */
+function handleScroll() {
+  if (handleScroll.ticking) return;
+
+  handleScroll.ticking = true;
+  requestAnimationFrame(() => {
+    applyScrollUI();
+    handleScroll.ticking = false;
+  });
+}
+
+function startOrderPolling() {
+  if (orderPollingStarted) return;
+  orderPollingStarted = true;
+
+  syncOrdersWithServer();
+
+  setInterval(() => {
+    const active = getState().orders?.active || [];
+    const hasActive = active.some(o => !["DONE", "CANCELED"].includes(o.status));
+
+    if (hasActive) {
+      syncOrdersWithServer();
+    }
+  }, 15000);
+}
 
 function handleGlobalClick(e) {
   const target = e.target.closest("[data-action]");
   if (!target) return;
 
-  const cmd = {
+  const cmd = readCommand(target);
+
+  if (handlePanelAction(cmd)) return;
+  if (handleOverlayAction(cmd)) return;
+  if (handlePlaceAction(cmd)) return;
+  if (handleOrderAction(cmd, target)) return;
+  if (handleCartAction(cmd)) return;
+  if (handleStatusAction(cmd)) return;
+  if (handleLanguageAction(cmd)) return;
+}
+
+function readCommand(target) {
+  return {
     action: target.dataset.action,
     value: target.dataset.value,
     option: target.dataset.option,
     extra: target.dataset.extra
   };
-
-
-  switch (cmd.action) {
-
-    /* ---------- NAV ---------- */
-
-    case "open-panel":
-      setState({
-        panel: {
-          view: cmd.value,
-          option: cmd.option
-        }
-      });
-      break;
-
-    case "open-overlay":
-      setState({
-        overlay: { view: cmd.value }
-      });
-      break;
-
-    case "close-overlay":
-      setState({
-        overlay: { view: null }
-      });
-      break;
-    
-    case "select-place":
-      setState({
-        overlay: { view: null }
-      });
-      applyPlaceById(cmd.value);
-      break;
-
-    /* ---------- CART / ORDER ---------- */
-    case "add_cart":
-      setOrder( cmd )
-      animateFlyToCart(target);
-      break;
-
-    case "buy_now":
-      setOrder(cmd);
-      break;
-
-    case "send_cart":
-      setOrder(cmd);
-      break;
-    
-    case "update-qty":
-      const delta = parseInt(cmd.option);
-      updateCartQuantity(cmd.value, delta);
-      break;
-    
-    case "toggle_status":
-      setState({
-        orders: {
-          isBarExpanded: cmd.value !== "true"? true : false
-        }
-    });
-      break;
-
-    /* ---------- LANGUAGE ---------- */
-
-    case "change-lang":
-      setState({ lang: { current: cmd.value } });
-      break;
-
-    default:
-      break;
-  }
 }
 
-function setOrder(cmd) {
+function handlePanelAction(cmd) {
+  if (cmd.action !== "open-panel") return false;
+
+  setState({
+    panel: {
+      view: cmd.value,
+      option: cmd.option
+    }
+  });
+
+  return true;
+}
+
+function handleOverlayAction(cmd) {
+  if (cmd.action === "open-overlay") {
+    setState({ overlay: { view: cmd.value } });
+    return true;
+  }
+
+  if (cmd.action === "close-overlay") {
+    setState({ overlay: { view: null } });
+    return true;
+  }
+
+  return false;
+}
+
+function handlePlaceAction(cmd) {
+  if (cmd.action !== "select-place") return false;
+
+  setState({ overlay: { view: null } });
+  applyPlaceById(cmd.value);
+  return true;
+}
+
+function handleOrderAction(cmd, target) {
+  if (!["add_cart", "buy_now", "send_cart"].includes(cmd.action)) return false;
+
+  setOrderCommand(cmd);
+
+  if (cmd.action === "add_cart") {
+    animateFlyToCart(target);
+  }
+
+  return true;
+}
+
+function handleCartAction(cmd) {
+  if (cmd.action !== "update-qty") return false;
+
+  const delta = parseInt(cmd.option, 10);
+  if (Number.isNaN(delta)) return true;
+
+  updateCartQuantity(cmd.value, delta);
+  return true;
+}
+
+function handleStatusAction(cmd) {
+  if (cmd.action !== "toggle_status") return false;
+
+  const state = getState();
+
+  setState({
+    orders: {
+      ...state.orders,
+      isBarExpanded: cmd.value !== "true"
+    }
+  });
+
+  return true;
+}
+
+function handleLanguageAction(cmd) {
+  if (cmd.action !== "change-lang") return false;
+
+  setState({
+    lang: { current: cmd.value }
+  });
+
+  return true;
+}
+
+function setOrderCommand(cmd) {
   setState({
     order: {
       action: cmd.action,
-      line: cmd.value,
-      status: cmd.option,
+      line: cmd.value || null,
+      status: cmd.option || "idle",
       at: Date.now()
     }
   });
-  // Cập nhật trạng thái 'sending' để renderStatusBar hiện spinner
 }
