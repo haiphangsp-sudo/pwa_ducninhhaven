@@ -15,7 +15,7 @@ const STEP_KEYS = ["NEW", "COOKING", "DELIVERING", "DONE"];
  * longMsg = true   => dùng msg_long_*
  */
 export function renderStepper(currentStatus, longMsg = false) {
-  const lang = getState().lang.current || "vi";
+  const lang = getState().lang.current;
 
   const steps = STEP_KEYS.map((key) => ({
     key,
