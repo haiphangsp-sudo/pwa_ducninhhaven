@@ -1,3 +1,6 @@
+// ui/events/scrollBehavior.js
+import { getState } from "../core/state.js";
+
 let lastY = window.scrollY;
 
 export function applyScrollUI() {
@@ -7,11 +10,12 @@ export function applyScrollUI() {
   const nav = document.getElementById("contextBar");
   const hub = document.getElementById("hubMenu");
   const cart = document.getElementById("cartBar");
+  const empty = getState().cart.items.length === 0;
 
   if (y <= 10) {
     nav?.classList.remove("context-bar--hidden");
     hub?.classList.remove("hub-menu--hidden");
-    cart?.classList.remove("cart-bar--hidden");
+    if(!empty) cart?.classList.remove("cart-bar--hidden");
     lastY = y;
     return;
   }
@@ -25,7 +29,7 @@ export function applyScrollUI() {
   } else {
     nav?.classList.remove("context-bar--hidden");
     hub?.classList.remove("hub-menu--hidden");
-    cart?.classList.remove("cart-bar--hidden");
+    if(!empty) cart?.classList.remove("cart-bar--hidden");
   }
 
   lastY = y;
