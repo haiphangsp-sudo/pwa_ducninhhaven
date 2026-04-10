@@ -51,9 +51,9 @@ export function attachAppEvents() {
       if (hasActive) {
         syncOrdersWithServer();
       }
-    }, 45000);
+    }, 15000);
   }
-
+ 
   attachRuntimeRefresh({
     intervalMs: 60000,
     enableInterval: true
