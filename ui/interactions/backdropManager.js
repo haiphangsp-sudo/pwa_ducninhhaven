@@ -10,10 +10,10 @@ export function syncOverlay(activeId) {
 
     // So khớp ID của element với activeId từ State
     if (el.id === activeId) {
-      el.classList.remove("animate-fade-out");
+      el.classList.remove("animate-fade-out", "hidden");
       el.classList.add("animate-fade-in");
     } else {
-      el.classList.add("animate-fade-out");
+      el.classList.add("animate-fade-out", "hidden");
       el.classList.remove("animate-fade-in");
     }
   });
