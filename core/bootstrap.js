@@ -81,8 +81,8 @@ function resolvePanel(state) {
   const categories = getCategoriesForCurrentPlace() || [];
   if (!categories.length) {
     return {
-      view: null,
-      option: "cart"
+      view: currentView,
+      option: currentOption
     };
   }
 
