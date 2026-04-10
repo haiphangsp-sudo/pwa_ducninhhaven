@@ -8,15 +8,18 @@ const TERMINAL_STATUSES = ['RECOVERING', 'CANCELED'];
 const ACTIONABLE_STATUSES = ['NEW', 'COOKING', 'DELIVERING', 'DONE', 'SYNCING'];
 const MAX_INACTIVE_ORDERS = 10;
 
+/* thời gian coi là SYNCING quá lâu */
+const SYNCING_STALE_MS = 15000;
+
 /* =========================
+   NORMALIZE
 ========================= */
 
 function normalizeOrder(order = {}) {
   return {
     id: order.id || "",
     status: order.status || "NEW",
-    // CHỈNH SỬA: Cho phép giữ lại String để parse sau này
-    items: order.items || [], 
+    items: order.items || [],
     time: order.time || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     totalQty: Number(order.totalQty || 0),
     totalPrice: Number(order.totalPrice || 0),
@@ -24,7 +27,8 @@ function normalizeOrder(order = {}) {
     placeLabel: order.placeLabel || "",
     type: order.type || "",
     device: order.device || "",
-    updatedAt: Number(order.updatedAt || Date.now())
+    updatedAt: Number(order.updatedAt || Date.now()),
+    syncedAt: Number(order.syncedAt || 0)
   };
 }
 
@@ -34,6 +38,11 @@ function isTerminalStatus(status) {
 
 function isActionableStatus(status) {
   return ACTIONABLE_STATUSES.includes(status);
+}
+
+function isSyncingTooLong(order = {}) {
+  return order.status === "SYNCING" &&
+    Date.now() - Number(order.updatedAt || 0) > SYNCING_STALE_MS;
 }
 
 /* =========================
@@ -58,7 +67,8 @@ function dedupeOrders(orders = []) {
       ...prev,
       ...order,
       items: order.items.length ? order.items : prev.items,
-      updatedAt: Math.max(Number(prev.updatedAt || 0), Number(order.updatedAt || 0))
+      updatedAt: Math.max(Number(prev.updatedAt || 0), Number(order.updatedAt || 0)),
+      syncedAt: Math.max(Number(prev.syncedAt || 0), Number(order.syncedAt || 0))
     });
   });
 
@@ -132,13 +142,15 @@ export function addOrderToTracking(orderId, items = [], meta = {}) {
     placeLabel: meta.placeLabel,
     type: meta.type,
     device: meta.device,
-    updatedAt: Date.now()
+    updatedAt: Date.now(),
+    syncedAt: Date.now()
   });
 
   const next = splitOrders([...active, ...inactive, newOrder]);
 
   setState({
     orders: {
+      ...state.orders,
       active: next.active,
       inactive: next.inactive
     }
@@ -173,20 +185,35 @@ export async function syncOrdersWithServer() {
       const existing = currentMap.get(id);
       const incoming = updates[id];
 
+      /* server trả string status */
       if (typeof incoming === "string") {
         return normalizeOrder({
           ...existing,
           id,
           status: incoming,
-          updatedAt: Date.now()
+          updatedAt: Date.now(),
+          syncedAt: Date.now()
         });
       }
 
+      /* server trả object order */
+      if (incoming && typeof incoming === "object") {
+        return normalizeOrder({
+          ...existing,
+          ...incoming,
+          id,
+          updatedAt: Date.now(),
+          syncedAt: Date.now()
+        });
+      }
+
+      /* server chưa có gì -> giữ placeholder cũ */
       return normalizeOrder({
         ...existing,
-        ...(incoming || {}),
         id,
-        updatedAt: Date.now()
+        status: existing?.status || "SYNCING",
+        updatedAt: existing?.updatedAt || Date.now(),
+        syncedAt: existing?.syncedAt || 0
       });
     });
 
@@ -197,6 +224,7 @@ export async function syncOrdersWithServer() {
 
     setState({
       orders: {
+        ...state.orders,
         active: next.active,
         inactive: next.inactive
       }
@@ -223,6 +251,7 @@ export function clearCompletedOrders() {
 
   setState({
     orders: {
+      ...state.orders,
       active: stillActive,
       inactive: nextInactive
     }
@@ -243,7 +272,8 @@ export function hydrateOrdersFromStorage() {
       id,
       status: "SYNCING",
       items: [],
-      updatedAt: Date.now()
+      updatedAt: Date.now(),
+      syncedAt: 0
     })
   );
 
@@ -251,9 +281,40 @@ export function hydrateOrdersFromStorage() {
 
   setState({
     orders: {
+      ...state.orders,
       active: next.active,
       inactive: next.inactive,
       isBarExpanded: false
+    }
+  });
+
+  return true;
+}
+
+/* dùng khi muốn refresh cảm giác UI cho đơn đang kẹt syncing */
+export function markSyncingAgedOrders() {
+  const state = getState();
+  const active = state.orders?.active || [];
+  const inactive = state.orders?.inactive || [];
+
+  let changed = false;
+
+  const nextActive = active.map(order => {
+    if (!isSyncingTooLong(order)) return order;
+    changed = true;
+    return normalizeOrder({
+      ...order,
+      updatedAt: Date.now()
+    });
+  });
+
+  if (!changed) return false;
+
+  setState({
+    orders: {
+      ...state.orders,
+      active: nextActive,
+      inactive
     }
   });
 
@@ -267,4 +328,9 @@ export function getActionableOrders() {
 
 export function getRecentInactiveOrders() {
   return (getState().orders?.inactive || []).slice(0, MAX_INACTIVE_ORDERS);
+}
+
+export function getSyncingOrders() {
+  const active = getState().orders?.active || [];
+  return active.filter(order => order.status === "SYNCING");
 }
