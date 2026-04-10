@@ -141,7 +141,7 @@
   padding-bottom: 10px;
   border-bottom: 1px dashed #efefef;
 }
-.tracker-item .total-price {
+.tracker-item.total-price {
   flex: 0 0 auto;
   border-bottom: none;
 }
