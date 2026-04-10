@@ -10,7 +10,7 @@ import { getDrawerExtended } from "../../core/menuQuery.js";
 ========================= */
 
 export function renderCartBar(state) {
-
+  const isEmpty = state?.cart?.items?.length === 0;
   const cart = getDrawerExtended();
   const cartBar = document.getElementById("cartBar");
   const btn = document.getElementById("cartOpen");
@@ -18,7 +18,7 @@ export function renderCartBar(state) {
   if (!cartBar || !btn || !countEl) return;
   
   
-  if (cart.isEmpty) {
+  if (isEmpty) {
     cartBar.classList.add("cart-bar--hidden");
   } else {
     cartBar.classList.remove("cart-bar--hidden");
