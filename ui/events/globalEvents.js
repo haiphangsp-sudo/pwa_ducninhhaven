@@ -45,7 +45,7 @@ export function attachAppEvents() {
       const { active } = getState().orders || {};
 
       const hasActive = active?.some(
-        o => !['RECOVERING', 'CANCELED'].includes(o.status)
+        o => !['DONE', 'CANCELED'].includes(o.status)
       );
 
       if (hasActive) {
