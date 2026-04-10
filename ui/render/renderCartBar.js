@@ -15,7 +15,7 @@ export function renderCartBar(state) {
   const cartBar = document.getElementById("cartBar");
   const btn = document.getElementById("cartOpen");
   const countEl = document.getElementById("cartCount");
-  if (!bar || !btn || !countEl) return;
+  if (!cartBar || !btn || !countEl) return;
   
   
   if (cart.isEmpty) {
