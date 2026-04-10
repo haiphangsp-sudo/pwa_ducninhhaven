@@ -1,8 +1,7 @@
-// ui/render/renderStatusBar.js
+import { getState } from "../../core/state.js";
 import { renderStepper } from "../render/renderStepper.js";
 import { translate } from "../utils/translate.js";
 import { formatPrice } from "../utils/formatPrice.js";
-import { getState } from "../../core/state.js";
 
 export function openOrderTracker() {
   const state = getState();
@@ -25,16 +24,34 @@ export function openOrderTracker() {
     return;
   }
 
-  listContainer.innerHTML = orders
+  const cards = orders
+    .slice()
     .sort((a, b) => Number(b.updatedAt || 0) - Number(a.updatedAt || 0))
-    .map(renderOrderCard)
+    .map(order => {
+      try {
+        return renderOrderCard(order);
+      } catch (error) {
+        console.error("Render order card failed:", order, error);
+        return "";
+      }
+    })
+    .filter(Boolean)
     .join("");
+
+  listContainer.innerHTML = cards || `
+    <div class="tracker-empty">
+      <div class="tracker-empty__icon">🍃</div>
+      <div class="tracker-empty__text">
+        ${translate("order.no_active_order")}
+      </div>
+    </div>
+  `;
 }
 
-function renderOrderCard(order) {
+function renderOrderCard(order = {}) {
   const safeId = String(order.id || "");
   const shortId = safeId.includes("-") ? safeId.split("-")[1] : safeId;
-  const status = order.status || "NEW";
+  const status = String(order.status || "NEW").toUpperCase();
 
   const items = parseItems(order.items);
   const itemsHtml = items.length
@@ -45,10 +62,10 @@ function renderOrderCard(order) {
     <article class="tracker-order">
       <div class="tracker-order__head">
         <div class="tracker-order__identity">
-          <div class="tracker-order__code">#${shortId}</div>
+          <div class="tracker-order__code">#${escapeHtml(shortId)}</div>
           <div class="tracker-order__meta">
             ${order.placeLabel ? `<span>${escapeHtml(order.placeLabel)}</span>` : ""}
-            ${order.createdAt ? `<span>• ${formatTime(order.createdAt)}</span>` : ""}
+            ${order.createdAt ? `<span>• ${escapeHtml(formatTime(order.createdAt))}</span>` : ""}
           </div>
         </div>
 
@@ -64,14 +81,14 @@ function renderOrderCard(order) {
             <div class="tracker-item__content">
               <span class="tracker-item__name">${translate("order.total")}</span>
             </div>
-            <span class="tracker-item__price">${formatPrice(order.totalPrice)}</span>
+            <span class="tracker-item__price">${safeFormatPrice(order.totalPrice)}</span>
           </div>
         </div>
       </div>
 
       <div class="tracker-order__foot">
         <div class="tracker-order__stepper">
-          ${renderStepper(status, true )}
+          ${renderStepper(status, true)}
         </div>
       </div>
     </article>
@@ -80,8 +97,8 @@ function renderOrderCard(order) {
 
 function renderOrderItem(item = {}) {
   const qty = Number(item.qty || 1);
-  const name = item.item || item.name || translate("order.unnamed_item");
-  const price = item.price || 0;
+  const name = item.item || item.name || "—";
+  const price = Number(item.price || 0);
   const option = item.option;
 
   return `
@@ -91,7 +108,7 @@ function renderOrderItem(item = {}) {
         <span class="tracker-item__name">${escapeHtml(name)}</span>
         ${option ? `<span class="tracker-item__option">${escapeHtml(option)}</span>` : ""}
       </div>
-      <span class="tracker-item__price">${formatPrice(price)}</span>
+      <span class="tracker-item__price">${safeFormatPrice(price)}</span>
     </div>
   `;
 }
@@ -109,6 +126,29 @@ function parseItems(raw) {
   }
 }
 
+function formatTime(value) {
+  const ts = Number(value);
+  if (!Number.isFinite(ts) || ts <= 0) return "";
+
+  try {
+    return new Date(ts).toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit"
+    });
+  } catch {
+    return "";
+  }
+}
+
+function safeFormatPrice(value) {
+  try {
+    return formatPrice(Number(value || 0));
+  } catch (error) {
+    console.error("formatPrice failed:", value, error);
+    return `${Number(value || 0).toLocaleString("vi-VN")} đ`;
+  }
+}
+
 function escapeHtml(value) {
   return String(value)
     .replaceAll("&", "&amp;")
@@ -116,19 +156,4 @@ function escapeHtml(value) {
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#39;");
-}
-function formatTime(ts) {
-  if (!ts) return "";
-  const d = new Date(Number(ts));
-  const now = Date.now();
-
-  const diff = now - d.getTime();
-
-  if (diff < 60_000) return "just now";
-  if (diff < 3_600_000) return Math.floor(diff / 60_000) + "m";
-
-  return d.toLocaleTimeString([], {
-    hour: "2-digit",
-    minute: "2-digit"
-  });
 }
