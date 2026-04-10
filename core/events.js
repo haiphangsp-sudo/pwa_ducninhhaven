@@ -69,7 +69,7 @@ function buildPayload(state, action) {
     timestamp: new Date().toISOString(),
     place: placeId,
     placeLabel: placeName,
-    mode: mode || "",
+    mode: mode,
     totalQty,
     totalPrice,
     items: formattedItems,
