@@ -217,7 +217,7 @@
 .step-status-msg {
   position: absolute;
   left: 50%;
-  top: -15px;
+  top: -10px;
   transform: translateX(-50%);
   white-space: nowrap;
   font-weight: 800;
