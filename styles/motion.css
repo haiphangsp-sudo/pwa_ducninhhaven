@@ -68,14 +68,21 @@
 #deliveryStatus {
   animation: slide-up .22s ease;
 }
-
-.place-picker {
-  animation: picker-in .18s var(--ease-soft);
-}
-
-@keyframes fade-in {
+@keyframes fadeIn {
   from { opacity: 0; }
   to   { opacity: 1; }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+.animate-fade-out {
+  animation: fadeOut 0.3s cubic-bezier(0.4, 0, 1, 1) forwards;
 }
 
 @keyframes slide-up {
@@ -101,8 +108,14 @@
 }
 
 @keyframes drawerUp {
-  from { transform: translateY(100%); }
-  to   { transform: translateY(0); }
+  0% { 
+    transform: translateY(100%); 
+    opacity: 0.5;
+  }
+  100% { 
+    transform: translateY(0); 
+    opacity: 1;
+  }
 }
 
 @keyframes recoverSlide {

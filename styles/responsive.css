@@ -1,6 +1,38 @@
 
 
-@media (max-width:480px){
+@media (max-width: 480px) {
+  .cart-bar {
+    gap: 14px;
+    min-height: 72px;
+    padding: 12px 14px calc(12px + env(safe-area-inset-bottom));
+  }
+
+  .cart-info {
+    gap: 10px;
+  }
+
+  .cart-bar__icon,
+  .cart-bar__emoji,
+  .cart-bar__symbol {
+    width: 24px;
+    height: 24px;
+    font-size: 20px;
+  }
+
+  .cart-bar__count,
+  .cart-bar_count,
+  #cartCount {
+    font-size: 17px;
+  }
+
+  .cart-bar__button,
+  .cart-bar_button,
+  #cartOpen {
+    min-width: 124px;
+    min-height: 50px;
+    padding: 0 20px;
+    font-size: 16px;
+  }
 
   .instant-card{
     flex-direction:column;
