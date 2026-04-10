@@ -1,34 +1,61 @@
-import { getState, setState } from './state.js';
-import { CONFIG } from '../config.js';
+// core/orders.js
+
+import { getState, setState } from "./state.js";
+import { CONFIG } from "../config.js";
 
 const SCRIPT_URL = CONFIG.API_ENDPOINT;
 const STORAGE_KEY = "haven_active_order_ids";
 
-const TERMINAL_STATUSES = ['DONE', 'CANCELED'];
-const ACTIONABLE_STATUSES = ['NEW', 'COOKING', 'DELIVERING', 'DONE', 'SYNCING'];
+const TERMINAL_STATUSES = ["DONE", "CANCELED"];
+const ACTIONABLE_STATUSES = ["NEW", "COOKING", "DELIVERING", "DONE", "SYNCING"];
 const MAX_INACTIVE_ORDERS = 10;
-
-/* thời gian coi là SYNCING quá lâu */
 const SYNCING_STALE_MS = 15000;
+
+/* =========================
+   TIME
+========================= */
+
+function toTimestamp(value, fallback = Date.now()) {
+  if (typeof value === "number" && Number.isFinite(value)) return value;
+
+  if (typeof value === "string") {
+    const parsed = Date.parse(value);
+    if (!Number.isNaN(parsed)) return parsed;
+
+    const asNumber = Number(value);
+    if (Number.isFinite(asNumber) && asNumber > 0) return asNumber;
+  }
+
+  if (value instanceof Date && !Number.isNaN(value.getTime())) {
+    return value.getTime();
+  }
+
+  return fallback;
+}
 
 /* =========================
    NORMALIZE
 ========================= */
 
 function normalizeOrder(order = {}) {
+  const createdAt = toTimestamp(
+    order.createdAt ?? order.timestamp ?? order.time,
+    Date.now()
+  );
+
   return {
     id: order.id || "",
     status: order.status || "NEW",
-    items: order.items || [],
+    items: Array.isArray(order.items) ? order.items : [],
     totalQty: Number(order.totalQty || 0),
     totalPrice: Number(order.totalPrice || 0),
     mode: order.mode || "",
     placeLabel: order.placeLabel || "",
     type: order.type || "",
     device: order.device || "",
-    createdAt: order.time || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-    updatedAt: Number(order.updatedAt || Date.now()),
-    syncedAt: Number(order.syncedAt || 0)
+    createdAt,
+    updatedAt: toTimestamp(order.updatedAt, createdAt),
+    syncedAt: toTimestamp(order.syncedAt, 0)
   };
 }
 
@@ -41,8 +68,10 @@ function isActionableStatus(status) {
 }
 
 function isSyncingTooLong(order = {}) {
-  return order.status === "SYNCING" &&
-    Date.now() - Number(order.updatedAt || 0) > SYNCING_STALE_MS;
+  return (
+    order.status === "SYNCING" &&
+    Date.now() - Number(order.updatedAt || 0) > SYNCING_STALE_MS
+  );
 }
 
 /* =========================
@@ -57,7 +86,6 @@ function dedupeOrders(orders = []) {
     if (!order.id) return;
 
     const prev = map.get(order.id);
-
     if (!prev) {
       map.set(order.id, order);
       return;
@@ -67,9 +95,18 @@ function dedupeOrders(orders = []) {
       ...prev,
       ...order,
       items: order.items.length ? order.items : prev.items,
-      updatedAt: Math.max(Number(prev.updatedAt || 0), Number(order.updatedAt || 0)),
-      createdAt: Math.max(Number(prev.createdAt || 0), Number(order.createdAt || 0)),
-      syncedAt: Math.max(Number(prev.syncedAt || 0), Number(order.syncedAt || 0))
+      createdAt: Math.min(
+        Number(prev.createdAt || Infinity),
+        Number(order.createdAt || Infinity)
+      ),
+      updatedAt: Math.max(
+        Number(prev.updatedAt || 0),
+        Number(order.updatedAt || 0)
+      ),
+      syncedAt: Math.max(
+        Number(prev.syncedAt || 0),
+        Number(order.syncedAt || 0)
+      )
     });
   });
 
@@ -82,14 +119,11 @@ function splitOrders(orders = []) {
 
   dedupeOrders(orders).forEach(order => {
     if (!order.id) return;
-
-    if (isTerminalStatus(order.status)) {
-      inactive.push(order);
-    } else {
-      active.push(order);
-    }
+    if (isTerminalStatus(order.status)) inactive.push(order);
+    else active.push(order);
   });
 
+  active.sort((a, b) => Number(b.createdAt || 0) - Number(a.createdAt || 0));
   inactive.sort((a, b) => Number(b.createdAt || 0) - Number(a.createdAt || 0));
 
   return {
@@ -122,27 +156,29 @@ function getSavedIds() {
    PUBLIC
 ========================= */
 
-export function addOrderToTracking(meta) {
-
+export function addOrderToTracking(meta = {}) {
   const state = getState();
   const active = state.orders?.active || [];
   const inactive = state.orders?.inactive || [];
   const all = [...active, ...inactive];
 
-  const exists = all.find(order => order.id === orderId);
+  const orderId = meta.id;
+  if (!orderId) return;
+
+  const exists = all.some(order => order.id === orderId);
   if (exists) return;
 
   const newOrder = normalizeOrder({
-    id: meta.id,
+    id: orderId,
     status: meta.status || "NEW",
-    items,
+    items: meta.items || [],
     totalQty: meta.totalQty,
     totalPrice: meta.totalPrice,
     mode: meta.mode,
     placeLabel: meta.placeLabel,
     type: meta.type,
     device: meta.device,
-    createdAt: meta.timestamp,
+    createdAt: meta.createdAt ?? meta.timestamp,
     updatedAt: Date.now(),
     syncedAt: Date.now()
   });
@@ -186,7 +222,6 @@ export async function syncOrdersWithServer() {
       const existing = currentMap.get(id);
       const incoming = updates[id];
 
-      /* server trả string status */
       if (typeof incoming === "string") {
         return normalizeOrder({
           ...existing,
@@ -198,24 +233,22 @@ export async function syncOrdersWithServer() {
         });
       }
 
-      /* server trả object order */
       if (incoming && typeof incoming === "object") {
         return normalizeOrder({
           ...existing,
           ...incoming,
           id,
-          createdAt: existing?.createdAt,
+          createdAt: existing?.createdAt ?? incoming.createdAt ?? incoming.timestamp,
           updatedAt: Date.now(),
           syncedAt: Date.now()
         });
       }
 
-      /* server chưa có gì -> giữ placeholder cũ */
       return normalizeOrder({
         ...existing,
         id,
         status: existing?.status || "SYNCING",
-        createdAt: existing?.createdAt || 0,
+        createdAt: existing?.createdAt || Date.now(),
         updatedAt: existing?.updatedAt || Date.now(),
         syncedAt: existing?.syncedAt || 0
       });
@@ -270,14 +303,15 @@ export function hydrateOrdersFromStorage() {
 
   const state = getState();
   const inactive = state.orders?.inactive || [];
+  const now = Date.now();
 
   const placeholders = savedIds.map(id =>
     normalizeOrder({
       id,
       status: "SYNCING",
       items: [],
-      createdAt: 0,
-      updatedAt: Date.now(),
+      createdAt: now,
+      updatedAt: now,
       syncedAt: 0
     })
   );
@@ -296,7 +330,6 @@ export function hydrateOrdersFromStorage() {
   return true;
 }
 
-/* dùng khi muốn refresh cảm giác UI cho đơn đang kẹt syncing */
 export function markSyncingAgedOrders() {
   const state = getState();
   const active = state.orders?.active || [];
