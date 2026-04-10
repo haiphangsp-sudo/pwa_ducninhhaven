@@ -101,7 +101,6 @@ function setOrderStatus(status) {
 
   setState(next);
 }
-
 export async function submitOrder(action) {
   const state = getState();
   const payload = buildPayload(state, action);
@@ -112,7 +111,7 @@ export async function submitOrder(action) {
 
   try {
     const res = await sendRequest(payload);
-
+    console.log("submitOrder res:", res);
     if (res?.duplicate) {
       setOrderStatus("duplicate");
       return true;
@@ -122,10 +121,17 @@ export async function submitOrder(action) {
       throw new Error(res?.message || "API_FAIL");
     }
 
-    addOrderToTracking(payload);
     setOrderStatus("success");
+
+    try {
+      addOrderToTracking(payload);
+    } catch (trackingError) {
+      console.error("addOrderToTracking failed:", trackingError);
+    }
+
     return true;
   } catch (error) {
+    console.error("submitOrder failed:", error);
     setOrderStatus("error");
     return false;
   }

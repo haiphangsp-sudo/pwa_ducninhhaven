@@ -43,7 +43,6 @@ export async function sendRequest(payload) {
   let data;
   try {
     data = await res.json();
-    console.log("API raw data:", data);
   } catch {
     throw new Error("invalid_json");
   }
