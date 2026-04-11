@@ -58,42 +58,34 @@ export async function processQueue() {
   processing = true;
 
   while (queue.length > 0) {
+
+  try {
     const req = queue[0];
-    const job = req.payload;
+    const result = await sendRequest(req.payload);
 
-    try {
-      setDeliveryState("sending");
+    if (result?.success) {
+      // 1. Xóa đơn hàng khỏi hàng đợi cục bộ
+      queue.shift();
+      saveQueue(queue);
 
-      const body = {
-        id: req.id,
-        device: navigator.userAgent,
-        time: Date.now(),
-        ...job
-      };
+      // 2. Nếu đã gửi hết sạch đơn trong hàng đợi
+      if (queue.length === 0) {
+        setDeliveryState("sent"); // Chuyển UI sang trạng thái "Đã gửi"
 
-      const result = await sendRequest(body);
+        import('./state.js').then(({ setState }) => {
+          setState({ cart: { items: [] } }); 
+        });
 
-      if (result && result.success === true) {
-        if (queue.length === 1) {
-          //finalizeOrderSuccess("recovery"); 
-        }
-        queue.shift();
-        saveQueue(queue);
-
-        if (queue.length === 0) {
-          setDeliveryState("sent");
-          if (navigator.vibrate) navigator.vibrate(50);
-
-          setTimeout(() => {
-            setDeliveryState("idle");
-            setRecoveryState("idle");
-          }, 2500);
-        }
-
-        continue;
+        // 4. Reset trạng thái sau 3 giây để khách quay lại màn hình chính
+        setTimeout(() => {
+          setDeliveryState("idle");
+        }, 3000);
       }
+      continue; 
+    }
+    
+    throw new Error(result?.message || "server_logic_error");
 
-      throw new Error(result?.message || "server_logic_error");
 
     } catch (e) {
       console.error("Queue Error:", e);

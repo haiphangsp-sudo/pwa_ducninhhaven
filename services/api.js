@@ -60,7 +60,7 @@ export async function sendRequest(payload) {
     return { success: true, duplicate: true };
   }
 
-  if (status === "ok" || status === "success" || data?.success === true) {
+  if (status === "success" || data?.success === true) {
     markSuccess();
     return { success: true };
   }
