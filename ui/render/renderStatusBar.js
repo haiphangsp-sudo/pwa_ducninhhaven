@@ -7,7 +7,8 @@ export function openStatusBar(state) {
 
   if (actionable.length > 0) {
     // Có đơn đang nấu/giao -> Hiện thanh Status Bar
-    renderStatusBar(state,actionable[0]);
+    const status = actionable[0].status;
+    renderStatusBar(state, status);
   } else {
     // Không có đơn nào cần chú ý -> Ẩn thanh Status Bar cho gọn
     hideStatusBar();
@@ -20,7 +21,7 @@ function hideStatusBar() {
 }
 
 
- function renderStatusBar(state,status) {
+ function renderStatusBar(state, status) {
   const bar = document.getElementById("orderStatusBar");
   if (!bar) return;
 
