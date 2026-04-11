@@ -90,6 +90,9 @@
   padding: 16px 16px 14px;
   box-shadow: 0 8px 24px rgba(47, 93, 70, 0.06);
 }
+.tracker-order.is-history{
+  opacity: 0.7;
+}
 
 .tracker-order::before {
   content: "";
