@@ -17,12 +17,14 @@ export function renderCartBar(state) {
   const countEl = document.getElementById("cartCount");
   if (!cartBar || !btn || !countEl) return;
   
-  btn.textContent = translate("cart_bar.cart_title");
-  countEl.textContent = cart.totalQtyFormat;
+  
+  
   if (isEmpty) {
     cartBar.classList.add("cart-bar--hidden");
   } else {
     cartBar.classList.remove("cart-bar--hidden");
+    btn.textContent = translate("cart_bar.cart_title");
+    countEl.textContent = cart.totalQtyFormat;
   }
   
 }
