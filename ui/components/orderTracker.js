@@ -20,7 +20,9 @@ export function openOrderTracker(state) {
     listContainer.innerHTML = `
       <div class="tracker-empty">
         <div class="tracker-empty__icon">🍃</div>
-        <div class="tracker-empty__text">${translate("order.no_active_order")}</div>
+        <div class="tracker-empty__text">
+        ${translate("order.no_active_order")}
+        </div>
       </div>`;
     return;
   }
@@ -51,7 +53,7 @@ export function openOrderTracker(state) {
     html += `<h3 class="tracker-section-title history">${translate("order.history_title")}</h3>`;
     html += `<div class="tracker-history-list">
       ${historyOrders
-        .sort((a, b) => Number(b.updatedAt || 0) - Number(a.updatedAt || 0))
+        .sort((a, b) => Number(b.createdAt || 0) - Number(a.createdAt || 0))
         .map(order => renderOrderCard(order, false))
         .join("")}
     </div>`;
