@@ -124,7 +124,7 @@ export async function submitOrder(action) {
     setOrderStatus("success");
 
     try {
-      addOrderToTracking(payload);
+      addOrderToTracking(payload.items);
     } catch (trackingError) {
       console.error("addOrderToTracking failed:", trackingError);
     }
