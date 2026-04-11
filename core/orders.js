@@ -161,12 +161,8 @@ export function addOrderToTracking(orderId,items=[],meta = {}) {
   const inactive = state.orders?.inactive || [];
   const all = [...active, ...inactive];
   const exists = all.some(order => order.id === orderId);
-   console.log("CHECK EXISTS", {
-  orderId,
-  allIds: all.map(o => o.id)
-});
+   
   if (exists) return;
-
 
   const newOrder = normalizeOrder({
     id: orderId,
@@ -268,13 +264,13 @@ export async function syncOrdersWithServer() {
     });
 
     persistActiveIds(next.active);
+    clearCompletedOrders();
   } catch (error) {
     console.error("Haven Service Error [Sync]:", error);
   }
 }
 
-export function clearCompletedOrders() {
-  const state = getState();
+function clearCompletedOrders(state) {
   const active = state.orders?.active || [];
   const inactive = state.orders?.inactive || [];
 

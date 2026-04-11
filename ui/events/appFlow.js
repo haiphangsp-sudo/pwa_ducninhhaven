@@ -11,8 +11,6 @@ const POLLING_TIME = 25000; // 25 giây - Khoảng cách an toàn cho Google Scr
 export function startOrderPolling() {
   // 1. Chống lặp: Nếu đang chạy rồi thì không tạo thêm interval mới
   if (orderPollingInterval) return;
-
-
   // 2. Chạy ngay lần đầu tiên để cập nhật dữ liệu mới nhất
   syncOrdersWithServer();
 
@@ -28,7 +26,6 @@ export function startOrderPolling() {
       syncOrdersWithServer();
     } else {
       // Nếu không còn đơn nào đang xử lý, tự động dừng để tiết kiệm tài nguyên
-      console.log("🍃 Không còn đơn hàng hoạt động. Tự động dừng polling.");
       stopOrderPolling();
     }
   }, POLLING_TIME);
