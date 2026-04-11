@@ -2,7 +2,7 @@
 import { renderStepper } from "../render/renderStepper.js";
 import { translate } from "../utils/translate.js";
 import { formatPrice } from "../utils/formatPrice.js";
-import { getActionableOrders, getRecentInactiveOrders } from "../../core/orders.js";
+import { getActionableOrders, getRecentInactiveOrders, getSyncingOrders } from "../../core/orders.js";
 
 /**
  * Mở trang theo dõi đơn hàng với 2 phân vùng: Đang xử lý & Lịch sử
@@ -13,6 +13,7 @@ export function openOrderTracker(state) {
 
   const activeOrders = getActionableOrders(); 
   const historyOrders = getRecentInactiveOrders(); 
+  const syncingOrders = getSyncingOrders();
 
   if (activeOrders.length === 0 && historyOrders.length === 0) {
     listContainer.innerHTML = `
@@ -24,6 +25,15 @@ export function openOrderTracker(state) {
   }
 
   let html = "";
+  
+  if (syncingOrders.length > 0) {
+    html += `
+      <div class="tracker-syncing-notice">
+        <div class="sync-spinner"></div>
+        <span>${translate("order.syncing_msg")}</span>
+      </div>
+    `;
+  }
 
   // 1. PHẦN ĐƠN HÀNG ĐANG XỬ LÝ (Hiện Stepper)
   if (activeOrders.length > 0) {

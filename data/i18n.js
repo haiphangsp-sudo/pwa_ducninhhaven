@@ -62,7 +62,8 @@ export const STRINGS = {
     quantity: { vi: "Số lượng", en: "Quantity" },
     price: { vi: "Giá", en: "Price" },
     service_request: { vi: "Yêu cầu phục vụ", en: "Service request" },
-  
+    syncing_msg: { vi: "Đang đồng bộ dữ liệu...", en: "Syncing data..." },
+    sending: { vi: "Đang gửi...", en: "Sending..." },
     success_title: { vi: "Đặt đơn thành công", en: "Order Placed" },
     success_msg: { vi: "Yêu cầu của bạn đã được chuyển tới bộ phận liên quan.", en: "Your request has been sent to the relevant department." },
     check_detail: { vi: "Kiểm tra", en: "Check" },

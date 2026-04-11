@@ -347,3 +347,28 @@
   70% { box-shadow: 0 0 0 8px rgba(107, 124, 111, 0); }
   100% { box-shadow: 0 0 0 0 rgba(107, 124, 111, 0); }
 }
+/* Thông báo đồng bộ */
+.tracker-syncing-notice {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: #f2e8da; /* Màu Beige của thương hiệu */
+  color: #2f5d34;      /* Màu xanh Primary Green */
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  border: 1px solid rgba(47, 93, 52, 0.1);
+}
+
+/* Hiệu ứng vòng xoay */
+.sync-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(47, 93, 52, 0.2);
+  border-top-color: #2f5d34;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
