@@ -28,7 +28,7 @@ function handleScroll() {
 
   handleScroll.ticking = true;
   requestAnimationFrame(() => {
-    applyScrollUI();
+    //applyScrollUI();
     handleScroll.ticking = false;
   });
 }
