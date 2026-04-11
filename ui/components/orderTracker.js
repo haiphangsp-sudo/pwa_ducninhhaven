@@ -1,151 +1,84 @@
+// ui/components/orderTracker.js
 import { renderStepper } from "../render/renderStepper.js";
 import { translate } from "../utils/translate.js";
 import { formatPrice } from "../utils/formatPrice.js";
+import { getActionableOrders, getRecentInactiveOrders } from "../../core/orders.js";
 
 export function openOrderTracker(state) {
-  const active = state.orders?.active || [];
-  const inactive = state.orders?.inactive || [];
-  const orders = [...active, ...inactive];
-
   const listContainer = document.getElementById("orderTrackerList");
   if (!listContainer) return;
 
-  if (orders.length === 0) {
+  const activeOrders = getActionableOrders(); // Đơn đang chạy
+  const historyOrders = getRecentInactiveOrders(); // Đơn đã xong/hủy
+
+  if (activeOrders.length === 0 && historyOrders.length === 0) {
     listContainer.innerHTML = `
-      <div class="tracker-empty">
-        <div class="tracker-empty__icon">🍃</div>
-        <div class="tracker-empty__text">
-          ${translate("order.no_active_order")}
-        </div>
-      </div>
-    `;
+      <div class=\"tracker-empty\">
+        <div class=\"tracker-empty__icon\">🍃</div>
+        <div class=\"tracker-empty__text\">${translate("order.no_active_order")}</div>
+      </div>`;
     return;
   }
 
-  const cards = orders
-    .slice()
-    .sort((a, b) => Number(b.updatedAt || 0) - Number(a.updatedAt || 0))
-    .map(order => {
-      try {
-        return renderOrderCard(order);
-      } catch (error) {
-        console.error("Render order card failed:", order, error);
-        return "";
-      }
-    })
-    .filter(Boolean)
-    .join("");
+  let html = "";
 
-  listContainer.innerHTML = cards || `
-    <div class="tracker-empty">
-      <div class="tracker-empty__icon">🍃</div>
-      <div class="tracker-empty__text">
-        ${translate("order.no_active_order")}
-      </div>
-    </div>
-  `;
+  // --- PHẦN 1: ĐƠN HÀNG ĐANG XỬ LÝ (Hiện Stepper đầy đủ) ---
+  if (activeOrders.length > 0) {
+    html += `<h3 class=\"tracker-section-title\">${translate("order.active_title") || "Đang xử lý"}</h3>`;
+    html += activeOrders
+      .sort((a, b) => Number(b.updatedAt || 0) - Number(a.updatedAt || 0))
+      .map(order => renderOrderCard(order, true)) // true: hiện stepper
+      .join("");
+  }
+
+  // --- PHẦN 2: LỊCH SỬ ĐẶT MÓN (Gọn gàng hơn) ---
+  if (historyOrders.length > 0) {
+    html += `<div class=\"tracker-history-divider\"></div>`;
+    html += `<h3 class=\"tracker-section-title history\">${translate("order.history_title") || "Lịch sử đặt món"}</h3>`;
+    html += `<div class=\"tracker-history-list\">
+      ${historyOrders
+        .sort((a, b) => Number(b.updatedAt || 0) - Number(a.updatedAt || 0))
+        .map(order => renderOrderCard(order, false)) // false: ẩn stepper cho gọn
+        .join("")}
+    </div>`;
+  }
+
+  listContainer.innerHTML = html;
 }
 
-function renderOrderCard(order = {}) {
-  const safeId = String(order.id || "");
-  const shortId = safeId.includes("-")
-    ? safeId.split("-").slice(1).join("-")
-    : safeId;
-  //const shortId = safeId.includes("-") ? safeId.split("-")[1] : safeId;
-  const status = String(order.status || "NEW").toUpperCase();
-
+function renderOrderCard(order = {}, showStepper = true) {
+  const status = order.status || "NEW";
   const items = parseItems(order.items);
-  const itemsHtml = items.length
-    ? items.map(renderOrderItem).join("")
-    : `<div class="tracker-order__empty">${translate("order.service_request")}</div>`;
-
+  const time = formatTime(order.updatedAt || order.createdAt);
+  
+  // Thêm class 'is-history' nếu không hiện stepper
   return `
-    <article class="tracker-order">
-      <div class="tracker-order__head">
-        <div class="tracker-order__identity">
-          <div class="tracker-order__code">#${escapeHtml(shortId)}</div>
-          <div class="tracker-order__meta">
-            ${order.placeLabel ? `<span>${escapeHtml(order.placeLabel)}</span>` : ""}
-            ${order.createdAt ? `<span>• ${escapeHtml(formatTime(order.createdAt))}</span>` : ""}
-          </div>
-        </div>
-
-        <div class="tracker-order__status status-badge is-${status.toLowerCase()}">
-          ${escapeHtml(status)}
-        </div>
+    <article class=\"tracker-order ${!showStepper ? "is-history" : ""}\">
+      <div class=\"tracker-order__header\">
+        <span class=\"tracker-order__id\">#${order.id.split("-").slice(-1)}</span>
+        <span class=\"tracker-order__time\">${time}</span>
       </div>
 
-      <div class="tracker-order__body">
-        <div class="tracker-order__items">
-          ${itemsHtml}
-          <div class="tracker-item total-price">
-            <div class="tracker-item__content">
-              <span class="tracker-item__name">${translate("order.total")}</span>
-            </div>
-            <span class="tracker-item__price">${formatPrice(order.totalPrice)}</span>
-          </div>
+      <div class=\"tracker-order__content\">
+        <div class=\"tracker-order__items\">
+          ${items.map(item => renderOrderItem(item)).join("")}
         </div>
-      </div>
+        
+        <div class=\"tracker-order__total\">
+          <span>${translate("order.total")}</span>
+          <span class=\"total-value\">${formatPrice(order.totalPrice)}</span>
+        </div>
 
-      <div class="tracker-order__foot">
-        <div class="tracker-order__stepper">
-          ${renderStepper(status, true)}
-        </div>
+        ${showStepper ? `
+          <div class=\"tracker-order__stepper\">
+            ${renderStepper(status, true)}
+          </div>
+        ` : `
+          <div class=\"tracker-order__status-badge ${status.toLowerCase()}\">
+            ${status === "DONE" ? "✓ Đã hoàn tất" : "✕ Đã hủy"}
+          </div>
+        `}
       </div>
     </article>
   `;
-}
-
-function renderOrderItem(item = {}) {
-  const qty = Number(item.qty || 1);
-  const name = item.item || item.name || "—";
-  const price = Number(item.price || 0);
-  const option = item.option;
-
-  return `
-    <div class="tracker-item">
-      <span class="tracker-item__qty">${qty}×</span>
-      <div class="tracker-item__content">
-        <span class="tracker-item__name">${escapeHtml(name)}</span>
-        ${option ? `<span class="tracker-item__option">${escapeHtml(option)}</span>` : ""}
-      </div>
-      <span class="tracker-item__price">${formatPrice(price)}</span>
-    </div>
-  `;
-}
-
-function parseItems(raw) {
-  try {
-    if (typeof raw === "string" && raw.trim() !== "") {
-      const parsed = JSON.parse(raw);
-      return Array.isArray(parsed) ? parsed : [];
-    }
-    return Array.isArray(raw) ? raw : [];
-  } catch (error) {
-    console.error("Parse order items failed:", error);
-    return [];
-  }
-}
-
-function formatTime(value) {
-  const ts = Number(value);
-  if (!Number.isFinite(ts) || ts <= 0) return "";
-
-  try {
-    return new Date(ts).toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit"
-    });
-  } catch {
-    return "";
-  }
-}
-
-function escapeHtml(value) {
-  return String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#39;");
 }
