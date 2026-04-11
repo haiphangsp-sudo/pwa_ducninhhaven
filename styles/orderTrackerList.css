@@ -176,6 +176,9 @@
   color: #2f5d46;
   font-variant-numeric: tabular-nums;
 }
+.tracker-item__content .tracker-item__price {
+  color: var(--accent);
+}
 .tracker-order__empty {
   color: #8f8f88;
   font-style: italic;
