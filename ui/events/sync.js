@@ -6,7 +6,7 @@ import { renderPlacePicker } from "../render/renderPlacePicker.js";
 import { renderDrawer } from "../render/renderDrawer.js";
 import { renderNavBar } from "../render/renderNavBar.js";
 import { renderCartBar } from "../render/renderCartBar.js";
-import { openStatusBar } from "../render/renderStatusBar.js";
+import { renderStatusBar } from "../render/renderStatusBar.js";
 import { renderHub, eventHub } from "../render/renderHub.js";
 import { renderPanel } from "../render/renderPanel.js";
 import { submitOrder, addToCart } from "../../core/events.js";
@@ -130,7 +130,7 @@ function syncLanguageIfNeeded(state, langChanged) {
   localStorage.setItem(CONFIG.LANG_KEY, state.lang.current);
   renderNavBar(state);
   renderCartBar(state);
-  openStatusBar(state);
+  renderStatusBar(state);
   renderHub(state);
   renderPanel(state);
 }
@@ -149,7 +149,7 @@ function syncStatusBarIfNeeded(state, ordersChanged, statusBarExpandedChanged, o
 
   if (!shouldRenderStatusBar) return;
 
-  openStatusBar(state);
+  renderStatusBar(state);
   openOrderTracker(state);
 }
 
