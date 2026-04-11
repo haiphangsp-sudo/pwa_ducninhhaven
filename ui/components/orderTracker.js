@@ -66,9 +66,11 @@ function renderOrderCard(order = {}, showStepper = true) {
           ${items.map(item => renderOrderItem(item)).join("")}
         </div>
         
-        <div class="tracker-order__total">
-          <span>${translate("order.total")}</span>
-          <span class="total-value">${formatPrice(order.totalPrice)}</span>
+        <div class="tracker-item total-price">
+          <div class="tracker-item__content">
+            <span class="tracker-item__name">${translate("order.total")}</span>
+          </div>
+          <span class="tracker-item__price">${formatPrice(order.totalPrice)}</span>
         </div>
 
         ${showStepper ? `
