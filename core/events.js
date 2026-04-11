@@ -113,7 +113,6 @@ export async function submitOrder(action) {
 
   try {
     const res = await sendRequest(payload);
-    console.log("submitOrder res:", res);
     if (res?.duplicate) {
       setOrderStatus("duplicate");
       return true;

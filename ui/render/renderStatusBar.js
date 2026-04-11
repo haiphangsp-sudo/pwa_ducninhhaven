@@ -1,29 +1,33 @@
 import { renderStepper } from "./renderStepper.js";
 import { translate } from "../utils/translate.js";
 
-export function renderStatusBar(state) {
+export function openStatusBar(state) {
+  const actionable = getActionableOrders();
+
+  if (actionable.length > 0) {
+    // Có đơn đang nấu/giao -> Hiện thanh Status Bar
+    renderStatusBar(state,actionable[0]);
+  } else {
+    // Không có đơn nào cần chú ý -> Ẩn thanh Status Bar cho gọn
+    hideStatusBar();
+  }
+}
+function hideStatusBar() {
+  const bar = document.getElementById("orderStatusBar");
+  if (!bar) return;
+  bar.classList.add("hidden");
+}
+
+
+ function renderStatusBar(state,status) {
   const bar = document.getElementById("orderStatusBar");
   if (!bar) return;
 
   const isExpanded = !!state.orders?.isBarExpanded;
-  const activeOrders = state.orders?.active || [];
-  const inactiveOrders = state.orders?.inactive || [];
-
-  if (activeOrders.length === 0 && inactiveOrders.length === 0) {
-    bar.classList.add("hidden");
-    return;
-  }
 
   bar.classList.remove("hidden");
   bar.classList.toggle("is-expanded", isExpanded);
   bar.classList.toggle("is-collapsed", !isExpanded);
-
-  const visibleOrders = [...activeOrders].sort(
-    (a, b) => Number(b.updatedAt || 0) - Number(a.updatedAt || 0)
-  );
-
-  const currentOrder = visibleOrders[0] || null;
-  const status = currentOrder?.status || "SYNCING";
 
   bar.innerHTML = `
     <div class="bar-center">
