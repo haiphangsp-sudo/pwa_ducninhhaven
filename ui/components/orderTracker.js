@@ -14,7 +14,7 @@ export function openOrderTracker(state) {
   const activeOrders = getActionableOrders(); 
   const historyOrders = getRecentInactiveOrders(); 
   const syncingOrders = getSyncingOrders();
-  listContainer.querySelector("tracker-title").textContent = translate("order.status");
+  listContainer.querySelector(".tracker-title").textContent = translate("order.status");
 
   if (activeOrders.length === 0 && historyOrders.length === 0) {
     listContainer.innerHTML = `
