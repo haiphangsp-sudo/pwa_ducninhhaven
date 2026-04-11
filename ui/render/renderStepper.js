@@ -18,7 +18,7 @@ export function renderStepper(currentStatus, longMsg = false) {
 
   const steps = STEP_KEYS.map((key) => ({
     key,
-    label: STRINGS.status?.[key]?.en || key,
+    label: STRINGS.status?.[key]?.en,
   }));
 
   const message = getStatusMessage(currentStatus, lang, longMsg);
