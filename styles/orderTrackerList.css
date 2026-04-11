@@ -179,7 +179,7 @@
   color: #2f5d46;
   font-variant-numeric: tabular-nums;
 }
-.tracker-item__content .tracker-item__price {
+.total-price .tracker-item__price {
   color: var(--accent);
 }
 .tracker-order__empty {
