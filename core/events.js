@@ -124,7 +124,9 @@ export async function submitOrder(action) {
     setOrderStatus("success");
 
     try {
-      addOrderToTracking(payload.items);
+      const orderId = payload?.id || "";
+      if (orderId&&payload.items)
+      addOrderToTracking(orderId,payload.items,payload);
     } catch (trackingError) {
       console.error("addOrderToTracking failed:", trackingError);
     }

@@ -153,15 +153,14 @@ function getSavedIds() {
 }
 
 /* =========================
-   PUBLIC
+   PUBLIC /orderId, items = [], meta = {}
 ========================= */
-export function addOrderToTracking(meta = {}) {
+export function addOrderToTracking(orderId,items=[],meta = {}) {
   const state = getState();
   const active = state.orders?.active || [];
   const inactive = state.orders?.inactive || [];
   const all = [...active, ...inactive];
 
-  const orderId = meta.id;
   if (!orderId) return;
 
   const exists = all.some(order => order.id === orderId);
@@ -170,7 +169,7 @@ export function addOrderToTracking(meta = {}) {
   const newOrder = normalizeOrder({
     id: orderId,
     status: meta.status || "NEW",
-    items: meta.items || [],
+    items,
     totalQty: meta.totalQty,
     totalPrice: meta.totalPrice,
     mode: meta.mode,
