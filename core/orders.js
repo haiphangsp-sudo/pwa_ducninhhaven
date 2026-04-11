@@ -265,6 +265,7 @@ export async function syncOrdersWithServer() {
 
     persistActiveIds(next.active);
     clearCompletedOrders(state);
+    markSyncingAgedOrders(state);
   } catch (error) {
     console.error("Haven Service Error [Sync]:", error);
   }
@@ -326,8 +327,7 @@ export function hydrateOrdersFromStorage() {
   return true;
 }
 
-export function markSyncingAgedOrders() {
-  const state = getState();
+function markSyncingAgedOrders(state) {
   const active = state.orders?.active || [];
   const inactive = state.orders?.inactive || [];
 
