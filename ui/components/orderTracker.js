@@ -14,7 +14,7 @@ export function openOrderTracker(state) {
   const activeOrders = getActionableOrders(); 
   const historyOrders = getRecentInactiveOrders(); 
   const syncingOrders = getSyncingOrders();
-  const titleOrder = listContainer.querySelector(".tracker-title");
+  const titleOrder = document.querySelector(".tracker-title");
   if(titleOrder) titleOrder.textContent = translate("order.status");
 
   if (activeOrders.length === 0 && historyOrders.length === 0) {
@@ -72,7 +72,7 @@ function renderOrderCard(order = {}, showStepper = true) {
     <article class="tracker-order ${!showStepper ? "is-history" : ""}">
       <div class="tracker-order__header">
         <span class="tracker-order__code">#${order.id.split("-").slice(-1)}</span>
-        <span class="tracker-order__time">${time}</span>
+        <span class="tracker-order__time">${translate("order.time")}: ${time}</span>
         <div class="tracker-order__meta">
           ${order.placeLabel ? `<span>${escapeHtml(order.placeLabel)}</span>` : ""}
         </div>
