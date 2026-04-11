@@ -265,7 +265,7 @@ export async function syncOrdersWithServer() {
 
     persistActiveIds(next.active);
     clearCompletedOrders(state);
-    markSyncingAgedOrders(state);
+    //markSyncingAgedOrders(state);
   } catch (error) {
     console.error("Haven Service Error [Sync]:", error);
   }
