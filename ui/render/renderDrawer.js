@@ -31,7 +31,8 @@ export function renderDrawer(state) {
     if (countEl) countEl.textContent = "0";
     if (uniqueEl) uniqueEl.textContent = "0";
     sendBtn.textContent = translate("cart_bar.close");
-    sendBtn.dataset.action ="close-overlay";
+    sendBtn.dataset.action = "close-overlay";
+    sendBtn.dataset.value = "";
     sendBtn.classList.remove("is-loading", "is-warning");
     return;
   }
@@ -71,7 +72,6 @@ export function renderDrawer(state) {
     sendBtn.textContent = translate("cart_bar.sending");
     sendBtn.classList.add("is-loading", "is-disabled");
     sendBtn.dataset.value = "sending";
-    sendBtn.disabled = true;
     return;
   }
   const hasPlace = getLocationInfo().hasPlace;
@@ -81,7 +81,6 @@ export function renderDrawer(state) {
     sendBtn.dataset.value = "placePicker";
     sendBtn.dataset.action = "open-overlay";
     sendBtn.dataset.extra = "picker";
-    sendBtn.disabled = false;
     return;
   }
 
@@ -91,5 +90,4 @@ export function renderDrawer(state) {
   sendBtn.classList.remove("is-warning", "is-disabled");
   sendBtn.dataset.value = "cart";
   sendBtn.dataset.extra = "normal";
-  sendBtn.disabled = false;
 }
