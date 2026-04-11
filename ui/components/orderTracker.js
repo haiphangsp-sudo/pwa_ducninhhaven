@@ -27,7 +27,7 @@ export function openOrderTracker(state) {
 
   // 1. PHẦN ĐƠN HÀNG ĐANG XỬ LÝ (Hiện Stepper)
   if (activeOrders.length > 0) {
-    html += `<h3 class="tracker-section-title">${translate("order.active_title") || "Đang xử lý"}</h3>`;
+    html += `<h3 class="tracker-section-title">${translate("order.active_title")}</h3>`;
     html += activeOrders
       .sort((a, b) => Number(b.updatedAt || 0) - Number(a.updatedAt || 0))
       .map(order => renderOrderCard(order, true))
@@ -37,7 +37,7 @@ export function openOrderTracker(state) {
   // 2. PHẦN LỊCH SỬ (Hiện Badge trạng thái)
   if (historyOrders.length > 0) {
     html += `<div class="tracker-history-divider"></div>`;
-    html += `<h3 class="tracker-section-title history">${translate("order.history_title") || "Lịch sử đặt món"}</h3>`;
+    html += `<h3 class="tracker-section-title history">${translate("order.history_title")}</h3>`;
     html += `<div class="tracker-history-list">
       ${historyOrders
         .sort((a, b) => Number(b.updatedAt || 0) - Number(a.updatedAt || 0))
@@ -51,7 +51,7 @@ export function openOrderTracker(state) {
 
 function renderOrderCard(order = {}, showStepper = true) {
   const status = order.status || "NEW";
-  const items = parseItems(order.items); // Gọi hàm bổ trợ bên dưới
+  const items = parseItems(order.items);
   const time = formatTime(order.updatedAt || order.createdAt);
   
   return `

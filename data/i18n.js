@@ -50,7 +50,8 @@ export const STRINGS = {
     confirm: { vi: "Xác nhận", en: "Confirm" },
     cancel: { vi: "Hủy", en: "Cancel" },
     status: { vi: "Trạng thái đơn hàng.", en: "Order status." },
-
+    history_title: { vi: "Lịch sử đơn hàng", en: "Order history" },
+    active_title: { vi: "Đơn hàng đang xử lý", en: "Active orders" },
     order_id: { vi: "Mã đơn hàng", en: "Order ID" },
     current_status: { vi: "Tiến độ dịch vụ", en: "Service Progress" },
     time: { vi: "Thời gian", en: "Time" },
