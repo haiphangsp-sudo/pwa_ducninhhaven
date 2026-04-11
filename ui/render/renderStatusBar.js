@@ -11,15 +11,12 @@ export function openStatusBar(state) {
     renderStatusBar(state, status);
   } else {
     // Không có đơn nào cần chú ý -> Ẩn thanh Status Bar cho gọn
-    hideStatusBar();
+
+    const bar = document.getElementById("orderStatusBar");
+    if (!bar) return;
+    bar.classList.add("hidden");
   }
 }
-function hideStatusBar() {
-  const bar = document.getElementById("orderStatusBar");
-  if (!bar) return;
-  bar.classList.add("hidden");
-}
-
 
  function renderStatusBar(state, status) {
   const bar = document.getElementById("orderStatusBar");
