@@ -58,62 +58,76 @@ export async function processQueue() {
   processing = true;
 
   while (queue.length > 0) {
-
-  try {
     const req = queue[0];
-    const result = await sendRequest(req.payload);
+    const job = req.payload;
 
-    if (result?.success) {
-      // 1. Xóa đơn hàng khỏi hàng đợi cục bộ
-      queue.shift();
-      saveQueue(queue);
+    try {
+      // Gọi API gửi đơn
+      const result = await sendRequest(job);
 
-      // 2. Nếu đã gửi hết sạch đơn trong hàng đợi
-      if (queue.length === 0) {
-        setDeliveryState("sent"); // Chuyển UI sang trạng thái "Đã gửi"
+      // Xử lý Thành công: Bao gồm cả status "success" và "duplicate"
+      // Vì duplicate nghĩa là dữ liệu đã nằm an toàn trên Google Sheets
+      if (result?.success || result?.duplicate) {
+        
+        // 1. Xóa đơn hàng đầu tiên khỏi hàng đợi
+        queue.shift();
+        saveQueue(queue);
 
-        import('./state.js').then(({ setState }) => {
-          setState({ cart: { items: [] } }); 
-        });
+        // 2. Nếu đã gửi xong xuôi toàn bộ hàng đợi
+        if (queue.length === 0) {
+          setDeliveryState("sent"); // Hiển thị trạng thái Đã gửi thành công
+          
+          // Phản hồi rung nhẹ trên thiết bị di động nếu hỗ trợ
+          if (navigator.vibrate) navigator.vibrate(50);
 
-        // 4. Reset trạng thái sau 3 giây để khách quay lại màn hình chính
-        setTimeout(() => {
-          setDeliveryState("idle");
-        }, 3000);
+          // 3. Đưa UI về trạng thái nghỉ sau khi khách đã thấy thông báo thành công
+          setTimeout(() => {
+            setDeliveryState("idle");
+            setRecoveryState("idle");
+          }, 3000); 
+        }
+
+        // Tiếp tục vòng lặp để xử lý đơn tiếp theo (nếu có)
+        continue;
       }
-      continue; 
-    }
-    
-    throw new Error(result?.message || "server_logic_error");
 
+      // Nếu API trả về lỗi logic (không phải success/duplicate)
+      throw new Error(result?.message || "server_logic_error");
 
     } catch (e) {
-      console.error("Queue Error:", e);
+      console.error("Queue Processing Error:", e);
 
+      // Xử lý lỗi Mạng/Ngoại tuyến: Dừng hàng đợi và báo Failed
       if (e.message === "offline" || e.message === "network" || !navigator.onLine) {
         setDeliveryState("failed");
         processing = false;
-        return;
+        return; // Thoát hàm để chờ mạng ổn định lại
       }
 
-      req.retries += 1;
+      // Xử lý lỗi Server/Logic: Thử lại (Retry)
+      req.retries = (req.retries || 0) + 1;
 
       if (req.retries > MAX_RETRIES) {
+        // Quá số lần thử lại: Xóa đơn lỗi để không làm nghẽn hàng đợi
         queue.shift();
         saveQueue(queue);
         setDeliveryState("failed");
       } else {
+        // Lưu lại số lần đã thử và tạm dừng để thử lại sau
         saveQueue(queue);
         setDeliveryState("queued");
-        const delay = getRetryDelay(req.retries);
+        
+        const delay = (typeof getRetryDelay === 'function') ? getRetryDelay(req.retries) : 2000;
         await new Promise(res => setTimeout(res, delay));
       }
+      
+      // Dừng vòng lặp hiện tại để không gây quá tải khi đang lỗi
       break;
     }
   }
+
   processing = false;
 }
-
 /* ---------- RECOVERY ---------- */
 
 export function detectRecovery() {
