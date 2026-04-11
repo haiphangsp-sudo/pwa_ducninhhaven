@@ -160,7 +160,7 @@ export function addOrderToTracking(meta = {}) {
   const active = state.orders?.active || [];
   const inactive = state.orders?.inactive || [];
   const all = [...active, ...inactive];
-  const exists = all.some(order => order.id === orderId);
+  const exists = all.some(order => order.id === meta.id);
    
   if (exists) return;
 
