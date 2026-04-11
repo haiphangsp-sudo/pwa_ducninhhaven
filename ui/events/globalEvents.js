@@ -5,10 +5,7 @@ import { updateCartQuantity } from "../../core/action.js";
 import { applyPlaceById, syncContextToState } from "../../core/context.js";
 import { animateFlyToCart } from "../../ui/interactions/animateFlyToCart.js";
 import { applyScrollUI } from "./scrollBehavior.js";
-import { syncOrdersWithServer } from "../../core/orders.js";
 import { attachRuntimeRefresh } from "../../core/runtimeRefresh.js";
-
-let orderPollingStarted = false;
 
 export function attachAppEvents() {
   document.addEventListener("click", handleGlobalClick);
@@ -149,25 +146,5 @@ function setOrderCommand(cmd) {
       at: Date.now()
     }
   });
-}
-// ui/events/globalEvents.js
-
-function startOrderPolling() {
-  if (orderPollingStarted) return;
-  orderPollingStarted = true;
-
-  setInterval(() => {
-    const state = getState();
-    const active = state.orders?.active || [];
-    const isViewingOrders = state.overlay?.view === "orderTrackerPage"; // Khách đang mở trang Orders
-    const hasActive = active.some(o => !["DONE", "CANCELED"].includes(o.status));
-
-    if (hasActive) {
-      if (isViewingOrders) {
-        // Nếu đang mở trang: Cập nhật nhanh (15-20s)
-        syncOrdersWithServer();
-      }
-    }
-  }, 15000); 
 }
 
