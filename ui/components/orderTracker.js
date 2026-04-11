@@ -50,7 +50,10 @@ export function openOrderTracker() {
 
 function renderOrderCard(order = {}) {
   const safeId = String(order.id || "");
-  const shortId = safeId.includes("-") ? safeId.split("-")[1] : safeId;
+  const shortId = safeId.includes("-")
+    ? safeId.split("-").slice(1).join("-")
+    : safeId;
+  //const shortId = safeId.includes("-") ? safeId.split("-")[1] : safeId;
   const status = String(order.status || "NEW").toUpperCase();
 
   const items = parseItems(order.items);
