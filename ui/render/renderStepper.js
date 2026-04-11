@@ -4,7 +4,6 @@ import { getState } from "../../core/state.js";
 const STEP_KEYS = ["NEW", "COOKING", "DELIVERING", "DONE"];
 
 /**
- * Mapping đã chốt:
  * SYNCING    -> ● ○ ○ ○
  * NEW        -> ✔ ● ○ ○
  * COOKING    -> ✔ ✔ ● ○
@@ -44,31 +43,33 @@ export function renderStepper(currentStatus, longMsg = false) {
 }
 
 function getStepState(index, currentStatus) {
-  switch (currentStatus) {
-    case "SYNCING":
-      return index === 0 ? "is-active is-syncing" : "is-pending";
+  // Định nghĩa vị trí của từng trạng thái (Trạng thái nào ứng với Step nào đang Active)
+  const statusIndexes = {
+    "SYNCING": 0,
+    "NEW": 1,
+    "COOKING": 2,
+    "DELIVERING": 3,
+    "DONE": 4 // DONE lớn hơn số index của các step (0-3) để tất cả đều "is-complete"
+  };
 
-    case "NEW":
-      if (index === 0) return "is-complete";
-      if (index === 1) return "is-active";
-      return "is-pending";
+  const currentIdx = statusIndexes[currentStatus] ?? -1;
 
-    case "COOKING":
-      if (index <= 1) return "is-complete";
-      if (index === 2) return "is-active";
-      return "is-pending";
-
-    case "DELIVERING":
-      if (index <= 2) return "is-complete";
-      if (index === 3) return "is-active";
-      return "is-pending";
-
-    case "DONE":
-      return "is-complete is-done";
-
-    default:
-      return "is-pending";
+  // Trường hợp đặc biệt: Đã hoàn thành toàn bộ
+  if (currentStatus === "DONE") {
+    return "is-complete is-done";
   }
+
+  // Logic so sánh Index để trả về Class tương ứng
+  if (index < currentIdx) {
+    return "is-complete"; // ✔ (Các bước trước đó)
+  } 
+  
+  if (index === currentIdx) {
+    // ● (Bước hiện tại đang xử lý)
+    return currentStatus === "SYNCING" ? "is-active is-syncing" : "is-active";
+  }
+
+  return "is-pending"; // ○ (Các bước chưa tới)
 }
 
 function getStatusMessage(status, lang, longMsg) {
