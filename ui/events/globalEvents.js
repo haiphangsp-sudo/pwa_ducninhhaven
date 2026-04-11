@@ -28,26 +28,11 @@ function handleScroll() {
 
   handleScroll.ticking = true;
   requestAnimationFrame(() => {
-    //applyScrollUI();
+    applyScrollUI();
     handleScroll.ticking = false;
   });
 }
 
-function startOrderPolling() {
-  if (orderPollingStarted) return;
-  orderPollingStarted = true;
-
-  syncOrdersWithServer();
-
-  setInterval(() => {
-    const active = getState().orders?.active || [];
-    const hasActive = active.some(o => !["DONE", "CANCELED"].includes(o.status));
-
-    if (hasActive) {
-      syncOrdersWithServer();
-    }
-  }, 15000);
-}
 
 function handleGlobalClick(e) {
   const target = e.target.closest("[data-action]");
@@ -165,3 +150,24 @@ function setOrderCommand(cmd) {
     }
   });
 }
+// ui/events/globalEvents.js
+
+function startOrderPolling() {
+  if (orderPollingStarted) return;
+  orderPollingStarted = true;
+
+  setInterval(() => {
+    const state = getState();
+    const active = state.orders?.active || [];
+    const isViewingOrders = state.overlay?.view === "orderTrackerPage"; // Khách đang mở trang Orders
+    const hasActive = active.some(o => !["DONE", "CANCELED"].includes(o.status));
+
+    if (hasActive) {
+      if (isViewingOrders) {
+        // Nếu đang mở trang: Cập nhật nhanh (15-20s)
+        syncOrdersWithServer();
+      }
+    }
+  }, 15000); 
+}
+

@@ -93,6 +93,7 @@ function syncOverlayIfNeeded(state, overlayChanged) {
       break;
     case "orderTrackerPage":
       openOrderTracker(state);
+      syncOrdersWithServer();
       break;
     default:
       break;
