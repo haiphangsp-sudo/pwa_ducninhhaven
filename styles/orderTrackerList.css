@@ -48,8 +48,8 @@
   justify-content: center;
 
   cursor: pointer;
-  background: #f3f1eb;
-  color: #4d4d47;
+  background: var(--accent-soft);
+  color: var(--accent);
 }
 
 #orderTrackerList {
