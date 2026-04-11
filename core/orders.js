@@ -157,6 +157,7 @@ function getSavedIds() {
 ========================= */
 
 export function addOrderToTracking(meta = {}) {
+  if (!meta.id) return;
   const state = getState();
   const active = state.orders?.active || [];
   const inactive = state.orders?.inactive || [];
