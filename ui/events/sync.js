@@ -93,7 +93,6 @@ function syncOverlayIfNeeded(state, overlayChanged) {
       renderPlacePicker(state);
       break;
     case "orderTrackerPage":
-      syncOrdersWithServer(state);
       openOrderTracker(state);
       break;
     default:
@@ -152,6 +151,7 @@ function syncStatusBarIfNeeded(state, ordersChanged, statusBarExpandedChanged, o
   if (!shouldRenderStatusBar) return;
 
   renderStatusBar(state);
+  openOrderTracker(state);
 }
 
 async function handleOrderLogic(state) {
