@@ -82,7 +82,7 @@ function renderOrderCard(order = {}) {
             <div class="tracker-item__content">
               <span class="tracker-item__name">${translate("order.total")}</span>
             </div>
-            <span class="tracker-item__price">${safeFormatPrice(order.totalPrice)}</span>
+            <span class="tracker-item__price">${formatPrice(order.totalPrice)}</span>
           </div>
         </div>
       </div>
@@ -109,7 +109,7 @@ function renderOrderItem(item = {}) {
         <span class="tracker-item__name">${escapeHtml(name)}</span>
         ${option ? `<span class="tracker-item__option">${escapeHtml(option)}</span>` : ""}
       </div>
-      <span class="tracker-item__price">${safeFormatPrice(price)}</span>
+      <span class="tracker-item__price">${formatPrice(price)}</span>
     </div>
   `;
 }
@@ -138,15 +138,6 @@ function formatTime(value) {
     });
   } catch {
     return "";
-  }
-}
-
-function safeFormatPrice(value) {
-  try {
-    return formatPrice(Number(value || 0));
-  } catch (error) {
-    console.error("formatPrice failed:", value, error);
-    return `${Number(value || 0).toLocaleString("vi-VN")} đ`;
   }
 }
 

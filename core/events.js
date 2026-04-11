@@ -1,3 +1,4 @@
+
 import { getState, setState } from "./state.js";
 import { sendRequest } from "../services/api.js";
 import { getVariantById } from "./menuQuery.js";
@@ -8,6 +9,7 @@ import { updateCartQuantity } from "./action.js";
 export function addToCart() {
   const itemId = getState().order?.line;
   if (!itemId) return;
+
   updateCartQuantity(itemId, 1);
 }
 
@@ -123,9 +125,7 @@ export async function submitOrder(action) {
 
     setOrderStatus("success");
 
-    const orderId = payload?.id || "";
-    if (orderId&&payload.items)
-    addOrderToTracking(orderId,payload.items,payload);
+    addOrderToTracking(payload);
 
     return true;
   } catch (error) {
