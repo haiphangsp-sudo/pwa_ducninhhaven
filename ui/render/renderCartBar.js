@@ -20,9 +20,9 @@ export function renderCartBar(state) {
   btn.textContent = translate("cart_bar.cart_title");
   countEl.textContent = cart.totalQtyFormat;
   if (isEmpty) {
-    cartBar.classList.add("hidden");
+    cartBar.classList.add("cart-bar--hidden");
   } else {
-    cartBar.classList.remove("hidden");
+    cartBar.classList.remove("cart-bar--hidden");
   }
   
 }
