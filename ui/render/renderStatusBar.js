@@ -1,5 +1,6 @@
 import { renderStepper } from "./renderStepper.js";
 import { translate } from "../utils/translate.js";
+import { getActionableOrders } from "../../core/orders.js";
 
 export function openStatusBar(state) {
   const actionable = getActionableOrders();
