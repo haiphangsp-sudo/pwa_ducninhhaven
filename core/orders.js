@@ -1,370 +1,147 @@
-// core/orders.js
+// ui/components/orderTracker.js
+import { renderStepper } from "../render/renderStepper.js";
+import { translate } from "../utils/translate.js";
+import { formatPrice } from "../utils/formatPrice.js";
+import { getActionableOrders, getRecentInactiveOrders } from "../../core/orders.js";
 
-import { getState, setState } from "./state.js";
-import { CONFIG } from "../config.js";
+/**
+ * Mở trang theo dõi đơn hàng với 2 phân vùng: Đang xử lý & Lịch sử
+ */
+export function openOrderTracker(state) {
+  const listContainer = document.getElementById("orderTrackerList");
+  if (!listContainer) return;
 
-const SCRIPT_URL = CONFIG.API_ENDPOINT;
-const STORAGE_KEY = "haven_active_order_ids";
+  const activeOrders = getActionableOrders(); 
+  const historyOrders = getRecentInactiveOrders(); 
 
-const TERMINAL_STATUSES = ["DONE", "CANCELED"];
-const ACTIONABLE_STATUSES = ["NEW", "COOKING", "DELIVERING", "DONE", "SYNCING"];
-const MAX_INACTIVE_ORDERS = 10;
-const SYNCING_STALE_MS = 15000;
-
-/* =========================
-   TIME
-========================= */
-
-function toTimestamp(value, fallback = Date.now()) {
-  if (typeof value === "number" && Number.isFinite(value)) return value;
-
-  if (typeof value === "string") {
-    const parsed = Date.parse(value);
-    if (!Number.isNaN(parsed)) return parsed;
-
-    const asNumber = Number(value);
-    if (Number.isFinite(asNumber) && asNumber > 0) return asNumber;
+  if (activeOrders.length === 0 && historyOrders.length === 0) {
+    listContainer.innerHTML = `
+      <div class="tracker-empty">
+        <div class="tracker-empty__icon">🍃</div>
+        <div class="tracker-empty__text">${translate("order.no_active_order")}</div>
+      </div>`;
+    return;
   }
 
-  if (value instanceof Date && !Number.isNaN(value.getTime())) {
-    return value.getTime();
+  let html = "";
+
+  // 1. PHẦN ĐƠN HÀNG ĐANG XỬ LÝ (Hiện Stepper)
+  if (activeOrders.length > 0) {
+    html += `<h3 class="tracker-section-title">${translate("order.active_title") || "Đang xử lý"}</h3>`;
+    html += activeOrders
+      .sort((a, b) => Number(b.updatedAt || 0) - Number(a.updatedAt || 0))
+      .map(order => renderOrderCard(order, true))
+      .join("");
   }
 
-  return fallback;
+  // 2. PHẦN LỊCH SỬ (Hiện Badge trạng thái)
+  if (historyOrders.length > 0) {
+    html += `<div class="tracker-history-divider"></div>`;
+    html += `<h3 class="tracker-section-title history">${translate("order.history_title") || "Lịch sử đặt món"}</h3>`;
+    html += `<div class="tracker-history-list">
+      ${historyOrders
+        .sort((a, b) => Number(b.updatedAt || 0) - Number(a.updatedAt || 0))
+        .map(order => renderOrderCard(order, false))
+        .join("")}
+    </div>`;
+  }
+
+  listContainer.innerHTML = html;
 }
 
-/* =========================
-   NORMALIZE
-========================= */
+function renderOrderCard(order = {}, showStepper = true) {
+  const status = order.status || "NEW";
+  const items = parseItems(order.items); // Gọi hàm bổ trợ bên dưới
+  const time = formatTime(order.updatedAt || order.createdAt);
+  
+  return `
+    <article class="tracker-order ${!showStepper ? "is-history" : ""}">
+      <div class="tracker-order__header">
+        <span class="tracker-order__id">#${order.id.split("-").slice(-1)}</span>
+        <span class="tracker-order__time">${time}</span>
+      </div>
 
-function normalizeOrder(order = {}) {
-  const createdAt = toTimestamp(
-    order.createdAt ?? order.timestamp ?? order.time,
-    Date.now()
-  );
+      <div class="tracker-order__content">
+        <div class="tracker-order__items">
+          ${items.map(item => renderOrderItem(item)).join("")}
+        </div>
+        
+        <div class="tracker-order__total">
+          <span>${translate("order.total")}</span>
+          <span class="total-value">${formatPrice(order.totalPrice)}</span>
+        </div>
 
-  return {
-    id: order.id || "",
-    status: order.status || "NEW",
-    items: Array.isArray(order.items) ? order.items : [],
-    totalQty: Number(order.totalQty || 0),
-    totalPrice: Number(order.totalPrice || 0),
-    mode: order.mode || "",
-    placeLabel: order.placeLabel || "",
-    type: order.type || "",
-    device: order.device || "",
-    createdAt,
-    updatedAt: toTimestamp(order.updatedAt, createdAt),
-    syncedAt: toTimestamp(order.syncedAt, 0)
-  };
+        ${showStepper ? `
+          <div class="tracker-order__stepper">
+            ${renderStepper(status, true)}
+          </div>
+        ` : `
+          <div class="tracker-order__status-badge ${status.toLowerCase()}">
+            ${status === "DONE" ? "✓ Đã hoàn tất" : "✕ Đã hủy"}
+          </div>
+        `}
+      </div>
+    </article>
+  `;
 }
 
-function isTerminalStatus(status) {
-  return TERMINAL_STATUSES.includes(status);
+/* ============================================================
+              HÀM BỔ TRỢ (HELPERS) 
+   ============================================================ */
+
+function renderOrderItem(item = {}) {
+  const qty = Number(item.qty || 1);
+  const name = item.item || item.name || "—";
+  const price = Number(item.price || 0);
+  const option = item.option;
+
+  return `
+    <div class="tracker-item">
+      <span class="tracker-item__qty">${qty}×</span>
+      <div class="tracker-item__content">
+        <span class="tracker-item__name">${escapeHtml(name)}</span>
+        ${option ? `<span class="tracker-item__option">${escapeHtml(option)}</span>` : ""}
+      </div>
+      <span class="tracker-item__price">${formatPrice(price)}</span>
+    </div>
+  `;
 }
 
-function isActionableStatus(status) {
-  return ACTIONABLE_STATUSES.includes(status);
-}
-
-function isSyncingTooLong(order = {}) {
-  return (
-    order.status === "SYNCING" &&
-    Date.now() - Number(order.updatedAt || 0) > SYNCING_STALE_MS
-  );
-}
-
-/* =========================
-   DEDUPE / SPLIT
-========================= */
-
-function dedupeOrders(orders = []) {
-  const map = new Map();
-
-  orders.forEach(raw => {
-    const order = normalizeOrder(raw);
-    if (!order.id) return;
-
-    const prev = map.get(order.id);
-    if (!prev) {
-      map.set(order.id, order);
-      return;
-    }
-
-    map.set(order.id, {
-      ...prev,
-      ...order,
-      items: order.items.length ? order.items : prev.items,
-      createdAt: Math.min(
-        Number(prev.createdAt || Infinity),
-        Number(order.createdAt || Infinity)
-      ),
-      updatedAt: Math.max(
-        Number(prev.updatedAt || 0),
-        Number(order.updatedAt || 0)
-      ),
-      syncedAt: Math.max(
-        Number(prev.syncedAt || 0),
-        Number(order.syncedAt || 0)
-      )
-    });
-  });
-
-  return Array.from(map.values());
-}
-
-function splitOrders(orders = []) {
-  const active = [];
-  const inactive = [];
-
-  dedupeOrders(orders).forEach(order => {
-    if (!order.id) return;
-    if (isTerminalStatus(order.status)) inactive.push(order);
-    else active.push(order);
-  });
-
-  active.sort((a, b) => Number(b.createdAt || 0) - Number(a.createdAt || 0));
-  inactive.sort((a, b) => Number(b.createdAt || 0) - Number(a.createdAt || 0));
-
-  return {
-    active,
-    inactive: inactive.slice(0, MAX_INACTIVE_ORDERS)
-  };
-}
-
-/* =========================
-   STORAGE
-========================= */
-
-function persistActiveIds(activeOrders = []) {
-  const ids = activeOrders
-    .filter(order => order.id && !isTerminalStatus(order.status))
-    .map(order => order.id);
-
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(ids));
-}
-
-function getSavedIds() {
+function parseItems(raw) {
   try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-  } catch {
+    if (typeof raw === "string" && raw.trim() !== "") {
+      const parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? parsed : [];
+    }
+    return Array.isArray(raw) ? raw : [];
+  } catch (error) {
+    console.error("Parse order items failed:", error);
     return [];
   }
 }
 
-/* =========================
-   PUBLIC /orderId, items = [], meta = {}
-========================= */
-export function addOrderToTracking(meta = {}) {
-  const state = getState();
-  const active = state.orders?.active || [];
-  const inactive = state.orders?.inactive || [];
-  const all = [...active, ...inactive];
-  const exists = all.some(order => order.id === meta.id);
-   
-  if (exists) return;
-
-  const newOrder = normalizeOrder({
-    id: meta.id,
-    status: meta.status || "NEW",
-    items: meta.items || [],
-    totalQty: meta.totalQty,
-    totalPrice: meta.totalPrice,
-    mode: meta.mode,
-    placeLabel: meta.placeLabel,
-    type: meta.type,
-    device: meta.device,
-    createdAt: meta.timestamp,
-    updatedAt: Date.now(),
-    syncedAt: Date.now()
-  });
-
-  const next = splitOrders([...active, ...inactive, newOrder]);
-
-  setState({
-    orders: {
-      ...state.orders,
-      active: next.active,
-      inactive: next.inactive
-    }
-  });
-
-  persistActiveIds(next.active);
-}
-
-export async function syncOrdersWithServer() {
-  const savedIds = getSavedIds();
-  if (savedIds.length === 0) return;
-
+function formatTime(value) {
+  const ts = Number(value);
+  if (!Number.isFinite(ts) || ts <= 0) return "";
   try {
-    const response = await fetch(
-      `${SCRIPT_URL}?action=getStatuses&ids=${savedIds.join(",")}`
-    );
-
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
-
-    const updates = await response.json();
-
-    const state = getState();
-    const currentActive = state.orders?.active || [];
-    const currentInactive = state.orders?.inactive || [];
-    const currentMap = new Map(
-      [...currentActive, ...currentInactive].map(order => [order.id, order])
-    );
-
-    const rebuilt = savedIds.map(id => {
-      const existing = currentMap.get(id);
-      const incoming = updates[id];
-
-      if (typeof incoming === "string") {
-        return normalizeOrder({
-          ...existing,
-          id,
-          status: incoming,
-          createdAt: existing?.createdAt,
-          updatedAt: Date.now(),
-          syncedAt: Date.now()
-        });
-      }
-
-      if (incoming && typeof incoming === "object") {
-        return normalizeOrder({
-          ...existing,
-          ...incoming,
-          id,
-          createdAt: existing?.createdAt ?? incoming.createdAt ?? incoming.timestamp,
-          updatedAt: Date.now(),
-          syncedAt: Date.now()
-        });
-      }
-
-      return normalizeOrder({
-        ...existing,
-        id,
-        status: existing?.status || "SYNCING",
-        createdAt: existing?.createdAt || Date.now(),
-        updatedAt: existing?.updatedAt || Date.now(),
-        syncedAt: existing?.syncedAt || 0
-      });
+    return new Date(ts).toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit"
     });
-
-    const next = splitOrders([
-      ...currentInactive.filter(order => !savedIds.includes(order.id)),
-      ...rebuilt
-    ]);
-
-    setState({
-      orders: {
-        ...state.orders,
-        active: next.active,
-        inactive: next.inactive
-      }
-    });
-
-    persistActiveIds(next.active);
-    clearCompletedOrders(state);
-  } catch (error) {
-    console.error("Haven Service Error [Sync]:", error);
+  } catch (e) {
+    return "";
   }
 }
 
-function clearCompletedOrders(state) {
-  const active = state.orders?.active || [];
-  const inactive = state.orders?.inactive || [];
-
-  const stillActive = active.filter(order => !isTerminalStatus(order.status));
-  const nextInactive = dedupeOrders([
-    ...inactive,
-    ...active.filter(order => isTerminalStatus(order.status))
-  ])
-    .sort((a, b) => Number(b.updatedAt || 0) - Number(a.updatedAt || 0))
-    .slice(0, MAX_INACTIVE_ORDERS);
-
-  setState({
-    orders: {
-      ...state.orders,
-      active: stillActive,
-      inactive: nextInactive
-    }
+function escapeHtml(str) {
+  if (typeof str !== 'string') return str;
+  return str.replace(/[&<>"']/g, function(m) {
+    return {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#039;'
+    }[m];
   });
-
-  persistActiveIds(stillActive);
-}
-
-export function hydrateOrdersFromStorage() {
-  const savedIds = getSavedIds();
-  if (savedIds.length === 0) return false;
-
-  const state = getState();
-  const inactive = state.orders?.inactive || [];
-  const now = Date.now();
-
-  const placeholders = savedIds.map(id =>
-    normalizeOrder({
-      id,
-      status: "SYNCING",
-      items: [],
-      createdAt: now,
-      updatedAt: now,
-      syncedAt: 0
-    })
-  );
-
-  const next = splitOrders([...placeholders, ...inactive]);
-
-  setState({
-    orders: {
-      ...state.orders,
-      active: next.active,
-      inactive: next.inactive,
-      isBarExpanded: false
-    }
-  });
-
-  return true;
-}
-
-export function markSyncingAgedOrders() {
-  const state = getState();
-  const active = state.orders?.active || [];
-  const inactive = state.orders?.inactive || [];
-
-  let changed = false;
-
-  const nextActive = active.map(order => {
-    if (!isSyncingTooLong(order)) return order;
-    changed = true;
-    return normalizeOrder({
-      ...order,
-      updatedAt: Date.now()
-    });
-  });
-
-  if (!changed) return false;
-
-  setState({
-    orders: {
-      ...state.orders,
-      active: nextActive,
-      inactive
-    }
-  });
-
-  return true;
-}
-
-export function getActionableOrders() {
-  const active = getState().orders?.active || [];
-  return active.filter(order => isActionableStatus(order.status));
-}
-
-export function getRecentInactiveOrders() {
-  return (getState().orders?.inactive || []).slice(0, MAX_INACTIVE_ORDERS);
-}
-
-export function getSyncingOrders() {
-  const active = getState().orders?.active || [];
-  return active.filter(order => order.status === "SYNCING");
 }
