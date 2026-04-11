@@ -91,7 +91,7 @@ function syncOverlayIfNeeded(state, overlayChanged) {
       renderPlacePicker(state);
       break;
     case "orderTrackerPage":
-      renderStatusBar(state);
+      openOrderTracker(state);
       break;
     default:
       break;

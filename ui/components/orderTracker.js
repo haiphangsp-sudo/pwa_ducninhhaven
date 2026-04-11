@@ -3,8 +3,8 @@ import { renderStepper } from "../render/renderStepper.js";
 import { translate } from "../utils/translate.js";
 import { formatPrice } from "../utils/formatPrice.js";
 
-export function openOrderTracker() {
-  const state = getState();
+export function openOrderTracker(state) {
+//const state = getState();
   const active = state.orders?.active || [];
   const inactive = state.orders?.inactive || [];
   const orders = [...active, ...inactive];
