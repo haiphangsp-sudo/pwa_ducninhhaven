@@ -24,7 +24,7 @@ export function renderStepper(currentStatus, longMsg = false) {
   const message = getStatusMessage(currentStatus, lang, longMsg);
 
   return `
-    ${message ? `<div class="step-status-msg${currentStatus === "SYNCING" ? " is-syncing" : ""}">${escapeHtml(message)}</div>` : ""}
+    ${message ? `<div class="step-status-msg${currentStatus === "SYNCING" ? "is-syncing sync-spinner" : ""}">${escapeHtml(message)}</div>` : ""}
     <div class="step-container${currentStatus === "SYNCING" ? " is-syncing" : ""}">
       ${steps.map((step, index) => {
         const stateClass = getStepState(index, currentStatus);
