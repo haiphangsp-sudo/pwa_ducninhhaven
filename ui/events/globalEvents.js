@@ -6,6 +6,7 @@ import { applyPlaceById, syncContextToState } from "../../core/context.js";
 import { animateFlyToCart } from "../../ui/interactions/animateFlyToCart.js";
 import { applyScrollUI } from "./scrollBehavior.js";
 import { attachRuntimeRefresh } from "../../core/runtimeRefresh.js";
+import { startOrderPolling, stopOrderPolling } from "./appFlow.js";
 
 export function attachAppEvents() {
   document.addEventListener("click", handleGlobalClick);
@@ -18,6 +19,13 @@ export function attachAppEvents() {
     intervalMs: 60000,
     enableInterval: true
   });
+  document.addEventListener("visibilitychange", () => {
+  if (document.hidden) {
+    stopOrderPolling(); // Dừng ngay để tiết kiệm tài nguyên
+  } else {
+    startOrderPolling(); // Chạy lại khi khách quay lại
+  }
+});
 }
 
 function handleScroll() {

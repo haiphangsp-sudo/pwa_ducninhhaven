@@ -93,7 +93,7 @@ function syncOverlayIfNeeded(state, overlayChanged) {
       renderPlacePicker(state);
       break;
     case "orderTrackerPage":
-      startOrderPolling(state);
+      syncOrdersWithServer(state);
       openOrderTracker(state);
       break;
     default:
@@ -101,16 +101,6 @@ function syncOverlayIfNeeded(state, overlayChanged) {
   }
 
   syncOverlay(state.overlay?.view || null);
-}
-
-function startOrderPolling(state) {
-  setInterval(() => {
-    const active = state.orders?.active || [];
-    const hasActive = active.some(o => !["DONE", "CANCELED"].includes(o.status));
-    if (hasActive) {
-        syncOrdersWithServer();
-    }
-  }, 15000); 
 }
 
 
