@@ -43,7 +43,7 @@ export function openOrderTracker(state) {
   if (activeOrders.length > 0) {
     html += `<h3 class="tracker-section-title">${translate("order.active_title")}</h3>`;
     html += activeOrders
-      .sort((a, b) => Number(b.updatedAt || 0) - Number(a.updatedAt || 0))
+      .sort((a, b) => Number(b.createdAt || 0) - Number(a.createdAt || 0))
       .map(order => renderOrderCard(order, true))
       .join("");
   }
