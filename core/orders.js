@@ -160,12 +160,9 @@ export function addOrderToTracking(orderId,items=[],meta = {}) {
   const active = state.orders?.active || [];
   const inactive = state.orders?.inactive || [];
   const all = [...active, ...inactive];
-  console.log("orderId:", orderId);
-  console.log("items:", items);
-  console.log("meta:",  meta);
-  if (!orderId) return;
-
   const exists = all.some(order => order.id === orderId);
+    console.log("exists:",  exists);
+
   if (exists) return;
 
   const newOrder = normalizeOrder({
