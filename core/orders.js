@@ -264,7 +264,7 @@ export async function syncOrdersWithServer() {
     });
 
     persistActiveIds(next.active);
-    clearCompletedOrders();
+    clearCompletedOrders(state);
   } catch (error) {
     console.error("Haven Service Error [Sync]:", error);
   }
