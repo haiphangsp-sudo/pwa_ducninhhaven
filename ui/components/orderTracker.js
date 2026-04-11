@@ -63,12 +63,15 @@ function renderOrderCard(order = {}, showStepper = true) {
   const status = order.status || "NEW";
   const items = parseItems(order.items);
   const time = formatTime(order.updatedAt || order.createdAt);
-  
+          
   return `
     <article class="tracker-order ${!showStepper ? "is-history" : ""}">
       <div class="tracker-order__header">
-        <span class="tracker-order__id">#${order.id.split("-").slice(-1)}</span>
+        <span class="tracker-order__code">#${order.id.split("-").slice(-1)}</span>
         <span class="tracker-order__time">${time}</span>
+        <div class="tracker-order__meta">
+          ${order.placeLabel ? `<span>${escapeHtml(order.placeLabel)}</span>` : ""}
+        </div>
       </div>
 
       <div class="tracker-order__content">
