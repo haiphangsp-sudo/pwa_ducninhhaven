@@ -3,7 +3,6 @@ import { getState } from "../../core/state.js";
 import { 
   syncOrdersWithServer, 
   markSyncingAgedOrders, 
-  clearCompletedOrders, 
   hydrateOrdersFromStorage 
 } from "../../core/orders.js";
 
@@ -17,7 +16,6 @@ const POLLING_TIME = 25000; // 25 giây
 export function bootstrapOrderTracker() {
   console.group("🏨 Haven Order System");
   hydrateOrdersFromStorage();
-  clearCompletedOrders();
   startOrderPolling();
   setupVisibilityListener();
   console.groupEnd();

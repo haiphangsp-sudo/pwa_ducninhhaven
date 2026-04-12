@@ -278,6 +278,7 @@ export async function syncOrdersWithServer() {
     });
 
     persistActiveIds(next.active);
+    clearCompletedOrders();
   } catch (error) {
     console.error("Haven Service Error [Sync]:", error);
   }
