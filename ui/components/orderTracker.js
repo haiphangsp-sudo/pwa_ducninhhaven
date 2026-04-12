@@ -69,10 +69,11 @@ export function openOrderTracker() {
 function renderOrderCard(order = {}, showStepper = true) {
   const status = order.status || "NEW";
   const items = parseItems(order.items);
+  if (items.length === 0) return "";
   const time = formatTime(order.updatedAt || order.createdAt);
   const shortId = getShortOrderId(order.id);
   const placeLabel = getOrderPlaceLabel(order);
-
+  
   return `
     <article class="tracker-order ${!showStepper ? "is-history" : ""}">
       <div class="tracker-order__header">
@@ -90,7 +91,10 @@ function renderOrderCard(order = {}, showStepper = true) {
 
       <div class="tracker-order__content">
         <div class="tracker-order__items">
-          ${items.map(item => renderOrderItem(item)).join("")}
+          ${items.map(item =>{
+            renderOrderItem(item).join(""),
+            console.log("renderOrderItem", item)}
+          ).join("")}
         </div>
 
         <div class="tracker-item total-price">
@@ -115,11 +119,13 @@ function renderOrderCard(order = {}, showStepper = true) {
 }
 
 function renderOrderItem(item = {}) {
+  const itemId = item.id;
+  if (!itemId) return "";
+
   const qty = Number(item.qty || 1);
   const price = Number(item.price || 0);
 
-  const resolved = item.id ? getVariantById(item.id) : null;
-  console.log("renderOrderItem", item);
+  const resolved = item.id ? getVariantById(itemId) : null;
 
   const name =
     resolved?.productLabel ||
