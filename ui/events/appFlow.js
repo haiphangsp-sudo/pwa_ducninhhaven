@@ -38,7 +38,7 @@ function startOrderPolling(state) {
   // Chạy ngay lập tức lần đầu
   runSyncCycle(state);
 
-  orderPollingInterval = setInterval(runSyncCycle, POLLING_TIME);
+  orderPollingInterval = setInterval(runSyncCycle(state), POLLING_TIME);
 }
 
 function stopOrderPolling() {
