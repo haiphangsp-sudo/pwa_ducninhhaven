@@ -5,6 +5,8 @@ import { getLocationInfo } from "./placesQuery.js";
 import { addOrderToTracking } from "./orders.js";
 import { updateCartQuantity } from "./action.js";
 import { translate } from "../ui/utils/translate.js";
+import { getAnchorDisplay } from "../ui/utils/getAnchorDisplay.js";
+
 
 export function addToCart() {
   const itemId = getState().order?.line;
@@ -76,7 +78,8 @@ function buildPayload(state, action) {
 
   const { totalQty, totalPrice } = getTotals(items);
   const timestamp = new Date().toISOString();
-  const placeName = state.places?.data?.index?.[placeId]?.label || "";
+  //const placeName = state.places?.data?.index?.[placeId]?.label || "";
+  const placeName = getAnchorDisplay();
 
   return {
     id: `H-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
