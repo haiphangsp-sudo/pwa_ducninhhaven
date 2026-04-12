@@ -1,35 +1,38 @@
-// ui/components/orderTracker.js
+// render/renderOrderTracker.js
 import { renderStepper } from "../render/renderStepper.js";
 import { translate } from "../utils/translate.js";
 import { formatPrice } from "../utils/formatPrice.js";
 import { getActionableOrders, getRecentInactiveOrders, getSyncingOrders } from "../../core/orders.js";
+import { getVariantById } from "../../core/menuQuery.js";
+import { getState } from "../../core/state.js";
 
-/**
- * Mở trang theo dõi đơn hàng với 2 phân vùng: Đang xử lý & Lịch sử
- */
-export function openOrderTracker(state) {
+export function openOrderTracker() {
   const listContainer = document.getElementById("orderTrackerList");
   if (!listContainer) return;
 
-  const activeOrders = getActionableOrders(); 
-  const historyOrders = getRecentInactiveOrders(); 
+  const activeOrders = getActionableOrders();
+  const historyOrders = getRecentInactiveOrders();
   const syncingOrders = getSyncingOrders();
   const titleOrder = document.querySelector(".tracker-title");
-  if(titleOrder) titleOrder.textContent = translate("order.status");
+
+  if (titleOrder) {
+    titleOrder.textContent = translate("order.status");
+  }
 
   if (activeOrders.length === 0 && historyOrders.length === 0) {
     listContainer.innerHTML = `
       <div class="tracker-empty">
         <div class="tracker-empty__icon">🍃</div>
         <div class="tracker-empty__text">
-        ${translate("order.no_active_order")}
+          ${translate("order.no_active_order")}
         </div>
-      </div>`;
+      </div>
+    `;
     return;
   }
 
   let html = "";
-  
+
   if (syncingOrders.length > 0) {
     html += `
       <div class="tracker-syncing-notice">
@@ -39,21 +42,21 @@ export function openOrderTracker(state) {
     `;
   }
 
-  // 1. PHẦN ĐƠN HÀNG ĐANG XỬ LÝ (Hiện Stepper)
   if (activeOrders.length > 0) {
     html += `<h3 class="tracker-section-title">${translate("order.active_title")}</h3>`;
     html += activeOrders
-      .sort((a, b) => Number(b.createdAt || 0) - Number(a.createdAt || 0))
+      .slice()
+      .sort((a, b) => Number(b.updatedAt || 0) - Number(a.updatedAt || 0))
       .map(order => renderOrderCard(order, true))
       .join("");
   }
 
-  // 2. PHẦN LỊCH SỬ (Hiện Badge trạng thái)
   if (historyOrders.length > 0) {
     html += `<div class="tracker-history-divider"></div>`;
     html += `<h3 class="tracker-section-title history">${translate("order.history_title")}</h3>`;
     html += `<div class="tracker-history-list">
       ${historyOrders
+        .slice()
         .sort((a, b) => Number(b.createdAt || 0) - Number(a.createdAt || 0))
         .map(order => renderOrderCard(order, false))
         .join("")}
@@ -67,11 +70,12 @@ function renderOrderCard(order = {}, showStepper = true) {
   const status = order.status || "NEW";
   const items = parseItems(order.items);
   const time = formatTime(order.updatedAt || order.createdAt);
-          
+  const shortId = getShortOrderId(order.id);
+
   return `
     <article class="tracker-order ${!showStepper ? "is-history" : ""}">
       <div class="tracker-order__header">
-        <span class="tracker-order__code">#${order.id.split("-").slice(-1)}</span>
+        <span class="tracker-order__code">#${escapeHtml(shortId)}</span>
         <span class="tracker-order__time">${translate("order.time")}: ${time}</span>
         <div class="tracker-order__meta">
           ${order.placeLabel ? `<span>${escapeHtml(order.placeLabel)}</span>` : ""}
@@ -82,7 +86,7 @@ function renderOrderCard(order = {}, showStepper = true) {
         <div class="tracker-order__items">
           ${items.map(item => renderOrderItem(item)).join("")}
         </div>
-        
+
         <div class="tracker-item total-price">
           <div class="tracker-item__content">
             <span class="tracker-item__name">${translate("order.total")}</span>
@@ -96,7 +100,7 @@ function renderOrderCard(order = {}, showStepper = true) {
           </div>
         ` : `
           <div class="tracker-order__status-badge ${status.toLowerCase()}">
-            ${status === "DONE" ? "✓ Đã hoàn tất" : "✕ Đã hủy"}
+            ${status === "DONE" ? "✓ " + translate("status.DONE") : "✕ CANCELED"}
           </div>
         `}
       </div>
@@ -104,15 +108,24 @@ function renderOrderCard(order = {}, showStepper = true) {
   `;
 }
 
-/* ============================================================
-   HÀM BỔ TRỢ (HELPERS) - ĐỪNG XÓA CÁC HÀM NÀY
-   ============================================================ */
-
 function renderOrderItem(item = {}) {
   const qty = Number(item.qty || 1);
-  const name = item.item || item.name || "—";
   const price = Number(item.price || 0);
-  const option = item.option;
+
+  const resolved = item.id ? getVariantById(item.id) : null;
+
+  const name =
+    resolved?.productLabel ||
+    item.itemLabel ||
+    item.item ||
+    item.name ||
+    translate("order.unnamed_item");
+
+  const option =
+    resolved?.variantLabel ||
+    item.optionLabel ||
+    item.option ||
+    "";
 
   return `
     <div class="tracker-item">
@@ -142,25 +155,31 @@ function parseItems(raw) {
 function formatTime(value) {
   const ts = Number(value);
   if (!Number.isFinite(ts) || ts <= 0) return "";
+
   try {
     return new Date(ts).toLocaleTimeString([], {
       hour: "2-digit",
       minute: "2-digit"
     });
-  } catch (e) {
+  } catch {
     return "";
   }
 }
 
+function getShortOrderId(id) {
+  const safeId = String(id || "");
+  return safeId.includes("-")
+    ? safeId.split("-").slice(1).join("-")
+    : safeId;
+}
+
 function escapeHtml(str) {
-  if (typeof str !== 'string') return str;
-  return str.replace(/[&<>"']/g, function(m) {
-    return {
-      '&': '&amp;',
-      '<': '&lt;',
-      '>': '&gt;',
-      '"': '&quot;',
-      "'": '&#039;'
-    }[m];
-  });
+  if (typeof str !== "string") return String(str ?? "");
+  return str.replace(/[&<>"']/g, m => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;"
+  }[m]));
 }

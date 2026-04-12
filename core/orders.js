@@ -50,6 +50,7 @@ function normalizeOrder(order = {}) {
     totalQty: Number(order.totalQty || 0),
     totalPrice: Number(order.totalPrice || 0),
     mode: order.mode || "",
+    placeId: order.placeId || order.place || "",
     placeLabel: order.placeLabel || "",
     type: order.type || "",
     device: order.device || "",
@@ -155,13 +156,14 @@ function getSavedIds() {
 /* =========================
    PUBLIC /orderId, items = [], meta = {}
 ========================= */
+
 export function addOrderToTracking(meta = {}) {
   const state = getState();
   const active = state.orders?.active || [];
   const inactive = state.orders?.inactive || [];
   const all = [...active, ...inactive];
+
   const exists = all.some(order => order.id === meta.id);
-   
   if (exists) return;
 
   const newOrder = normalizeOrder({
@@ -171,6 +173,8 @@ export function addOrderToTracking(meta = {}) {
     totalQty: meta.totalQty,
     totalPrice: meta.totalPrice,
     mode: meta.mode,
+    place: meta.place,
+    placeId: meta.placeId || meta.place,
     placeLabel: meta.placeLabel,
     type: meta.type,
     device: meta.device,

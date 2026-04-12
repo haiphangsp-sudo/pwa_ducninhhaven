@@ -1,4 +1,3 @@
-
 import { getState, setState } from "./state.js";
 import { sendRequest } from "../services/api.js";
 import { getVariantById } from "./menuQuery.js";
@@ -33,12 +32,18 @@ function normalizeItems(rawItems) {
 
       return {
         id,
-        category: info.categoryKey || "",
-        item: info.productLabel || "",
-        option: info.variantLabel || "",
         qty: quantity,
         price,
-        subtotal: quantity * price
+        subtotal: quantity * price,
+
+        // key / id chuẩn để render đa ngôn ngữ
+        categoryKey: info.categoryKey || "",
+        productKey: info.productKey || "",
+        variantKey: info.variantKey || "",
+
+        // snapshot dự phòng
+        itemLabel: info.productLabel || "",
+        optionLabel: info.variantLabel || ""
       };
     })
     .filter(Boolean);
@@ -74,8 +79,11 @@ function buildPayload(state, action) {
     type: getOrderType(action),
     status: "NEW",
     timestamp,
+
     place: placeId,
+    placeId,
     placeLabel: placeName,
+
     mode,
     totalQty,
     totalPrice,
@@ -103,6 +111,7 @@ function setOrderStatus(status) {
 
   setState(next);
 }
+
 export async function submitOrder(action) {
   const state = getState();
   const payload = buildPayload(state, action);
@@ -113,6 +122,7 @@ export async function submitOrder(action) {
 
   try {
     const res = await sendRequest(payload);
+
     if (res?.duplicate) {
       setOrderStatus("duplicate");
       return true;
@@ -124,7 +134,11 @@ export async function submitOrder(action) {
 
     setOrderStatus("success");
 
-    addOrderToTracking(payload);
+    try {
+      addOrderToTracking(payload);
+    } catch (error) {
+      console.error("addOrderToTracking failed:", error);
+    }
 
     return true;
   } catch (error) {
