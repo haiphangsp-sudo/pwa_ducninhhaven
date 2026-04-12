@@ -78,7 +78,7 @@ function buildPayload(state, action) {
   const { totalQty, totalPrice } = getTotals(items);
   const timestamp = new Date().toISOString();
   //const placeName = state.places?.data?.index?.[placeId]?.label || "";
-  const placeName = getAnchorDisplay();
+  const placeName = getAnchorDisplay(state);
 
   return {
     id: `H-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
