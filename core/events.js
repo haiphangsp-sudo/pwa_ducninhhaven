@@ -4,7 +4,7 @@ import { getVariantById } from "./menuQuery.js";
 import { getLocationInfo } from "./placesQuery.js";
 import { addOrderToTracking } from "./orders.js";
 import { updateCartQuantity } from "./action.js";
-import { translate } from "./utils/translate.js";
+import { translate } from "../ui/utils/translate.js";
 
 export function addToCart() {
   const itemId = getState().order?.line;
