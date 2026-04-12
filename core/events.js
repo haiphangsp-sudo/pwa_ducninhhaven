@@ -67,7 +67,7 @@ function getOrderType(action) {
 }
 
 function buildPayload(state, action) {
-  const { placeName, placeId, mode } = getLocationInfo();
+  const { placeId, mode } = getLocationInfo();
   if (!placeId) return null;
 
   const items = normalizeItems(getRawItems(state, action));
@@ -75,6 +75,7 @@ function buildPayload(state, action) {
 
   const { totalQty, totalPrice } = getTotals(items);
   const timestamp = new Date().toISOString();
+  const placeName = state.places?.data?.index?.[placeId]?.label || "";
 
   return {
     id: `H-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
