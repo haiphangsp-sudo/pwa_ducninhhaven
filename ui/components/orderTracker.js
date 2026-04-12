@@ -1,4 +1,3 @@
-// render/renderOrderTracker.js
 import { renderStepper } from "../render/renderStepper.js";
 import { translate } from "../utils/translate.js";
 import { formatPrice } from "../utils/formatPrice.js";
@@ -71,6 +70,7 @@ function renderOrderCard(order = {}, showStepper = true) {
   const items = parseItems(order.items);
   const time = formatTime(order.updatedAt || order.createdAt);
   const shortId = getShortOrderId(order.id);
+  const placeLabel = getOrderPlaceLabel(order);
 
   return `
     <article class="tracker-order ${!showStepper ? "is-history" : ""}">
@@ -78,7 +78,7 @@ function renderOrderCard(order = {}, showStepper = true) {
         <span class="tracker-order__code">#${escapeHtml(shortId)}</span>
         <span class="tracker-order__time">${translate("order.time")}: ${time}</span>
         <div class="tracker-order__meta">
-          ${order.placeLabel ? `<span>${escapeHtml(order.placeLabel)}</span>` : ""}
+          ${placeLabel ? `<span>${escapeHtml(placeLabel)}</span>` : ""}
         </div>
       </div>
 
@@ -137,6 +137,21 @@ function renderOrderItem(item = {}) {
       <span class="tracker-item__price">${formatPrice(price)}</span>
     </div>
   `;
+}
+
+function getOrderPlaceLabel(order = {}) {
+  const placeId = order.placeId || order.place;
+  if (!placeId) return order.placeLabel || "";
+
+  const state = getState();
+  const index = state.places?.data?.index || {};
+  const place = index[placeId];
+
+  if (place?.label) {
+    return translate(place.label);
+  }
+
+  return order.placeLabel || placeId;
 }
 
 function parseItems(raw) {

@@ -123,7 +123,6 @@ function syncCartIfNeeded(state, cartChanged) {
   renderDrawer(state);
   localStorage.setItem(CONFIG.CART_KEY, JSON.stringify(state.cart?.items || []));
 }
-
 function syncLanguageIfNeeded(state, langChanged) {
   if (!langChanged) return;
 
@@ -133,6 +132,18 @@ function syncLanguageIfNeeded(state, langChanged) {
   renderStatusBar(state);
   renderHub(state);
   renderPanel(state);
+
+  if (state.overlay?.view === "orderTrackerPage") {
+    openOrderTracker();
+  }
+
+  if (state.overlay?.view === "cartDrawer") {
+    renderDrawer(state);
+  }
+
+  if (state.overlay?.view === "placePicker") {
+    renderPlacePicker(state);
+  }
 }
 
 function syncAckIfNeeded(state, ackChanged) {
