@@ -69,7 +69,7 @@ export function openOrderTracker() {
 function renderOrderCard(order = {}, showStepper = true) {
   const status = order.status || "NEW";
   const items = parseItems(order.items);
-  console.log("parseItems", items);
+  
   if (items.length === 0) return "";
   const time = formatTime(order.updatedAt || order.createdAt);
   const shortId = getShortOrderId(order.id);
@@ -155,6 +155,7 @@ function parseItems(raw) {
   try {
     if (typeof raw === "string" && raw.trim() !== "") {
       const parsed = JSON.parse(raw);
+      console.log("parseItems", parsed);
       return Array.isArray(parsed) ? parsed : [];
     }
     return Array.isArray(raw) ? raw : [];
