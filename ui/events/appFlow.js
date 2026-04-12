@@ -14,7 +14,7 @@ const POLLING_TIME = 25000; // 25 giây
  * KHỞI CHẠY TOÀN BỘ HỆ THỐNG
  * Gọi hàm này 1 lần duy nhất khi App bắt đầu (ví dụ trong main.js)
  */
-export function bootstrapApp() {
+export function bootstrapOrderTracker() {
   const state = getState();
   // 1. Khôi phục ID từ bộ nhớ (Hydrate)
   hydrateOrdersFromStorage(state);
