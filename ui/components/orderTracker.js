@@ -91,7 +91,7 @@ function renderOrderCard(order = {}, showStepper = true) {
 
       <div class="tracker-order__content">
         <div class="tracker-order__items">
-          ${items.map(item =>renderOrderItem(item)
+          ${items.map(product =>renderOrderItem(product)
           ).join("")}
         </div>
 
