@@ -65,7 +65,6 @@ export function openOrderTracker() {
 
   listContainer.innerHTML = html;
 }
-
 function renderOrderCard(order = {}, showStepper = true) {
   const status = order.status || "NEW";
   const items = parseItems(order.items);
@@ -73,41 +72,54 @@ function renderOrderCard(order = {}, showStepper = true) {
   const shortId = getShortOrderId(order.id);
   const placeLabel = getOrderPlaceLabel(order);
 
+  const statusLabel = translate(`status.${status}`) || status;
+
   return `
     <article class="tracker-order ${!showStepper ? "is-history" : ""}">
+      
       <div class="tracker-order__header">
-          <div class="tracker-order__code">#${escapeHtml(shortId)}</div>
-          <span class="tracker-order__status status-badge is-${status.toLowerCase()}">
-          ${escapeHtml(status)}
-        </span>
+        <div class="tracker-order__main">
+          <span class="tracker-order__code">#${escapeHtml(shortId)}</span>
+          <span class="tracker-order__time">
+            ${translate("order.time")}: ${time}
+          </span>
+        </div>
+
+        <div class="tracker-order__right">
+          <span class="tracker-order__status ${status.toLowerCase()}">
+            ${escapeHtml(statusLabel)}
+          </span>
+        </div>
+
         <div class="tracker-order__meta">
           ${placeLabel ? `<span>${escapeHtml(placeLabel)}</span>` : ""}
-           <span class="tracker-order__time">${translate("order.time")}: ${time}</span>
         </div>
       </div>
 
       <div class="tracker-order__content">
+        
         <div class="tracker-order__items">
           ${items.map(item => renderOrderItem(item)).join("")}
         </div>
 
         <div class="tracker-item total-price">
           <div class="tracker-item__content">
-            <span class="tracker-item__name">${translate("order.total")}</span>
+            <span class="tracker-item__name">
+              ${translate("order.total")}
+            </span>
           </div>
-          <span class="tracker-item__price">${formatPrice(order.totalPrice)}</span>
+          <span class="tracker-item__price">
+            ${formatPrice(order.totalPrice)}
+          </span>
         </div>
 
         ${showStepper ? `
           <div class="tracker-order__stepper">
             ${renderStepper(status, true)}
           </div>
-        ` : `
-          <div class="tracker-order__status-badge ${status.toLowerCase()}">
-            ${status === "DONE" ? "✓ " + translate("status.DONE") : "✕ CANCELED"}
-          </div>
-        `}
+        ` : ""}
       </div>
+
     </article>
   `;
 }
