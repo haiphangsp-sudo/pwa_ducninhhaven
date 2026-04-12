@@ -72,7 +72,6 @@ function renderOrderCard(order = {}, showStepper = true) {
   const shortId = getShortOrderId(order.id);
   const placeLabel = getOrderPlaceLabel(order);
 
-  const statusLabel = translate(`status.${status}`) || status;
 
   return `
     <article class="tracker-order ${!showStepper ? "is-history" : ""}">
@@ -86,8 +85,8 @@ function renderOrderCard(order = {}, showStepper = true) {
         </div>
 
         <div class="tracker-order__right">
-          <span class="tracker-order__status ${status.toLowerCase()}">
-            ${escapeHtml(statusLabel)}
+          <span class="tracker-order__status status-badge is-${status.toLowerCase()}">
+            ${escapeHtml(status)}
           </span>
         </div>
 
