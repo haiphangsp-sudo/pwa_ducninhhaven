@@ -68,7 +68,8 @@ function buildPayload(state, action) {
   const { placeName, placeId, mode } = getLocationInfo();
   if (!placeId) return null;
 
-  const items = normalizeItems(getRawItems(state, action));
+  //const items = normalizeItems(getRawItems(state, action));
+  const items = getRawItems(state, action);
   if (!items.length) return null;
 
   const { totalQty, totalPrice } = getTotals(items);
