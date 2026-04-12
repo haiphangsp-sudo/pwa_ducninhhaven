@@ -1,7 +1,7 @@
 import { getState, setState } from "./state.js";
 import { sendRequest } from "../services/api.js";
 import { getVariantById } from "./menuQuery.js";
-import { getLocationInfo, getAnchorDisplay } from "./placesQuery.js";
+import { getLocationInfo, getAnchorDisplay, getCurrentPlaceId } from "./placesQuery.js";
 import { addOrderToTracking } from "./orders.js";
 import { updateCartQuantity } from "./action.js";
 import { translate } from "../ui/utils/translate.js";
@@ -71,6 +71,7 @@ function getOrderType(action) {
 function buildPayload(state, action) {
   const { placeId, mode } = getLocationInfo();
   if (!placeId) return null;
+  const type = getCurrentPlaceId();
 
   const items = normalizeItems(getRawItems(state, action));
   if (!items.length) return null;
@@ -90,7 +91,7 @@ function buildPayload(state, action) {
     placeId,
     placeLabel: translate(placeName),
 
-    mode,
+    mode: type,
     totalQty,
     totalPrice,
     items,
