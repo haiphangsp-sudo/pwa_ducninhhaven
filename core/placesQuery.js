@@ -27,7 +27,7 @@ export function getCurrentPlaceType() {
 }
 
 export function getCurrentPlaceId() {
-  return getCtx()?.active?.id || null;
+  return getCtx()?.active?.id || null; 
 }
 
 export function getAnchorType() {

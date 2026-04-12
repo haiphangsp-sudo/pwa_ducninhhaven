@@ -1,7 +1,7 @@
 import { getState, setState } from "./state.js";
 import { sendRequest } from "../services/api.js";
 import { getVariantById } from "./menuQuery.js";
-import { getLocationInfo, getAnchorDisplay, getAnchorId } from "./placesQuery.js";
+import { getCurrentPlaceId, getCurrentPlaceType, getAnchorId } from "./placesQuery.js";
 import { addOrderToTracking } from "./orders.js";
 import { updateCartQuantity } from "./action.js";
 import { translate } from "../ui/utils/translate.js";
@@ -69,17 +69,16 @@ function getOrderType(action) {
 }
 
 function buildPayload(state, action) {
-  const { placeId, mode } = getLocationInfo();
+  const placeId = getCurrentPlaceId();
   if (!placeId) return null;
-  const type = getAnchorId();
+  const mode = getAnchorId();
 
   const items = normalizeItems(getRawItems(state, action));
   if (!items.length) return null;
 
   const { totalQty, totalPrice } = getTotals(items);
   const timestamp = new Date().toISOString();
-  //const placeName = state.places?.data?.index?.[placeId]?.label || "";
-  const placeName = getAnchorDisplay(state).label;
+  const placeName = getCurrentPlaceType();
 
   return {
     id: `H-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
@@ -91,7 +90,7 @@ function buildPayload(state, action) {
     placeId,
     placeLabel: translate(placeName),
 
-    mode: type,
+    mode: mode,
     totalQty,
     totalPrice,
     items,
