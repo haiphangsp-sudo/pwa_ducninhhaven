@@ -4,8 +4,9 @@ import { getState, setState } from "./state.js";
 import { CONFIG } from "../config.js";
 
 const SCRIPT_URL = CONFIG.API_ENDPOINT;
-const STORAGE_KEY = "haven_active_order_ids";
-
+const STORAGE_KEY_ACTIVE = "haven_active_order_ids";
+const STORAGE_KEY_HISTORY = "haven_order_history"; // Ngăn kéo mới
+const MAX_INACTIVE_AGE_MS = 2 * 24 * 60 * 60 * 1000; // 2 ngày
 const TERMINAL_STATUSES = ["DONE", "CANCELED"];
 const ACTIONABLE_STATUSES = ["NEW", "COOKING", "DELIVERING", "DONE", "SYNCING"];
 const MAX_INACTIVE_ORDERS = 10;
@@ -151,12 +152,12 @@ function persistActiveIds(activeOrders = []) {
     .filter(order => order.id && !isTerminalStatus(order.status))
     .map(order => order.id);
 
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(ids));
+  localStorage.setItem(STORAGE_KEY_ACTIVE, JSON.stringify(ids));
 }
 
 function getSavedIds() {
   try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+    return JSON.parse(localStorage.getItem(STORAGE_KEY_ACTIVE) || "[]");
   } catch {
     return [];
   }
@@ -284,61 +285,61 @@ export async function syncOrdersWithServer() {
 
 export function clearCompletedOrders() {
   const state = getState();
-  const active = state.orders?.active || [];
   const inactive = state.orders?.inactive || [];
+  if (inactive.length === 0) return;
 
-  const stillActive = active.filter(order => !isTerminalStatus(order.status));
-  const nextInactive = dedupeOrders([
-    ...inactive,
-    ...active.filter(order => isTerminalStatus(order.status))
-  ])
-    .sort((a, b) => Number(b.updatedAt || 0) - Number(a.updatedAt || 0))
-    .slice(0, MAX_INACTIVE_ORDERS);
-
-  setState({
-    orders: {
-      ...state.orders,
-      active: stillActive,
-      inactive: nextInactive
-    }
-  });
-
-  persistActiveIds(stillActive);
-}
-
-export function hydrateOrdersFromStorage() {
-  const state = getState();
-  const savedIds = getSavedIds();
-  if (savedIds.length === 0) return false;
-
-  const inactive = state.orders?.inactive || [];
   const now = Date.now();
 
-  const placeholders = savedIds.map(id =>
-    normalizeOrder({
-      id,
-      status: "SYNCING",
-      items: [],
-      createdAt: now,
-      updatedAt: now,
-      syncedAt: 0
-    })
-  );
+  // 1. Lọc theo thời gian: Chỉ giữ lại đơn trong vòng 48 giờ
+  let filtered = inactive.filter(order => {
+    const time = toTimestamp(order.updatedAt, order.createdAt);
+    return (now - time) < MAX_INACTIVE_AGE_MS;
+  });
 
-  const next = splitOrders([...placeholders, ...inactive]);
+  // 2. Lọc theo số lượng: Sắp xếp mới nhất lên đầu và lấy tối đa 10 đơn
+  filtered.sort((a, b) => toTimestamp(b.updatedAt) - toTimestamp(a.updatedAt));
+  if (filtered.length > MAX_INACTIVE_ORDERS) {
+    filtered = filtered.slice(0, MAX_INACTIVE_ORDERS);
+  }
 
+  // 3. Cập nhật State và ghi đè xuống LocalStorage
   setState({
     orders: {
       ...state.orders,
-      active: next.active,
-      inactive: next.inactive,
-      isBarExpanded: false
+      inactive: filtered
     }
   });
 
-  return true;
+  localStorage.setItem(STORAGE_KEY_HISTORY, JSON.stringify(filtered));
 }
+export function hydrateOrdersFromStorage() {
+  const savedActiveIds = JSON.parse(localStorage.getItem(STORAGE_KEY_ACTIVE) || "[]");
+  const savedHistory = JSON.parse(localStorage.getItem(STORAGE_KEY_HISTORY) || "[]");
 
+  const now = Date.now();
+  
+  // Phục hồi placeholder cho đơn đang active để sync lại với server
+  const placeholders = savedActiveIds.map(id => normalizeOrder({
+    id,
+    status: "SYNCING",
+    items: [],
+    createdAt: now,
+    updatedAt: now
+  }));
+
+  setState({
+    orders: {
+      ...getState().orders,
+      active: placeholders,
+      inactive: savedHistory
+    }
+  });
+
+  // Dọn dẹp ngay lúc khởi động để xóa các đơn quá 2 ngày/10 đơn
+  clearCompletedOrders();
+  
+  return placeholders.length > 0;
+}
 export function markSyncingAgedOrders() {
   const state = getState();
   const active = state.orders?.active || [];
