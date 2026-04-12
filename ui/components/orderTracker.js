@@ -120,7 +120,7 @@ function renderOrderCard(order = {}, showStepper = true) {
 function renderOrderItem(item = {}) {
   
   const itemId = item.id;
-  
+  console.log(itemId);
   //const resolved = item.id ? getVariantById(itemId) : null;
   const option = item.option;
 
@@ -152,7 +152,7 @@ function getOrderPlaceLabel(order = {}) {
 }
 
 function parseItems(raw) {
-   console.log("parseItems", raw);
+   
   try {
     if (typeof raw === "string" && raw.trim() !== "") {
       const parsed = JSON.parse(raw);
