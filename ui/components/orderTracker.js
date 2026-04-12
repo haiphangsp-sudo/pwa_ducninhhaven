@@ -91,9 +91,7 @@ function renderOrderCard(order = {}, showStepper = true) {
 
       <div class="tracker-order__content">
         <div class="tracker-order__items">
-          ${items.map(item =>{
-            renderOrderItem(item).join(""),
-            console.log("renderOrderItem", item)}
+          ${items.map(item =>renderOrderItem(item)
           ).join("")}
         </div>
 
@@ -119,6 +117,7 @@ function renderOrderCard(order = {}, showStepper = true) {
 }
 
 function renderOrderItem(item = {}) {
+  console.log("renderOrderItem", item);
   const itemId = item.id;
   if (!itemId) return "";
 
