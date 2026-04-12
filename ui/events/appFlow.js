@@ -15,30 +15,31 @@ const POLLING_TIME = 25000; // 25 giây
  * Gọi hàm này 1 lần duy nhất khi App bắt đầu (ví dụ trong main.js)
  */
 export function bootstrapOrderTracker() {
-  
-  // 1. Khôi phục ID từ bộ nhớ (Hydrate)
+  console.group("🏨 Haven Order System");
   hydrateOrdersFromStorage();
-
-  // 2. Dọn dẹp rác từ hôm trước (Clear)
   clearCompletedOrders();
-
-  // 3. Bắt đầu theo dõi tự động (Polling)
   startOrderPolling();
-
-  // 4. Lắng nghe sự kiện ẩn/hiện tab trình duyệt
   setupVisibilityListener();
+  console.groupEnd();
 }
 
 /**
  * TRÌNH QUẢN LÝ TRUY VẤN (POLLING)
  */
-function startOrderPolling() {
+
+export function startOrderPolling() {
   if (orderPollingInterval) return;
 
-  // Chạy ngay lập tức lần đầu
-  runSyncCycle();
+  // Kiểm tra xem có đơn nào cần theo dõi không mới chạy
+  const state = getState();
+  const activeOrders = state.orders?.active || [];
+  const hasActive = activeOrders.some(o => !["DONE", "CANCELED"].includes(o.status));
 
-  orderPollingInterval = setInterval(runSyncCycle, POLLING_TIME);
+  if (hasActive) {
+    console.log("🟢 Bắt đầu theo dõi đơn hàng...");
+    runSyncCycle();
+    orderPollingInterval = setInterval(runSyncCycle, POLLING_TIME);
+  }
 }
 
 function stopOrderPolling() {
