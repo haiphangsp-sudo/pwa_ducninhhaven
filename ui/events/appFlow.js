@@ -32,13 +32,13 @@ export function bootstrapOrderTracker() {
 /**
  * TRÌNH QUẢN LÝ TRUY VẤN (POLLING)
  */
-function startOrderPolling(state) {
+function startOrderPolling() {
   if (orderPollingInterval) return;
 
   // Chạy ngay lập tức lần đầu
-  runSyncCycle(state);
+  runSyncCycle();
 
-  orderPollingInterval = setInterval(runSyncCycle(state), POLLING_TIME);
+  orderPollingInterval = setInterval(runSyncCycle, POLLING_TIME);
 }
 
 function stopOrderPolling() {
@@ -51,7 +51,8 @@ function stopOrderPolling() {
 /**
  * CHU KỲ ĐỒNG BỘ CHI TIẾT
  */
-async function runSyncCycle(state) {
+async function runSyncCycle() {
+  const state = getState();
   const activeOrders = state.orders?.active || [];
   
   // Kiểm tra xem có đơn hàng nào cần theo dõi không
