@@ -284,7 +284,7 @@ export async function syncOrdersWithServer() {
   }
 }
 
-function clearCompletedOrders(state) {
+export function clearCompletedOrders(state) {
   const active = state.orders?.active || [];
   const inactive = state.orders?.inactive || [];
 
