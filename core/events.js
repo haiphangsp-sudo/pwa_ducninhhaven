@@ -4,6 +4,7 @@ import { getVariantById } from "./menuQuery.js";
 import { getLocationInfo } from "./placesQuery.js";
 import { addOrderToTracking } from "./orders.js";
 import { updateCartQuantity } from "./action.js";
+import { translate } from "./utils/translate.js";
 
 export function addToCart() {
   const itemId = getState().order?.line;
@@ -85,7 +86,7 @@ function buildPayload(state, action) {
 
     place: placeId,
     placeId,
-    placeLabel: placeName,
+    placeLabel: translate(placeName),
 
     mode,
     totalQty,
