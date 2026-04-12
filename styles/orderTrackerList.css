@@ -425,3 +425,29 @@
   background: linear-gradient(to right, transparent, #ddd, transparent);
   margin: 2rem 0;
 }
+.tracker-order__header {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.tracker-order__main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tracker-order__right {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.tracker-order__status {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: var(--bg-muted);
+}
