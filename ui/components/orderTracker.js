@@ -119,29 +119,16 @@ function renderOrderCard(order = {}, showStepper = true) {
 function renderOrderItem(item = {}) {
   console.log("renderOrderItem", item);
   const itemId = item.id;
-
-  const qty = Number(item.qty || 1);
-  const price = Number(item.price || 0);
-
   const resolved = item.id ? getVariantById(itemId) : null;
-
-  const name =
-    resolved?.productLabel ||
-    item.itemLabel || translate("order.unnamed_item");
-
-  const option =
-    resolved?.variantLabel ||
-    item.optionLabel ||
-    item.option ||"";
 
   return `
     <div class="tracker-item">
-      <span class="tracker-item__qty">${qty}×</span>
+      <span class="tracker-item__qty">${item.qty}×</span>
       <div class="tracker-item__content">
-        <span class="tracker-item__name">${escapeHtml(name)}</span>
-        ${option ? `<span class="tracker-item__option">${escapeHtml(option)}</span>` : ""}
+        <span class="tracker-item__name">${escapeHtml(item.itemLabel)}</span>
+        ${option ? `<span class="tracker-item__option">${escapeHtml(item.optionLabel)}</span>` : ""}
       </div>
-      <span class="tracker-item__price">${formatPrice(price)}</span>
+      <span class="tracker-item__price">${formatPrice(item.price)}</span>
     </div>
   `;
 }
