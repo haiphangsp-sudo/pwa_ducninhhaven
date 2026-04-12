@@ -205,7 +205,8 @@ export function addOrderToTracking(meta = {}) {
   persistActiveIds(next.active);
 }
 
-export async function syncOrdersWithServer(state) {
+export async function syncOrdersWithServer() {
+  const state = getState();
   const savedIds = getSavedIds();
   if (savedIds.length === 0) return;
 
@@ -281,7 +282,8 @@ export async function syncOrdersWithServer(state) {
   }
 }
 
-export function clearCompletedOrders(state) {
+export function clearCompletedOrders() {
+  const state = getState();
   const active = state.orders?.active || [];
   const inactive = state.orders?.inactive || [];
 
@@ -304,7 +306,8 @@ export function clearCompletedOrders(state) {
   persistActiveIds(stillActive);
 }
 
-export function hydrateOrdersFromStorage(state) {
+export function hydrateOrdersFromStorage() {
+  const state = getState();
   const savedIds = getSavedIds();
   if (savedIds.length === 0) return false;
 
@@ -336,7 +339,8 @@ export function hydrateOrdersFromStorage(state) {
   return true;
 }
 
-export function markSyncingAgedOrders(state) {
+export function markSyncingAgedOrders() {
+  const state = getState();
   const active = state.orders?.active || [];
   const inactive = state.orders?.inactive || [];
 

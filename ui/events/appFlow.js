@@ -15,15 +15,15 @@ const POLLING_TIME = 25000; // 25 giây
  * Gọi hàm này 1 lần duy nhất khi App bắt đầu (ví dụ trong main.js)
  */
 export function bootstrapOrderTracker() {
-  const state = getState();
+  
   // 1. Khôi phục ID từ bộ nhớ (Hydrate)
-  hydrateOrdersFromStorage(state);
+  hydrateOrdersFromStorage();
 
   // 2. Dọn dẹp rác từ hôm trước (Clear)
-  clearCompletedOrders(state);
+  clearCompletedOrders();
 
   // 3. Bắt đầu theo dõi tự động (Polling)
-  startOrderPolling(state);
+  startOrderPolling();
 
   // 4. Lắng nghe sự kiện ẩn/hiện tab trình duyệt
   setupVisibilityListener();
@@ -60,10 +60,10 @@ async function runSyncCycle() {
 
   if (hasActive) {
     // A. Quét lỗi "Đồng bộ vô tận" trước (Watchdog)
-    markSyncingAgedOrders(state);
+    markSyncingAgedOrders();
     
     // B. Sau đó mới gọi Server
-    await syncOrdersWithServer(state);
+    await syncOrdersWithServer();
   } else {
     // Nếu không còn đơn nào, tạm nghỉ để tiết kiệm tài nguyên
     stopOrderPolling();
