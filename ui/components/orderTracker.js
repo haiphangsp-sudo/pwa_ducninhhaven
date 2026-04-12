@@ -128,10 +128,7 @@ function renderOrderItem(item = {}) {
 
   const name =
     resolved?.productLabel ||
-    item.itemLabel ||
-    item.item ||
-    item.name ||
-    translate("order.unnamed_item");
+    item.itemLabel || translate("order.unnamed_item");
 
   const option =
     resolved?.variantLabel ||

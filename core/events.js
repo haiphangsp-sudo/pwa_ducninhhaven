@@ -36,14 +36,16 @@ function normalizeItems(rawItems) {
         price,
         subtotal: quantity * price,
 
-        // key / id chuẩn để render đa ngôn ngữ
+        // GIỮ cho GAS / Sheets
+        item: info.productLabel || "",
+        option: info.variantLabel || "",
+
+        // GIỮ cho tracking đa ngôn ngữ / fallback
+        itemLabel: info.productLabel || "",
+        optionLabel: info.variantLabel || "",
         categoryKey: info.categoryKey || "",
         productKey: info.productKey || "",
-        variantKey: info.variantKey || "",
-
-        // snapshot dự phòng
-        itemLabel: info.productLabel || "",
-        optionLabel: info.variantLabel || ""
+        variantKey: info.variantKey || ""
       };
     })
     .filter(Boolean);
@@ -68,8 +70,7 @@ function buildPayload(state, action) {
   const { placeName, placeId, mode } = getLocationInfo();
   if (!placeId) return null;
 
-  //const items = normalizeItems(getRawItems(state, action));
-  const items = getRawItems(state, action);
+  const items = normalizeItems(getRawItems(state, action));
   if (!items.length) return null;
 
   const { totalQty, totalPrice } = getTotals(items);
