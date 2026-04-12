@@ -75,11 +75,18 @@ function renderOrderCard(order = {}, showStepper = true) {
   return `
     <article class="tracker-order ${!showStepper ? "is-history" : ""}">
       <div class="tracker-order__header">
-        <span class="tracker-order__code">#${escapeHtml(shortId)}</span>
-        <span class="tracker-order__time">${translate("order.time")}: ${time}</span>
+      
+        <div class="tracker-order__meta">
+          <span class="tracker-order__code">#${escapeHtml(shortId)}</span>
+          <span class="tracker-order__time">${translate("order.time")}: ${time}</span>
+          <span class="tracker-order__status status-badge is-${status.toLowerCase()}">
+            ${escapeHtml(status)}</span>
+        </div>
+
         <div class="tracker-order__meta">
           ${placeLabel ? `<span>${escapeHtml(placeLabel)}</span>` : ""}
         </div>
+
       </div>
 
       <div class="tracker-order__content">
