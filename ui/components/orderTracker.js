@@ -120,13 +120,14 @@ function renderOrderItem(item = {}) {
   console.log("renderOrderItem", item);
   const itemId = item.id;
   const resolved = item.id ? getVariantById(itemId) : null;
+  const option = resolved?.variantLabel || "";
 
   return `
     <div class="tracker-item">
       <span class="tracker-item__qty">${item.qty}×</span>
       <div class="tracker-item__content">
         <span class="tracker-item__name">${escapeHtml(item.itemLabel)}</span>
-        ${option ? `<span class="tracker-item__option">${escapeHtml(item.optionLabel)}</span>` : ""}
+        ${option ? `<span class="tracker-item__option">${escapeHtml(option)}</span>` : ""}
       </div>
       <span class="tracker-item__price">${formatPrice(item.price)}</span>
     </div>
