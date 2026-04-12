@@ -152,10 +152,11 @@ function getOrderPlaceLabel(order = {}) {
 }
 
 function parseItems(raw) {
+   console.log("parseItems", raw);
   try {
     if (typeof raw === "string" && raw.trim() !== "") {
       const parsed = JSON.parse(raw);
-      console.log("parseItems", parsed);
+     
       return Array.isArray(parsed) ? parsed : [];
     }
     return Array.isArray(raw) ? raw : [];
@@ -163,6 +164,7 @@ function parseItems(raw) {
     console.error("Parse order items failed:", error);
     return [];
   }
+
 }
 
 function formatTime(value) {
