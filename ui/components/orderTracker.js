@@ -119,7 +119,7 @@ function renderOrderItem(item = {}) {
   const price = Number(item.price || 0);
 
   const resolved = item.id ? getVariantById(item.id) : null;
-  console.log("resolved", item.id);
+  console.log("renderOrderItem", item);
 
   const name =
     resolved?.productLabel ||
