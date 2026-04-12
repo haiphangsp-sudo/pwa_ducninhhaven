@@ -10,7 +10,7 @@ import { attachUI } from "./ui/events/sync.js";
 import { renderApp } from "./ui/render/renderApp.js";
 import { setState, getState } from "./core/state.js";
 import { bootstrapApp } from "./core/bootstrap.js";
-import { hydrateOrdersFromStorage } from "./core/orders.js";
+import { hydrateOrdersFromStorage, clearCompletedOrders } from "./core/orders.js";
 
 boot();
 
@@ -79,6 +79,7 @@ function restoreRuntimeState() {
   applyURLContext();
   syncContextToState();
   hydrateOrdersFromStorage();
+  clearCompletedOrders();
 }
 
 async function loadAppData() {
