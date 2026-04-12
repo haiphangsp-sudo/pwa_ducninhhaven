@@ -36,6 +36,7 @@ function toTimestamp(value, fallback = Date.now()) {
 /* =========================
    NORMALIZE
 ========================= */
+// Cập nhật hàm này trong core/orders.js
 
 function normalizeOrder(order = {}) {
   const createdAt = toTimestamp(
@@ -43,20 +44,29 @@ function normalizeOrder(order = {}) {
     Date.now()
   );
 
+  // Hàm hỗ trợ parse items an toàn
+  let items = [];
+  try {
+    if (typeof order.items === "string" && order.items.trim() !== "") {
+      items = JSON.parse(order.items);
+    } else if (Array.isArray(order.items)) {
+      items = order.items;
+    }
+  } catch (e) {
+    console.error("Lỗi parse items cho đơn hàng:", order.id, e);
+    items = [];
+  }
+
   return {
     id: order.id || "",
     status: order.status || "NEW",
-    items: Array.isArray(order.items) ? order.items : [],
-    totalQty: Number(order.totalQty || 0),
+    items: items, // Bây giờ items đã là một mảng thực thụ
     totalPrice: Number(order.totalPrice || 0),
-    mode: order.mode || "",
-    placeId: order.placeId || order.place || "",
-    placeLabel: order.placeLabel || "",
-    type: order.type || "",
-    device: order.device || "",
+    totalQty: Number(order.totalQty || 0),
+    place: order.place || order.placeId || "",
     createdAt,
     updatedAt: toTimestamp(order.updatedAt, createdAt),
-    syncedAt: toTimestamp(order.syncedAt, 0)
+    syncedAt: Date.now()
   };
 }
 
