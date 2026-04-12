@@ -1,11 +1,10 @@
 import { getState, setState } from "./state.js";
 import { sendRequest } from "../services/api.js";
 import { getVariantById } from "./menuQuery.js";
-import { getLocationInfo } from "./placesQuery.js";
+import { getLocationInfo, getAnchorDisplay } from "./placesQuery.js";
 import { addOrderToTracking } from "./orders.js";
 import { updateCartQuantity } from "./action.js";
 import { translate } from "../ui/utils/translate.js";
-import { getAnchorDisplay } from "../ui/utils/getAnchorDisplay.js";
 
 
 export function addToCart() {
