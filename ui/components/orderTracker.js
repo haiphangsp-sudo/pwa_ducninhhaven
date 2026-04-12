@@ -39,31 +39,31 @@ export function openOrderTracker() {
         <span>${translate("order.syncing_msg")}</span>
       </div>
     `;
-    return;
-  }
+  } else {
 
-  if (activeOrders.length > 0) {
-    html += `<h3 class="tracker-section-title">${translate("order.active_title")}</h3>`;
-    html += activeOrders
-      .slice()
-      .sort((a, b) => Number(b.updatedAt || 0) - Number(a.updatedAt || 0))
-      .map(order => renderOrderCard(order, true))
-      .join("");
-  }
-
-  if (historyOrders.length > 0) {
-    html += `<div class="tracker-history-divider"></div>`;
-    html += `<h3 class="tracker-section-title history">${translate("order.history_title")}</h3>`;
-    html += `<div class="tracker-history-list">
-      ${historyOrders
+    if (activeOrders.length > 0) {
+      html += `<h3 class="tracker-section-title">${translate("order.active_title")}</h3>`;
+      html += activeOrders
         .slice()
-        .sort((a, b) => Number(b.createdAt || 0) - Number(a.createdAt || 0))
-        .map(order => renderOrderCard(order, false))
-        .join("")}
-    </div>`;
-  }
+        .sort((a, b) => Number(b.updatedAt || 0) - Number(a.updatedAt || 0))
+        .map(order => renderOrderCard(order, true))
+        .join("");
+    }
 
-  listContainer.innerHTML = html;
+    if (historyOrders.length > 0) {
+      html += `<div class="tracker-history-divider"></div>`;
+      html += `<h3 class="tracker-section-title history">${translate("order.history_title")}</h3>`;
+      html += `<div class="tracker-history-list">
+      ${historyOrders
+          .slice()
+          .sort((a, b) => Number(b.createdAt || 0) - Number(a.createdAt || 0))
+          .map(order => renderOrderCard(order, false))
+          .join("")}
+    </div>`;
+    }
+
+    listContainer.innerHTML = html;
+  }
 }
 
 function renderOrderCard(order = {}, showStepper = true) {
