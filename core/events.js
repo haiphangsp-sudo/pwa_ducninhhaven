@@ -83,7 +83,7 @@ function buildPayload(state, action) {
 
     placeId: getLocationInfo().placeId,
     placeLabel: getLocationInfo().placeName,
-    anchorId: getAnchorDisplay().label,
+    anchorId: getAnchorDisplay(state).label,
 
     mode: getLocationInfo().mode,
     totalQty,
