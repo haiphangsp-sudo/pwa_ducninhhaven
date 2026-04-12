@@ -205,7 +205,7 @@ export function addOrderToTracking(meta = {}) {
   persistActiveIds(next.active);
 }
 
-export async function syncOrdersWithServer() {
+export async function syncOrdersWithServer(state) {
   const savedIds = getSavedIds();
   if (savedIds.length === 0) return;
 
@@ -220,7 +220,6 @@ export async function syncOrdersWithServer() {
 
     const updates = await response.json();
 
-    const state = getState();
     const currentActive = state.orders?.active || [];
     const currentInactive = state.orders?.inactive || [];
     const currentMap = new Map(
@@ -277,8 +276,6 @@ export async function syncOrdersWithServer() {
     });
 
     persistActiveIds(next.active);
-    clearCompletedOrders(state);
-    //markSyncingAgedOrders(state);
   } catch (error) {
     console.error("Haven Service Error [Sync]:", error);
   }
@@ -307,11 +304,10 @@ export function clearCompletedOrders(state) {
   persistActiveIds(stillActive);
 }
 
-export function hydrateOrdersFromStorage() {
+export function hydrateOrdersFromStorage(state) {
   const savedIds = getSavedIds();
   if (savedIds.length === 0) return false;
 
-  const state = getState();
   const inactive = state.orders?.inactive || [];
   const now = Date.now();
 
@@ -340,7 +336,7 @@ export function hydrateOrdersFromStorage() {
   return true;
 }
 
-function markSyncingAgedOrders(state) {
+export function markSyncingAgedOrders(state) {
   const active = state.orders?.active || [];
   const inactive = state.orders?.inactive || [];
 

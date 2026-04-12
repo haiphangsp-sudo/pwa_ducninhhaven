@@ -1,43 +1,85 @@
 // ui/events/appFlow.js
 import { getState } from "../../core/state.js";
-import { syncOrdersWithServer } from "../../core/orders.js";
+import { 
+  syncOrdersWithServer, 
+  markSyncingAgedOrders, 
+  clearCompletedOrders, 
+  hydrateOrdersFromStorage 
+} from "../../core/orders.js";
 
 let orderPollingInterval = null;
-const POLLING_TIME = 25000; // 25 giây - Khoảng cách an toàn cho Google Script
+const POLLING_TIME = 25000; // 25 giây
 
 /**
- * Bắt đầu truy vấn trạng thái đơn hàng
+ * KHỞI CHẠY TOÀN BỘ HỆ THỐNG
+ * Gọi hàm này 1 lần duy nhất khi App bắt đầu (ví dụ trong main.js)
  */
-export function startOrderPolling() {
-  // 1. Chống lặp: Nếu đang chạy rồi thì không tạo thêm interval mới
-  if (orderPollingInterval) return;
-  // 2. Chạy ngay lần đầu tiên để cập nhật dữ liệu mới nhất
-  syncOrdersWithServer();
+export function bootstrapApp() {
+  const state = getState();
+  // 1. Khôi phục ID từ bộ nhớ (Hydrate)
+  hydrateOrdersFromStorage(state);
 
-  // 3. Thiết lập vòng lặp
-  orderPollingInterval = setInterval(() => {
-    const state = getState();
-    const activeOrders = state.orders?.active || [];
-    
-    // Kiểm tra xem có đơn hàng nào cần theo dõi không (không phải DONE/CANCELED)
-    const hasActive = activeOrders.some(o => !["DONE", "CANCELED"].includes(o.status));
+  // 2. Dọn dẹp rác từ hôm trước (Clear)
+  clearCompletedOrders(state);
 
-    if (hasActive) {
-      syncOrdersWithServer();
-    } else {
-      // Nếu không còn đơn nào đang xử lý, tự động dừng để tiết kiệm tài nguyên
-      stopOrderPolling();
-    }
-  }, POLLING_TIME);
+  // 3. Bắt đầu theo dõi tự động (Polling)
+  startOrderPolling(state);
+
+  // 4. Lắng nghe sự kiện ẩn/hiện tab trình duyệt
+  setupVisibilityListener();
 }
 
 /**
- * Dừng truy vấn trạng thái đơn hàng
+ * TRÌNH QUẢN LÝ TRUY VẤN (POLLING)
  */
-export function stopOrderPolling() {
+function startOrderPolling(state) {
+  if (orderPollingInterval) return;
+
+  // Chạy ngay lập tức lần đầu
+  runSyncCycle(state);
+
+  orderPollingInterval = setInterval(runSyncCycle, POLLING_TIME);
+}
+
+function stopOrderPolling() {
   if (orderPollingInterval) {
     clearInterval(orderPollingInterval);
     orderPollingInterval = null;
-    console.log("💤 Đã tạm dừng cập nhật trạng thái.");
   }
+}
+
+/**
+ * CHU KỲ ĐỒNG BỘ CHI TIẾT
+ */
+async function runSyncCycle(state) {
+  const activeOrders = state.orders?.active || [];
+  
+  // Kiểm tra xem có đơn hàng nào cần theo dõi không
+  const hasActive = activeOrders.some(o => !["DONE", "CANCELED"].includes(o.status));
+
+  if (hasActive) {
+    // A. Quét lỗi "Đồng bộ vô tận" trước (Watchdog)
+    markSyncingAgedOrders(state);
+    
+    // B. Sau đó mới gọi Server
+    await syncOrdersWithServer(state);
+  } else {
+    // Nếu không còn đơn nào, tạm nghỉ để tiết kiệm tài nguyên
+    stopOrderPolling();
+  }
+}
+
+/**
+ * QUẢN LÝ TRẠNG THÁI TRÌNH DUYỆT (Tiết kiệm pin/data)
+ */
+function setupVisibilityListener() {
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+      stopOrderPolling();
+    } else {
+      // Khi khách quay lại, kiểm tra xem có đơn hàng không để chạy lại polling
+      const hasOrders = (getState().orders?.active || []).length > 0;
+      if (hasOrders) startOrderPolling();
+    }
+  });
 }
