@@ -69,6 +69,7 @@ export function openOrderTracker() {
 function renderOrderCard(order = {}, showStepper = true) {
   const status = order.status || "NEW";
   const items = parseItems(order.items);
+  console.log("parseItems", items);
   if (items.length === 0) return "";
   const time = formatTime(order.updatedAt || order.createdAt);
   const shortId = getShortOrderId(order.id);
@@ -119,7 +120,7 @@ function renderOrderCard(order = {}, showStepper = true) {
 function renderOrderItem(item = {}) {
   
   const itemId = item.id;
-  console.log("renderOrderItem", itemId);
+  
   //const resolved = item.id ? getVariantById(itemId) : null;
   const option = item.option;
 
