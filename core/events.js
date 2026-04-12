@@ -1,7 +1,7 @@
 import { getState, setState } from "./state.js";
 import { sendRequest } from "../services/api.js";
 import { getVariantById } from "./menuQuery.js";
-import { getCurrentPlaceId, getCurrentPlaceType, getAnchorId } from "./placesQuery.js";
+import { getCurrentPlaceId, getCurrentPlaceType, getAnchorId, getLocationInfo } from "./placesQuery.js";
 import { addOrderToTracking } from "./orders.js";
 import { updateCartQuantity } from "./action.js";
 import { translate } from "../ui/utils/translate.js";
@@ -88,7 +88,7 @@ function buildPayload(state, action) {
 
     place: placeId,
     placeId,
-    placeLabel: translate(placeName),
+    placeLabel: getLocationInfo().placeName,
 
     mode: mode,
     totalQty,
