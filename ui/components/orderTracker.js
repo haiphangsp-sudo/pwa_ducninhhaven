@@ -117,8 +117,9 @@ function renderOrderCard(order = {}, showStepper = true) {
 }
 
 function renderOrderItem(item = {}) {
-  console.log("renderOrderItem", item);
+  
   const itemId = item.id;
+  console.log("renderOrderItem", itemId);
   //const resolved = item.id ? getVariantById(itemId) : null;
   const option = item.option;
 
