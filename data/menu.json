@@ -540,6 +540,7 @@
   },
    "house_rules": {
     "label": { "vi": "Hướng dẫn", "en": "Guidelines" },
+    "allow": ["room", "table", "area"],
     "icon": "info",
     "ui": "article",
     "active": true,
