@@ -274,10 +274,6 @@
   vertical-align: middle;
 }
 
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
 .drawer-empty {
   padding: 24px 12px;
   text-align: center;
