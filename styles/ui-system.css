@@ -46,6 +46,12 @@
 
 .btn-primary:hover {
   background: var(--button-primary-hover);
+  color: var(--button-primary-text);
+}
+
+.btn-primary:active {
+  background: var(--button-primary-active);
+  color: var(--button-primary-text);
 }
 
 .btn-secondary {
