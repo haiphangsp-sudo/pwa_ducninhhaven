@@ -87,7 +87,7 @@ async function syncUI(state) {
 function syncOverlayIfNeeded(state, overlayChanged) {
   if (!overlayChanged) return;
 
-  switch (state.overlay?.view) {
+  switch (state.overlay.view) {
     case "cartDrawer":
       renderDrawer(state);
       break;
@@ -104,7 +104,7 @@ function syncOverlayIfNeeded(state, overlayChanged) {
       break;
   }
 
-  syncOverlay(state.overlay?.view || null);
+  syncOverlay(state.overlay.view || null);
 }
 
 
