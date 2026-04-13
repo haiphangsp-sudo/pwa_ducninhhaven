@@ -53,8 +53,9 @@ export function attachUI() {
 
 async function syncUI(state) {
   const prevState = getPrevState();
-
-  const overlayChanged = state.overlay?.view !== prevState.overlay?.view;
+  const overlayChanged =
+    state.overlay?.view !== prevState.overlay?.view ||
+    state.overlay?.value !== prevState.overlay?.value;
   const contextChanged = !isEqual(state.context, prevState.context);
   const panelChanged =
     state.panel?.view !== prevState.panel?.view ||
