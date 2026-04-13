@@ -242,6 +242,7 @@
   line-height: 1;
   color: var(--text-soft);
   cursor: pointer;
+  padding: 6px;
 }
 
 .item-detail__body {
@@ -282,4 +283,137 @@
   font-weight: 600;
   text-align: left;
   cursor: pointer;
+}
+.item-detail {
+  width: min(680px, calc(100vw - 24px));
+  max-height: min(84vh, 760px);
+  margin: 0 auto;
+  padding: 18px;
+  border-radius: 24px;
+  background: var(--bg-card);
+  box-shadow: var(--shadow-floating);
+  display: grid;
+  gap: 16px;
+}
+
+.item-detail__media {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: 18px;
+  background: var(--bg-muted);
+}
+
+.item-detail__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.item-detail__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.item-detail__eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  opacity: 0.72;
+}
+
+.item-detail__title {
+  margin: 0;
+  font-size: 20px;
+  line-height: 1.2;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.item-detail__close {
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-soft);
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.item-detail__close:hover {
+  background: var(--bg-soft);
+}
+
+.item-detail__body {
+  display: grid;
+  gap: 12px;
+  overflow: auto;
+}
+
+.item-detail__body p {
+  margin: 0;
+  font-size: var(--font-m);
+  line-height: 1.75;
+  color: var(--text-soft);
+}
+
+.item-detail__note {
+  padding: 12px 14px;
+  border-radius: var(--radius-m);
+  background: var(--bg-soft);
+  border: 1px solid var(--border-light);
+  color: var(--text-soft);
+  font-size: var(--font-s);
+  line-height: 1.6;
+}
+
+.item-detail__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border-light);
+}
+
+.item-detail__price {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-brand);
+}
+
+.item-detail__footer .btn {
+  min-width: 148px;
+  height: 46px;
+  padding: 0 18px;
+  border-radius: 999px;
+}
+
+@media (max-width: 640px) {
+  .item-detail {
+    width: calc(100vw - 18px);
+    padding: 16px;
+    border-radius: 22px;
+    gap: 14px;
+  }
+
+  .item-detail__title {
+    font-size: 18px;
+  }
+
+  .item-detail__price {
+    font-size: 18px;
+  }
+
+  .item-detail__footer .btn {
+    min-width: 132px;
+    height: 42px;
+  }
 }

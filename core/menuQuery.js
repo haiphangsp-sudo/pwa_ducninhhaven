@@ -107,6 +107,8 @@ export function getVariantDetailById(id) {
             variantLabel: translate(variant.label),
             description: variant.description ? translate(variant.description) : "",
             descriptionLong: variant.description_long ? translate(variant.description_long) : "",
+            note: variant.note ? translate(variant.note) : "",
+            image: variant.image || prod.image || "",
             price: Number(variant.price || 0),
             priceFormat:
               Number(variant.price) > 0
