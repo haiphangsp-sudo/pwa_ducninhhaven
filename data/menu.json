@@ -112,44 +112,6 @@
       }
     }
   },
-  "house_rules": {
-    "label": { "vi": "Lưu ý khi lưu trú", "en": "House Rules" },
-    "icon": "info",
-    "ui": "article",
-    "active": true,
-    "items": {
-      "general": {
-        "label": { "vi": "Lưu ý chung", "en": "General Notes" },
-        "content": [
-          {
-            "type": "text",
-            "vi": "Xin giữ yên tĩnh sau 22:00 để đảm bảo trải nghiệm cho tất cả khách.",
-            "en": "Please keep noise low after 22:00 to ensure a comfortable stay for all guests."
-          },
-          {
-            "type": "text",
-            "vi": "Không hút thuốc trong phòng. Có thể sử dụng khu vực ngoài trời.",
-            "en": "No smoking inside the room. Outdoor areas are available."
-          }
-        ]
-      },
-      "service": {
-        "label": { "vi": "Dịch vụ", "en": "Service" },
-        "content": [
-          {
-            "type": "text",
-            "vi": "Bữa sáng phục vụ từ 7:00–9:30.",
-            "en": "Breakfast is served from 7:00–9:30."
-          },
-          {
-            "type": "highlight",
-            "vi": "Khi cần hỗ trợ, hãy vào mục Hỗ trợ để liên hệ lễ tân.",
-            "en": "For assistance, please use the Support section."
-          }
-        ]
-      }
-    }
-  },
 
   "food": {
     "label": { "vi": "Bữa ăn", "en": "Food" },
@@ -575,5 +537,44 @@
         }
       }
     }
+  },
+   "house_rules": {
+    "label": { "vi": "Hướng dẫn", "en": "Guidelines" },
+    "icon": "info",
+    "ui": "article",
+    "active": true,
+    "items": {
+      "general": {
+        "label": { "vi": "Lưu ý chung", "en": "General Notes" },
+        "content": [
+          {
+            "type": "text",
+            "vi": "Xin giữ yên tĩnh sau 22:00 để đảm bảo trải nghiệm cho tất cả khách.",
+            "en": "Please keep noise low after 22:00 to ensure a comfortable stay for all guests."
+          },
+          {
+            "type": "text",
+            "vi": "Không hút thuốc trong phòng. Có thể sử dụng khu vực ngoài trời.",
+            "en": "No smoking inside the room. Outdoor areas are available."
+          }
+        ]
+      },
+      "service": {
+        "label": { "vi": "Dịch vụ", "en": "Service" },
+        "content": [
+          {
+            "type": "text",
+            "vi": "Bữa sáng phục vụ từ 7:00–9:30.",
+            "en": "Breakfast is served from 7:00–9:30."
+          },
+          {
+            "type": "highlight",
+            "vi": "Khi cần hỗ trợ, hãy vào mục Hỗ trợ để liên hệ lễ tân.",
+            "en": "For assistance, please use the Support section."
+          }
+        ]
+      }
+    }
   }
+
 }
