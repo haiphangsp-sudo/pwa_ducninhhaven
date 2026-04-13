@@ -90,7 +90,7 @@ function renderOrderCard(order = {}, showStepper = true) {
         <div class="tracker-order__main">
           <div class="tracker-order__code">#${escapeHtml(shortId)}</div>
           <span class="tracker-order__status status-badge is-${status.toLowerCase()}">
-            ${escapeHtml(statusLabel)}
+            ${escapeHtml(status)}
           </span>
         </div>
 
