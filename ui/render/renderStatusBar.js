@@ -21,7 +21,7 @@ if (nocactive && history.length === 0) {
   bar.classList.remove("hidden");
   bar.classList.toggle("is-expanded", isExpanded);
   bar.classList.toggle("is-collapsed", !isExpanded);
-  if (!nocactive) {
+  if (nocactive) {
     bar.innerHTML = `
       <div class="order-history-hint">
       <span>${translate("order.no_active_order")}</span>
