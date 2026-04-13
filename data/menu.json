@@ -1,6 +1,6 @@
 {
   "intro": {
-    "label": { "vi": "Giới thiệu", "en": "Introduction" },
+    "label": { "vi": "Giới thiệu", "en": "Intro" },
     "allow": ["room", "table", "area"],
     "ui": "article",
     "active": true,
