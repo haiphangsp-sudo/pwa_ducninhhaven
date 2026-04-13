@@ -6,10 +6,12 @@ export function renderStatusBar(state) {
   const bar = document.getElementById("orderStatusBar");
   if (!bar) return;
   const actionable = getActionableOrders();
-  const history = getRecentInactiveOrders(); 
+  const history = getRecentInactiveOrders();
+  const nocactive = actionable.length === 0;
+
 
 // Chỉ ẩn khi thực sự không có gì để xem
-if (actionable.length === 0 && history.length === 0) {
+if (nocactive && history.length === 0) {
   bar.classList.add("hidden");
   return;
 }
@@ -23,7 +25,7 @@ if (actionable.length === 0 && history.length === 0) {
   bar.innerHTML = `
     <div class="bar-center">
       <div class="stepper">
-        ${actionable?renderStepper(actionable[0].status, false):translate("order.no_active_order")}
+        ${!nocactive?renderStepper(actionable[0].status, false):translate("order.no_active_order")}
       </div>
       <div class="check-orders">
         <button class="btn-check-orders" data-action="open-overlay" data-value="orderTrackerPage">
