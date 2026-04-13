@@ -116,6 +116,7 @@ function renderOrderCard(order = {}, showStepper = true) {
             ${renderStepper(status, true)}
           </div>
         ` : ""}
+        <span class="tracker-tracker_note">${translate("order.tracker_note")}</span>
       </div>
     </article>
   `;
