@@ -1,6 +1,6 @@
 import { renderStepper } from "./renderStepper.js";
 import { translate } from "../utils/translate.js";
-import { getActionableOrders, getActionableOrders } from "../../core/orders.js";
+import { getActionableOrders, getRecentInactiveOrders } from "../../core/orders.js";
 
 export function renderStatusBar(state) {
   const bar = document.getElementById("orderStatusBar");
