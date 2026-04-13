@@ -75,6 +75,8 @@ body.en .hub-btn {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  stroke-width: 1.8;
+  stroke: var(--text-soft);
 }
 
 .hub-icon img,
