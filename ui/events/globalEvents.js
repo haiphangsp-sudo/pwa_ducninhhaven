@@ -70,12 +70,24 @@ function handlePanelAction(cmd) {
 
 function handleOverlayAction(cmd) {
   if (cmd.action === "open-overlay") {
-    setState({ overlay: { view: cmd.value } });
+    setState({
+      overlay: {
+        view: cmd.value,
+        source: cmd.extra || "",
+        value: cmd.option || null
+      }
+    });
     return true;
   }
 
   if (cmd.action === "close-overlay") {
-    setState({ overlay: { view: null } });
+    setState({
+      overlay: {
+        view: null,
+        source: "",
+        value: null
+      }
+    });
     return true;
   }
 

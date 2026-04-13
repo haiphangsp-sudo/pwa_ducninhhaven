@@ -1,54 +1,75 @@
 import { getVariantDetailById } from "../../core/menuQuery.js";
 import { translate } from "../utils/translate.js";
 
-export function renderItemDetail(state) {
-  const overlayValue = state.overlay?.value;
-  const detail = getVariantDetailById(overlayValue);
+/* =========================
+   PUBLIC
+========================= */
 
+export function renderItemDetail(state) {
+  const host = document.getElementById("overlayContent");
+  if (!host) return;
+
+  const variantId = state.overlay?.value;
+  const detail = getVariantDetailById(variantId);
+
+  // fallback
   if (!detail) {
-    return `
+    host.innerHTML = `
       <div class="item-detail">
         <div class="item-detail__header">
           <h2 class="item-detail__title">...</h2>
-          <button class="item-detail__close" data-action="close-overlay" data-value="">×</button>
+          <button class="item-detail__close" data-action="close-overlay">×</button>
         </div>
         <div class="item-detail__body">
-          <p>${translate("received.vi") ? "" : "Đang cập nhật..."}</p>
+          <p>Đang cập nhật nội dung...</p>
         </div>
       </div>
     `;
+    return;
   }
 
   const body = detail.descriptionLong || detail.description;
 
-  return `
+  host.innerHTML = `
     <div class="item-detail">
+
+      <!-- HEADER -->
       <div class="item-detail__header">
         <div class="stack gap-s">
           <div class="item-detail__eyebrow">${detail.productLabel}</div>
           <h2 class="item-detail__title">${detail.variantLabel}</h2>
         </div>
-        <button class="item-detail__close" data-action="close-overlay" data-value="">×</button>
+        <button class="item-detail__close" data-action="close-overlay">×</button>
       </div>
 
+      <!-- BODY -->
       <div class="item-detail__body">
         ${renderParagraphs(body)}
       </div>
 
+      <!-- FOOTER -->
       <div class="item-detail__footer">
         <div class="item-detail__price">${detail.priceFormat}</div>
+
         <button class="btn btn-primary"
           data-action="${detail.ui === "cart" ? "add_cart" : "buy_now"}"
           data-option="added"
           data-value="${detail.id}">
-          ${detail.ui === "cart"
-            ? "+ " + translate("cart_bar.add_to_order")
-            : "⚡ " + translate("cart_bar.send_request")}
+          ${
+            detail.ui === "cart"
+              ? "+ " + translate("cart_bar.add_to_order")
+              : "⚡ " + translate("cart_bar.send_request")
+          }
         </button>
       </div>
+
     </div>
   `;
 }
+
+/* =========================
+   PRIVATE
+========================= */
 
 function renderParagraphs(text = "") {
   if (!text || typeof text !== "string") return "";

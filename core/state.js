@@ -53,9 +53,10 @@ export let UI = {
   },
   /* ---------------- OVERLAY ---------------- */
   overlay: {
-    view: null, // close || placePicker || cartDrawer ....
-    source: ""
-  },
+  view: null,
+  source: "",
+  value: null
+},
 
   order: {
     action: null,     // add_cart, buy_now, send_cart
