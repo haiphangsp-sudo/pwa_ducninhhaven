@@ -70,7 +70,7 @@ export function renderDrawer(state) {
   // 1. SENDING (ưu tiên cao nhất)
   if (isSending) {
     sendBtn.textContent = translate("cart_bar.sending");
-    sendBtn.classList.add("is-loading", "is-disabled", "sync-spinner");
+    sendBtn.classList.add("is-loading", "is-disabled");
     sendBtn.dataset.value = "sending";
     return;
   }
