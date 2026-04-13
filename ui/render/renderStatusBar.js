@@ -21,22 +21,11 @@ if (nocactive && history.length === 0) {
   bar.classList.remove("hidden");
   bar.classList.toggle("is-expanded", isExpanded);
   bar.classList.toggle("is-collapsed", !isExpanded);
-  if (nocactive) {
-    bar.innerHTML = `
-    <div class="order-history-hint">
-      <span>${translate("order.no_active_order")}</span>
-      </div>
-       <div class="check-orders">
-        <button class="btn-check-orders" data-action="open-overlay" data-value="orderTrackerPage">
-          ${translate("order.button")}
-        </button>
-      </div>
-    `
-  }else{
+
   bar.innerHTML = `
     <div class="bar-center">
       <div class="stepper">
-        ${renderStepper(actionable[0].status, false)}
+        ${!nocactive?renderStepper(actionable[0].status, false):translate("order.no_active_order")}
       </div>
       <div class="check-orders">
         <button class="btn-check-orders" data-action="open-overlay" data-value="orderTrackerPage">
@@ -53,5 +42,4 @@ if (nocactive && history.length === 0) {
       </div>
     </div>
   `;
-  }
 }
