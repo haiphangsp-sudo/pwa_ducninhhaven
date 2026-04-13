@@ -42,7 +42,9 @@ export const STRINGS = {
     error_cart: { vi: "Chưa gửi được", en: "Failed to send" }
 
   },
-
+  menu: {
+    detail: { vi: "Chi tiết", en: "Details" }
+  },
   order: {
     other: { vi: "Đơn hàng khác", en: "Other orders" },
     button: { vi: "Xem đơn", en: "View orders" },
