@@ -73,6 +73,9 @@ function renderOrderCard(order = {}, showStepper = true) {
   const items = parseItems(order.items);
 
   if (!Array.isArray(items) || items.length === 0) {
+    if (order.status === "SYNCING") {
+      return `<div class="order-card-loading">Đang tải chi tiết món ăn...</div>`;
+    }
     console.warn("Empty order items:", order);
     return "";
   }
