@@ -87,7 +87,43 @@ export function getVariantById(id) {
   }
   return null;
 }
+export function getVariantDetailById(id) {
+  const menuData = getMenuData();
 
+  for (const [catKey, cat] of Object.entries(menuData)) {
+    const products = cat.products || {};
+
+    for (const [prodKey, prod] of Object.entries(products)) {
+      const variants = prod.variants || {};
+
+      for (const [varKey, variant] of Object.entries(variants)) {
+        if (variant.id === id) {
+          return {
+            id: variant.id,
+            categoryKey: catKey,
+            productKey: prodKey,
+            variantKey: varKey,
+            productLabel: translate(prod.label),
+            variantLabel: translate(variant.label),
+            description: variant.description ? translate(variant.description) : "",
+            descriptionLong: variant.description_long ? translate(variant.description_long) : "",
+            price: Number(variant.price || 0),
+            priceFormat:
+              Number(variant.price) > 0
+                ? formatPrice(variant.price)
+                : Number(variant.price) === 0
+                  ? translate("cart_bar.free")
+                  : translate("cart_bar.instant"),
+            unit: variant.unit || "",
+            ui: cat.ui || "cart"
+          };
+        }
+      }
+    }
+  }
+
+  return null;
+}
 /**
  * BIẾN ĐỔI GIỎ HÀNG: Từ mảng {id, qty} thành dữ liệu hiển thị Drawer
  */
