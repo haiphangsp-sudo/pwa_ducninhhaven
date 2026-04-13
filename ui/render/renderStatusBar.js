@@ -14,7 +14,6 @@ if (actionable.length === 0 && history.length === 0) {
   return;
 }
 
-  const status = actionable[0].status;
   const isExpanded = !!state.orders?.isBarExpanded;
 
   bar.classList.remove("hidden");
@@ -24,7 +23,7 @@ if (actionable.length === 0 && history.length === 0) {
   bar.innerHTML = `
     <div class="bar-center">
       <div class="stepper">
-        ${renderStepper(status, false)}
+        ${actionable?renderStepper(actionable[0].status, false):translate("order.no_active_order")}
       </div>
       <div class="check-orders">
         <button class="btn-check-orders" data-action="open-overlay" data-value="orderTrackerPage">
