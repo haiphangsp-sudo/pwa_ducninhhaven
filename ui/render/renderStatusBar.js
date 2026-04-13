@@ -28,7 +28,7 @@ if (nocactive && history.length === 0) {
         ${!nocactive?renderStepper(actionable[0].status, false):translate("order.no_active_order")}
       </div>
       <div class="check-orders">
-        <button class="btn-check-orders" data-action="open-overlay" data-value="orderTrackerPage">
+        <button class="btn btn-check-orders" data-action="open-overlay" data-value="orderTrackerPage">
           ${translate("order.button")}
         </button>
       </div>

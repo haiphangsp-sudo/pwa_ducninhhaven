@@ -3,7 +3,7 @@
 ================================ */
 .order-status-bar {
   position: fixed;
-  bottom: 15px;
+  bottom: 10px;
   left: auto;
   right: 20px;
   z-index: 90;
@@ -238,9 +238,6 @@
 }
 
 .btn-check-orders {
-  height: 30px;
-  padding: 10px 12px;
-  border: none;
   border-radius: 999px;
   display: inline-flex;
   align-items: center;
