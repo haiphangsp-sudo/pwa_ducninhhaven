@@ -12,7 +12,6 @@ import { renderPanel } from "../render/renderPanel.js";
 import { submitOrder, addToCart } from "../../core/events.js";
 import { renderAck, showToast } from "../render/renderAck.js";
 import { openOrderTracker } from "../components/orderTracker.js";
-import { renderCustomOverlay } from "../render/renderCustomOverlay.js";
 import { renderItemDetail } from "../render/renderItemDetail.js";
 
 
@@ -98,7 +97,7 @@ function syncOverlayIfNeeded(state, overlayChanged) {
       openOrderTracker(state);
       break;
     case "itemDetail":
-      renderCustomOverlay(renderItemDetail(state));
+      renderItemDetail(state);
       break;
     default:
       break;
