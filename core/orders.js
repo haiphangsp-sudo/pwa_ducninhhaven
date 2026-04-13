@@ -207,59 +207,81 @@ export function addOrderToTracking(meta = {}) {
 }
 
 export async function syncOrdersWithServer() {
-  // 1. Kiểm tra lỗi "SYNCING" quá lâu
-  markSyncingAgedOrders();
-
-  // 2. Lấy ID phòng hiện tại từ context
-  const { getActivePlaceId } = await import("./context.js");
-  const placeId = getActivePlaceId();
-  if (!placeId) return;
+  const state = getState();
+  const savedIds = getSavedIds();
+  if (savedIds.length === 0) return;
 
   try {
-    const response = await fetch(`${SCRIPT_URL}?placeId=${placeId}`);
-    const rawOrders = await response.json();
+    const response = await fetch(
+      `${SCRIPT_URL}?action=getStatuses&ids=${savedIds.join(",")}`
+    );
 
-    if (rawOrders && Array.isArray(rawOrders)) {
-      const allOrders = rawOrders.map(normalizeOrder);
-
-      // 3. Phân loại đơn hàng
-      const active = allOrders.filter(o => !TERMINAL_STATUSES.includes(o.status));
-      const newlyDone = allOrders.filter(o => TERMINAL_STATUSES.includes(o.status));
-
-      // 4. Hợp nhất với lịch sử cũ đang có trong máy (Tránh trùng lặp)
-      const currentHistory = getState().orders?.inactive || [];
-      const updatedHistory = mergeOrders(currentHistory, newlyDone);
-
-      // 5. Cập nhật vào RAM (State)
-      setState({
-        orders: {
-          ...getState().orders,
-          active: active,
-          inactive: updatedHistory
-        }
-      });
-
-      // 6. GHI XUỐNG Ổ CỨNG (QUAN TRỌNG NHẤT)
-      persistActiveIds(active);      // Lưu ID đơn đang nấu
-      clearCompletedOrders();       // Lọc 2 ngày/10 đơn và lưu Object đơn đã xong
-      
-      console.log("✅ Đồng bộ và Lưu trữ thành công.");
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
     }
-  } catch (error) {
-    console.error("❌ Lỗi đồng bộ:", error);
-  }
-}
 
-/**
- * Hàm hỗ trợ gộp đơn hàng mới vào lịch sử mà không bị trùng ID
- */
-function mergeOrders(oldOrders, newOrders) {
-  const map = new Map();
-  // Ưu tiên đơn cũ đã có trong máy trước
-  oldOrders.forEach(o => map.set(o.id, o));
-  // Đè đơn mới từ server lên (vì server có trạng thái mới nhất)
-  newOrders.forEach(o => map.set(o.id, o));
-  return Array.from(map.values());
+    const updates = await response.json();
+
+    const currentActive = state.orders?.active || [];
+    const currentInactive = state.orders?.inactive || [];
+    const currentMap = new Map(
+      [...currentActive, ...currentInactive].map(order => [order.id, order])
+    );
+
+    const rebuilt = savedIds.map(id => {
+      const existing = currentMap.get(id);
+      const incoming = updates[id];
+
+      if (typeof incoming === "string") {
+        return normalizeOrder({
+          ...existing,
+          id,
+          status: incoming,
+          createdAt: existing?.createdAt,
+          updatedAt: Date.now(),
+          syncedAt: Date.now()
+        });
+      }
+
+      if (incoming && typeof incoming === "object") {
+        return normalizeOrder({
+          ...existing,
+          ...incoming,
+          id,
+          createdAt: existing?.createdAt ?? incoming.createdAt ?? incoming.timestamp,
+          updatedAt: Date.now(),
+          syncedAt: Date.now()
+        });
+      }
+
+      return normalizeOrder({
+        ...existing,
+        id,
+        status: existing?.status || "SYNCING",
+        createdAt: existing?.createdAt || Date.now(),
+        updatedAt: existing?.updatedAt || Date.now(),
+        syncedAt: existing?.syncedAt || 0
+      });
+    });
+
+    const next = splitOrders([
+      ...currentInactive.filter(order => !savedIds.includes(order.id)),
+      ...rebuilt
+    ]);
+
+    setState({
+      orders: {
+        ...state.orders,
+        active: next.active,
+        inactive: next.inactive
+      }
+    });
+
+    persistActiveIds(next.active);
+    clearCompletedOrders();
+  } catch (error) {
+    console.error("Haven Service Error [Sync]:", error);
+  }
 }
 
 export function clearCompletedOrders() {
@@ -269,23 +291,28 @@ export function clearCompletedOrders() {
 
   const now = Date.now();
 
+  // 1. Lọc theo thời gian: Chỉ giữ lại đơn trong vòng 48 giờ
   let filtered = inactive.filter(order => {
     const time = toTimestamp(order.updatedAt, order.createdAt);
     return (now - time) < MAX_INACTIVE_AGE_MS;
   });
 
+  // 2. Lọc theo số lượng: Sắp xếp mới nhất lên đầu và lấy tối đa 10 đơn
   filtered.sort((a, b) => toTimestamp(b.updatedAt) - toTimestamp(a.updatedAt));
   if (filtered.length > MAX_INACTIVE_ORDERS) {
     filtered = filtered.slice(0, MAX_INACTIVE_ORDERS);
   }
 
+  // 3. Cập nhật State và ghi đè xuống LocalStorage
   setState({
-    orders: { ...state.orders, inactive: filtered }
+    orders: {
+      ...state.orders,
+      inactive: filtered
+    }
   });
 
   localStorage.setItem(STORAGE_KEY_HISTORY, JSON.stringify(filtered));
 }
-
 export function hydrateOrdersFromStorage() {
   const savedActiveIds = JSON.parse(localStorage.getItem(STORAGE_KEY_ACTIVE) || "[]");
   const savedHistory = JSON.parse(localStorage.getItem(STORAGE_KEY_HISTORY) || "[]");
