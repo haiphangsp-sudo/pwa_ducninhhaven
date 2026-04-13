@@ -74,7 +74,7 @@ function renderOrderCard(order = {}, showStepper = true) {
 
   if (!Array.isArray(items) || items.length === 0) {
     if (order.status === "SYNCING") {
-      return `<div class="order-card-loading">Đang tải chi tiết món ăn...</div>`;
+      return `<div class="order-card-loading">${translate("order.syncing_msg")}</div>`;
     }
     return "";
   }
