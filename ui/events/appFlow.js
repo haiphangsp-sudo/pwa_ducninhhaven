@@ -1,10 +1,6 @@
 // ui/events/appFlow.js
 import { getState } from "../../core/state.js";
-import { 
-  syncOrdersWithServer, 
-  markSyncingAgedOrders, 
-  hydrateOrdersFromStorage 
-} from "../../core/orders.js";
+import { syncOrdersWithServer, hydrateOrdersFromStorage } from "../../core/orders.js";
 
 let orderPollingInterval = null;
 const POLLING_TIME = 25000; // 25 giây
@@ -14,11 +10,9 @@ const POLLING_TIME = 25000; // 25 giây
  * Gọi hàm này 1 lần duy nhất khi App bắt đầu (ví dụ trong main.js)
  */
 export function bootstrapOrderTracker() {
-  console.group("🏨 Haven Order System");
   hydrateOrdersFromStorage();
   startOrderPolling();
   setupVisibilityListener();
-  console.groupEnd();
 }
 
 /**
@@ -34,7 +28,6 @@ export function startOrderPolling() {
   const hasActive = activeOrders.some(o => !["DONE", "CANCELED"].includes(o.status));
 
   if (hasActive) {
-    console.log("🟢 Bắt đầu theo dõi đơn hàng...");
     runSyncCycle();
     orderPollingInterval = setInterval(runSyncCycle, POLLING_TIME);
   }
@@ -58,13 +51,8 @@ async function runSyncCycle() {
   const hasActive = activeOrders.some(o => !["DONE", "CANCELED"].includes(o.status));
 
   if (hasActive) {
-    // A. Quét lỗi "Đồng bộ vô tận" trước (Watchdog)
-    markSyncingAgedOrders();
-    
-    // B. Sau đó mới gọi Server
     await syncOrdersWithServer();
   } else {
-    // Nếu không còn đơn nào, tạm nghỉ để tiết kiệm tài nguyên
     stopOrderPolling();
   }
 }
