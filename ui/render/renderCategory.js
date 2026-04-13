@@ -2,7 +2,9 @@
 
 import { getProducts} from "../../core/menuQuery.js";
 import { translate } from "../utils/translate.js";
-import { categoryOpt } from "../components/categoryOption.js";
+//import { categoryOpt } from "../components/categoryOption.js";
+import { categoryOpt } from "../components/categoryCard.js";
+
 
 export function renderMenu(categoryKey,ui) {
 
