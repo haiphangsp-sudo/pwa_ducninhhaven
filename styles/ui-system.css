@@ -41,8 +41,7 @@
 
 .btn-primary {
   background: var(--bg-main);
-  color: var(--button-primary-text);
-  box-shadow: var(--shadow-card);
+  color: var(--button-secondary-text);
 }
 
 .btn-primary:hover {
