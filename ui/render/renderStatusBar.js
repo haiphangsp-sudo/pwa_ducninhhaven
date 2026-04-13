@@ -24,7 +24,7 @@ if (nocactive && history.length === 0) {
 
   bar.innerHTML = `
     <div class="bar-center">
-      <div class="stepper">
+      <div class=${!nocactive ? "stepper" :"center text-muted"}>
         ${!nocactive?renderStepper(actionable[0].status, false):translate("order.no_active_order")}
       </div>
       <div class="check-orders">
