@@ -48,8 +48,6 @@
   justify-content: center;
 
   cursor: pointer;
-  background: var(--accent-soft);
-  color: var(--accent);
 }
 
 #orderTrackerList {
@@ -362,7 +360,9 @@
   font-weight: 500;
   border: 1px solid rgba(47, 93, 52, 0.1);
 }
-
+.tracker-tracker_note{
+  padding: 12px;
+}
 /* Hiệu ứng vòng xoay */
 .sync-spinner {
   width: 16px;
