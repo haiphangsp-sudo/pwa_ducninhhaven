@@ -210,15 +210,15 @@
 }
 
 .overlay__ack.ack--success {
-  background: #2f7d57;
+  background: var(--success-soft);
 }
 
 .overlay__ack.ack--error {
-  background: #b64134;
+  background: var(--error);
 }
 
 .overlay__ack.ack--info {
-  background: #3a5f8a;
+  background: var(--info);
 }
 
 .overlay__ack.ack--sending {
