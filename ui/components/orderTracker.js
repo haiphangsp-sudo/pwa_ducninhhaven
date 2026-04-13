@@ -76,7 +76,6 @@ function renderOrderCard(order = {}, showStepper = true) {
     if (order.status === "SYNCING") {
       return `<div class="order-card-loading">Đang tải chi tiết món ăn...</div>`;
     }
-    console.warn("Empty order items:", order);
     return "";
   }
 
