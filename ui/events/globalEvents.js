@@ -132,7 +132,7 @@ function handleStatusAction(cmd) {
   setState({
     orders: {
       ...state.orders,
-      isBarExpanded: cmd.value === "true"
+      isBarExpanded: cmd.value !== "true"
     }
   });
 
