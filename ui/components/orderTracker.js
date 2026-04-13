@@ -82,7 +82,6 @@ function renderOrderCard(order = {}, showStepper = true) {
   const time = formatTime(order.updatedAt || order.createdAt);
   const shortId = getShortOrderId(order.id);
   const placeLabel = getOrderPlaceLabel(order);
-  const statusLabel = getStatusLabel(status);
 
   return `
     <article class="tracker-order ${!showStepper ? "is-history" : ""}">
@@ -90,7 +89,7 @@ function renderOrderCard(order = {}, showStepper = true) {
         <div class="tracker-order__main">
           <div class="tracker-order__code">#${escapeHtml(shortId)}</div>
           <span class="tracker-order__status status-badge is-${status.toLowerCase()}">
-            ${escapeHtml(status)}
+            ${status}
           </span>
         </div>
 
@@ -151,14 +150,6 @@ function getItemText(value) {
   }
 
   return String(value);
-}
-
-function getStatusLabel(status) {
-  const key = `status.${status}`;
-  const translated = translate(key);
-
-  // Nếu translate trả nguyên key thì fallback status
-  return translated && translated !== key ? translated : status;
 }
 
 function getOrderPlaceLabel(order = {}) {
