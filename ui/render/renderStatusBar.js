@@ -6,10 +6,13 @@ export function renderStatusBar(state) {
   const bar = document.getElementById("orderStatusBar");
   if (!bar) return;
   const actionable = getActionableOrders();
-  if (actionable.length === 0) {
-    bar.classList.add("hidden");
-    return;
-  }
+  const history = getRecentInactiveOrders(); 
+
+// Chỉ ẩn khi thực sự không có gì để xem
+if (actionable.length === 0 && history.length === 0) {
+  bar.classList.add("hidden");
+  return;
+}
 
   const status = actionable[0].status;
   const isExpanded = !!state.orders?.isBarExpanded;
