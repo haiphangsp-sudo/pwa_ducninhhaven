@@ -6,9 +6,8 @@ import { translate } from "../utils/translate.js";
 ========================= */
 
 export function renderItemDetail(state) {
-  const host = document.getElementById("overlayContent");
+  const host = document.getElementById("itemDetail");
   if (!host) return;
-   host.classList.remove("hidden");
   const variantId = state.overlay?.value;
   const detail = getVariantDetailById(variantId);
 
