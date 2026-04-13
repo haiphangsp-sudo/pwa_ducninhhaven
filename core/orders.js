@@ -207,6 +207,8 @@ export function addOrderToTracking(meta = {}) {
 }
 
 export async function syncOrdersWithServer() {
+  markSyncingAgedOrders();
+
   const state = getState();
   const savedIds = getSavedIds();
   if (savedIds.length === 0) return;
