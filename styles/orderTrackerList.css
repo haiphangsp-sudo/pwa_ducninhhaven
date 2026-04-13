@@ -195,7 +195,7 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  padding-top: 10px;
+  padding: 0 10px;
   border-top: 1px solid #f2efe9;
 }
 .tracker-order__stepper .step-container {
