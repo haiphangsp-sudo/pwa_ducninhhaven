@@ -93,17 +93,7 @@ function handleOverlayAction(cmd) {
     
     return true;
   }
-  if (cmd.source === "cartDrawer") {
-    setState({
-      overlay: {
-        view: "cartDrawer",
-        value: null,
-        source: extra
-      }
-    });
-    
-    return true;
-  }
+  
   return false;
 }
 
@@ -116,7 +106,17 @@ function handlePlaceAction(cmd) {
     }
   });
     applyPlaceById(cmd.value);
-  
+  if (cmd.source === "cartDrawer") {
+    setState({
+      overlay: {
+        view: "cartDrawer",
+        value: null,
+        source: extra
+      }
+    });
+    
+    return true;
+  }
   return true;
 }
 
