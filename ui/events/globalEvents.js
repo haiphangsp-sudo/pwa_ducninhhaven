@@ -73,25 +73,27 @@ function handleOverlayAction(cmd) {
   if (cmd.action === "open-overlay") {
     setState({
       overlay: {
-        view: cmd.value
+        view: cmd.value,
+        value: cmd.option,
+        source: cmd.extra
       }
     });
     return true;
   }
-  
+  if (cmd.extra==="cartDrawer") {
+      setState({
+        overlay: {
+          view: "cartDrawer"
+        }
+      });
+    }
   if (cmd.action === "close-overlay") {
     setState({
       overlay: {
         view: null
       }
     });
-    if (cmd.extra==="cartDrawer") {
-      setState({
-        overlay: {
-          view: cmd.extra
-        }
-      });
-    }
+    
     return true;
   }
   return false;
