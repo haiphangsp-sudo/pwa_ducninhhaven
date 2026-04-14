@@ -83,7 +83,7 @@ function handleOverlayAction(cmd) {
   if (cmd.action === "close-overlay") {
     setState({
       overlay: {
-        view: null,
+        view: cmd.source === "cartDrawer" ? "cartDrawer" : null,
         source: "",
         value: null
       }
@@ -160,3 +160,12 @@ function setOrderCommand(cmd) {
   });
 }
 
+function resolveOverlayAfterPlaceSelect(state) {
+  const source = state.overlay?.source;
+
+  if (source === "drawer") return "cartDrawer";
+  if (source === "instant") return "confirm";
+  if (source === "history") return "cartDrawer";
+
+  return null;
+}

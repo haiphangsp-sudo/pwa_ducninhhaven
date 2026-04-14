@@ -80,7 +80,7 @@ export function renderDrawer(state) {
     sendBtn.classList.add("is-warning");
     sendBtn.dataset.value = "placePicker";
     sendBtn.dataset.action = "open-overlay";
-    sendBtn.dataset.extra = "picker";
+    sendBtn.dataset.extra = "cartDrawer";
     return;
   }
 
