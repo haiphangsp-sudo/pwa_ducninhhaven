@@ -61,7 +61,7 @@ function handlePanelAction(cmd) {
   setState({
     panel: {
       view: cmd.value,
-      option: cmd.optionz
+      option: cmd.option
     }
   });
 
@@ -73,8 +73,7 @@ function handleOverlayAction(cmd) {
   if (cmd.action === "open-overlay") {
     setState({
       overlay: {
-        view: cmd.value,
-        source: cmd.extra,
+        view: cmd.value
       }
     });
     return true;
