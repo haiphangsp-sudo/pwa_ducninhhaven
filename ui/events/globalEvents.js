@@ -105,12 +105,11 @@ function handlePlaceAction(cmd) {
     }
   });
     applyPlaceById(cmd.value);
-  if (cmd.source === "cartDrawer") {
+  if (cmd.extra === "cartDrawer") {
     setState({
       overlay: {
         view: "cartDrawer",
-        value: null,
-        source: extra
+        value: null
       }
     });
     
