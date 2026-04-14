@@ -69,13 +69,14 @@ function handlePanelAction(cmd) {
 }
 
 function handleOverlayAction(cmd) {
+  const extra = cmd.extra || "";
 
   if (cmd.action === "open-overlay") {
     setState({
       overlay: {
         view: cmd.value,
         value: cmd.option,
-        source: cmd.extra
+        source: extra
       }
     });
     return true;
@@ -86,18 +87,18 @@ function handleOverlayAction(cmd) {
       overlay: {
         view: null,
         value: null,
-        source: ""
+        ...source
       }
     });
     
     return true;
   }
-  if (cmd.source === "cartDrawer" && cmd.action === "close-overlay") {
+  if (cmd.source === "cartDrawer") {
     setState({
       overlay: {
         view: "cartDrawer",
         value: null,
-        source: ""
+        source: extra
       }
     });
     
