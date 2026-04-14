@@ -86,6 +86,13 @@ function handleOverlayAction(cmd) {
         view: cmd.extra ||  null
       }
     });
+    if (cmd.extra) {
+      setState({
+        overlay: {
+          view: cmd.extra
+        }
+      });
+    }
     return true;
   }
   return false;
