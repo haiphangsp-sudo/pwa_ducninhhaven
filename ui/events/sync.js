@@ -55,7 +55,8 @@ async function syncUI(state) {
   const prevState = getPrevState();
   const overlayChanged =
     state.overlay.view !== prevState.overlay?.view ||
-    state.overlay.value !== prevState.overlay?.value;
+    state.overlay.value !== prevState.overlay?.value ||
+    state.overlay.source !== prevState.overlay?.source;
   const contextChanged = !isEqual(state.context, prevState.context);
   const panelChanged =
     state.panel.view !== prevState.panel?.view ||
@@ -103,7 +104,7 @@ function syncOverlayIfNeeded(state, overlayChanged) {
     default:
       break;
   }
-  if (state.overlay.source==="cartDrawer") {
+  if (state.overlay.source === "cartDrawer") {
     renderDrawer(state);
   }
   syncOverlay(state.overlay.view || null);
