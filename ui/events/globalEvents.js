@@ -86,8 +86,7 @@ function handleOverlayAction(cmd) {
     setState({
       overlay: {
         view: null,
-        value: null,
-        ...source
+        value: null
       }
     });
     
