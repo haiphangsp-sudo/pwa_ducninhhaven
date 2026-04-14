@@ -79,13 +79,11 @@ function handleOverlayAction(cmd) {
     });
     return true;
   }
-
+  
   if (cmd.action === "close-overlay") {
     setState({
       overlay: {
-        view: cmd.source === "cartDrawer" ? "cartDrawer" : null,
-        source: "",
-        value: null
+        view: null
       }
     });
     return true;
