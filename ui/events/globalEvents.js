@@ -44,6 +44,7 @@ function handleGlobalClick(e) {
   if (handleCartAction(cmd)) return;
   if (handleStatusAction(cmd)) return;
   if (handleLanguageAction(cmd)) return;
+  if (resolveOverlayAfter(cmd)) return;
 }
 
 function readCommand(target) {
@@ -61,7 +62,7 @@ function handlePanelAction(cmd) {
   setState({
     panel: {
       view: cmd.value,
-      option: cmd.option
+      option: cmd.optionz
     }
   });
 
@@ -158,12 +159,12 @@ function setOrderCommand(cmd) {
   });
 }
 
-function resolveOverlayAfterPlaceSelect(state) {
-  const source = state.overlay?.source;
-
-  if (source === "drawer") return "cartDrawer";
-  if (source === "instant") return "confirm";
-  if (source === "history") return "cartDrawer";
-
-  return null;
-}
+  function resolveOverlayAfter(cmd) {
+    if (cmd.source === "") return false;
+    setState({
+      overlay: {
+        view: cmd.source
+      }
+    });
+    return true;
+  }
