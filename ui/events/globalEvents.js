@@ -86,7 +86,7 @@ function handleOverlayAction(cmd) {
         view: null
       }
     });
-    if (cmd.extra) {
+    if (cmd.extra==="cartDrawer") {
       setState({
         overlay: {
           view: cmd.extra
