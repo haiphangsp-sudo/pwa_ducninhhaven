@@ -103,7 +103,9 @@ function syncOverlayIfNeeded(state, overlayChanged) {
     default:
       break;
   }
-
+  if (state.overlay.source==="cartDrawer") {
+    renderDrawer(state);
+  }
   syncOverlay(state.overlay.view || null);
 }
 
