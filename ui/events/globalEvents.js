@@ -83,7 +83,7 @@ function handleOverlayAction(cmd) {
   if (cmd.action === "close-overlay") {
     setState({
       overlay: {
-        view: null
+        view: cmd.extra ||  null
       }
     });
     return true;
@@ -93,12 +93,10 @@ function handleOverlayAction(cmd) {
 
 function handlePlaceAction(cmd) {
   if (cmd.action !== "select-place") return false;
-  const extra = cmd.extra;
 
   setState({
     overlay: {
-      view: extra? extra : cmd.value,
-      source: ""
+      view: cmd.value
     }
   });
     applyPlaceById(cmd.value);
