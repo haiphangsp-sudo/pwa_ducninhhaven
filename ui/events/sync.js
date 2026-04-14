@@ -54,18 +54,18 @@ export function attachUI() {
 async function syncUI(state) {
   const prevState = getPrevState();
   const overlayChanged =
-    state.overlay?.view !== prevState.overlay?.view ||
-    state.overlay?.value !== prevState.overlay?.value;
+    state.overlay.view !== prevState.overlay?.view ||
+    state.overlay.value !== prevState.overlay?.value;
   const contextChanged = !isEqual(state.context, prevState.context);
   const panelChanged =
-    state.panel?.view !== prevState.panel?.view ||
-    state.panel?.option !== prevState.panel?.option;
+    state.panel.view !== prevState.panel?.view ||
+    state.panel.option !== prevState.panel?.option;
   const cartChanged = !isEqual(state.cart?.items || [], prevState.cart?.items || []);
   const langChanged = state.lang?.current !== prevState.lang?.current;
   const ackChanged =
-    state.ack?.visible !== prevState.ack?.visible ||
-    state.ack?.message !== prevState.ack?.message ||
-    state.ack?.status !== prevState.ack?.status;
+    state.ack.visible !== prevState.ack?.visible ||
+    state.ack.message !== prevState.ack?.message ||
+    state.ack.status !== prevState.ack?.status;
   const ordersChanged = !isEqual(state.orders?.active || [], prevState.orders?.active || []);
   const statusBarExpandedChanged =
     state.orders?.isBarExpanded !== prevState.orders?.isBarExpanded;
@@ -117,7 +117,6 @@ function syncContextIfNeeded(state, contextChanged) {
 
 function syncPanelIfNeeded(state, panelChanged) {
   if (!panelChanged) return;
-
   eventHub(state);
   renderPanel(state);
 }
@@ -138,18 +137,6 @@ function syncLanguageIfNeeded(state, langChanged) {
   renderStatusBar(state);
   renderHub(state);
   renderPanel(state);
-
-  if (state.overlay?.view === "orderTrackerPage") {
-    openOrderTracker();
-  }
-
-  if (state.overlay?.view === "cartDrawer") {
-    renderDrawer(state);
-  }
-
-  if (state.overlay?.view === "placePicker") {
-    renderPlacePicker(state);
-  }
 }
 
 function syncAckIfNeeded(state, ackChanged) {
@@ -200,10 +187,10 @@ async function handleOrderLogic(state) {
 
 function syncOrderFeedback(state, prevState) {
   const orderChanged =
-    state.order?.status !== prevState.order?.status ||
-    state.order?.action !== prevState.order?.action ||
-    state.order?.line !== prevState.order?.line ||
-    state.order?.at !== prevState.order?.at;
+    state.order.status !== prevState.order?.status ||
+    state.order.action !== prevState.order?.action ||
+    state.order.line !== prevState.order?.line ||
+    state.order.at !== prevState.order?.at;
 
   if (!orderChanged) return;
 
