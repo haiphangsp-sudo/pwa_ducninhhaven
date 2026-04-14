@@ -44,7 +44,6 @@ function handleGlobalClick(e) {
   if (handleCartAction(cmd)) return;
   if (handleStatusAction(cmd)) return;
   if (handleLanguageAction(cmd)) return;
-  if (resolveOverlayAfter(cmd)) return;
 }
 
 function readCommand(target) {
@@ -70,12 +69,12 @@ function handlePanelAction(cmd) {
 }
 
 function handleOverlayAction(cmd) {
+
   if (cmd.action === "open-overlay") {
     setState({
       overlay: {
         view: cmd.value,
-        source: cmd.extra || "",
-        value: cmd.option || null
+        source: cmd.extra,
       }
     });
     return true;
@@ -89,15 +88,21 @@ function handleOverlayAction(cmd) {
     });
     return true;
   }
-
   return false;
 }
 
 function handlePlaceAction(cmd) {
   if (cmd.action !== "select-place") return false;
+  const extra = cmd.extra;
 
-  setState({ overlay: { view: null } });
-  applyPlaceById(cmd.value);
+  setState({
+    overlay: {
+      view: extra? extra : cmd.value,
+      source: ""
+    }
+  });
+    applyPlaceById(cmd.value);
+  
   return true;
 }
 
@@ -158,13 +163,3 @@ function setOrderCommand(cmd) {
     }
   });
 }
-
-  function resolveOverlayAfter(cmd) {
-    if (cmd.source === "") return false;
-    setState({
-      overlay: {
-        view: cmd.source
-      }
-    });
-    return true;
-  }

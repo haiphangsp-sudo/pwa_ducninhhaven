@@ -89,5 +89,5 @@ export function renderDrawer(state) {
   sendBtn.dataset.action = "send_cart";
   sendBtn.classList.remove("is-warning", "is-disabled");
   sendBtn.dataset.value = "cart";
-  sendBtn.dataset.extra = "normal";
+  sendBtn.dataset.extra = "";
 }
