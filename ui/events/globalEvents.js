@@ -80,17 +80,13 @@ function handleOverlayAction(cmd) {
     });
     return true;
   }
-  if (cmd.extra==="cartDrawer") {
-      setState({
-        overlay: {
-          view: "cartDrawer"
-        }
-      });
-    }
+  
   if (cmd.action === "close-overlay") {
     setState({
       overlay: {
-        view: null
+        view: null,
+        value: null,
+        source: ""
       }
     });
     
