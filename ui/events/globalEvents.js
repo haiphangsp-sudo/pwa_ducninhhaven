@@ -83,7 +83,7 @@ function handleOverlayAction(cmd) {
   if (cmd.action === "close-overlay") {
     setState({
       overlay: {
-        view: cmd.extra ||  null
+        view: null
       }
     });
     if (cmd.extra) {
