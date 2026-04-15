@@ -206,53 +206,57 @@ export function addOrderToTracking(meta = {}) {
   persistActiveIds(next.active);
 }
 
+// core/orders.js
+
 export async function syncOrdersWithServer() {
   markSyncingAgedOrders();
 
   const state = getState();
-  const savedIds = getSavedIds(); 
+  const savedIds = getSavedIds();
   if (!savedIds || savedIds.length === 0) return;
 
   try {
     const url = `${SCRIPT_URL}?action=getStatuses&ids=${savedIds.join(",")}`;
-    const res = await fetch(url);
+    console.log("Haven Sync: Đang gọi server...", url); // DEBUG
     
-    if (!res.ok) return;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("Mạng lỗi");
     const data = await res.json();
 
     if (data?.success && Array.isArray(data.orders)) {
       const currentActive = state.orders?.active || [];
+      console.log("Haven Sync: Dữ liệu server về:", data.orders); // DEBUG
 
-      const updatedActive = data.orders.map(serverOrder => {
-        // 1. Tìm đơn hàng tương ứng ở Local (nơi đang giữ Object {vi, en})
-        const localOrder = currentActive.find(o => String(o.id) === String(serverOrder.id));
-        
-        // 2. Chuẩn hóa dữ liệu từ Server (lấy status, updatedAt)
-        const normalizedServer = normalizeOrder(serverOrder);
+      const updatedActive = currentActive.map(localOrder => {
+        // Tìm thông tin mới nhất từ server cho ĐƠN HÀNG LOCAL này
+        const serverUpdate = data.orders.find(s => String(s.id).trim() === String(localOrder.id).trim());
 
-        if (localOrder) {
-          // HỢP NHẤT: Giữ lại toàn bộ localOrder (để bảo vệ itemLabel: {vi, en})
-          // Chỉ cập nhật status và thời gian từ Server trả về
+        if (serverUpdate) {
+          // Nếu server có cập nhật -> Cập nhật status, giữ nguyên items {vi, en}
           return {
             ...localOrder,
-            status: normalizedServer.status,
-            updatedAt: normalizedServer.updatedAt
+            status: serverUpdate.status || localOrder.status,
+            updatedAt: Date.now()
           };
         }
         
-        // Nếu là đơn mới hoàn toàn (từ máy khác), dùng bản của server
-        return normalizedServer;
+        // Nếu server chưa trả về (đang lag), giữ nguyên bản cũ để không bị mất đơn
+        return localOrder;
       });
 
       setState({
-        orders: {
-          ...state.orders,
-          active: updatedActive
-        }
+        orders: { ...state.orders, active: updatedActive }
       });
+
+      // Nếu có đơn xong, dọn dẹp
+      const hasDone = data.orders.some(o => ["DONE", "CANCELED"].includes(o.status));
+      if (hasDone) clearCompletedOrders();
+      
+    } else {
+      console.warn("Haven Sync: Server trả về không thành công hoặc không có đơn.");
     }
   } catch (error) {
-    console.error("Sync failed:", error);
+    console.error("Haven Sync: Lỗi Fetch:", error);
   }
 }
 
