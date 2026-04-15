@@ -3,7 +3,15 @@ import { applyPlaceById } from "../../core/context.js";
 import { getState } from "../../core/state.js";
 
 export const UI_ACTIONS = {
-  // Logic chọn phòng & quay lại Drawer cũ
+  // Lấy data từ button (cmd) và nhét vào State Overlay
+  toggleOverlay: (cmd) => ({
+    overlay: { 
+      view: cmd.value || null,   // Ví dụ: "cartDrawer" hoặc "orderTrackerPage"
+      value: cmd.option || null, // Ví dụ: ID món cho itemDetail
+      source: cmd.extra || null  // Nguồn để quay lại (nếu có)
+    }
+  }),
+
   selectPlace: (cmd) => {
     const success = applyPlaceById(cmd.value);
     if (!success) return null;
@@ -13,26 +21,14 @@ export const UI_ACTIONS = {
     };
   },
 
-  // Logic mở bảng (Overlay): Lồng ghép ID món (option) vào value
-  toggleOverlay: (view, idMon = null, source = null) => ({
-    overlay: { 
-      view: view || null, 
-      value: idMon || null, // data-option chính là ID món để renderItemDetail
-      source: source 
-    }
-  }),
-
-  // Logic thu gọn/mở rộng thanh trạng thái
   toggleOrderStatus: (currentValue) => ({
     orders: { ...getState().orders, isBarExpanded: currentValue !== "true" }
   }),
 
-  // Logic mở Panel (thông tin, hub...)
-  togglePanel: (view, option) => ({
-    panel: { view, option }
+  togglePanel: (cmd) => ({
+    panel: { view: cmd.value, option: cmd.option }
   }),
 
-  // Logic đổi ngôn ngữ
   changeLanguage: (langCode) => ({
     lang: { current: langCode }
   })
