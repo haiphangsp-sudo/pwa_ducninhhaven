@@ -210,7 +210,7 @@ export async function syncOrdersWithServer() {
   markSyncingAgedOrders();
 
   const ids = getSavedIds();
-  if (!ids&&ids.length) return;
+  if (!ids&&ids.length===0) return;
 
   try {
     const res = await fetch(`${SCRIPT_URL}?action=sync_orders&ids=${ids.join(",")}`);
