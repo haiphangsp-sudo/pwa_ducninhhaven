@@ -218,6 +218,7 @@ function escapeHtml(str) {
 function getItemName(item) {
   const label = item.itemLabel; 
   if (label && typeof label === 'object') {
+    console.log("item",label);
     return translate(label);
   }
   return item.item || ""; // Fallback nếu là đơn cũ (string)
