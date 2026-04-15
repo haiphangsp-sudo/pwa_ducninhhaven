@@ -1,5 +1,8 @@
 import { STRINGS } from "../../data/i18n.js";
 import { getState } from "../../core/state.js";
+import { translate } from "../utils/translate.js";
+
+
 
 const STEP_KEYS = ["NEW", "COOKING", "DELIVERING", "DONE"];
 
@@ -26,7 +29,7 @@ export function renderStepper(currentStatus, longMsg = false) {
   return `
     ${message ?
     `<div class="step-status-msg ${currentStatus === "SYNCING" ? "is-syncing" : ""}">
-      ${escapeHtml(message)}
+      ${message}
       </div>` : ""}
     <div class="step-container ${currentStatus === "SYNCING" ? "is-syncing" : ""}">
       ${steps.map((step, index) => {
@@ -36,7 +39,7 @@ export function renderStepper(currentStatus, longMsg = false) {
         return `
           <div class="step ${stateClass}">
             <div class="step-dot">${dotContent}</div>
-            <div class="step-label">${escapeHtml(step.label)}</div>
+            <div class="step-label">${step.label}</div>
             ${index < steps.length - 1 ? `<div class="step-line"></div>` : ""}
           </div>
         `;
