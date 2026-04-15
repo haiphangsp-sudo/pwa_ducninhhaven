@@ -205,55 +205,51 @@ export function addOrderToTracking(meta = {}) {
 
   persistActiveIds(next.active);
 }
-
 export async function syncOrdersWithServer() {
   markSyncingAgedOrders();
 
   const state = getState();
-  const savedIds = getSavedIds();
+  const savedIds = getSavedIds(); // Đúng tên hàm trong file của bạn
   if (!savedIds || savedIds.length === 0) return;
 
   try {
+    // Giữ nguyên action=getStatuses theo đúng Google Script của bạn
     const url = `${SCRIPT_URL}?action=getStatuses&ids=${savedIds.join(",")}`;
     const res = await fetch(url);
+    
     if (!res.ok) return;
     const data = await res.json();
 
     if (data?.success && Array.isArray(data.orders)) {
       const currentActive = state.orders?.active || [];
-      let hasTerminalStatus = false; // Cờ kiểm tra xem có đơn nào đã xong không
 
       const updatedActive = data.orders.map(serverOrder => {
+        // 1. Tìm đơn hàng tương ứng ở Local (nơi đang giữ Object {vi, en})
         const localOrder = currentActive.find(o => String(o.id) === String(serverOrder.id));
+        
+        // 2. Chuẩn hóa dữ liệu từ Server (lấy status, updatedAt)
         const normalizedServer = normalizeOrder(serverOrder);
 
-        // Kiểm tra xem đơn này đã đạt trạng thái kết thúc chưa (DONE/CANCELED)
-        if (["DONE", "CANCELED"].includes(normalizedServer.status)) {
-            hasTerminalStatus = true;
-        }
-
         if (localOrder) {
+          // HỢP NHẤT: Giữ lại toàn bộ localOrder (để bảo vệ itemLabel: {vi, en})
+          // Chỉ cập nhật status và thời gian từ Server trả về
           return {
             ...localOrder,
             status: normalizedServer.status,
             updatedAt: normalizedServer.updatedAt
           };
         }
+        
+        // Nếu là đơn mới hoàn toàn (từ máy khác), dùng bản của server
         return normalizedServer;
       });
 
-      // 1. Cập nhật State
       setState({
         orders: {
           ...state.orders,
           active: updatedActive
         }
       });
-
-      // 2. CHÈN TẠI ĐÂY: Nếu có đơn vừa hoàn thành, tiến hành dọn dẹp lịch sử
-      if (hasTerminalStatus) {
-        clearCompletedOrders(); 
-      }
     }
   } catch (error) {
     console.error("Sync failed:", error);
