@@ -210,11 +210,10 @@ export async function syncOrdersWithServer() {
   markSyncingAgedOrders();
 
   const state = getState();
-  const savedIds = getSavedIds(); // Giữ nguyên tên hàm cũ của bạn
+  const savedIds = getSavedIds(); 
   if (!savedIds || savedIds.length === 0) return;
 
   try {
-    // Giữ nguyên action=getStatuses theo đúng Google Script của bạn
     const url = `${SCRIPT_URL}?action=getStatuses&ids=${savedIds.join(",")}`;
     const res = await fetch(url);
     
@@ -225,16 +224,15 @@ export async function syncOrdersWithServer() {
       const currentActive = state.orders?.active || [];
 
       const updatedActive = data.orders.map(serverOrder => {
-        // 1. Tìm đơn hàng tương ứng đang lưu ở Local (có chứa Object {vi, en})
+        // 1. Tìm đơn hàng tương ứng ở Local (nơi đang giữ Object {vi, en})
         const localOrder = currentActive.find(o => String(o.id) === String(serverOrder.id));
         
-        // 2. Chuẩn hóa dữ liệu mới từ Server
+        // 2. Chuẩn hóa dữ liệu từ Server (lấy status, updatedAt)
         const normalizedServer = normalizeOrder(serverOrder);
 
         if (localOrder) {
-          // CHIẾN THUẬT HỢP NHẤT:
-          // - Giữ nguyên toàn bộ localOrder (để bảo vệ itemLabel: {vi, en})
-          // - Chỉ cập nhật status và updatedAt từ Server trả về
+          // HỢP NHẤT: Giữ lại toàn bộ localOrder (để bảo vệ itemLabel: {vi, en})
+          // Chỉ cập nhật status và thời gian từ Server trả về
           return {
             ...localOrder,
             status: normalizedServer.status,
@@ -242,7 +240,7 @@ export async function syncOrdersWithServer() {
           };
         }
         
-        // Nếu không tìm thấy ở local (đơn mới từ máy khác), mới dùng bản của server
+        // Nếu là đơn mới hoàn toàn (từ máy khác), dùng bản của server
         return normalizedServer;
       });
 
