@@ -1,8 +1,7 @@
 // ui/render/renderPlacePicker.js
 import { getPickerGroups } from "../../core/placesQuery.js";
 import { translate } from "../utils/translate.js";
-import { applyPlaceById } from "../../core/context.js";
-import { getState, setState } from "../../core/state.js";
+import { getState } from "../../core/state.js";
 
 let shellReady = false;
 
@@ -51,8 +50,8 @@ function renderGroup(groupData) {
   const { type, title, icon, items } = groupData;
   const container = document.querySelector(`[data-group="${type}"]`);
   if (!container || !items?.length) return;
-   const source = getState().overlay?.source;
-
+  const source = getState().overlay?.source;
+  
   container.innerHTML = `
     <div class="flex gap-s">
       <span class="${type}-icon">${icon}</span>

@@ -1,173 +1,62 @@
 // ui/events/globalEvents.js
-
-import { getState, setState } from "../../core/state.js";
+import { setState } from "../../core/state.js";
 import { updateCartQuantity } from "../../core/action.js";
-import { applyPlaceById, syncContextToState } from "../../core/context.js";
-import { animateFlyToCart } from "../../ui/interactions/animateFlyToCart.js";
+import { UI_ACTIONS } from "../actions/uiActions.js";
+import { animateFlyToCart } from "../interactions/animateFlyToCart.js";
 import { applyScrollUI } from "./scrollBehavior.js";
-import { attachRuntimeRefresh } from "../../core/runtimeRefresh.js";
+
+const COMMAND_MAP = {
+  "open-overlay": (cmd) => setState(UI_ACTIONS.toggleOverlay(cmd.value, cmd.extra)),
+  "close-overlay": () => setState(UI_ACTIONS.toggleOverlay(null)),
+  
+  "select-place": (cmd) => {
+    const nextState = UI_ACTIONS.selectPlace(cmd);
+    if (nextState) setState(nextState);
+  },
+
+  "update-qty": (cmd) => {
+    const delta = parseInt(cmd.option, 10);
+    if (!isNaN(delta)) updateCartQuantity(cmd.value, delta);
+  },
+
+  "add_cart": (cmd, target) => {
+    // Kích hoạt lệnh order để sync.js xử lý side-effect
+    setState({ order: { action: cmd.action, line: cmd.value, at: Date.now() } });
+    animateFlyToCart(target);
+  },
+
+  "send_cart": (cmd) => {
+    setState({ order: { action: cmd.action, status: "sending", at: Date.now() } });
+  },
+
+  "toggle_status": (cmd) => setState(UI_ACTIONS.toggleOrderStatus(cmd.value)),
+  "open-panel": (cmd) => setState(UI_ACTIONS.openPanel(cmd.value, cmd.option))
+};
 
 export function attachAppEvents() {
-  document.addEventListener("click", handleGlobalClick);
+  document.addEventListener("click", (e) => {
+    const target = e.target.closest("[data-action]");
+    if (!target) return;
 
-  window.addEventListener("contextchange", syncContextToState);
-  window.addEventListener("scroll", handleScroll, { passive: true });
+    const cmd = {
+      action: target.dataset.action,
+      value: target.dataset.value,
+      option: target.dataset.option,
+      extra: target.dataset.extra
+    };
 
-  attachRuntimeRefresh({
-    intervalMs: 60000,
-    enableInterval: true
+    const handler = COMMAND_MAP[cmd.action];
+    if (handler) handler(cmd, target);
   });
 
+  window.addEventListener("scroll", handleScroll, { passive: true });
 }
 
 function handleScroll() {
   if (handleScroll.ticking) return;
-
   handleScroll.ticking = true;
   requestAnimationFrame(() => {
     applyScrollUI();
     handleScroll.ticking = false;
-  });
-}
-
-
-function handleGlobalClick(e) {
-  const target = e.target.closest("[data-action]");
-  if (!target) return;
-
-  const cmd = readCommand(target);
-
-  if (handlePanelAction(cmd)) return;
-  if (handleOverlayAction(cmd)) return;
-  if (handlePlaceAction(cmd)) return;
-  if (handleOrderAction(cmd, target)) return;
-  if (handleCartAction(cmd)) return;
-  if (handleStatusAction(cmd)) return;
-  if (handleLanguageAction(cmd)) return;
-}
-
-function readCommand(target) {
-  return {
-    action: target.dataset.action,
-    value: target.dataset.value,
-    option: target.dataset.option,
-    extra: target.dataset.extra
-  };
-}
-
-function handlePanelAction(cmd) {
-  if (cmd.action !== "open-panel") return false;
-
-  setState({
-    panel: {
-      view: cmd.value,
-      option: cmd.option
-    }
-  });
-
-  return true;
-}
-
-function handleOverlayAction(cmd) {
-
-  if (cmd.action === "open-overlay") {
-    setState({
-      overlay: {
-        view: cmd.value,
-        value: cmd.option,
-        source: cmd.extra
-      }
-    });
-    return true;
-  }
-  
-  if (cmd.action === "close-overlay") {
-    setState({
-      overlay: {
-        view: null,
-        value: null
-      }
-    });
-    
-    return true;
-  }
-  
-  return false;
-}
-
-function handlePlaceAction(cmd) {
-  if (cmd.action !== "select-place") return false;
-
-  const success = applyPlaceById(cmd.value);
-
-  if (success) {
-   
-    setState({
-      overlay: {
-        view: cmd.extra || null,
-        source: null,   
-        value: null
-      }
-    });
-  }
-  
-  return true;
-}
-
-function handleOrderAction(cmd, target) {
-  if (!["add_cart", "buy_now", "send_cart"].includes(cmd.action)) return false;
-
-  setOrderCommand(cmd);
-
-  if (cmd.action === "add_cart") {
-    animateFlyToCart(target);
-  }
-
-  return true;
-}
-
-function handleCartAction(cmd) {
-  if (cmd.action !== "update-qty") return false;
-
-  const delta = parseInt(cmd.option, 10);
-  if (Number.isNaN(delta)) return true;
-
-  updateCartQuantity(cmd.value, delta);
-  return true;
-}
-
-function handleStatusAction(cmd) {
-  if (cmd.action !== "toggle_status") return false;
-
-  const state = getState();
-
-  setState({
-    orders: {
-      ...state.orders,
-      isBarExpanded: cmd.value !== "true"
-    }
-  });
-
-  return true;
-}
-
-function handleLanguageAction(cmd) {
-  if (cmd.action !== "change-lang") return false;
-
-  setState({
-    lang: { current: cmd.value }
-  });
-
-  return true;
-}
-
-function setOrderCommand(cmd) {
-  setState({
-    order: {
-      action: cmd.action,
-      line: cmd.value || null,
-      status: cmd.option || "idle",
-      at: Date.now()
-    }
   });
 }
