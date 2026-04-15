@@ -12,7 +12,7 @@ import { renderPlacePicker } from "../render/renderPlacePicker.js";
 import { renderDrawer } from "../render/renderDrawer.js";
 import { renderCartBar } from "../render/renderCartBar.js";
 import { renderStatusBar } from "../render/renderStatusBar.js";
-import { renderHub, eventHub } from "../render/renderHub.js";
+import { renderHub } from "../render/renderHub.js";
 import { renderPanel } from "../render/renderPanel.js";
 import { renderItemDetail } from "../render/renderItemDetail.js";
 import { openOrderTracker } from "../components/orderTracker.js";
@@ -60,7 +60,6 @@ function syncUI(state) {
     renderStatusBar(state);
     renderNavBar(state);
     renderHub(state);
-    eventHub(state);
   }
 
   if (state.panel?.view !== prevState.panel?.view) {
@@ -76,10 +75,10 @@ function syncUI(state) {
 
 function syncStorage(state, prevState) {
   if (JSON.stringify(state.cart?.items) !== JSON.stringify(prevState.cart?.items)) {
-    localStorage.setItem("haven_cart", JSON.stringify(state.cart?.items || []));
+    localStorage.setItem(CONFIG.CART_KEY, JSON.stringify(state.cart?.items || []));
   }
   if (state.lang?.current !== prevState.lang?.current) {
-    localStorage.setItem("haven_lang", state.lang?.current);
+    localStorage.setItem(CONFIG.LANG_KEY, state.lang?.current);
   }
 }
 

@@ -26,7 +26,7 @@ export function renderHub(state) {
   `}).join("");
   eventHub(state);
 }
-export function eventHub(state) {
+function eventHub(state) {
   const menuEl = document.getElementById("hub-container");
   menuEl.querySelectorAll("button").forEach(btn => {
     btn.classList.toggle("is-active", btn.getAttribute("data-value") === state.panel.view);
