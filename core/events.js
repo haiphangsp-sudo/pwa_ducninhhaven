@@ -30,9 +30,6 @@ function normalizeItems(rawItems) {
 
       const quantity = Number(qty || 1);
       const price = Number(info.price || 0);
-      console.log("objProLab", info.objProLab);
-      console.log("objVarLab", info.objVarLab);
-
       return {
         id,
         qty: quantity,
