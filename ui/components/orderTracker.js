@@ -134,7 +134,7 @@ function renderOrderItem(item = {}) {
       <span class="tracker-item__qty">${qty}×</span>
       <div class="tracker-item__content">
         <span class="tracker-item__name">${translate(item.itemLabel)}</span>
-        ${variant ? `<span class="tracker-item__option">${translate(item.optionLabel)}</span>` : ""}
+        <span class="tracker-item__option">${translate(item.optionLabel)}</span>
       </div>
       <span class="tracker-item__price">${formatPrice(price)}</span>
     </div>
