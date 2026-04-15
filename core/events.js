@@ -38,8 +38,8 @@ function normalizeItems(rawItems) {
         subtotal: quantity * price,
 
         // GIỮ cho GAS / Sheets
-        item: info.objProLab.vn || "",
-        option: info.objVarLab.vn || "",
+        item: info.productLabel|| "",
+        option: info.variantLabel || "",
 
         // GIỮ cho tracking đa ngôn ngữ / fallback
         itemLabel: info.objProLab || "",
