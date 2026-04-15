@@ -98,11 +98,10 @@ function handleOverlayAction(cmd) {
 function handlePlaceAction(cmd) {
   if (cmd.action !== "select-place") return false;
 
-  const success = applyPlaceById(selectedId);
+  const success = applyPlaceById(cmd.value);
 
   if (success) {
-    const source = getState().overlay?.source;
-
+   
     setState({
       overlay: {
         view: source || null,
