@@ -15,13 +15,16 @@ export const UI_ACTIONS = {
     const success = applyPlaceById(cmd.value);
     if (!success) return null;
 
-    // cmd.extra chính là 'source' (ví dụ: "cartDrawer")
-    // Nếu rỗng, view sẽ là null -> BackdropManager sẽ ẩn hết
     const nextView = cmd.extra || null; 
-
-    return {
-        overlay: { view: nextView, source: null, value: null }
-    };
+        if (nextView === "orderTrackerPage") {
+            return {
+                overlay: { view: nextView, source: null, value: null }
+            };
+        } else {
+            return {
+                overlay: { view: null, source: null, value: null }
+            };
+        }
     },
   
 
