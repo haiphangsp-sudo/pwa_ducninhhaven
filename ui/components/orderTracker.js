@@ -216,7 +216,7 @@ function escapeHtml(str) {
 }
 
 function getItemName(item) {
-  const label = item.itemLabel; // Đây là {vi: "...", en: "..."}
+  const label = item.itemLabel; 
   if (label && typeof label === 'object') {
     return translate(label);
   }
