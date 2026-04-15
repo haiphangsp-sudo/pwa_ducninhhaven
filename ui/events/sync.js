@@ -32,42 +32,53 @@ function syncUI(state) {
   if (!state) return;
   const prevState = lastState || {};
 
-  // CHẶN VÒNG LẶP: Cập nhật trí nhớ trước khi thực hiện các hành động gây ra setState
+  // 1. CHỐT CHẶN VÒNG LẶP & TRÍ NHỚ
   lastState = JSON.parse(JSON.stringify(state));
 
+  // Các biến cờ (Flags) để kiểm tra thay đổi
   const isViewChanged = state.overlay?.view !== prevState.overlay?.view;
   const isCartChanged = JSON.stringify(state.cart?.items) !== JSON.stringify(prevState.cart?.items);
   const isLangChanged = state.lang?.current !== prevState.lang?.current;
+  const isPanelViewChanged = state.panel?.view !== prevState.panel?.view;
+  const isPlaceChanged = state.context?.current?.id !== prevState.context?.current?.id;
 
-  // 1. ĐỒNG BỘ LOCALSTORAGE
+  // 2. ĐỒNG BỘ LOCALSTORAGE (Side Effect)
   syncStorage(state, prevState);
 
-  // 2. RENDER OVERLAYS (Cùng cấp trong khối isViewChanged)
-  if (isViewChanged || (state.overlay?.view && isCartChanged) || isLangChanged) {
-    if (isViewChanged) syncOverlay(state.overlay?.view);
-    
-    // Gọi đúng hàm render dựa trên view hiện tại
-    const view = state.overlay?.view;
-    if (view === "cartDrawer") renderDrawer(state);
-    if (view === "placePicker") renderPlacePicker(state);
-    if (view === "itemDetail") renderItemDetail(state);
-    if (view === "orderTrackerPage") openOrderTracker(state); // <--- Đã nằm trong khối check view
-  }
-
-  // 3. RENDER CÁC THÀNH PHẦN NGOÀI (Luôn cập nhật khi cart/lang đổi)
-  if (isCartChanged || isLangChanged || isViewChanged) {
-    renderCartBar(state);
-    renderStatusBar(state);
-    renderNavBar(state);
+  // 3. XỬ LÝ HUB (TRÁNH NHÁY ICON)
+  if (isLangChanged || isPlaceChanged) {
+    // Chỉ vẽ lại toàn bộ HTML khi đổi ngôn ngữ hoặc đổi vị trí
     renderHub(state);
+  } else if (isPanelViewChanged) {
+    // Chỉ cập nhật class 'is-active' bằng JS thuần để mượt mà
     eventHub(state);
   }
 
-  if (state.panel?.view !== prevState.panel?.view) {
-    renderPanel(state);
+  // 4. ĐỒNG BỘ OVERLAY (Cơ chế lồng thẻ #overlay của bạn)
+  if (isViewChanged || isCartChanged || isLangChanged) {
+    // BackdropManager lo việc ẩn/hiện class 'hidden' cho các con của #overlay
+    syncOverlay(state.overlay?.view);
+
+    const currentView = state.overlay?.view;
+    if (currentView) {
+      // Chỉ render nội dung cho trang đang thực sự hiển thị
+      switch (currentView) {
+        case "cartDrawer": renderDrawer(state); break;
+        case "orderTrackerPage": openOrderTracker(state); break;
+        case "placePicker": renderPlacePicker(state); break;
+        case "itemDetail": renderItemDetail(state); break;
+      }
+    }
   }
 
-  // 4. SIDE EFFECTS (Gửi đơn & Thông báo)
+  // 5. CÁC THÀNH PHẦN TĨNH (NavBar, CartBar, StatusBar)
+  if (isCartChanged || isLangChanged || isViewChanged) {
+    renderNavBar(state);
+    renderCartBar(state);
+    renderStatusBar(state);
+  }
+
+  // 6. XỬ LÝ ĐƠN HÀNG & THÔNG BÁO
   processOrders(state);
   if (state.order?.status !== prevState.order?.status) {
     syncOrderFeedback(state.order?.status);
