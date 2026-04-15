@@ -256,34 +256,60 @@ export async function syncOrdersWithServer() {
   }
 }
 
-export function clearCompletedOrders() {
+// core/orders.js
+
+export async function syncOrdersWithServer() {
+  markSyncingAgedOrders();
+
   const state = getState();
-  const inactive = state.orders?.inactive || [];
-  if (inactive.length === 0) return;
+  const savedIds = getSavedIds();
+  if (!savedIds || savedIds.length === 0) return;
 
-  const now = Date.now();
+  try {
+    const url = `${SCRIPT_URL}?action=getStatuses&ids=${savedIds.join(",")}`;
+    const res = await fetch(url);
+    if (!res.ok) return;
+    const data = await res.json();
 
-  // 1. Lọc theo thời gian: Chỉ giữ lại đơn trong vòng 48 giờ
-  let filtered = inactive.filter(order => {
-    const time = toTimestamp(order.updatedAt, order.createdAt);
-    return (now - time) < MAX_INACTIVE_AGE_MS;
-  });
+    if (data?.success && Array.isArray(data.orders)) {
+      const currentActive = state.orders?.active || [];
+      let hasTerminalStatus = false; // Cờ kiểm tra xem có đơn nào đã xong không
 
-  // 2. Lọc theo số lượng: Sắp xếp mới nhất lên đầu và lấy tối đa 10 đơn
-  filtered.sort((a, b) => toTimestamp(b.updatedAt) - toTimestamp(a.updatedAt));
-  if (filtered.length > MAX_INACTIVE_ORDERS) {
-    filtered = filtered.slice(0, MAX_INACTIVE_ORDERS);
-  }
+      const updatedActive = data.orders.map(serverOrder => {
+        const localOrder = currentActive.find(o => String(o.id) === String(serverOrder.id));
+        const normalizedServer = normalizeOrder(serverOrder);
 
-  // 3. Cập nhật State và ghi đè xuống LocalStorage
-  setState({
-    orders: {
-      ...state.orders,
-      inactive: filtered
+        // Kiểm tra xem đơn này đã đạt trạng thái kết thúc chưa (DONE/CANCELED)
+        if (["DONE", "CANCELED"].includes(normalizedServer.status)) {
+            hasTerminalStatus = true;
+        }
+
+        if (localOrder) {
+          return {
+            ...localOrder,
+            status: normalizedServer.status,
+            updatedAt: normalizedServer.updatedAt
+          };
+        }
+        return normalizedServer;
+      });
+
+      // 1. Cập nhật State
+      setState({
+        orders: {
+          ...state.orders,
+          active: updatedActive
+        }
+      });
+
+      // 2. CHÈN TẠI ĐÂY: Nếu có đơn vừa hoàn thành, tiến hành dọn dẹp lịch sử
+      if (hasTerminalStatus) {
+        clearCompletedOrders(); 
+      }
     }
-  });
-
-  localStorage.setItem(STORAGE_KEY_HISTORY, JSON.stringify(filtered));
+  } catch (error) {
+    console.error("Sync failed:", error);
+  }
 }
 export function hydrateOrdersFromStorage() {
   const savedActiveIds = JSON.parse(localStorage.getItem(STORAGE_KEY_ACTIVE) || "[]");
