@@ -8,7 +8,7 @@ import {
 } from "../../core/orders.js";
 import { getState } from "../../core/state.js";
 
-export function openOrderTracker() {
+export function openOrderTracker(state) {
   const listContainer = document.getElementById("orderTrackerList");
   if (!listContainer) return;
 
@@ -127,9 +127,9 @@ function renderOrderCard(order = {}, showStepper = true) {
 function renderOrderItem(item = {}) {
   const qty = Number(item.qty || 1);
   const price = Number(item.price || 0);
-
-  const product = getItemText(item.itemLabel || item.item || translate("order.unnamed_item"));
-  const variant = getItemText(item.optionLabel || item.option || "");
+  
+  const product = getItemText(item.itemLabel || translate("order.unnamed_item"));
+  const variant = getItemText(item.optionLabel || "");
 
   return `
     <div class="tracker-item">
@@ -149,7 +149,7 @@ function getItemText(value) {
   // Hỗ trợ tương lai nếu bạn lưu dạng { vi, en }
   if (typeof value === "object") {
     const lang = getState().lang?.current || "vi";
-    return value[lang] || value.vi || value.en || "";
+    return value[lang] || "";
   }
 
   return String(value);
