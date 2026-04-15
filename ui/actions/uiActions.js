@@ -14,14 +14,14 @@ export const UI_ACTIONS = {
       overlay: {
         view: source || null,
         source: null,
-        value: null
+        value: value
       }
     };
   },
 
   // Logic đóng/mở Overlay
-  toggleOverlay: (view, source = null) => ({
-    overlay: { view: view || null, source: source, value: null }
+  toggleOverlay: (view, value = null, source = null) => ({
+    overlay: { view: view || null, source: source, value: value ||null }
   }),
 
   // Logic thu gọn/mở rộng thanh trạng thái
