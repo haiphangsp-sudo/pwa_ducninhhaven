@@ -213,7 +213,7 @@ export async function syncOrdersWithServer() {
   if (!ids&&ids.length===0) return;
 
   try {
-    const res = await fetch(`${SCRIPT_URL}?action=sync_orders&ids=${ids.join(",")}`);
+    const res = `${SCRIPT_URL}?action=sync_orders&ids=${ids.join(",")}`;
     const data = await res.json();
 
     if (data?.success && Array.isArray(data.orders)) {
