@@ -8,6 +8,7 @@ export function renderDrawer(state) {
   if (!drawer) return;
 
   // Lấy các element con
+  const panel = drawer.querySelector(".drawer-panel");
   const drawerHeader = drawer.querySelector(".drawer__header-title");
   const namePlace = document.getElementById("namePlace");
   const totalEl = drawer.querySelector(".drawer__header-price");
@@ -66,6 +67,9 @@ export function renderDrawer(state) {
 
   // reset class về base trước
   sendBtn.classList.remove("is-loading", "is-warning", "is-disabled");
+  if (panel && !panel.classList.contains("drawer-animated")) {
+    panel.classList.add("drawer-animated");
+  }
 
   // 1. SENDING (ưu tiên cao nhất)
   if (isSending) {

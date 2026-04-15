@@ -280,7 +280,16 @@
   color: var(--text-soft);
   font-size: var(--font-s);
 }
+/* Lớp này dùng để kích hoạt hiệu ứng trượt lên */
+.drawer-animated {
+  animation: drawerUp 0.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
 
+/* Đảm bảo các panel có trạng thái chuẩn bị để trượt */
+.drawer-panel, .picker-panel {
+  will-change: transform, opacity;
+  transform: translateY(100%); /* Bắt đầu từ dưới cùng */
+}
 /* =========================
    CART BAR
 ========================= */
