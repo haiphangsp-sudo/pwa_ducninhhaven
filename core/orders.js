@@ -155,7 +155,7 @@ function persistActiveIds(activeOrders = []) {
   localStorage.setItem(STORAGE_KEY_ACTIVE, JSON.stringify(ids));
 }
 
-function getSavedIds() {
+function getActiveOrderIds() {
   try {
     return JSON.parse(localStorage.getItem(STORAGE_KEY_ACTIVE) || "[]");
   } catch {
@@ -207,7 +207,7 @@ export function addOrderToTracking(meta = {}) {
 }
 
 export async function syncOrdersWithServer() {
-  const ids = getActionableOrders();
+  const ids = getActiveOrderIds();
   if (!ids.length) return;
 
   try {
