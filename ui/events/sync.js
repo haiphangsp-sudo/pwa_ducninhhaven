@@ -17,7 +17,7 @@ import { renderItemDetail } from "../render/renderItemDetail.js";
 let lastHandledOrderAt = null;
 let isProcessingOrder = false;
 
-export function initSync() {
+export function attachUI() {
   // Đăng ký lắng nghe sự thay đổi của State
   subscribe(handleSync);
 }
