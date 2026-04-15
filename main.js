@@ -5,7 +5,6 @@ import { loadMenu } from "./core/menuStore.js";
 import { loadPlaces } from "./core/placesStore.js";
 import { normalizeContext, applyURLContext, syncContextToState } from "./core/context.js";
 import { detectRecovery } from "./core/queue.js";
-import { attachAppEvents } from "./ui/events/globalEvents.js";
 import { attachUI } from "./ui/events/sync.js";
 import { renderApp } from "./ui/render/renderApp.js";
 import { setState, getState } from "./core/state.js";
@@ -92,7 +91,6 @@ function mountApp() {
   const state = bootstrapApp();
   renderApp(state);
   attachUI();
-  attachAppEvents();
   detectRecovery();
 }
 
