@@ -104,7 +104,7 @@ function handlePlaceAction(cmd) {
    
     setState({
       overlay: {
-        view: source || null,
+        view: cmd.extra || null,
         source: null,   
         value: null
       }
