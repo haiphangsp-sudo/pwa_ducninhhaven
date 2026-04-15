@@ -74,7 +74,7 @@ export function renderDrawer(state) {
     sendBtn.dataset.value = "sending";
     return;
   }
-  const hasPlace = getLocationInfo().hasPlace;
+  const { hasPlace, placeName } = getLocationInfo();
   if (!hasPlace) {
     sendBtn.textContent = translate("cart_bar.place_prompt");
     sendBtn.classList.add("is-warning");
@@ -90,4 +90,5 @@ export function renderDrawer(state) {
   sendBtn.classList.remove("is-warning", "is-disabled");
   sendBtn.dataset.value = "cart";
   sendBtn.dataset.extra = "";
+  namePlace.textContent = placeName;
 }
