@@ -6,7 +6,7 @@ import { animateFlyToCart } from "../interactions/animateFlyToCart.js";
 import { applyScrollUI } from "./scrollBehavior.js";
 
 const COMMAND_MAP = {
-  "open-overlay": (cmd) => setState(UI_ACTIONS.toggleOverlay(cmd.value, cmd.extra)),
+  "open-overlay": (cmd) => setState(UI_ACTIONS.toggleOverlay(cmd.value, cmd.option, cmd.extra)),
   "close-overlay": () => setState(UI_ACTIONS.toggleOverlay(null)),
   "select-place": (cmd) => {
     const nextState = UI_ACTIONS.selectPlace(cmd);
