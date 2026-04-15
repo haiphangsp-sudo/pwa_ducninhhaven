@@ -12,7 +12,7 @@ import { renderPlacePicker } from "../render/renderPlacePicker.js";
 import { renderDrawer } from "../render/renderDrawer.js";
 import { renderCartBar } from "../render/renderCartBar.js";
 import { renderStatusBar } from "../render/renderStatusBar.js";
-import { renderHub } from "../render/renderHub.js";
+import { renderHub, eventHub } from "../render/renderHub.js";
 import { renderPanel } from "../render/renderPanel.js";
 import { renderItemDetail } from "../render/renderItemDetail.js";
 import { openOrderTracker } from "../components/orderTracker.js";
@@ -60,6 +60,7 @@ function syncUI(state) {
     renderStatusBar(state);
     renderNavBar(state);
     renderHub(state);
+    eventHub(state);
   }
 
   if (state.panel?.view !== prevState.panel?.view) {

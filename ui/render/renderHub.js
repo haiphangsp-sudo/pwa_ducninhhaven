@@ -3,7 +3,6 @@
 
 import { translate } from "../utils/translate.js";
 import { getCategoriesForCurrentPlace } from "../../core/menuQuery.js";
-import { getState } from "../../core/state.js";
 
 export function renderHub(state) {
   const categories = getCategoriesForCurrentPlace();
@@ -25,12 +24,10 @@ export function renderHub(state) {
       </span>
     </button>
   `}).join("");
-  eventHub();
 }
-function eventHub() {
-  
+export function eventHub(state) {
   const menuEl = document.getElementById("hub-container");
   menuEl.querySelectorAll("button").forEach(btn => {
-    btn.classList.toggle("is-active", btn.getAttribute("data-value") === getState().panel.view);
+    btn.classList.toggle("is-active", btn.getAttribute("data-value") === state.panel.view);
   });
 }
