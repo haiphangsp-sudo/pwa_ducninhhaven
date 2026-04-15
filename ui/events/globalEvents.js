@@ -98,13 +98,19 @@ function handleOverlayAction(cmd) {
 function handlePlaceAction(cmd) {
   if (cmd.action !== "select-place") return false;
 
-  setState({
-    overlay: {
-      view: cmd.value,
-      sources: cmd.extra
-    }
-  });
-    applyPlaceById(cmd.value);
+  const success = applyPlaceById(selectedId);
+
+  if (success) {
+    const source = getState().overlay?.source;
+
+    setState({
+      overlay: {
+        view: source || null,
+        source: null,   
+        value: null
+      }
+    });
+  }
   
   return true;
 }
