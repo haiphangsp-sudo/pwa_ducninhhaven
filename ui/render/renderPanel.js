@@ -4,7 +4,7 @@ import { renderArticle } from "./renderArticle.js";
 
 export function renderPanel(state) {
   const panelId = state.panel.view;
-  const ui = state.panel.option;
+  const typePanel = state.panel.option;
   
   // Container chính để chứa nội dung
   const container = document.querySelector(".category-panel");
@@ -12,7 +12,7 @@ export function renderPanel(state) {
   if (!container || !panelId) return;
 
   container.innerHTML =
-    ui === "article"
+    typePanel === "article"
       ? renderArticle(panelId)
-      : renderMenu(panelId, ui);
+      : renderMenu(panelId, typePanel);
 }

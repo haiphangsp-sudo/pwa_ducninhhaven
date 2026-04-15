@@ -76,6 +76,10 @@ export function getVariantById(id) {
             // Đã dịch sẵn để UI chỉ việc hiển thị
             productLabel: translate(prod.label),
             variantLabel: translate(variant.label),
+            
+            objProLab: prod.label,
+            objVarLab: variant.label,
+            
             price: Number(variant.price || 0),
             priceFormat: formatPrice(variant.price),
             unit: variant.unit,

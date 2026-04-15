@@ -6,8 +6,6 @@ import { submitOrder, addToCart } from "../../core/events.js";
 import { showToast } from "../render/renderAck.js";
 import { setupEventListeners } from "./globalEvents.js";
 import { bootstrapOrderTracker } from "./appFlow.js";
-
-// Import 14 hàm Render
 import { renderNavBar } from "../render/renderNavBar.js";
 import { renderPlacePicker } from "../render/renderPlacePicker.js";
 import { renderDrawer } from "../render/renderDrawer.js";
