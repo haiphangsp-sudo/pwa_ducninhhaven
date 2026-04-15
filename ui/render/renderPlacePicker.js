@@ -50,7 +50,7 @@ function renderGroup(groupData) {
   const { type, title, icon, items } = groupData;
   const container = document.querySelector(`[data-group="${type}"]`);
   if (!container || !items?.length) return;
-  const source = getState().overlay?.source;
+  const source = getState().overlay?.source || null;
   
   container.innerHTML = `
     <div class="flex gap-s">
