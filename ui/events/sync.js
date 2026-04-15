@@ -30,38 +30,39 @@ export function attachUI() {
 function syncUI(state) {
   if (!state) return;
 
-  // 1. Tạo "Ảnh chụp cũ" để so sánh
-  // Nếu là lần đầu, tạo một object rỗng để không bị lỗi undefined
-  const prevState = lastState ? JSON.parse(JSON.stringify(lastState)) : {};
+  // 1. CHUẨN BỊ: Xác định những gì đã thay đổi TRƯỚC khi cập nhật lastState
+  const prevState = lastState || {};
+  
+  const isViewChanged = state.overlay?.view !== prevState.overlay?.view;
+  const isCartChanged = JSON.stringify(state.cart?.items) !== JSON.stringify(prevState.cart?.items);
+  const isLangChanged = state.lang?.current !== prevState.lang?.current;
+  const isStatusChanged = state.order?.status !== prevState.order?.status;
 
-  // 2. CẬP NHẬT TRÍ NHỚ NGAY LẬP TỨC
-  // Dòng này cực kỳ quan trọng để chặn vòng lặp vô tận từ showToast
+  // 2. CHẶN LOOP: Cập nhật trí nhớ ngay lập tức
   lastState = JSON.parse(JSON.stringify(state));
 
-  // 3. SO SÁNH VÀ RENDER (Chỉ vẽ lại khi dữ liệu liên quan thay đổi)
-  
-  // Overlay & Backdrop
-  if (state.overlay?.view !== prevState.overlay?.view || state.overlay?.value !== prevState.overlay?.value) {
-    syncOverlay(state.overlay.view);
-    if (state.overlay.view === "cartDrawer") renderDrawer(state);
-    if (state.overlay.view === "placePicker") renderPlacePicker(state);
-    if (state.overlay.view === "itemDetail") renderItemDetail(state);
+  // 3. RENDER THEO ĐIỀU KIỆN (Logic "Boutique" - Chỉ vẽ cái cần thiết)
+
+  // Nếu view đổi HOẶC giỏ hàng đổi khi đang mở Drawer -> Vẽ lại Drawer
+  if (isViewChanged || (state.overlay?.view === "cartDrawer" && isCartChanged) || isLangChanged) {
+    if (state.overlay?.view === "cartDrawer") renderDrawer(state);
+    if (state.overlay?.view === "placePicker") renderPlacePicker(state);
+    if (state.overlay?.view === "itemDetail") renderItemDetail(state);
+    
+    // Đồng bộ lớp nền Backdrop khi đổi view
+    if (isViewChanged) syncOverlay(state.overlay?.view);
   }
 
-  // Giỏ hàng (Nút +/- sẽ hoạt động lại nhờ dòng này)
-  if (JSON.stringify(state.cart?.items) !== JSON.stringify(prevState.cart?.items)) {
-    renderCartBar(state);
-    renderStatusBar(state); // Cập nhật tổng tiền ở thanh trạng thái
-  }
-
-  // Ngôn ngữ
-  if (state.lang?.current !== prevState.lang?.current) {
-    renderNavBar(state);
+  // Nếu giỏ hàng đổi -> Vẽ lại các thanh trạng thái ngoài màn hình
+  if (isCartChanged || isLangChanged) {
     renderCartBar(state);
     renderStatusBar(state);
   }
 
-  // Panel & Hub
+  // Render các thành phần tĩnh khác
+  renderNavBar(state);
+  renderHub(state);
+  
   if (state.panel?.view !== prevState.panel?.view) {
     renderPanel(state);
   }
@@ -70,8 +71,7 @@ function syncUI(state) {
   processOrders(state);
 
   // 5. THÔNG BÁO (Toast)
-  // Chỉ hiện thông báo nếu status thực sự thay đổi (ví dụ từ 'sending' sang 'success')
-  if (state.order?.status !== prevState.order?.status) {
+  if (isStatusChanged) {
     syncOrderFeedback(state.order?.status);
   }
 }
