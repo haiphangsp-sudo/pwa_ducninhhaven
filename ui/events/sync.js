@@ -15,7 +15,7 @@ import { renderStatusBar } from "../render/renderStatusBar.js";
 import { renderHub } from "../render/renderHub.js";
 import { renderPanel } from "../render/renderPanel.js";
 import { renderItemDetail } from "../render/renderItemDetail.js";
-import { openOrderTracker } from "../render/renderOrderTracker.js";
+import { openOrderTracker } from "../components/orderTracker.js";
 
 let lastState = null;
 let isProcessingOrder = false;
