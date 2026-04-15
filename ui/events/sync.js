@@ -1,86 +1,82 @@
 // ui/sync.js
 import { subscribe, getState } from "../../core/state.js";
-import { CONFIG } from "../../config.js";
 import { syncOverlay } from "../../ui/interactions/backdropManager.js";
 import { submitOrder, addToCart } from "../../core/events.js";
 import { showToast } from "../render/renderAck.js";
 import { setupEventListeners } from "./globalEvents.js";
 import { bootstrapOrderTracker } from "./appFlow.js";
+
+// --- Imports các hàm Render ---
 import { renderNavBar } from "../render/renderNavBar.js";
 import { renderPlacePicker } from "../render/renderPlacePicker.js";
 import { renderDrawer } from "../render/renderDrawer.js";
 import { renderCartBar } from "../render/renderCartBar.js";
 import { renderStatusBar } from "../render/renderStatusBar.js";
-import { renderHub, eventHub } from "../render/renderHub.js";
+import { renderHub } from "../render/renderHub.js";
 import { renderPanel } from "../render/renderPanel.js";
 import { renderItemDetail } from "../render/renderItemDetail.js";
-import { openOrderTracker } from "../components/orderTracker.js";
 
 let lastState = null;
 let isProcessingOrder = false;
 let lastHandledOrderAt = null;
 
 export function attachUI() {
-  setupEventListeners(); // Lắng nghe click
-  bootstrapOrderTracker(); // Khởi chạy theo dõi đơn hàng ngầm (appFlow)
-  subscribe(syncUI); // Đăng ký đồng bộ State
+  setupEventListeners();
+  bootstrapOrderTracker(); 
+  subscribe(syncUI);
   syncUI(getState()); // Chạy lần đầu để nạp UI
 }
 
 function syncUI(state) {
-  const prevState = lastState ? JSON.parse(JSON.stringify(lastState)) : {};
-  
-  lastState = JSON.parse(JSON.stringify(state));
-  // 1. LỒNG GHÉP: ĐỒNG BỘ LOCALSTORAGE (Giỏ hàng & Ngôn ngữ)
-  persistData(state, prevState);
+  if (!state) return;
 
-  // 2. ĐỒNG BỘ OVERLAY & BACKDROP
-  if (state.overlay.view !== prevState.overlay?.view || state.overlay.value !== prevState.overlay?.value) {
-    syncOverlay(state.overlay.view || null);
-    // Render Overlay cụ thể
+  // 1. Tạo "Ảnh chụp cũ" để so sánh
+  // Nếu là lần đầu, tạo một object rỗng để không bị lỗi undefined
+  const prevState = lastState ? JSON.parse(JSON.stringify(lastState)) : {};
+
+  // 2. CẬP NHẬT TRÍ NHỚ NGAY LẬP TỨC
+  // Dòng này cực kỳ quan trọng để chặn vòng lặp vô tận từ showToast
+  lastState = JSON.parse(JSON.stringify(state));
+
+  // 3. SO SÁNH VÀ RENDER (Chỉ vẽ lại khi dữ liệu liên quan thay đổi)
+  
+  // Overlay & Backdrop
+  if (state.overlay?.view !== prevState.overlay?.view || state.overlay?.value !== prevState.overlay?.value) {
+    syncOverlay(state.overlay.view);
     if (state.overlay.view === "cartDrawer") renderDrawer(state);
     if (state.overlay.view === "placePicker") renderPlacePicker(state);
-    if (state.overlay.view === "itemDetail") renderItemDetail(state); // Nhận ID món từ overlay.value
-    if (state.overlay.view === "orderTrackerPage") openOrderTracker(state);
+    if (state.overlay.view === "itemDetail") renderItemDetail(state);
   }
 
-  // 3. RENDER CÁC THÀNH PHẦN CÒN LẠI (Chỉ khi dữ liệu liên quan thay đổi)
-  if (state.lang?.current !== prevState.lang?.current) {
-    renderNavBar(state); renderCartBar(state); renderStatusBar(state); renderHub(state); renderPanel(state);
+  // Giỏ hàng (Nút +/- sẽ hoạt động lại nhờ dòng này)
+  if (JSON.stringify(state.cart?.items) !== JSON.stringify(prevState.cart?.items)) {
+    renderCartBar(state);
+    renderStatusBar(state); // Cập nhật tổng tiền ở thanh trạng thái
   }
-  
-  // Render bổ trợ
-  renderNavBar(state);
-  renderCartBar(state);
-  renderStatusBar(state);
+
+  // Ngôn ngữ
+  if (state.lang?.current !== prevState.lang?.current) {
+    renderNavBar(state);
+    renderCartBar(state);
+    renderStatusBar(state);
+  }
+
+  // Panel & Hub
   if (state.panel?.view !== prevState.panel?.view) {
-    eventHub(state);
     renderPanel(state);
   }
 
-  // 4. XỬ LÝ ĐƠN HÀNG (Side Effects)
-  handleOrderSideEffects(state);
+  // 4. XỬ LÝ ĐẶT HÀNG (Side Effects)
+  processOrders(state);
 
-  // 5. THÔNG BÁO (Toast Feedback)
+  // 5. THÔNG BÁO (Toast)
+  // Chỉ hiện thông báo nếu status thực sự thay đổi (ví dụ từ 'sending' sang 'success')
   if (state.order?.status !== prevState.order?.status) {
     syncOrderFeedback(state.order?.status);
   }
-
-  lastState = JSON.parse(JSON.stringify(state));
 }
 
-function persistData(state, prevState) {
-  // Lưu giỏ hàng
-  if (JSON.stringify(state.cart?.items) !== JSON.stringify(prevState.cart?.items)) {
-    localStorage.setItem(CONFIG.CART_KEY, JSON.stringify(state.cart?.items || []));
-  }
-  // Lưu ngôn ngữ
-  if (state.lang?.current !== prevState.lang?.current) {
-    localStorage.setItem(CONFIG.LANG_KEY, state.lang.current);
-  }
-}
-
-async function handleOrderSideEffects(state) {
+async function processOrders(state) {
   const { action, at } = state.order || {};
   if (!action || at === lastHandledOrderAt || isProcessingOrder) return;
 
@@ -99,8 +95,8 @@ function syncOrderFeedback(status) {
   const config = {
     success: { type: "success", msg: "cart_bar.success" },
     error: { type: "error", msg: "cart_bar.error" },
-    duplicate: { type: "info", msg: "cart_bar.duplicate" },
-    added: { type: "success", msg: "cart_bar.added" }
+    duplicate: { type: "info", msg: "cart_bar.duplicate" }
   }[status];
-  if (config) showToast({ type: config.type, message: config.msg, duration: 2500 });
+  
+  if (config) showToast({ type: config.type, message: config.msg });
 }
