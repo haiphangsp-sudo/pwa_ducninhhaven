@@ -54,7 +54,7 @@ export let UI = {
   /* ---------------- OVERLAY ---------------- */
   overlay: {
   view: null,
-  source: "",
+  source: null,
   value: null
 },
 
