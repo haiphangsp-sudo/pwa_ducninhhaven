@@ -11,15 +11,19 @@ export const UI_ACTIONS = {
       source: cmd.extra || null  // Nguồn để quay lại (nếu có)
     }
   }),
-
-  selectPlace: (cmd) => {
+    selectPlace: (cmd) => {
     const success = applyPlaceById(cmd.value);
     if (!success) return null;
-    const source = cmd.extra || getState().overlay?.source;
+
+    // cmd.extra chính là 'source' (ví dụ: "cartDrawer")
+    // Nếu rỗng, view sẽ là null -> BackdropManager sẽ ẩn hết
+    const nextView = cmd.extra || null; 
+
     return {
-      overlay: { view: source || null, source: null, value: null }
+        overlay: { view: nextView, source: null, value: null }
     };
-  },
+    },
+  
 
   toggleOrderStatus: (currentValue) => ({
     orders: { ...getState().orders, isBarExpanded: currentValue !== "true" }
