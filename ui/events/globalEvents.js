@@ -8,32 +8,26 @@ import { applyScrollUI } from "./scrollBehavior.js";
 const COMMAND_MAP = {
   "open-overlay": (cmd) => setState(UI_ACTIONS.toggleOverlay(cmd.value, cmd.extra)),
   "close-overlay": () => setState(UI_ACTIONS.toggleOverlay(null)),
-  
   "select-place": (cmd) => {
     const nextState = UI_ACTIONS.selectPlace(cmd);
     if (nextState) setState(nextState);
   },
-
   "update-qty": (cmd) => {
     const delta = parseInt(cmd.option, 10);
     if (!isNaN(delta)) updateCartQuantity(cmd.value, delta);
   },
-
   "add_cart": (cmd, target) => {
-    // Kích hoạt lệnh order để sync.js xử lý side-effect
     setState({ order: { action: cmd.action, line: cmd.value, at: Date.now() } });
     animateFlyToCart(target);
   },
-
   "send_cart": (cmd) => {
     setState({ order: { action: cmd.action, status: "sending", at: Date.now() } });
   },
-
   "toggle_status": (cmd) => setState(UI_ACTIONS.toggleOrderStatus(cmd.value)),
-  "open-panel": (cmd) => setState(UI_ACTIONS.openPanel(cmd.value, cmd.option))
+  "open-panel": (cmd) => setState(UI_ACTIONS.togglePanel(cmd.value, cmd.option))
 };
 
-export function attachAppEvents() {
+export function setupEventListeners() {
   document.addEventListener("click", (e) => {
     const target = e.target.closest("[data-action]");
     if (!target) return;

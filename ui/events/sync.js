@@ -3,35 +3,38 @@ import { subscribe } from "../../core/state.js";
 import { syncOverlay } from "../../ui/interactions/backdropManager.js";
 import { submitOrder, addToCart } from "../../core/events.js";
 import { showToast } from "../render/renderAck.js";
+import { setupEventListeners } from "./globalEvents.js";
 
-// Import tất cả các hàm Render bạn đã có
+// Import đủ 14 hàm render của bạn
+import { renderNavBar } from "../render/renderNavBar.js";
 import { renderPlacePicker } from "../render/renderPlacePicker.js";
 import { renderDrawer } from "../render/renderDrawer.js";
-import { renderNavBar } from "../render/renderNavBar.js";
 import { renderCartBar } from "../render/renderCartBar.js";
 import { renderStatusBar } from "../render/renderStatusBar.js";
 import { renderHub } from "../render/renderHub.js";
 import { renderPanel } from "../render/renderPanel.js";
 import { renderItemDetail } from "../render/renderItemDetail.js";
 
-let lastHandledOrderAt = null;
+// ĐÂY LÀ NƠI PREVSTATE RA ĐỜI
+let lastState = null;
 let isProcessingOrder = false;
+let lastHandledOrderAt = null;
 
 export function attachUI() {
-  // Đăng ký lắng nghe sự thay đổi của State
+  setupEventListeners();
   subscribe(handleSync);
 }
 
-function handleSync(state, prevState) {
-  // 1. Kiểm tra những thay đổi lớn để tránh render thừa (Performance)
-  const overlayChanged = state.overlay.view !== prevState.overlay?.view;
-  const contextChanged = JSON.stringify(state.context) !== JSON.stringify(prevState.context);
-  const cartChanged = state.cart?.items !== prevState.cart?.items;
+function handleSync(state) {
+  // Nếu chưa có lastState, tạo một object rỗng để không lỗi khi so sánh lần đầu
+  const prevState = lastState || {};
 
-  // 2. Đồng bộ các thành phần giao diện (UI Rendering)
-  // Mỗi hàm render sẽ tự quyết định có cần vẽ lại dựa trên state hay không
-  if (overlayChanged) syncOverlay(state.overlay.view);
-  
+  // 1. Đồng bộ Backdrop (Chỉ khi view thay đổi)
+  if (state.overlay.view !== prevState.overlay?.view) {
+    syncOverlay(state.overlay.view);
+  }
+
+  // 2. Chạy Render (Mỗi hàm tự có logic tối ưu bên trong)
   renderNavBar(state);
   renderPlacePicker(state);
   renderDrawer(state);
@@ -41,62 +44,38 @@ function handleSync(state, prevState) {
   renderPanel(state);
   renderItemDetail(state);
 
-  // 3. Xử lý tác vụ đặt hàng (Side Effects - GAS/Sheets)
-  processOrderCommands(state);
+  // 3. Xử lý Đặt hàng (Side Effects)
+  processOrders(state);
 
-  // 4. Phản hồi người dùng (Toasts/Feedback)
+  // 4. Hiển thị Thông báo
   if (state.order?.status !== prevState.order?.status) {
-    handleOrderFeedback(state.order?.status);
+    syncFeedback(state.order?.status);
   }
+
+  // CẬP NHẬT LASTSTATE CHO LẦN SAU
+  lastState = { ...state };
 }
 
-/**
- * Hàm xử lý gửi dữ liệu lên Server hoặc thêm vào giỏ hàng
- */
-async function processOrderCommands(state) {
+async function processOrders(state) {
   const { action, at } = state.order || {};
-  
-  // Chặn gửi trùng đơn hoặc đang trong quá trình xử lý
   if (!action || at === lastHandledOrderAt || isProcessingOrder) return;
 
   lastHandledOrderAt = at;
   isProcessingOrder = true;
-
   try {
-    switch (action) {
-      case "add_cart":
-        addToCart(); 
-        break;
-      case "buy_now":
-      case "send_cart":
-        await submitOrder(action);
-        break;
-    }
-  } catch (error) {
-    console.error("Order process error:", error);
+    if (action === "add_cart") addToCart();
+    if (["send_cart", "buy_now"].includes(action)) await submitOrder(action);
   } finally {
     isProcessingOrder = false;
   }
 }
 
-/**
- * Quản lý thông báo dựa trên trạng thái đơn hàng
- */
-function handleOrderFeedback(status) {
-  if (!status || status === "idle" || status === "sending") return;
-
-  const configMap = {
-    success: { type: "success", text: "cart_bar.success" },
-    error: { type: "error", text: "cart_bar.error" },
-    duplicate: { type: "info", text: "cart_bar.duplicate" }
-  };
-
-  const config = configMap[status];
-  if (config) {
-    showToast({ 
-      type: config.type, 
-      message: config.text, 
-      duration: 2500 
-    });
-  }
+function syncFeedback(status) {
+  if (!status || ["idle", "sending"].includes(status)) return;
+  const config = {
+    success: { type: "success", msg: "cart_bar.success" },
+    error: { type: "error", msg: "cart_bar.error" },
+    duplicate: { type: "info", msg: "cart_bar.duplicate" }
+  }[status];
+  if (config) showToast({ type: config.type, message: config.msg });
 }

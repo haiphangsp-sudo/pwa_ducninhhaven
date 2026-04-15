@@ -3,17 +3,16 @@ import { applyPlaceById } from "../../core/context.js";
 import { getState } from "../../core/state.js";
 
 export const UI_ACTIONS = {
-  // Logic chọn phòng: Áp dụng vị trí và quyết định đường về (source)
+  // Logic chọn phòng: Trả về state để quay lại Drawer cũ nếu có source
   selectPlace: (cmd) => {
     const success = applyPlaceById(cmd.value);
     if (!success) return null;
 
-    // Lấy nguồn quay về: Ưu tiên extra từ nút, nếu không có thì lấy từ State overlay
+    // Lấy nguồn để quay lại: Ưu tiên extra từ nút, nếu không có thì lấy trong State
     const source = cmd.extra || getState().overlay?.source;
-    
     return {
       overlay: {
-        view: source || null, // Quay lại cartDrawer nếu có source
+        view: source || null,
         source: null,
         value: null
       }
@@ -21,30 +20,20 @@ export const UI_ACTIONS = {
   },
 
   // Logic đóng/mở Overlay
-  toggleOverlay: (view, source = null) => {
-    return {
-      overlay: {
-        view: view || null,
-        source: source,
-        value: null
-      }
-    };
-  },
+  toggleOverlay: (view, source = null) => ({
+    overlay: { view: view || null, source: source, value: null }
+  }),
 
-  // Logic thu gọn/mở rộng thanh trạng thái đơn hàng
-  toggleOrderStatus: (currentValue) => {
-    return {
-      orders: {
-        ...getState().orders,
-        isBarExpanded: currentValue !== "true"
-      }
-    };
-  },
+  // Logic thu gọn/mở rộng thanh trạng thái
+  toggleOrderStatus: (currentValue) => ({
+    orders: {
+      ...getState().orders,
+      isBarExpanded: currentValue !== "true"
+    }
+  }),
 
-  // Logic mở Panel (thông tin phòng, menu phụ...)
-  openPanel: (view, option) => {
-    return {
-      panel: { view, option }
-    };
-  }
+  // Logic mở Panel
+  togglePanel: (view, option) => ({
+    panel: { view, option }
+  })
 };
