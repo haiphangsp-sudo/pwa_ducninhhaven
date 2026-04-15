@@ -128,14 +128,14 @@ function renderOrderCard(order = {}, showStepper = true) {
 function renderOrderItem(item = {}) {
   const qty = Number(item.qty || 1);
   const price = Number(item.price || 0);
-  console.log("item",item);
-  console.log("optionLabel",item.optionLabel);
+  const name = getItemName(item, lang);
+  const option = getOptionName(item, lang);
   return `
     <div class="tracker-item">
       <span class="tracker-item__qty">${qty}×</span>
       <div class="tracker-item__content">
-        <span class="tracker-item__name">${item.item}</span>
-        <span class="tracker-item__option">${item.option}</span>
+        <span class="tracker-item__name">${name}</span>
+        <span class="tracker-item__option">${option}</span>
       </div>
       <span class="tracker-item__price">${formatPrice(price)}</span>
     </div>
@@ -213,4 +213,20 @@ function escapeHtml(str) {
     '"': "&quot;",
     "'": "&#039;"
   }[m]));
+}
+
+function getItemName(item, lang) {
+  const label = item.itemLabel; // Đây là {vi: "...", en: "..."}
+  if (label && typeof label === 'object') {
+    return label[lang] || label['vi'];
+  }
+  return item.item || ""; // Fallback nếu là đơn cũ (string)
+}
+
+function getOptionName(item, lang) {
+  const label = item.optionLabel;
+  if (label && typeof label === 'object') {
+    return label[lang] || label['vi'];
+  }
+  return item.option || "";
 }
