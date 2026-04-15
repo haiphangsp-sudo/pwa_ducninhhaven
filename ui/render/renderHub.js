@@ -24,6 +24,7 @@ export function renderHub(state) {
       </span>
     </button>
   `}).join("");
+  eventHub(state);
 }
 export function eventHub(state) {
   const menuEl = document.getElementById("hub-container");
