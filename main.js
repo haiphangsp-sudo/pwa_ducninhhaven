@@ -7,9 +7,8 @@ import { normalizeContext, applyURLContext, syncContextToState } from "./core/co
 import { detectRecovery } from "./core/queue.js";
 import { attachUI } from "./ui/events/sync.js";
 import { renderApp } from "./ui/render/renderApp.js";
-import { setState, getState } from "./core/state.js";
+import { setState } from "./core/state.js";
 import { bootstrapApp } from "./core/bootstrap.js";
-import { bootstrapOrderTracker } from "./ui/events/appFlow.js";
 
 boot();
 
@@ -77,7 +76,6 @@ function restoreRuntimeState() {
   normalizeContext();
   applyURLContext();
   syncContextToState();
-  bootstrapOrderTracker();
 }
 
 async function loadAppData() {

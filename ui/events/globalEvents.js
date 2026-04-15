@@ -17,14 +17,15 @@ const COMMAND_MAP = {
     if (!isNaN(delta)) updateCartQuantity(cmd.value, delta);
   },
   "add_cart": (cmd, target) => {
-    setState({ order: { action: cmd.action, line: cmd.value, at: Date.now() } });
+    setState({ order: { action: cmd.action, line: cmd.value, status: "idle", at: Date.now() } });
     animateFlyToCart(target);
   },
   "send_cart": (cmd) => {
     setState({ order: { action: cmd.action, status: "sending", at: Date.now() } });
   },
   "toggle_status": (cmd) => setState(UI_ACTIONS.toggleOrderStatus(cmd.value)),
-  "open-panel": (cmd) => setState(UI_ACTIONS.togglePanel(cmd.value, cmd.option))
+  "open-panel": (cmd) => setState(UI_ACTIONS.togglePanel(cmd.value, cmd.option)),
+  "change-lang": (cmd) => setState(UI_ACTIONS.changeLanguage(cmd.value))
 };
 
 export function setupEventListeners() {
@@ -42,7 +43,6 @@ export function setupEventListeners() {
     const handler = COMMAND_MAP[cmd.action];
     if (handler) handler(cmd, target);
   });
-
   window.addEventListener("scroll", handleScroll, { passive: true });
 }
 

@@ -3,37 +3,37 @@ import { applyPlaceById } from "../../core/context.js";
 import { getState } from "../../core/state.js";
 
 export const UI_ACTIONS = {
-  // Logic chọn phòng: Trả về state để quay lại Drawer cũ nếu có source
+  // Logic chọn phòng & quay lại Drawer cũ
   selectPlace: (cmd) => {
     const success = applyPlaceById(cmd.value);
     if (!success) return null;
-
-    // Lấy nguồn để quay lại: Ưu tiên extra từ nút, nếu không có thì lấy trong State
     const source = cmd.extra || getState().overlay?.source;
     return {
-      overlay: {
-        view: source || null,
-        source: null,
-        value: value
-      }
+      overlay: { view: source || null, source: null, value: null }
     };
   },
 
-  // Logic đóng/mở Overlay
-  toggleOverlay: (view, value = null, source = null) => ({
-    overlay: { view: view || null, source: source, value: value ||null }
+  // Logic mở bảng (Overlay): Lồng ghép ID món (option) vào value
+  toggleOverlay: (view, idMon = null, source = null) => ({
+    overlay: { 
+      view: view || null, 
+      value: idMon || null, // data-option chính là ID món để renderItemDetail
+      source: source 
+    }
   }),
 
   // Logic thu gọn/mở rộng thanh trạng thái
   toggleOrderStatus: (currentValue) => ({
-    orders: {
-      ...getState().orders,
-      isBarExpanded: currentValue !== "true"
-    }
+    orders: { ...getState().orders, isBarExpanded: currentValue !== "true" }
   }),
 
-  // Logic mở Panel
+  // Logic mở Panel (thông tin, hub...)
   togglePanel: (view, option) => ({
     panel: { view, option }
+  }),
+
+  // Logic đổi ngôn ngữ
+  changeLanguage: (langCode) => ({
+    lang: { current: langCode }
   })
 };
