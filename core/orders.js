@@ -205,15 +205,15 @@ export function addOrderToTracking(meta = {}) {
 
   persistActiveIds(next.active);
 }
+
 export async function syncOrdersWithServer() {
   markSyncingAgedOrders();
 
   const state = getState();
-  const savedIds = getSavedIds(); // Đúng tên hàm trong file của bạn
+  const savedIds = getSavedIds(); 
   if (!savedIds || savedIds.length === 0) return;
 
   try {
-    // Giữ nguyên action=getStatuses theo đúng Google Script của bạn
     const url = `${SCRIPT_URL}?action=getStatuses&ids=${savedIds.join(",")}`;
     const res = await fetch(url);
     
@@ -254,6 +254,36 @@ export async function syncOrdersWithServer() {
   } catch (error) {
     console.error("Sync failed:", error);
   }
+}
+
+export function clearCompletedOrders() {
+  const state = getState();
+  const inactive = state.orders?.inactive || [];
+  if (inactive.length === 0) return;
+
+  const now = Date.now();
+
+  // 1. Lọc theo thời gian: Chỉ giữ lại đơn trong vòng 48 giờ
+  let filtered = inactive.filter(order => {
+    const time = toTimestamp(order.updatedAt, order.createdAt);
+    return (now - time) < MAX_INACTIVE_AGE_MS;
+  });
+
+  // 2. Lọc theo số lượng: Sắp xếp mới nhất lên đầu và lấy tối đa 10 đơn
+  filtered.sort((a, b) => toTimestamp(b.updatedAt) - toTimestamp(a.updatedAt));
+  if (filtered.length > MAX_INACTIVE_ORDERS) {
+    filtered = filtered.slice(0, MAX_INACTIVE_ORDERS);
+  }
+
+  // 3. Cập nhật State và ghi đè xuống LocalStorage
+  setState({
+    orders: {
+      ...state.orders,
+      inactive: filtered
+    }
+  });
+
+  localStorage.setItem(STORAGE_KEY_HISTORY, JSON.stringify(filtered));
 }
 export function hydrateOrdersFromStorage() {
   const savedActiveIds = JSON.parse(localStorage.getItem(STORAGE_KEY_ACTIVE) || "[]");
