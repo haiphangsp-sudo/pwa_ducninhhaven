@@ -128,7 +128,7 @@ function renderOrderCard(order = {}, showStepper = true) {
 function renderOrderItem(item = {}) {
   const qty = Number(item.qty || 1);
   const price = Number(item.price || 0);
-  console.log("itemLabel",item.itemLabel);
+  console.log("item",item);
   console.log("optionLabel",item.optionLabel);
   return `
     <div class="tracker-item">
