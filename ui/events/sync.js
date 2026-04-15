@@ -29,7 +29,8 @@ export function attachUI() {
 
 function syncUI(state) {
   const prevState = lastState ? JSON.parse(JSON.stringify(lastState)) : {};
-
+  
+  lastState = JSON.parse(JSON.stringify(state));
   // 1. LỒNG GHÉP: ĐỒNG BỘ LOCALSTORAGE (Giỏ hàng & Ngôn ngữ)
   persistData(state, prevState);
 
