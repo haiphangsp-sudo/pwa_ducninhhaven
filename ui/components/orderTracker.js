@@ -9,7 +9,7 @@ import {
 import { getState } from "../../core/state.js";
 
 
-export function openOrderTracker(state) {
+export function openOrderTracker() {
   const listContainer = document.getElementById("orderTrackerList");
   if (!listContainer) return;
 
@@ -134,8 +134,8 @@ function renderOrderItem(item = {}) {
     <div class="tracker-item">
       <span class="tracker-item__qty">${qty}×</span>
       <div class="tracker-item__content">
-        <span class="tracker-item__name">${translate(item.itemLabel)}</span>
-        <span class="tracker-item__option">${translate(item.optionLabel)}</span>
+        <span class="tracker-item__name">${item.item}</span>
+        <span class="tracker-item__option">${item.option}</span>
       </div>
       <span class="tracker-item__price">${formatPrice(price)}</span>
     </div>
