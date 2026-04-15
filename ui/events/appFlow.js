@@ -14,7 +14,6 @@ export function bootstrapOrderTracker() {
   startOrderPolling();
   setupVisibilityListener();
 }
-
 /**
  * TRÌNH QUẢN LÝ TRUY VẤN (POLLING)
  */
