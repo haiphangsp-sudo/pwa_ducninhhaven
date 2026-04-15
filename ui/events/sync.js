@@ -48,11 +48,12 @@ function syncUI(state) {
     if (state.overlay?.view === "cartDrawer") renderDrawer(state);
     if (state.overlay?.view === "placePicker") renderPlacePicker(state);
     if (state.overlay?.view === "itemDetail") renderItemDetail(state);
+    if (state.overlay?.view === "orderTrackerPage") openOrderTracker(state);
     
     // Đồng bộ lớp nền Backdrop khi đổi view
     if (isViewChanged) syncOverlay(state.overlay?.view);
   }
-
+  
   // Nếu giỏ hàng đổi -> Vẽ lại các thanh trạng thái ngoài màn hình
   if (isCartChanged || isLangChanged) {
     renderCartBar(state);

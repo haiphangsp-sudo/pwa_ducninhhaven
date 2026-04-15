@@ -16,6 +16,7 @@ const COMMAND_MAP = {
     const delta = parseInt(cmd.option, 10);
     if (!isNaN(delta)) updateCartQuantity(cmd.value, delta);
   },
+  
   "add_cart": (cmd, target) => {
     setState({ order: { action: cmd.action, line: cmd.value, status: "idle", at: Date.now() } });
     animateFlyToCart(target);
