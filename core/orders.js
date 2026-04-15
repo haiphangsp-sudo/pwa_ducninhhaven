@@ -210,58 +210,6 @@ export async function syncOrdersWithServer() {
   markSyncingAgedOrders();
 
   const state = getState();
-  const savedIds = getSavedIds(); 
-  if (!savedIds || savedIds.length === 0) return;
-
-  try {
-    const url = `${SCRIPT_URL}?action=getStatuses&ids=${savedIds.join(",")}`;
-    const res = await fetch(url);
-    
-    if (!res.ok) return;
-    const data = await res.json();
-
-    if (data?.success && Array.isArray(data.orders)) {
-      const currentActive = state.orders?.active || [];
-
-      const updatedActive = data.orders.map(serverOrder => {
-        // 1. Tìm đơn hàng tương ứng ở Local (nơi đang giữ Object {vi, en})
-        const localOrder = currentActive.find(o => String(o.id) === String(serverOrder.id));
-        
-        // 2. Chuẩn hóa dữ liệu từ Server (lấy status, updatedAt)
-        const normalizedServer = normalizeOrder(serverOrder);
-
-        if (localOrder) {
-          // HỢP NHẤT: Giữ lại toàn bộ localOrder (để bảo vệ itemLabel: {vi, en})
-          // Chỉ cập nhật status và thời gian từ Server trả về
-          return {
-            ...localOrder,
-            status: normalizedServer.status,
-            updatedAt: normalizedServer.updatedAt
-          };
-        }
-        
-        // Nếu là đơn mới hoàn toàn (từ máy khác), dùng bản của server
-        return normalizedServer;
-      });
-
-      setState({
-        orders: {
-          ...state.orders,
-          active: updatedActive
-        }
-      });
-    }
-  } catch (error) {
-    console.error("Sync failed:", error);
-  }
-}
-
-// core/orders.js
-
-export async function syncOrdersWithServer() {
-  markSyncingAgedOrders();
-
-  const state = getState();
   const savedIds = getSavedIds();
   if (!savedIds || savedIds.length === 0) return;
 
