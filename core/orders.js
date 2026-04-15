@@ -207,7 +207,7 @@ export function addOrderToTracking(meta = {}) {
 }
 
 export async function syncOrdersWithServer() {
-  const ids = getActiveOrderIds();
+  const ids = getActionableOrders();
   if (!ids.length) return;
 
   try {
