@@ -220,7 +220,7 @@ export function addOrderToTrackingCu(meta = {}) {
   persistActiveIds(next.active);
 }
 
-export async function syncOrdersWithServer() {
+export async function syncOrdersWithServerCu() {
   markSyncingAgedOrders();
 
   const state = getState();
@@ -300,44 +300,43 @@ export async function syncOrdersWithServer() {
   }
 }
 
-export async function syncOrdersWithServerNew() {
-  const state = getState();
-  const activeOrders = state.orders?.active || [];
-  if (activeOrders.length === 0) return;
-
-  // Lấy danh sách ID để gửi lên server
-  const ids = activeOrders.map(o => o.id);
+export async function syncOrdersWithServer() {
+  const savedIds = getSavedIds();
+  if (savedIds.length === 0) return;
 
   try {
-    const url = `${SCRIPT_URL}?action=getStatuses&ids=${ids.join(",")}`;
+    const url = `${SCRIPT_URL}?action=getStatuses&ids=${savedIds.join(",")}`;
     const res = await fetch(url);
     const data = await res.json();
 
-    // KIỂM TRA: Server trả về data.orders dạng { "ID": {status:...} }
-    if (data && data.success && data.orders) {
-      const serverOrders = data.orders;
+    // SỬA TẠI ĐÂY: Không dùng Array.isArray nữa
+    if (data?.success && data.orders) {
+      const state = getState();
+      const currentActive = state.orders?.active || [];
+      const serverOrdersObj = data.orders; // Đây là Object { "H-123...": {...} }
 
-      const nextActive = activeOrders.map(localOrder => {
-        // Truy xuất thông tin từ Server bằng Key (ID)
-        const update = serverOrders[localOrder.id];
+      const nextActive = currentActive.map(order => {
+        // Tìm thông tin mới từ Object bằng Key (ID)
+        const update = serverOrdersObj[order.id];
 
         if (update) {
+          // KẾT THÚC SYNCING: Ghi đè bằng status mới (NEW, COOKING, v.v.)
           return {
-            ...localOrder,
-            status: update.status, // Cập nhật trạng thái (NEW, COOKING...)
+            ...order,
+            status: update.status, 
             updatedAt: Date.now()
           };
         }
-        return localOrder;
+        return order;
       });
 
+      // Lệnh này chạy xong -> SYNCING biến mất trên màn hình
       setState({
         orders: { ...state.orders, active: nextActive }
       });
-      
     }
-  } catch (error) {
-    console.error("Haven Sync Error:", error);
+  } catch (e) {
+    console.error("Sync failed", e);
   }
 }
 export function clearCompletedOrders() {
