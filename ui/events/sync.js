@@ -2,120 +2,224 @@
 import { subscribe, getState } from "../../core/state.js";
 import { CONFIG } from "../../config.js";
 import { syncOverlay } from "../../ui/interactions/backdropManager.js";
-import { submitOrder, addToCart } from "../../core/events.js";
-import { showToast } from "../render/renderAck.js";
-import { setupEventListeners } from "./globalEvents.js";
-import { bootstrapOrderTracker } from "./appFlow.js";
-
-import { renderNavBar } from "../render/renderNavBar.js";
 import { renderPlacePicker } from "../render/renderPlacePicker.js";
 import { renderDrawer } from "../render/renderDrawer.js";
+import { renderNavBar } from "../render/renderNavBar.js";
 import { renderCartBar } from "../render/renderCartBar.js";
 import { renderStatusBar } from "../render/renderStatusBar.js";
 import { renderHub, eventHub } from "../render/renderHub.js";
 import { renderPanel } from "../render/renderPanel.js";
-import { renderItemDetail } from "../render/renderItemDetail.js";
+import { submitOrder, addToCart } from "../../core/events.js";
+import { renderAck, showToast } from "../render/renderAck.js";
 import { openOrderTracker } from "../components/orderTracker.js";
+import { renderItemDetail } from "../render/renderItemDetail.js";
+
 
 let lastState = null;
 let isProcessingOrder = false;
 let lastHandledOrderAt = null;
+let uiAttached = false;
+
+function createPrevState() {
+  return {
+    overlay: { view: null },
+    context: {},
+    panel: { view: null, option: null },
+    cart: { items: [] },
+    lang: { current: "vi" },
+    ack: { visible: false, status: null, message: "" },
+    orders: { active: [], inactive: [], isBarExpanded: false },
+    order: { action: null, line: null, status: "idle", at: null }
+  };
+}
+
+function isEqual(a, b) {
+  return JSON.stringify(a) === JSON.stringify(b);
+}
+
+function getPrevState() {
+  return lastState
+    ? JSON.parse(JSON.stringify(lastState))
+    : createPrevState();
+}
 
 export function attachUI() {
-  setupEventListeners();
-  bootstrapOrderTracker(); 
+  if (uiAttached) return;
+  uiAttached = true;
+
   subscribe(syncUI);
-  syncUI(getState()); 
-}
-function syncUI(state) {
-  if (!state) return;
-  const prevState = lastState || {};
-
-  // --- CÁC BIẾN KIỂM TRA THAY ĐỔI ---
-  const isViewChanged = state.overlay?.view !== prevState.overlay?.view;
-  const isCartChanged = JSON.stringify(state.cart?.items) !== JSON.stringify(prevState.cart?.items);
-  
-  const isLangChanged = state.lang?.current !== prevState.lang?.current;
-  const isPlaceChanged = state.context?.current?.id !== prevState.context?.current?.id;
-  const isPanelViewChanged = state.panel?.view !== prevState.panel?.view;
-  //const isOrdersChanged = JSON.stringify(state.orders) !== JSON.stringify(prevState.orders);
-  // 1. QUẢN LÝ HUB & PANEL (Vùng nội dung chính)
-  const currentOrderAt = state.orders?.active?.[0]?.updatedAt || 0;
-  const prevOrderAt = prevState.orders?.active?.[0]?.updatedAt || 0;
-  
-  const isOrdersChanged = currentOrderAt !== prevOrderAt;
-  // Xử lý Hub (Các nút bấm bên dưới)
-  if (isLangChanged || isPlaceChanged) {
-    renderHub(state); // Chỉ vẽ lại icon khi đổi ngôn ngữ/vị trí (nháy icon là cần thiết)
-  } else if (isPanelViewChanged) {
-    eventHub(state);  // Chỉ đổi class is-active (không nháy icon)
-  }
-
-  // Xử lý Panel (Nội dung món ăn/bài viết bên trên)
-  // Phải render lại khi: Đổi trang, Đổi ngôn ngữ, hoặc Đổi vị trí
-  if (isPanelViewChanged || isLangChanged || isPlaceChanged) {
-    renderPanel(state);
-  }
-
-  // 2. QUẢN LÝ OVERLAY (Cơ chế lồng thẻ trong #overlay)
-  if (isViewChanged || isCartChanged || isLangChanged || isOrdersChanged) {
-    const view = state.overlay?.view;
-    if (view === "cartDrawer") renderDrawer(state);
-    if (view === "placePicker") renderPlacePicker(state);
-    if (view === "itemDetail") renderItemDetail(state); // Nhận ID từ state.overlay.value
-    if (view === "orderTrackerPage") openOrderTracker();
-  
-   
-    syncOverlay(state.overlay?.view);
-  }
-  if (isOrdersChanged || isViewChanged) {
-    renderStatusBar(state);
-    openOrderTracker();
-  }
-  // 3. CÁC THÀNH PHẦN LUÔN HIỆN HỮU
-  if (isCartChanged || isLangChanged || isViewChanged) {
-    renderNavBar(state);
-    renderCartBar(state);
-    renderStatusBar(state);
-  }
-
-  // 4. SIDE EFFECTS (Lưu trữ & Đơn hàng)
-  syncStorage(state, prevState);
-  processOrders(state);
-  if (state.order?.status !== prevState.order?.status) {
-    syncOrderFeedback(state.order?.status);
-  }
-  lastState = JSON.parse(JSON.stringify(state));
+  syncUI(getState());
 }
 
-function syncStorage(state, prevState) {
-  if (JSON.stringify(state.cart?.items) !== JSON.stringify(prevState.cart?.items)) {
-    localStorage.setItem(CONFIG.CART_KEY, JSON.stringify(state.cart?.items || []));
-  }
-  if (state.lang?.current !== prevState.lang?.current) {
-    localStorage.setItem(CONFIG.LANG_KEY, state.lang?.current);
-  }
+async function syncUI(state) {
+  const prevState = getPrevState();
+  const overlayChanged =
+    state.overlay.view !== prevState.overlay?.view ||
+    state.overlay.value !== prevState.overlay?.value;
+  const contextChanged = !isEqual(state.context, prevState.context);
+  const panelChanged =
+    state.panel.view !== prevState.panel?.view ||
+    state.panel.option !== prevState.panel?.option;
+  const cartChanged = !isEqual(state.cart?.items || [], prevState.cart?.items || []);
+  const langChanged = state.lang?.current !== prevState.lang?.current;
+  const ackChanged =
+    state.ack.visible !== prevState.ack?.visible ||
+    state.ack.message !== prevState.ack?.message ||
+    state.ack.status !== prevState.ack?.status;
+  const ordersChanged = !isEqual(state.orders?.active || [], prevState.orders?.active || []);
+  const statusBarExpandedChanged =
+    state.orders?.isBarExpanded !== prevState.orders?.isBarExpanded;
+
+  syncOverlayIfNeeded(state, overlayChanged);
+  syncContextIfNeeded(state, contextChanged);
+  syncPanelIfNeeded(state, panelChanged);
+  syncCartIfNeeded(state, cartChanged);
+  syncLanguageIfNeeded(state, langChanged);
+  syncAckIfNeeded(state, ackChanged);
+  syncStatusBarIfNeeded(state, ordersChanged, statusBarExpandedChanged, overlayChanged);
+
+  await handleOrderLogic(state);
+  syncOrderFeedback(state, prevState);
+
+  lastState = JSON.parse(JSON.stringify(getState()));
 }
 
-async function processOrders(state) {
+function syncOverlayIfNeeded(state, overlayChanged) {
+  if (!overlayChanged) return;
+
+  switch (state.overlay.view) {
+    case "cartDrawer":
+      renderDrawer(state);
+      break;
+    case "placePicker":
+      renderPlacePicker(state);
+      break;
+    case "orderTrackerPage":
+      openOrderTracker(state);
+      break;
+    case "itemDetail":
+      renderItemDetail(state);
+      break;
+    default:
+      break;
+  }
+  syncOverlay(state.overlay.view || null);
+  
+}
+
+
+function syncContextIfNeeded(state, contextChanged) {
+  if (!contextChanged) return;
+
+  renderNavBar(state);
+  renderDrawer(state);
+}
+
+function syncPanelIfNeeded(state, panelChanged) {
+  if (!panelChanged) return;
+  eventHub(state);
+  renderPanel(state);
+}
+
+function syncCartIfNeeded(state, cartChanged) {
+  if (!cartChanged) return;
+
+  renderCartBar(state);
+  renderDrawer(state);
+  localStorage.setItem(CONFIG.CART_KEY, JSON.stringify(state.cart?.items || []));
+}
+function syncLanguageIfNeeded(state, langChanged) {
+  if (!langChanged) return;
+
+  localStorage.setItem(CONFIG.LANG_KEY, state.lang.current);
+  renderNavBar(state);
+  renderCartBar(state);
+  renderStatusBar(state);
+  renderHub(state);
+  renderPanel(state);
+}
+
+function syncAckIfNeeded(state, ackChanged) {
+  if (!ackChanged) return;
+  renderAck(state);
+}
+
+function syncStatusBarIfNeeded(state, ordersChanged, statusBarExpandedChanged, overlayChanged) {
+  const trackerOpen = state.overlay?.view === "orderTrackerPage";
+  const shouldRenderStatusBar =
+    ordersChanged ||
+    statusBarExpandedChanged ||
+    (trackerOpen && overlayChanged);
+
+  if (!shouldRenderStatusBar) return;
+
+  renderStatusBar(state);
+  openOrderTracker(state);
+}
+
+async function handleOrderLogic(state) {
   const { action, at } = state.order || {};
-  if (!action || at === lastHandledOrderAt || isProcessingOrder) return;
+
+  const isNewCommand = action && at && at !== lastHandledOrderAt;
+  if (!isNewCommand || isProcessingOrder) return;
+
   lastHandledOrderAt = at;
   isProcessingOrder = true;
+
   try {
-    if (action === "add_cart") addToCart();
-    if (["send_cart", "buy_now"].includes(action)) await submitOrder(action);
+    switch (action) {
+      case "add_cart":
+        addToCart();
+        break;
+
+      case "buy_now":
+      case "send_cart":
+        await submitOrder(action);
+        break;
+
+      default:
+        break;
+    }
   } finally {
     isProcessingOrder = false;
   }
 }
 
-function syncOrderFeedback(status) {
-  if (!status || ["idle", "sending"].includes(status)) return;
-  const config = {
-    success: { type: "success", msg: "cart_bar.success" },
-    error: { type: "error", msg: "cart_bar.error" },
-    duplicate: { type: "info", msg: "cart_bar.duplicate" }
-  }[status];
-  if (config) showToast({ type: config.type, message: config.msg });
+function syncOrderFeedback(state, prevState) {
+  const orderChanged =
+    state.order.status !== prevState.order?.status ||
+    state.order.action !== prevState.order?.action ||
+    state.order.line !== prevState.order?.line ||
+    state.order.at !== prevState.order?.at;
+
+  if (!orderChanged) return;
+
+  switch (state.order?.status) {
+    case "error":
+      showToast({ type: "error", message: "cart_bar.error", duration: 2500 });
+      break;
+
+    case "duplicate":
+      showToast({ type: "info", message: "cart_bar.duplicate", duration: 2500 });
+      break;
+
+    case "success":
+      showToast({ type: "success", message: "cart_bar.success", duration: 2500 });
+      break;
+
+    case "sending":
+      showToast({ type: "sending", message: "cart_bar.sending" });
+      break;
+
+    case "added":
+      showToast({ type: "success", message: "cart_bar.added" });
+      break;
+
+    case "idle":
+      showToast({ type: "idle", message: "cart_bar.idle" });
+      break;
+
+    default:
+      break;
+  }
 }
