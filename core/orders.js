@@ -57,31 +57,33 @@ function normalizeItems(items) {
     variantKey: item?.variantKey || ""
   }));
 }
+export function normalizeOrder(order = {}) {
+  const items = safeArray(order.items);
 
-function normalizeOrder(order = {}) {
-  const createdAt = toTimestamp(
-    order.createdAt ?? order.timestamp ?? order.time,
-    Date.now()
-  );
+  const totalQty = items.reduce((sum, i) => sum + (i.qty || 0), 0);
+  const totalPrice = items.reduce((sum, i) => sum + (i.price || 0) * (i.qty || 0), 0);
 
   return {
-    id: order?.id  === "string" ? order?.id : "",
-    status: order.status || "NEW",
-    items: normalizeItems(order.items),
-    totalQty: Number(order.totalQty || 0),
-    totalPrice: Number(order.totalPrice || 0),
+    id: normalizeId(order.id),
+
+    status: order.status || "SYNCING",
+    items,
+
+    totalQty,
+    totalPrice,
 
     mode: order.mode || "",
-    placeId: order.placeId || order.place || "",
+    placeId: order.placeId || "",
     placeLabel: order.placeLabel || "",
+
     anchorId: order.anchorId || "",
 
-    type: order.type || "",
-    device: order.device || "",
+    createdAt: order.createdAt || Date.now(),
+    updatedAt: order.updatedAt || Date.now(),
+    syncedAt: order.syncedAt || 0,
 
-    createdAt,
-    updatedAt: toTimestamp(order.updatedAt, createdAt),
-    syncedAt: toTimestamp(order.syncedAt, 0)
+    type: order.type || "",
+    device: order.device || ""
   };
 }
 
@@ -103,51 +105,23 @@ function isSyncingTooLong(order = {}) {
 /* =========================
    DEDUPE / SPLIT
 ========================= */
-
-function dedupeOrders(orders = []) {
+function dedupeOrders(list = []) {
   const map = new Map();
 
-  orders.forEach(raw => {
+  list.forEach(raw => {
     const order = normalizeOrder(raw);
-    if (!order.id) return;
 
-    const prev = map.get(order.id);
-    if (!prev) {
+    if (!order.id) return; // chặn id lỗi
+
+    const existing = map.get(order.id);
+
+    if (!existing || order.updatedAt > existing.updatedAt) {
       map.set(order.id, order);
-      return;
     }
-
-    map.set(order.id, {
-      ...prev,
-      ...order,
-
-      // Ưu tiên items mới nếu có, không thì giữ snapshot cũ
-      items: order.items.length ? order.items : prev.items,
-
-      // Giữ location snapshot tốt nhất
-      mode: order.mode || prev.mode,
-      placeId: order.placeId || prev.placeId,
-      placeLabel: order.placeLabel || prev.placeLabel,
-      anchorId: order.anchorId || prev.anchorId,
-
-      createdAt: Math.min(
-        Number(prev.createdAt || Infinity),
-        Number(order.createdAt || Infinity)
-      ),
-      updatedAt: Math.max(
-        Number(prev.updatedAt || 0),
-        Number(order.updatedAt || 0)
-      ),
-      syncedAt: Math.max(
-        Number(prev.syncedAt || 0),
-        Number(order.syncedAt || 0)
-      )
-    });
   });
 
   return Array.from(map.values());
 }
-
 function splitOrders(orders = []) {
   const active = [];
   const inactive = [];
@@ -170,11 +144,10 @@ function splitOrders(orders = []) {
 /* =========================
    STORAGE
 ========================= */
-
 function persistActiveIds(activeOrders = []) {
   const ids = activeOrders
-    .filter(order => order.id && !isTerminalStatus(order.status))
-    .map(order => order.id);
+    .map(o => normalizeId(o?.id))
+    .filter(Boolean);
 
   localStorage.setItem(STORAGE_KEY, JSON.stringify(ids));
 }
@@ -193,44 +166,35 @@ function getSavedIds() {
 /* =========================
    PUBLIC
 ========================= */
-
 export function addOrderToTracking(meta = {}) {
-  const state = getState();
-  const active = state.orders?.active || [];
-  const inactive = state.orders?.inactive || [];
-  const all = [...active, ...inactive];
-
-  const exists = all.some(order => order.id === meta.id);
-  if (exists) return;
-
   const newOrder = normalizeOrder({
     id: meta.id,
     status: "SYNCING",
     items: meta.items || [],
-    totalQty: meta.totalQty,
-    totalPrice: meta.totalPrice,
     mode: meta.mode,
     placeId: meta.placeId,
     placeLabel: meta.placeLabel,
-    anchorId: meta.anchorId,
-    type: meta.type,
-    device: meta.device,
-    createdAt: meta.timestamp,
-    updatedAt: Date.now(),
-    syncedAt: Date.now()
+    anchorId: meta.anchorId
   });
 
-  const next = splitOrders([...active, ...inactive, newOrder]);
+  if (!newOrder.id) {
+    console.warn("Invalid order id, skip tracking", meta);
+    return;
+  }
+
+  const state = getState();
+  const active = state.orders?.active || [];
+
+  const merged = dedupeOrders([newOrder, ...active]);
+
+  persistActiveIds(merged);
 
   setState({
     orders: {
       ...state.orders,
-      active: next.active,
-      inactive: next.inactive
+      active: merged
     }
   });
-
-  persistActiveIds(next.active);
 }
 
 export async function syncOrdersWithServer() {
@@ -318,7 +282,13 @@ export async function syncOrdersWithServer() {
     console.error("Haven Service Error [Sync]:", error);
   }
 }
+function normalizeId(value) {
+  return typeof value === "string" && value.trim() !== "" ? value : "";
+}
 
+function safeArray(arr) {
+  return Array.isArray(arr) ? arr : [];
+}
 function clearCompletedOrders(state) {
   const active = state.orders?.active || [];
   const inactive = state.orders?.inactive || [];
@@ -341,40 +311,25 @@ function clearCompletedOrders(state) {
 
   persistActiveIds(stillActive);
 }
-
 export function hydrateOrdersFromStorage() {
   const savedIds = getSavedIds();
-  if (savedIds.length === 0) return false;
 
-  const state = getState();
-  const inactive = state.orders?.inactive || [];
-  const now = Date.now();
-
-  const placeholders = savedIds.map(id =>
+  const active = savedIds.map(id =>
     normalizeOrder({
       id,
       status: "SYNCING",
       items: [],
-      createdAt: now,
-      updatedAt: now,
-      syncedAt: 0
+      createdAt: Date.now()
     })
   );
 
-  const next = splitOrders([...placeholders, ...inactive]);
-
   setState({
     orders: {
-      ...state.orders,
-      active: next.active,
-      inactive: next.inactive,
-      isBarExpanded: false
+      active,
+      inactive: []
     }
   });
-
-  return true;
 }
-
 export function markSyncingAgedOrders() {
   const state = getState();
   const active = state.orders?.active || [];
