@@ -89,14 +89,14 @@ function renderOrderCard(order = {}, showStepper = true) {
     <article class="tracker-order ${!showStepper ? "is-history" : ""}">
       <div class="tracker-order__header">
         <div class="tracker-order__main">
-          <div class="tracker-order__code">#${escapeHtml(shortId)}</div>
+          <span class="tracker-order__code">#${getShortOrderId(order.id)}</span>
           <span class="tracker-order__status status-badge is-${status.toLowerCase()}">
             ${status}
           </span>
         </div>
 
         <div class="tracker-order__meta">
-          ${placeLabel ? `<span>${escapeHtml(placeLabel)}</span>` : ""}
+          ${getOrderPlaceLabel(order) ? `<span>${escapeHtml(getOrderPlaceLabel(order))}</span>` : ""}
           ${time ? `<span class="tracker-order__time">${translate("order.time")}: ${escapeHtml(time)}</span>` : ""}
         </div>
       </div>
@@ -125,23 +125,23 @@ function renderOrderCard(order = {}, showStepper = true) {
     </article>
   `;
 }
-
 function renderOrderItem(item = {}) {
   const qty = Number(item.qty || 1);
   const price = Number(item.price || 0);
+  const name = getLocalizedLabel(item.itemLabel) || item.item || item.name || "—";
+  const option = getLocalizedLabel(item.optionLabel) || item.option || "";
+
   return `
     <div class="tracker-item">
       <span class="tracker-item__qty">${qty}×</span>
       <div class="tracker-item__content">
-        <span class="tracker-item__name">${getItemName(item)}</span>
-        <span class="tracker-item__option">${getOptionName(item)}</span>
+        <span class="tracker-item__name">${escapeHtml(name)}</span>
+        ${option ? `<span class="tracker-item__option">${escapeHtml(option)}</span>` : ""}
       </div>
       <span class="tracker-item__price">${formatPrice(price)}</span>
     </div>
   `;
 }
-
-
 function getOrderPlaceLabel(order = {}) {
   const placeId = order.placeId || order.place || "";
   const anchorId = order.anchorId || "";
@@ -228,4 +228,41 @@ function getOptionName(item) {
     return translate(label);
   }
   return item.option || "";
+}
+function getLocalizedLabel(value) {
+  if (!value) return "";
+
+  if (typeof value === "object") {
+    const lang = getState().lang?.current || "vi";
+    return value[lang] || value.vi || value.en || "";
+  }
+
+  return String(value);
+}
+
+function getOrderPlaceLabel(order = {}) {
+  const placeId = order.placeId || "";
+  const anchorId = order.anchorId || "";
+  const placeLabel = getPlaceDisplayLabel(placeId, order.placeLabel || placeId);
+  const anchorLabel = getPlaceDisplayLabel(anchorId, anchorId);
+
+  if (!anchorId) return placeLabel;
+  if (!placeId) return anchorLabel;
+  if (anchorId === placeId) return anchorLabel;
+
+  return `${anchorLabel} → ${placeLabel}`;
+}
+
+function getPlaceDisplayLabel(placeId, fallback = "") {
+  if (!placeId) return fallback;
+
+  const state = getState();
+  const index = state.places?.data?.index || {};
+  const place = index[placeId];
+
+  if (place?.label) {
+    return translate(place.label);
+  }
+
+  return fallback || placeId;
 }
