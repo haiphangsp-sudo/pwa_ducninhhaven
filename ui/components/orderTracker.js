@@ -1,3 +1,4 @@
+// ui/components/orderTracker.js
 import { renderStepper } from "../render/renderStepper.js";
 import { translate } from "../utils/translate.js";
 import { formatPrice } from "../utils/formatPrice.js";
@@ -35,6 +36,7 @@ export function openOrderTracker() {
   }
 
   let html = "";
+      console.log("name",syncingOrders.length);
 
   if (syncingOrders.length > 0) {
     html += `
@@ -72,7 +74,6 @@ export function openOrderTracker() {
 function renderOrderCard(order = {}, showStepper = true) {
   const status = String(order.status || "NEW").toUpperCase();
   const items = parseItems(order.items);
-    console.log("name",items,status);
 
   if (!Array.isArray(items) || items.length === 0) {
     if (order.status === "SYNCING") {
