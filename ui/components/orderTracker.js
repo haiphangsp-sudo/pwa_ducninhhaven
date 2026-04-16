@@ -72,6 +72,7 @@ export function openOrderTracker() {
 function renderOrderCard(order = {}, showStepper = true) {
   const status = String(order.status || "NEW").toUpperCase();
   const items = parseItems(order.items);
+    console.log("name",items,status);
 
   if (!Array.isArray(items) || items.length === 0) {
     if (order.status === "SYNCING") {
@@ -130,7 +131,6 @@ function renderOrderItem(item = {}) {
   const price = Number(item.price || 0);
   const name = getItemName(item);
   const option = getOptionName(item);
-  console.log("name",name,option);
   return `
     <div class="tracker-item">
       <span class="tracker-item__qty">${qty}×</span>
