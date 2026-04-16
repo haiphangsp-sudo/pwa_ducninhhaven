@@ -5,7 +5,7 @@ import { loadMenu } from "./core/menuStore.js";
 import { loadPlaces } from "./core/placesStore.js";
 import { normalizeContext, applyURLContext, syncContextToState } from "./core/context.js";
 import { detectRecovery } from "./core/queue.js";
-import { attachUI } from "./ui/events/sync.js";
+import { attachUI } from "./ui/events/syncmoi.js";
 import { renderApp } from "./ui/render/renderApp.js";
 import { setState } from "./core/state.js";
 import { bootstrapApp } from "./core/bootstrap.js";
