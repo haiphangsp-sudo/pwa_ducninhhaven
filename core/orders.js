@@ -39,7 +39,7 @@ function normalizeItems(items) {
   if (!Array.isArray(items)) return [];
 
   return items.map(item => ({
-    id: item?.id || "",
+    id: item?.id  === "string" ? item?.id : "",
     qty: Number(item?.qty || 0),
     price: Number(item?.price || 0),
     subtotal: Number(item?.subtotal || 0),
@@ -65,7 +65,7 @@ function normalizeOrder(order = {}) {
   );
 
   return {
-    id: order.id || "",
+    id: order?.id  === "string" ? order?.id : "",
     status: order.status || "NEW",
     items: normalizeItems(order.items),
     totalQty: Number(order.totalQty || 0),
@@ -181,7 +181,10 @@ function persistActiveIds(activeOrders = []) {
 
 function getSavedIds() {
   try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+    const raw = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+    return Array.isArray(raw)
+      ? raw.filter(id => typeof id === "string" && id.trim() !== "")
+      : [];
   } catch {
     return [];
   }
