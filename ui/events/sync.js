@@ -44,7 +44,7 @@ function syncUI(state) {
 
   // --- 2. PHẢN HỒI TOAST (Gửi đơn thành công/thất bại) ---
   if (state.order?.status !== prevState.order?.status) {
-    syncOrderFeedback(state.order?.status);
+    syncOrderFeedback(state);
   }
 
   // --- 3. TỰ ĐỘNG QUAY LẠI GIỎ HÀNG (Picker Flow) ---
