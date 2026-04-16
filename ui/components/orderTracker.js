@@ -129,14 +129,12 @@ function renderOrderCard(order = {}, showStepper = true) {
 function renderOrderItem(item = {}) {
   const qty = Number(item.qty || 1);
   const price = Number(item.price || 0);
-  const name = getItemName(item);
-  const option = getOptionName(item);
   return `
     <div class="tracker-item">
       <span class="tracker-item__qty">${qty}×</span>
       <div class="tracker-item__content">
-        <span class="tracker-item__name">${name}</span>
-        <span class="tracker-item__option">${option}</span>
+        <span class="tracker-item__name">${translate(item.itemLabel)}</span>
+        <span class="tracker-item__option">${translate(item.optionLabel)}</span>
       </div>
       <span class="tracker-item__price">${formatPrice(price)}</span>
     </div>
