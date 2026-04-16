@@ -1,6 +1,6 @@
 // ui/events/appFlow.js
 import { getState } from "../../core/state.js";
-import { syncOrdersWithServer, hydrateOrdersFromStorage } from "../../core/orders.js";
+import { syncOrdersWithServer, hydrateOrdersFromStorage, markSyncingAgedOrders } from "../../core/orders.js";
 
 let orderPollingInterval = null;
 const POLLING_TIME = 20000; // 25 giây
@@ -51,6 +51,7 @@ async function runSyncCycle() {
 
   if (hasActive) {
     await syncOrdersWithServer();
+    markSyncingAgedOrders();
   } else {
     stopOrderPolling();
   }
