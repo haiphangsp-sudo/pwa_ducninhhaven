@@ -281,48 +281,39 @@ export async function syncOrdersWithServer() {
       [...currentActive, ...currentInactive].map(order => [order.id, order])
     );
 
-    const rebuilt = savedIds.map(id => {
-      const existing = currentMap.get(id);
-      const incoming = updates[id];
+    const rebuilt = savedIds
+      .map(id => {
+        const existing = currentMap.get(id);
+        const incoming = updates[id];
 
-      if (typeof incoming === "string") {
+        if (!existing) return null;
+
+        if (typeof incoming === "string") {
+          return normalizeOrder({
+            ...existing,
+            status: incoming,
+            updatedAt: Date.now(),
+            syncedAt: Date.now()
+          });
+        }
+
+        if (incoming && typeof incoming === "object") {
+          return normalizeOrder({
+            ...existing,
+            status: incoming.status || existing.status || "SYNCING",
+            updatedAt: Date.now(),
+            syncedAt: Date.now()
+          });
+        }
+
         return normalizeOrder({
           ...existing,
-          id,
-          status: incoming,
-          createdAt: existing?.createdAt,
-          updatedAt: Date.now(),
-          syncedAt: Date.now()
+          status: existing.status || "SYNCING",
+          updatedAt: existing.updatedAt || Date.now(),
+          syncedAt: existing.syncedAt || 0
         });
-      }
-
-      if (incoming && typeof incoming === "object") {
-        return normalizeOrder({
-          ...existing,
-          ...incoming,
-          id,
-
-          items: incoming.items ?? existing?.items,
-          placeId: incoming.placeId ?? existing?.placeId,
-          placeLabel: incoming.placeLabel ?? existing?.placeLabel,
-          anchorId: incoming.anchorId ?? existing?.anchorId,
-          mode: incoming.mode ?? existing?.mode,
-
-          createdAt: existing?.createdAt ?? incoming.createdAt ?? incoming.timestamp,
-          updatedAt: Date.now(),
-          syncedAt: Date.now()
-        });
-      }
-
-      return normalizeOrder({
-        ...existing,
-        id,
-        status: existing?.status || "SYNCING",
-        createdAt: existing?.createdAt || Date.now(),
-        updatedAt: existing?.updatedAt || Date.now(),
-        syncedAt: existing?.syncedAt || 0
-      });
-    });
+      })
+      .filter(Boolean);
 
     const next = splitOrders([
       ...currentInactive.filter(order => !savedIds.includes(order.id)),
@@ -337,13 +328,13 @@ export async function syncOrdersWithServer() {
       }
     });
 
-    persistOrdersSnapshot(next.active, next.inactive);
+    persistActiveIds(next.active);
+    persistInactiveOrders(next.inactive);
     clearCompletedOrders(getState());
   } catch (error) {
     console.error("Haven Service Error [Sync]:", error);
   }
 }
-
 function clearCompletedOrders(state) {
   const active = state.orders?.active || [];
   const inactive = state.orders?.inactive || [];
