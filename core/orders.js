@@ -1,12 +1,9 @@
-// core/orders.js
-
 import { getState, setState } from "./state.js";
 import { CONFIG } from "../config.js";
 
 const SCRIPT_URL = CONFIG.API_ENDPOINT;
-const STORAGE_KEY_ACTIVE = "haven_active_order_ids";
-const STORAGE_KEY_HISTORY = "haven_order_history"; // Ngăn kéo mới
-const MAX_INACTIVE_AGE_MS = 2 * 24 * 60 * 60 * 1000; // 2 ngày
+const STORAGE_KEY = "haven_active_order_ids";
+
 const TERMINAL_STATUSES = ["DONE", "CANCELED"];
 const ACTIONABLE_STATUSES = ["NEW", "COOKING", "DELIVERING", "DONE", "SYNCING"];
 const MAX_INACTIVE_ORDERS = 10;
@@ -38,37 +35,53 @@ function toTimestamp(value, fallback = Date.now()) {
    NORMALIZE
 ========================= */
 
+function normalizeItems(items) {
+  if (!Array.isArray(items)) return [];
+
+  return items.map(item => ({
+    id: item?.id || "",
+    qty: Number(item?.qty || 0),
+    price: Number(item?.price || 0),
+    subtotal: Number(item?.subtotal || 0),
+
+    // text cho GAS / legacy fallback
+    item: item?.item || "",
+    option: item?.option || "",
+
+    // snapshot song ngữ / tracker fallback
+    itemLabel: item?.itemLabel || null,
+    optionLabel: item?.optionLabel || null,
+
+    categoryKey: item?.categoryKey || "",
+    productKey: item?.productKey || "",
+    variantKey: item?.variantKey || ""
+  }));
+}
+
 function normalizeOrder(order = {}) {
   const createdAt = toTimestamp(
     order.createdAt ?? order.timestamp ?? order.time,
     Date.now()
   );
 
-  // GIẢI MÃ ITEMS: Chuyển từ Chuỗi JSON sang Mảng Object
-  let parsedItems = [];
-  try {
-    if (typeof order.items === "string" && order.items.trim() !== "") {
-      parsedItems = JSON.parse(order.items);
-    } else if (Array.isArray(order.items)) {
-      parsedItems = order.items;
-    }
-  } catch (e) {
-    console.error("Lỗi giải mã món ăn:", order.id, e);
-    parsedItems = [];
-  }
-
   return {
     id: order.id || "",
     status: order.status || "NEW",
-    items: parsedItems, // Bây giờ items đã có dữ liệu thật
-    totalPrice: Number(order.totalPrice || 0),
+    items: normalizeItems(order.items),
     totalQty: Number(order.totalQty || 0),
-    place: order.place || order.placeId || "",
-    placeId: order.placeId || "",
+    totalPrice: Number(order.totalPrice || 0),
+
+    mode: order.mode || "",
+    placeId: order.placeId || order.place || "",
+    placeLabel: order.placeLabel || "",
     anchorId: order.anchorId || "",
+
+    type: order.type || "",
+    device: order.device || "",
+
     createdAt,
     updatedAt: toTimestamp(order.updatedAt, createdAt),
-    syncedAt: Date.now()
+    syncedAt: toTimestamp(order.syncedAt, 0)
   };
 }
 
@@ -107,7 +120,16 @@ function dedupeOrders(orders = []) {
     map.set(order.id, {
       ...prev,
       ...order,
+
+      // Ưu tiên items mới nếu có, không thì giữ snapshot cũ
       items: order.items.length ? order.items : prev.items,
+
+      // Giữ location snapshot tốt nhất
+      mode: order.mode || prev.mode,
+      placeId: order.placeId || prev.placeId,
+      placeLabel: order.placeLabel || prev.placeLabel,
+      anchorId: order.anchorId || prev.anchorId,
+
       createdAt: Math.min(
         Number(prev.createdAt || Infinity),
         Number(order.createdAt || Infinity)
@@ -154,22 +176,22 @@ function persistActiveIds(activeOrders = []) {
     .filter(order => order.id && !isTerminalStatus(order.status))
     .map(order => order.id);
 
-  localStorage.setItem(STORAGE_KEY_ACTIVE, JSON.stringify(ids));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(ids));
 }
 
 function getSavedIds() {
   try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY_ACTIVE) || "[]");
+    return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
   } catch {
     return [];
   }
 }
 
 /* =========================
-   PUBLIC /orderId, items = [], meta = {}
+   PUBLIC
 ========================= */
 
-export function addOrderToTracking(meta = {},status = "NEW") {
+export function addOrderToTracking(meta = {}) {
   const state = getState();
   const active = state.orders?.active || [];
   const inactive = state.orders?.inactive || [];
@@ -180,15 +202,14 @@ export function addOrderToTracking(meta = {},status = "NEW") {
 
   const newOrder = normalizeOrder({
     id: meta.id,
-    status: status,
+    status: meta.status || "SYNCING",
     items: meta.items || [],
     totalQty: meta.totalQty,
     totalPrice: meta.totalPrice,
     mode: meta.mode,
-    place: meta.place,
     placeId: meta.placeId,
-    anchorId: meta.anchorId,
     placeLabel: meta.placeLabel,
+    anchorId: meta.anchorId,
     type: meta.type,
     device: meta.device,
     createdAt: meta.timestamp,
@@ -210,9 +231,6 @@ export function addOrderToTracking(meta = {},status = "NEW") {
 }
 
 export async function syncOrdersWithServer() {
-  markSyncingAgedOrders();
-
-  const state = getState();
   const savedIds = getSavedIds();
   if (savedIds.length === 0) return;
 
@@ -227,6 +245,7 @@ export async function syncOrdersWithServer() {
 
     const updates = await response.json();
 
+    const state = getState();
     const currentActive = state.orders?.active || [];
     const currentInactive = state.orders?.inactive || [];
     const currentMap = new Map(
@@ -253,6 +272,14 @@ export async function syncOrdersWithServer() {
           ...existing,
           ...incoming,
           id,
+
+          // giữ snapshot local nếu GS không trả
+          items: incoming.items ?? existing?.items,
+          placeId: incoming.placeId ?? existing?.placeId,
+          placeLabel: incoming.placeLabel ?? existing?.placeLabel,
+          anchorId: incoming.anchorId ?? existing?.anchorId,
+          mode: incoming.mode ?? existing?.mode,
+
           createdAt: existing?.createdAt ?? incoming.createdAt ?? incoming.timestamp,
           updatedAt: Date.now(),
           syncedAt: Date.now()
@@ -283,69 +310,68 @@ export async function syncOrdersWithServer() {
     });
 
     persistActiveIds(next.active);
-    clearCompletedOrders();
+    clearCompletedOrders(getState());
   } catch (error) {
     console.error("Haven Service Error [Sync]:", error);
   }
 }
 
-export function clearCompletedOrders() {
-  const state = getState();
+function clearCompletedOrders(state) {
+  const active = state.orders?.active || [];
   const inactive = state.orders?.inactive || [];
-  if (inactive.length === 0) return;
 
-  const now = Date.now();
+  const stillActive = active.filter(order => !isTerminalStatus(order.status));
+  const nextInactive = dedupeOrders([
+    ...inactive,
+    ...active.filter(order => isTerminalStatus(order.status))
+  ])
+    .sort((a, b) => Number(b.updatedAt || 0) - Number(a.updatedAt || 0))
+    .slice(0, MAX_INACTIVE_ORDERS);
 
-  // 1. Lọc theo thời gian: Chỉ giữ lại đơn trong vòng 48 giờ
-  let filtered = inactive.filter(order => {
-    const time = toTimestamp(order.updatedAt, order.createdAt);
-    return (now - time) < MAX_INACTIVE_AGE_MS;
-  });
-
-  // 2. Lọc theo số lượng: Sắp xếp mới nhất lên đầu và lấy tối đa 10 đơn
-  filtered.sort((a, b) => toTimestamp(b.updatedAt) - toTimestamp(a.updatedAt));
-  if (filtered.length > MAX_INACTIVE_ORDERS) {
-    filtered = filtered.slice(0, MAX_INACTIVE_ORDERS);
-  }
-
-  // 3. Cập nhật State và ghi đè xuống LocalStorage
   setState({
     orders: {
       ...state.orders,
-      inactive: filtered
+      active: stillActive,
+      inactive: nextInactive
     }
   });
 
-  localStorage.setItem(STORAGE_KEY_HISTORY, JSON.stringify(filtered));
+  persistActiveIds(stillActive);
 }
-export function hydrateOrdersFromStorage() {
-  const savedActiveIds = JSON.parse(localStorage.getItem(STORAGE_KEY_ACTIVE) || "[]");
-  const savedHistory = JSON.parse(localStorage.getItem(STORAGE_KEY_HISTORY) || "[]");
 
+export function hydrateOrdersFromStorage() {
+  const savedIds = getSavedIds();
+  if (savedIds.length === 0) return false;
+
+  const state = getState();
+  const inactive = state.orders?.inactive || [];
   const now = Date.now();
-  
-  // Phục hồi placeholder cho đơn đang active để sync lại với server
-  const placeholders = savedActiveIds.map(id => normalizeOrder({
-    id,
-    status: "SYNCING",
-    items: [],
-    createdAt: now,
-    updatedAt: now
-  }));
+
+  const placeholders = savedIds.map(id =>
+    normalizeOrder({
+      id,
+      status: "SYNCING",
+      items: [],
+      createdAt: now,
+      updatedAt: now,
+      syncedAt: 0
+    })
+  );
+
+  const next = splitOrders([...placeholders, ...inactive]);
 
   setState({
     orders: {
-      ...getState().orders,
-      active: placeholders,
-      inactive: savedHistory
+      ...state.orders,
+      active: next.active,
+      inactive: next.inactive,
+      isBarExpanded: false
     }
   });
 
-  // Dọn dẹp ngay lúc khởi động để xóa các đơn quá 2 ngày/10 đơn
-  clearCompletedOrders();
-  
-  return placeholders.length > 0;
+  return true;
 }
+
 export function markSyncingAgedOrders() {
   const state = getState();
   const active = state.orders?.active || [];
