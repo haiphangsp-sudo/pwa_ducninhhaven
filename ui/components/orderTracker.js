@@ -226,19 +226,6 @@ function getLocalizedLabel(value) {
   return String(value);
 }
 
-function getOrderPlaceLabel(order = {}) {
-  const placeId = order.placeId || "";
-  const anchorId = order.anchorId || "";
-  const placeLabel = getPlaceDisplayLabel(placeId, order.placeLabel || placeId);
-  const anchorLabel = getPlaceDisplayLabel(anchorId, anchorId);
-
-  if (!anchorId) return placeLabel;
-  if (!placeId) return anchorLabel;
-  if (anchorId === placeId) return anchorLabel;
-
-  return `${anchorLabel} → ${placeLabel}`;
-}
-
 function getPlaceDisplayLabel(placeId, fallback = "") {
   if (!placeId) return fallback;
 
