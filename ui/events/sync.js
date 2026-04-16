@@ -34,6 +34,7 @@ function syncUI(state) {
   // --- CÁC BIẾN KIỂM TRA THAY ĐỔI ---
   const isViewChanged = state.overlay?.view !== prevState.overlay?.view;
   const isCartChanged = JSON.stringify(state.cart?.items) !== JSON.stringify(prevState.cart?.items);
+  
   const isLangChanged = state.lang?.current !== prevState.lang?.current;
   const isPlaceChanged = state.context?.current?.id !== prevState.context?.current?.id;
   const isPanelViewChanged = state.panel?.view !== prevState.panel?.view;
@@ -55,13 +56,12 @@ function syncUI(state) {
 
   // 2. QUẢN LÝ OVERLAY (Cơ chế lồng thẻ trong #overlay)
   if (isViewChanged || isCartChanged || isLangChanged ) {
-    syncOverlay(state.overlay?.view);
-
     const view = state.overlay?.view;
     if (view === "cartDrawer") renderDrawer(state);
     if (view === "placePicker") renderPlacePicker(state);
     if (view === "itemDetail") renderItemDetail(state); // Nhận ID từ state.overlay.value
     if (view === "orderTrackerPage") openOrderTracker();
+    syncOverlay(state.overlay?.view);
   }
   if (isOrdersChanged) {
     renderStatusBar(state);
