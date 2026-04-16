@@ -31,9 +31,6 @@ function syncUI(state) {
   if (!state) return;
   const prevState = lastState || {};
 
-  // CHỐT CHẶN VÒNG LẶP: Cập nhật trí nhớ trước
-  lastState = JSON.parse(JSON.stringify(state));
-
   // --- CÁC BIẾN KIỂM TRA THAY ĐỔI ---
   const isViewChanged = state.overlay?.view !== prevState.overlay?.view;
   const isCartChanged = JSON.stringify(state.cart?.items) !== JSON.stringify(prevState.cart?.items);
@@ -84,6 +81,7 @@ function syncUI(state) {
   if (state.order?.status !== prevState.order?.status) {
     syncOrderFeedback(state.order?.status);
   }
+  lastState = JSON.parse(JSON.stringify(state));
 }
 
 function syncStorage(state, prevState) {
