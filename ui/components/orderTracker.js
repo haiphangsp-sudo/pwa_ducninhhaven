@@ -36,7 +36,6 @@ export function openOrderTracker() {
   }
 
   let html = "";
-      console.log("name",syncingOrders.length);
 
   if (syncingOrders.length > 0) {
     html += `
