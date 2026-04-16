@@ -142,8 +142,9 @@ function renderOrderItem(item = {}) {
     </div>
   `;
 }
+
 function getOrderPlaceLabel(order = {}) {
-  const placeId = order.placeId || order.place || "";
+  const placeId = order.placeId || "";
   const anchorId = order.anchorId || "";
   const placeLabel = getPlaceDisplayLabel(placeId, order.placeLabel || placeId);
   const anchorLabel = getPlaceDisplayLabel(anchorId, anchorId);
