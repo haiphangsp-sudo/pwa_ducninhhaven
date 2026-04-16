@@ -37,8 +37,8 @@ function normalizeItems(rawItems) {
         subtotal: quantity * price,
 
         // GIỮ cho GAS / Sheets
-        item: info.objProLab[vi] || "",
-        option: info.objVarLab[vi] || "",
+        item: info.objProLab["vi"] || "",
+        option: info.objVarLab["vi"] || "",
 
         // GIỮ cho tracking đa ngôn ngữ / fallback
         itemLabel: info.objProLab || "",
