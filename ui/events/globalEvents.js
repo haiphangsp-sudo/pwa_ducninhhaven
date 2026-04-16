@@ -21,7 +21,7 @@ const COMMAND_MAP = {
     animateFlyToCart(target);
   },
   "send_cart": (cmd) => {
-    setState({ order: { action: cmd.action, status: "sending", at: Date.now() } });
+    setState({ order: { action: cmd.action, at: Date.now() } });
   },
   "toggle_status": (cmd) => setState(UI_ACTIONS.toggleOrderStatus(cmd.value)),
   "open-panel": (cmd) => setState(UI_ACTIONS.togglePanel(cmd)),
