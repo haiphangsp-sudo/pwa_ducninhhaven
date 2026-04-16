@@ -16,7 +16,7 @@ export const UI_ACTIONS = {
     if (!success) return null;
 
     const nextView = cmd.extra || null; 
-        if (nextView === "orderTrackerPage") {
+        if (nextView === "cartDrawer") {
             return {
                 overlay: { view: nextView, source: null, value: null }
             };
