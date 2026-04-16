@@ -3,7 +3,7 @@ import { getState } from "../../core/state.js";
 import { syncOrdersWithServer, hydrateOrdersFromStorage } from "../../core/orders.js";
 
 let orderPollingInterval = null;
-const POLLING_TIME = 25000; // 25 giây
+const POLLING_TIME = 20000; // 25 giây
 
 /**
  * KHỞI CHẠY TOÀN BỘ HỆ THỐNG
