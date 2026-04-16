@@ -202,7 +202,7 @@ export function addOrderToTracking(meta = {}) {
 
   const newOrder = normalizeOrder({
     id: meta.id,
-    status: meta.status || "SYNCING",
+    status: "SYNCING",
     items: meta.items || [],
     totalQty: meta.totalQty,
     totalPrice: meta.totalPrice,
