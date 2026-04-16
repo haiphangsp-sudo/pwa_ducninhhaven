@@ -220,7 +220,7 @@ export function addOrderToTrackingCu(meta = {}) {
   persistActiveIds(next.active);
 }
 
-export async function syncOrdersWithServerCu() {
+export async function syncOrdersWithServer() {
   markSyncingAgedOrders();
 
   const state = getState();
@@ -301,7 +301,7 @@ export async function syncOrdersWithServerCu() {
 }
 // core/orders.js
 
-export async function syncOrdersWithServer() {
+export async function syncOrdersWithServerMoi() {
   const state = getState();
   const activeOrders = state.orders?.active || [];
   
