@@ -167,21 +167,7 @@ function getSavedIds() {
    PUBLIC /orderId, items = [], meta = {}
 ========================= */
 
-function saveActiveOrders(orders) {
-  localStorage.setItem(STORAGE_KEY_ACTIVE, JSON.stringify(orders));
-}
-
-export function addOrderToTracking(order) {
-  const state = getState();
-  const active = [order, ...(state.orders?.active || [])];
-  
-  setState({
-    orders: { ...state.orders, active }
-  });
-  
-  saveActiveOrders(active); // Lưu cả cục đơn hàng (có itemLabel {vi, en})
-}
-export function addOrderToTrackingCu(meta = {}) {
+export function addOrderToTracking(meta = {}) {
   const state = getState();
   const active = state.orders?.active || [];
   const inactive = state.orders?.inactive || [];
@@ -299,56 +285,7 @@ export async function syncOrdersWithServer() {
     console.error("Haven Service Error [Sync]:", error);
   }
 }
-// core/orders.js
 
-export async function syncOrdersWithServerMoi() {
-  const state = getState();
-  const activeOrders = state.orders?.active || [];
-  
-  // Nếu không có đơn hàng nào đang active (bao gồm cả đơn SYNCING), thoát luôn
-  if (activeOrders.length === 0) return;
-
-  const ids = activeOrders.map(o => o.id);
-
-  try {
-    const url = `${SCRIPT_URL}?action=getStatuses&ids=${ids.join(",")}`;
-    const res = await fetch(url);
-    const data = await res.json();
-
-    // KIỂM TRA: data.orders là Object { "ID-1": {status:...}, "ID-2": {...} }
-    if (data?.success && data.orders) {
-      const serverOrders = data.orders;
-      let hasChanged = false;
-
-      const nextActive = activeOrders.map(localOrder => {
-        // Tra cứu trạng thái từ server bằng ID đơn hàng
-        const update = serverOrders[localOrder.id];
-
-        if (update && update.status !== localOrder.status) {
-          hasChanged = true;
-          // Cập nhật trạng thái mới (Ví dụ: SYNCING -> NEW)
-          return {
-            ...localOrder,
-            status: update.status,
-            updatedAt: Date.now()
-          };
-        }
-        return localOrder;
-      });
-
-      if (hasChanged) {
-        setState({
-          orders: {
-            ...state.orders,
-            active: nextActive
-          }
-        });
-      }
-    }
-  } catch (error) {
-    console.error("Sync failed:", error);
-  }
-}
 export function clearCompletedOrders() {
   const state = getState();
   const inactive = state.orders?.inactive || [];
@@ -377,28 +314,6 @@ export function clearCompletedOrders() {
   });
 
   localStorage.setItem(STORAGE_KEY_HISTORY, JSON.stringify(filtered));
-}
-
-export function hydrateOrdersFromStoragemoi() {
-  // 1. Lấy toàn bộ dữ liệu đơn hàng đã lưu (thay vì chỉ lấy ID)
-  const savedActive = JSON.parse(localStorage.getItem(STORAGE_KEY_ACTIVE) || "[]");
-  const savedHistory = JSON.parse(localStorage.getItem(STORAGE_KEY_HISTORY) || "[]");
-
-  // 2. Chuyển các đơn hàng sang trạng thái SYNCING để chuẩn bị cập nhật từ server
-  const placeholders = savedActive.map(order => ({
-    ...order,
-    status: "SYNCING",
-    updatedAt: Date.now()
-  }));
-
-  setState({
-    orders: {
-      active: placeholders,
-      inactive: savedHistory
-    }
-  });
-
-  return placeholders.length > 0;
 }
 export function hydrateOrdersFromStorage() {
   const savedActiveIds = JSON.parse(localStorage.getItem(STORAGE_KEY_ACTIVE) || "[]");
