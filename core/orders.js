@@ -301,6 +301,8 @@ export async function syncOrdersWithServerCu() {
 }
 
 export async function syncOrdersWithServer() {
+  markSyncingAgedOrders();
+
   const savedIds = getSavedIds();
   if (savedIds.length === 0) return;
 
