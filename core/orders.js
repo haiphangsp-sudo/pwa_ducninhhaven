@@ -2,7 +2,8 @@ import { getState, setState } from "./state.js";
 import { CONFIG } from "../config.js";
 
 const SCRIPT_URL = CONFIG.API_ENDPOINT;
-const STORAGE_KEY = "haven_active_order_ids";
+const ACTIVE_STORAGE_KEY = "haven_active_order_ids";
+const HISTORY_STORAGE_KEY = "haven_order_history";
 
 const TERMINAL_STATUSES = ["DONE", "CANCELED"];
 const ACTIONABLE_STATUSES = ["NEW", "COOKING", "DELIVERING", "DONE", "SYNCING"];
@@ -10,8 +11,12 @@ const MAX_INACTIVE_ORDERS = 10;
 const SYNCING_STALE_MS = 15000;
 
 /* =========================
-   TIME
+   HELPERS
 ========================= */
+
+function normalizeId(value) {
+  return typeof value === "string" && value.trim() !== "" ? value : "";
+}
 
 function toTimestamp(value, fallback = Date.now()) {
   if (typeof value === "number" && Number.isFinite(value)) return value;
@@ -31,24 +36,18 @@ function toTimestamp(value, fallback = Date.now()) {
   return fallback;
 }
 
-/* =========================
-   NORMALIZE
-========================= */
-
 function normalizeItems(items) {
   if (!Array.isArray(items)) return [];
 
   return items.map(item => ({
-    id: item?.id  === "string" ? item?.id : "",
+    id: normalizeId(item?.id),
     qty: Number(item?.qty || 0),
     price: Number(item?.price || 0),
     subtotal: Number(item?.subtotal || 0),
 
-    // text cho GAS / legacy fallback
     item: item?.item || "",
     option: item?.option || "",
 
-    // snapshot song ngữ / tracker fallback
     itemLabel: item?.itemLabel || null,
     optionLabel: item?.optionLabel || null,
 
@@ -57,33 +56,35 @@ function normalizeItems(items) {
     variantKey: item?.variantKey || ""
   }));
 }
-export function normalizeOrder(order = {}) {
-  const items = safeArray(order.items);
 
-  const totalQty = items.reduce((sum, i) => sum + (i.qty || 0), 0);
-  const totalPrice = items.reduce((sum, i) => sum + (i.price || 0) * (i.qty || 0), 0);
+/* =========================
+   NORMALIZE
+========================= */
+
+function normalizeOrder(order = {}) {
+  const createdAt = toTimestamp(
+    order.createdAt ?? order.timestamp ?? order.time,
+    Date.now()
+  );
 
   return {
     id: normalizeId(order.id),
-
-    status: order.status || "SYNCING",
-    items,
-
-    totalQty,
-    totalPrice,
+    status: order.status || "NEW",
+    items: normalizeItems(order.items),
+    totalQty: Number(order.totalQty || 0),
+    totalPrice: Number(order.totalPrice || 0),
 
     mode: order.mode || "",
-    placeId: order.placeId || "",
+    placeId: order.placeId || order.place || "",
     placeLabel: order.placeLabel || "",
-
     anchorId: order.anchorId || "",
 
-    createdAt: order.createdAt || Date.now(),
-    updatedAt: order.updatedAt || Date.now(),
-    syncedAt: order.syncedAt || 0,
-
     type: order.type || "",
-    device: order.device || ""
+    device: order.device || "",
+
+    createdAt,
+    updatedAt: toTimestamp(order.updatedAt, createdAt),
+    syncedAt: toTimestamp(order.syncedAt, 0)
   };
 }
 
@@ -105,23 +106,49 @@ function isSyncingTooLong(order = {}) {
 /* =========================
    DEDUPE / SPLIT
 ========================= */
-function dedupeOrders(list = []) {
+
+function dedupeOrders(orders = []) {
   const map = new Map();
 
-  list.forEach(raw => {
+  orders.forEach(raw => {
     const order = normalizeOrder(raw);
+    if (!order.id) return;
 
-    if (!order.id) return; // chặn id lỗi
-
-    const existing = map.get(order.id);
-
-    if (!existing || order.updatedAt > existing.updatedAt) {
+    const prev = map.get(order.id);
+    if (!prev) {
       map.set(order.id, order);
+      return;
     }
+
+    map.set(order.id, {
+      ...prev,
+      ...order,
+
+      items: order.items.length ? order.items : prev.items,
+
+      mode: order.mode || prev.mode,
+      placeId: order.placeId || prev.placeId,
+      placeLabel: order.placeLabel || prev.placeLabel,
+      anchorId: order.anchorId || prev.anchorId,
+
+      createdAt: Math.min(
+        Number(prev.createdAt || Infinity),
+        Number(order.createdAt || Infinity)
+      ),
+      updatedAt: Math.max(
+        Number(prev.updatedAt || 0),
+        Number(order.updatedAt || 0)
+      ),
+      syncedAt: Math.max(
+        Number(prev.syncedAt || 0),
+        Number(order.syncedAt || 0)
+      )
+    });
   });
 
   return Array.from(map.values());
 }
+
 function splitOrders(orders = []) {
   const active = [];
   const inactive = [];
@@ -144,17 +171,19 @@ function splitOrders(orders = []) {
 /* =========================
    STORAGE
 ========================= */
+
 function persistActiveIds(activeOrders = []) {
   const ids = activeOrders
-    .map(o => normalizeId(o?.id))
-    .filter(Boolean);
+    .map(order => normalizeId(order?.id))
+    .filter(Boolean)
+    .filter((_, index, arr) => arr.indexOf(_) === index);
 
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(ids));
+  localStorage.setItem(ACTIVE_STORAGE_KEY, JSON.stringify(ids));
 }
 
 function getSavedIds() {
   try {
-    const raw = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+    const raw = JSON.parse(localStorage.getItem(ACTIVE_STORAGE_KEY) || "[]");
     return Array.isArray(raw)
       ? raw.filter(id => typeof id === "string" && id.trim() !== "")
       : [];
@@ -163,38 +192,71 @@ function getSavedIds() {
   }
 }
 
+function persistInactiveOrders(inactiveOrders = []) {
+  localStorage.setItem(
+    HISTORY_STORAGE_KEY,
+    JSON.stringify(inactiveOrders.slice(0, MAX_INACTIVE_ORDERS))
+  );
+}
+
+function getSavedInactiveOrders() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(HISTORY_STORAGE_KEY) || "[]");
+    return Array.isArray(raw) ? raw.map(normalizeOrder).filter(o => o.id) : [];
+  } catch {
+    return [];
+  }
+}
+
+function persistOrdersSnapshot(activeOrders = [], inactiveOrders = []) {
+  persistActiveIds(activeOrders);
+  persistInactiveOrders(inactiveOrders);
+}
+
 /* =========================
    PUBLIC
 ========================= */
+
 export function addOrderToTracking(meta = {}) {
+  const state = getState();
+  const active = state.orders?.active || [];
+  const inactive = state.orders?.inactive || [];
+  const all = [...active, ...inactive];
+
+  const incomingId = normalizeId(meta.id);
+  if (!incomingId) return;
+
+  const exists = all.some(order => order.id === incomingId);
+  if (exists) return;
+
   const newOrder = normalizeOrder({
-    id: meta.id,
-    status: "SYNCING",
+    id: incomingId,
+    status: meta.status || "SYNCING",
     items: meta.items || [],
+    totalQty: meta.totalQty,
+    totalPrice: meta.totalPrice,
     mode: meta.mode,
     placeId: meta.placeId,
     placeLabel: meta.placeLabel,
-    anchorId: meta.anchorId
+    anchorId: meta.anchorId,
+    type: meta.type,
+    device: meta.device,
+    createdAt: meta.timestamp,
+    updatedAt: Date.now(),
+    syncedAt: Date.now()
   });
 
-  if (!newOrder.id) {
-    console.warn("Invalid order id, skip tracking", meta);
-    return;
-  }
-
-  const state = getState();
-  const active = state.orders?.active || [];
-
-  const merged = dedupeOrders([newOrder, ...active]);
-
-  persistActiveIds(merged);
+  const next = splitOrders([...active, ...inactive, newOrder]);
 
   setState({
     orders: {
       ...state.orders,
-      active: merged
+      active: next.active,
+      inactive: next.inactive
     }
   });
+
+  persistOrdersSnapshot(next.active, next.inactive);
 }
 
 export async function syncOrdersWithServer() {
@@ -240,7 +302,6 @@ export async function syncOrdersWithServer() {
           ...incoming,
           id,
 
-          // giữ snapshot local nếu GS không trả
           items: incoming.items ?? existing?.items,
           placeId: incoming.placeId ?? existing?.placeId,
           placeLabel: incoming.placeLabel ?? existing?.placeLabel,
@@ -276,19 +337,13 @@ export async function syncOrdersWithServer() {
       }
     });
 
-    persistActiveIds(next.active);
+    persistOrdersSnapshot(next.active, next.inactive);
     clearCompletedOrders(getState());
   } catch (error) {
     console.error("Haven Service Error [Sync]:", error);
   }
 }
-function normalizeId(value) {
-  return typeof value === "string" && value.trim() !== "" ? value : "";
-}
 
-function safeArray(arr) {
-  return Array.isArray(arr) ? arr : [];
-}
 function clearCompletedOrders(state) {
   const active = state.orders?.active || [];
   const inactive = state.orders?.inactive || [];
@@ -309,27 +364,44 @@ function clearCompletedOrders(state) {
     }
   });
 
-  persistActiveIds(stillActive);
+  persistOrdersSnapshot(stillActive, nextInactive);
 }
+
 export function hydrateOrdersFromStorage() {
   const savedIds = getSavedIds();
+  const savedInactive = getSavedInactiveOrders();
 
-  const active = savedIds.map(id =>
+  if (savedIds.length === 0 && savedInactive.length === 0) return false;
+
+  const state = getState();
+  const now = Date.now();
+
+  const placeholders = savedIds.map(id =>
     normalizeOrder({
       id,
       status: "SYNCING",
       items: [],
-      createdAt: Date.now()
+      createdAt: now,
+      updatedAt: now,
+      syncedAt: 0
     })
   );
 
+  const next = splitOrders([...placeholders, ...savedInactive]);
+
   setState({
     orders: {
-      active,
-      inactive: []
+      ...state.orders,
+      active: next.active,
+      inactive: next.inactive,
+      isBarExpanded: false
     }
   });
+
+  persistOrdersSnapshot(next.active, next.inactive);
+  return true;
 }
+
 export function markSyncingAgedOrders() {
   const state = getState();
   const active = state.orders?.active || [];
@@ -356,6 +428,7 @@ export function markSyncingAgedOrders() {
     }
   });
 
+  persistOrdersSnapshot(nextActive, inactive);
   return true;
 }
 
