@@ -23,18 +23,6 @@ export function openOrderTracker() {
     titleOrder.textContent = translate("order.status");
   }
 
-  if (activeOrders.length === 0 && historyOrders.length === 0) {
-    listContainer.innerHTML = `
-      <div class="tracker-empty">
-        <div class="tracker-empty__icon">🍃</div>
-        <div class="tracker-empty__text">
-          ${translate("order.no_active_order")}
-        </div>
-      </div>
-    `;
-    return;
-  }
-
   let html = "";
 
   if (syncingOrders.length > 0) {
@@ -128,8 +116,8 @@ function renderOrderCard(order = {}, showStepper = true) {
 function renderOrderItem(item = {}) {
   const qty = Number(item.qty || 1);
   const price = Number(item.price || 0);
-  const name = getLocalizedLabel(item.itemLabel) || item.item || item.name || "—";
-  const option = getLocalizedLabel(item.optionLabel) || item.option || "";
+  const name = translate(item.itemLabel);
+  const option = translate(item.optionLabel);
 
   return `
     <div class="tracker-item">
