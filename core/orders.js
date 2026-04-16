@@ -379,7 +379,7 @@ export function clearCompletedOrders() {
   localStorage.setItem(STORAGE_KEY_HISTORY, JSON.stringify(filtered));
 }
 
-export function hydrateOrdersFromStorage() {
+export function hydrateOrdersFromStoragemoi() {
   // 1. Lấy toàn bộ dữ liệu đơn hàng đã lưu (thay vì chỉ lấy ID)
   const savedActive = JSON.parse(localStorage.getItem(STORAGE_KEY_ACTIVE) || "[]");
   const savedHistory = JSON.parse(localStorage.getItem(STORAGE_KEY_HISTORY) || "[]");
@@ -400,7 +400,7 @@ export function hydrateOrdersFromStorage() {
 
   return placeholders.length > 0;
 }
-export function hydrateOrdersFromStorageCu() {
+export function hydrateOrdersFromStorage() {
   const savedActiveIds = JSON.parse(localStorage.getItem(STORAGE_KEY_ACTIVE) || "[]");
   const savedHistory = JSON.parse(localStorage.getItem(STORAGE_KEY_HISTORY) || "[]");
 
