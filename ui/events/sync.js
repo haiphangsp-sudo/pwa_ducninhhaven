@@ -40,7 +40,7 @@ function syncUI(state) {
   const isLangChanged = state.lang?.current !== prevState.lang?.current;
   const isPlaceChanged = state.context?.current?.id !== prevState.context?.current?.id;
   const isPanelViewChanged = state.panel?.view !== prevState.panel?.view;
-
+  const isOrdersChanged = JSON.stringify(state.orders) !== JSON.stringify(prevState.orders);
   // 1. QUẢN LÝ HUB & PANEL (Vùng nội dung chính)
   
   // Xử lý Hub (Các nút bấm bên dưới)
@@ -66,6 +66,9 @@ function syncUI(state) {
     if (view === "itemDetail") renderItemDetail(state); // Nhận ID từ state.overlay.value
     if (view === "orderTrackerPage") openOrderTracker();
   }
+  
+  if (isOrdersChanged)openOrderTracker();
+
 
   // 3. CÁC THÀNH PHẦN LUÔN HIỆN HỮU
   if (isCartChanged || isLangChanged || isViewChanged) {
