@@ -201,27 +201,11 @@ function escapeHtml(str) {
   }[m]));
 }
 
-function getItemName(item) {
-  const label = item.itemLabel; 
-  if (label && typeof label === 'object') {
-    return translate(label);
-  }
-  return item.item || ""; // Fallback nếu là đơn cũ (string)
-}
-
-function getOptionName(item) {
-  const label = item.optionLabel;
-  if (label && typeof label === 'object') {
-    return translate(label);
-  }
-  return item.option || "";
-}
 function getLocalizedLabel(value) {
   if (!value) return "";
 
   if (typeof value === "object") {
-    const lang = getState().lang?.current || "vi";
-    return value[lang] || value.vi || value.en || "";
+    return  translate(value);
   }
 
   return String(value);

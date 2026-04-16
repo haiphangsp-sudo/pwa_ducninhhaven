@@ -1,3 +1,4 @@
+// ui/utils/translate.js
 import { STRINGS } from "../../data/i18n.js";
 import { getState } from "../../core/state.js";
 
