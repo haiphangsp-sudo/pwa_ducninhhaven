@@ -53,7 +53,7 @@ export function showToast({
   type = "info",
   title = "",
   message = "",
-  duration = 2500
+  duration = 2000
 }) {
   if (toastTimer) {
     clearTimeout(toastTimer);
