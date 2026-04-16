@@ -38,9 +38,12 @@ function syncUI(state) {
   const isLangChanged = state.lang?.current !== prevState.lang?.current;
   const isPlaceChanged = state.context?.current?.id !== prevState.context?.current?.id;
   const isPanelViewChanged = state.panel?.view !== prevState.panel?.view;
-  const isOrdersChanged = JSON.stringify(state.orders) !== JSON.stringify(prevState.orders);
+  //const isOrdersChanged = JSON.stringify(state.orders) !== JSON.stringify(prevState.orders);
   // 1. QUẢN LÝ HUB & PANEL (Vùng nội dung chính)
+  const currentOrderAt = state.orders?.active?.[0]?.updatedAt || 0;
+  const prevOrderAt = prevState.orders?.active?.[0]?.updatedAt || 0;
   
+  const isOrdersChanged = currentOrderAt !== prevOrderAt;
   // Xử lý Hub (Các nút bấm bên dưới)
   if (isLangChanged || isPlaceChanged) {
     renderHub(state); // Chỉ vẽ lại icon khi đổi ngôn ngữ/vị trí (nháy icon là cần thiết)
