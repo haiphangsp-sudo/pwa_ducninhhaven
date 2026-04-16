@@ -14,6 +14,7 @@ import { renderAck, showToast } from "../render/renderAck.js";
 import { openOrderTracker } from "../components/orderTracker.js";
 import { renderItemDetail } from "../render/renderItemDetail.js";
 import { bootstrapOrderTracker } from "./appFlow.js";
+import { setupEventListeners } from "./globalEvents.js";
 
 let lastState = null;
 let isProcessingOrder = false;
