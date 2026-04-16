@@ -13,8 +13,9 @@ import { submitOrder, addToCart } from "../../core/events.js";
 import { renderAck, showToast } from "../render/renderAck.js";
 import { openOrderTracker } from "../components/orderTracker.js";
 import { renderItemDetail } from "../render/renderItemDetail.js";
-import { bootstrapOrderTracker } from "./appFlow.js";
+import { bootstrapOrderTracker, startOrderPolling } from "./appFlow.js";
 import { setupEventListeners } from "./globalEvents.js";
+
 
 let lastState = null;
 let isProcessingOrder = false;
@@ -71,6 +72,7 @@ async function syncUI(state) {
   const ordersChanged = !isEqual(state.orders?.active || [], prevState.orders?.active || []);
   const statusBarExpandedChanged =
     state.orders?.isBarExpanded !== prevState.orders?.isBarExpanded;
+  //const isOrdersChanged = JSON.stringify(state.orders?.active) !== JSON.stringify(prevState.orders?.active);
 
   syncOverlayIfNeeded(state, overlayChanged);
   syncContextIfNeeded(state, contextChanged);
@@ -109,7 +111,7 @@ function syncOverlayIfNeeded(state, overlayChanged) {
   
 }
 
-
+  
 function syncContextIfNeeded(state, contextChanged) {
   if (!contextChanged) return;
 
@@ -154,6 +156,7 @@ function syncStatusBarIfNeeded(state, ordersChanged, statusBarExpandedChanged, o
     (trackerOpen && overlayChanged);
 
   if (!shouldRenderStatusBar) return;
+  startOrderPolling(); 
 
   renderStatusBar(state);
   openOrderTracker(state);
