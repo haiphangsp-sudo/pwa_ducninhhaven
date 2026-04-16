@@ -29,11 +29,13 @@ export function startOrderPolling() {
   if (hasActive) {
     runSyncCycle();
     orderPollingInterval = setInterval(runSyncCycle, POLLING_TIME);
+    console.log("startOrderPolling", activeOrders);
   }
 }
 
 function stopOrderPolling() {
   if (orderPollingInterval) {
+    console.log("runSyncCycle");
     clearInterval(orderPollingInterval);
     orderPollingInterval = null;
   }

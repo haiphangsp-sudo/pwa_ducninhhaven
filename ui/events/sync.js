@@ -160,6 +160,7 @@ function syncStatusBarIfNeeded(state, ordersChanged, statusBarExpandedChanged, o
 
   renderStatusBar(state);
   openOrderTracker(state);
+  console.log("syncStatusBarIfNeeded -> startOrderPolling", state.orders?.active);
 }
 
 async function handleOrderLogic(state) {
