@@ -220,7 +220,7 @@ export function addOrderToTrackingCu(meta = {}) {
   persistActiveIds(next.active);
 }
 
-export async function syncOrdersWithServerCu() {
+export async function syncOrdersWithServer() {
   markSyncingAgedOrders();
 
   const state = getState();
@@ -299,9 +299,8 @@ export async function syncOrdersWithServerCu() {
     console.error("Haven Service Error [Sync]:", error);
   }
 }
-// core/orders.js
 
-export async function syncOrdersWithServer() {
+export async function syncOrdersWithServerNew() {
   const state = getState();
   const activeOrders = state.orders?.active || [];
   if (activeOrders.length === 0) return;
@@ -335,6 +334,7 @@ export async function syncOrdersWithServer() {
       setState({
         orders: { ...state.orders, active: nextActive }
       });
+      
     }
   } catch (error) {
     console.error("Haven Sync Error:", error);
