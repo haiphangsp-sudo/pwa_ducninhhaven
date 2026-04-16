@@ -130,6 +130,7 @@ function renderOrderItem(item = {}) {
   const price = Number(item.price || 0);
   const name = getItemName(item);
   const option = getOptionName(item);
+  console.log("name",name,option);
   return `
     <div class="tracker-item">
       <span class="tracker-item__qty">${qty}×</span>
@@ -218,7 +219,6 @@ function escapeHtml(str) {
 function getItemName(item) {
   const label = item.itemLabel; 
   if (label && typeof label === 'object') {
-    console.log("item",label);
     return translate(label);
   }
   return item.item || ""; // Fallback nếu là đơn cũ (string)
