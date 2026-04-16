@@ -46,6 +46,7 @@ function getPrevState() {
 export function attachUI() {
   if (uiAttached) return;
   uiAttached = true;
+  setupEventListeners();
   bootstrapOrderTracker();
   subscribe(syncUI);
   syncUI(getState());
