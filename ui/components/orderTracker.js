@@ -155,20 +155,6 @@ function getOrderPlaceLabel(order = {}) {
   return `${anchorLabel} → ${placeLabel}`;
 }
 
-function getPlaceDisplayLabel(placeId, fallback = "") {
-  if (!placeId) return fallback;
-
-  const state = getState();
-  const index = state.places?.data?.index || {};
-  const place = index[placeId];
-
-  if (place?.label) {
-    return translate(place.label);
-  }
-
-  return fallback || placeId;
-}
-
 function parseItems(raw) {
   try {
     if (typeof raw === "string" && raw.trim() !== "") {
