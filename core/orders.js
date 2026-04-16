@@ -64,6 +64,8 @@ function normalizeOrder(order = {}) {
     totalPrice: Number(order.totalPrice || 0),
     totalQty: Number(order.totalQty || 0),
     place: order.place || order.placeId || "",
+    placeId: order.placeId || "",
+    anchorId: order.anchorId || "",
     createdAt,
     updatedAt: toTimestamp(order.updatedAt, createdAt),
     syncedAt: Date.now()
@@ -167,7 +169,7 @@ function getSavedIds() {
    PUBLIC /orderId, items = [], meta = {}
 ========================= */
 
-export function addOrderToTracking(meta = {}) {
+export function addOrderToTracking(meta = {},status = "NEW") {
   const state = getState();
   const active = state.orders?.active || [];
   const inactive = state.orders?.inactive || [];
@@ -178,13 +180,14 @@ export function addOrderToTracking(meta = {}) {
 
   const newOrder = normalizeOrder({
     id: meta.id,
-    status: meta.status || "NEW",
+    status: status,
     items: meta.items || [],
     totalQty: meta.totalQty,
     totalPrice: meta.totalPrice,
     mode: meta.mode,
     place: meta.place,
-    placeId: meta.placeId || meta.place,
+    placeId: meta.placeId,
+    anchorId: meta.anchorId,
     placeLabel: meta.placeLabel,
     type: meta.type,
     device: meta.device,
