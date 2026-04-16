@@ -122,7 +122,7 @@ function syncOrderFeedback(state, prevState) {
       break;
 
     case "idle":
-      showToast({ type: "idle", message: "cart_bar.idle" });
+      //showToast({ type: "idle", message: "cart_bar.idle" });
       break;
 
     default:
