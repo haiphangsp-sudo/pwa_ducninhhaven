@@ -220,7 +220,7 @@ export function addOrderToTrackingCu(meta = {}) {
   persistActiveIds(next.active);
 }
 
-export async function syncOrdersWithServer() {
+export async function syncOrdersWithServerCu() {
   markSyncingAgedOrders();
 
   const state = getState();
@@ -299,7 +299,47 @@ export async function syncOrdersWithServer() {
     console.error("Haven Service Error [Sync]:", error);
   }
 }
+// core/orders.js
 
+export async function syncOrdersWithServer() {
+  const state = getState();
+  const activeOrders = state.orders?.active || [];
+  if (activeOrders.length === 0) return;
+
+  // Lấy danh sách ID để gửi lên server
+  const ids = activeOrders.map(o => o.id);
+
+  try {
+    const url = `${SCRIPT_URL}?action=getStatuses&ids=${ids.join(",")}`;
+    const res = await fetch(url);
+    const data = await res.json();
+
+    // KIỂM TRA: Server trả về data.orders dạng { "ID": {status:...} }
+    if (data && data.success && data.orders) {
+      const serverOrders = data.orders;
+
+      const nextActive = activeOrders.map(localOrder => {
+        // Truy xuất thông tin từ Server bằng Key (ID)
+        const update = serverOrders[localOrder.id];
+
+        if (update) {
+          return {
+            ...localOrder,
+            status: update.status, // Cập nhật trạng thái (NEW, COOKING...)
+            updatedAt: Date.now()
+          };
+        }
+        return localOrder;
+      });
+
+      setState({
+        orders: { ...state.orders, active: nextActive }
+      });
+    }
+  } catch (error) {
+    console.error("Haven Sync Error:", error);
+  }
+}
 export function clearCompletedOrders() {
   const state = getState();
   const inactive = state.orders?.inactive || [];
