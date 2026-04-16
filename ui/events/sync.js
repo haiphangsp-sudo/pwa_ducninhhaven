@@ -13,7 +13,7 @@ import { submitOrder, addToCart } from "../../core/events.js";
 import { renderAck, showToast } from "../render/renderAck.js";
 import { openOrderTracker } from "../components/orderTracker.js";
 import { renderItemDetail } from "../render/renderItemDetail.js";
-
+import { bootstrapOrderTracker } from "../events/appFlow.js";
 
 let lastState = null;
 let isProcessingOrder = false;
@@ -46,7 +46,7 @@ function getPrevState() {
 export function attachUI() {
   if (uiAttached) return;
   uiAttached = true;
-
+  bootstrapOrderTracker();
   subscribe(syncUI);
   syncUI(getState());
 }
