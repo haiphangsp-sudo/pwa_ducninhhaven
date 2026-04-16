@@ -1,188 +1,94 @@
 // ui/sync.js
-import { subscribe, getState } from "../../core/state.js";
-import { CONFIG } from "../../config.js";
+import { subscribe, getState, setState } from "../../core/state.js";
 import { syncOverlay } from "../../ui/interactions/backdropManager.js";
+import { submitOrder, addToCart } from "../../core/events.js";
+import { showToast } from "../render/renderAck.js";
+import { bootstrapOrderTracker } from "./appFlow.js";
+
+import { renderNavBar } from "../render/renderNavBar.js";
 import { renderPlacePicker } from "../render/renderPlacePicker.js";
 import { renderDrawer } from "../render/renderDrawer.js";
-import { renderNavBar } from "../render/renderNavBar.js";
 import { renderCartBar } from "../render/renderCartBar.js";
 import { renderStatusBar } from "../render/renderStatusBar.js";
-import { renderHub, eventHub } from "../render/renderHub.js";
+import { renderHub } from "../render/renderHub.js";
 import { renderPanel } from "../render/renderPanel.js";
-import { submitOrder, addToCart } from "../../core/events.js";
-import { renderAck, showToast } from "../render/renderAck.js";
-import { openOrderTracker } from "../components/orderTracker.js";
 import { renderItemDetail } from "../render/renderItemDetail.js";
-import { bootstrapOrderTracker } from "../events/appFlow.js";
+import { openOrderTracker } from "../components/orderTracker.js";
 
 let lastState = null;
 let isProcessingOrder = false;
 let lastHandledOrderAt = null;
-let uiAttached = false;
-
-function createPrevState() {
-  return {
-    overlay: { view: null },
-    context: {},
-    panel: { view: null, option: null },
-    cart: { items: [] },
-    lang: { current: "vi" },
-    ack: { visible: false, status: null, message: "" },
-    orders: { active: [], inactive: [], isBarExpanded: false },
-    order: { action: null, line: null, status: "idle", at: null }
-  };
-}
-
-function isEqual(a, b) {
-  return JSON.stringify(a) === JSON.stringify(b);
-}
-
-function getPrevState() {
-  return lastState
-    ? JSON.parse(JSON.stringify(lastState))
-    : createPrevState();
-}
 
 export function attachUI() {
-  if (uiAttached) return;
-  uiAttached = true;
-  bootstrapOrderTracker();
+  bootstrapOrderTracker(); 
   subscribe(syncUI);
-  syncUI(getState());
+  syncUI(getState()); 
 }
 
-async function syncUI(state) {
-  const prevState = getPrevState();
-  const overlayChanged =
-    state.overlay.view !== prevState.overlay?.view ||
-    state.overlay.value !== prevState.overlay?.value;
-  const contextChanged = !isEqual(state.context, prevState.context);
-  const panelChanged =
-    state.panel.view !== prevState.panel?.view ||
-    state.panel.option !== prevState.panel?.option;
-  const cartChanged = !isEqual(state.cart?.items || [], prevState.cart?.items || []);
-  const langChanged = state.lang?.current !== prevState.lang?.current;
-  const ackChanged =
-    state.ack.visible !== prevState.ack?.visible ||
-    state.ack.message !== prevState.ack?.message ||
-    state.ack.status !== prevState.ack?.status;
-  const ordersChanged = !isEqual(state.orders?.active || [], prevState.orders?.active || []);
-  const statusBarExpandedChanged =
-    state.orders?.isBarExpanded !== prevState.orders?.isBarExpanded;
+function syncUI(state) {
+  if (!state) return;
+  const prevState = lastState || {};
 
-  syncOverlayIfNeeded(state, overlayChanged);
-  syncContextIfNeeded(state, contextChanged);
-  syncPanelIfNeeded(state, panelChanged);
-  syncCartIfNeeded(state, cartChanged);
-  syncLanguageIfNeeded(state, langChanged);
-  syncAckIfNeeded(state, ackChanged);
-  syncStatusBarIfNeeded(state, ordersChanged, statusBarExpandedChanged, overlayChanged);
-
-  await handleOrderLogic(state);
-  syncOrderFeedback(state, prevState);
-
-  lastState = JSON.parse(JSON.stringify(getState()));
-}
-
-function syncOverlayIfNeeded(state, overlayChanged) {
-  if (!overlayChanged) return;
-
-  switch (state.overlay.view) {
-    case "cartDrawer":
-      renderDrawer(state);
-      break;
-    case "placePicker":
-      renderPlacePicker(state);
-      break;
-    case "orderTrackerPage":
-      openOrderTracker(state);
-      break;
-    case "itemDetail":
-      renderItemDetail(state);
-      break;
-    default:
-      break;
-  }
-  syncOverlay(state.overlay.view || null);
+  // --- 1. SO SÁNH THAY ĐỔI (Dùng "at" và Key so sánh) ---
+  const isViewChanged = state.overlay?.view !== prevState.overlay?.view;
+  const isLangChanged = state.lang?.current !== prevState.lang?.current;
+  const isCartChanged = JSON.stringify(state.cart?.items) !== JSON.stringify(prevState.cart?.items);
   
-}
+  // So sánh timestamp cập nhật của đơn hàng (quan trọng để thoát SYNCING)
+  const currentOrderAt = state.orders?.active?.[0]?.updatedAt || 0;
+  const prevOrderAt = prevState.orders?.active?.[0]?.updatedAt || 0;
+  const isOrdersChanged = currentOrderAt !== prevOrderAt;
 
+  // Kiểm tra chọn bàn/phòng (để tự quay lại Giỏ)
+  const isPlaceSelected = state.cart?.placeId !== prevState.cart?.placeId;
 
-function syncContextIfNeeded(state, contextChanged) {
-  if (!contextChanged) return;
-
-  renderNavBar(state);
-  renderDrawer(state);
-}
-
-function syncPanelIfNeeded(state, panelChanged) {
-  if (!panelChanged) return;
-  eventHub(state);
-  renderPanel(state);
-}
-
-function syncCartIfNeeded(state, cartChanged) {
-  if (!cartChanged) return;
-
-  renderCartBar(state);
-  renderDrawer(state);
-  localStorage.setItem(CONFIG.CART_KEY, JSON.stringify(state.cart?.items || []));
-}
-function syncLanguageIfNeeded(state, langChanged) {
-  if (!langChanged) return;
-
-  localStorage.setItem(CONFIG.LANG_KEY, state.lang.current);
-  renderNavBar(state);
-  renderCartBar(state);
-  renderStatusBar(state);
-  renderHub(state);
-  renderPanel(state);
-}
-
-function syncAckIfNeeded(state, ackChanged) {
-  if (!ackChanged) return;
-  renderAck(state);
-}
-
-function syncStatusBarIfNeeded(state, ordersChanged, statusBarExpandedChanged, overlayChanged) {
-  const trackerOpen = state.overlay?.view === "orderTrackerPage";
-  const shouldRenderStatusBar =
-    ordersChanged ||
-    statusBarExpandedChanged ||
-    (trackerOpen && overlayChanged);
-
-  if (!shouldRenderStatusBar) return;
-
-  renderStatusBar(state);
-  openOrderTracker(state);
-}
-
-async function handleOrderLogic(state) {
-  const { action, at } = state.order || {};
-
-  const isNewCommand = action && at && at !== lastHandledOrderAt;
-  if (!isNewCommand || isProcessingOrder) return;
-
-  lastHandledOrderAt = at;
-  isProcessingOrder = true;
-
-  try {
-    switch (action) {
-      case "add_cart":
-        addToCart();
-        break;
-
-      case "buy_now":
-      case "send_cart":
-        await submitOrder(action);
-        break;
-
-      default:
-        break;
-    }
-  } finally {
-    isProcessingOrder = false;
+  // --- 2. PHẢN HỒI TOAST (Gửi đơn thành công/thất bại) ---
+  if (state.order?.status !== prevState.order?.status) {
+    syncOrderFeedback(state.order?.status);
   }
+
+  // --- 3. TỰ ĐỘNG QUAY LẠI GIỎ HÀNG (Picker Flow) ---
+  if (isPlaceSelected && state.overlay?.view === "placePicker") {
+    // Nếu chọn bàn xong, tự động trả về giao diện Giỏ hàng
+    setTimeout(() => {
+      setState({ overlay: { view: "cartDrawer" } });
+    }, 250);
+  }
+
+  // --- 4. CẬP NHẬT GIAO DIỆN TĨNH (NavBar, CartBar, StatusBar) ---
+  if (isCartChanged || isLangChanged || isViewChanged || isOrdersChanged) {
+    renderNavBar(state);
+    renderCartBar(state);
+    renderStatusBar(state);
+  }
+
+  // --- 5. CẬP NHẬT NỘI DUNG CHÍNH (Hub & Panel) ---
+  if (isLangChanged || isViewChanged) {
+    renderHub(state);
+    renderPanel(state);
+  }
+
+  // --- 6. QUẢN LÝ OVERLAY & TRANG CHI TIẾT ---
+  if (isViewChanged || isLangChanged || isOrdersChanged) {
+    syncOverlay(state.overlay?.view);
+    const view = state.overlay?.view;
+
+    if (view === "cartDrawer") renderDrawer(state);
+    if (view === "placePicker") renderPlacePicker(state);
+    if (view === "itemDetail") renderItemDetail(state);
+    
+    // Nếu dữ liệu đơn hàng đổi hoặc đang mở trang Tracker -> Vẽ lại chi tiết
+    if (view === "orderTrackerPage" && (isOrdersChanged || isLangChanged)) {
+      openOrderTracker();
+    }
+  }
+
+  // --- 7. SIDE EFFECTS (Lưu trữ & Xử lý đơn) ---
+  syncStorage(state, prevState);
+  processOrders(state);
+
+  // CHỐT CHẶN CUỐI: Cập nhật "trí nhớ"
+  lastState = JSON.parse(JSON.stringify(state));
 }
 
 function syncOrderFeedback(state, prevState) {
@@ -221,5 +127,28 @@ function syncOrderFeedback(state, prevState) {
 
     default:
       break;
+  }
+}
+
+async function processOrders(state) {
+  const { action, at } = state.order || {};
+  if (!action || at === lastHandledOrderAt || isProcessingOrder) return;
+  
+  lastHandledOrderAt = at;
+  isProcessingOrder = true;
+  try {
+    if (action === "add_cart") addToCart();
+    if (["send_cart", "buy_now"].includes(action)) await submitOrder(action);
+  } finally {
+    isProcessingOrder = false;
+  }
+}
+
+function syncStorage(state, prevState) {
+  if (JSON.stringify(state.cart?.items) !== JSON.stringify(prevState.cart?.items)) {
+    localStorage.setItem("haven_cart", JSON.stringify(state.cart?.items || []));
+  }
+  if (state.lang?.current !== prevState.lang?.current) {
+    localStorage.setItem("haven_lang", state.lang?.current);
   }
 }
