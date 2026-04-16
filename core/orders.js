@@ -5,7 +5,7 @@ import { CONFIG } from "../config.js";
 
 const SCRIPT_URL = CONFIG.API_ENDPOINT;
 const STORAGE_KEY_ACTIVE = "haven_active_order_ids";
-const STORAGE_KEY_HISTORY = "haven_order_history";
+const STORAGE_KEY_HISTORY = "haven_order_history"; // Ngăn kéo mới
 const MAX_INACTIVE_AGE_MS = 2 * 24 * 60 * 60 * 1000; // 2 ngày
 const TERMINAL_STATUSES = ["DONE", "CANCELED"];
 const ACTIONABLE_STATUSES = ["NEW", "COOKING", "DELIVERING", "DONE", "SYNCING"];
@@ -205,49 +205,87 @@ export function addOrderToTracking(meta = {}) {
 
   persistActiveIds(next.active);
 }
-// core/orders.js
 
 export async function syncOrdersWithServer() {
+  markSyncingAgedOrders();
+
+  const state = getState();
   const savedIds = getSavedIds();
-  if (!savedIds || savedIds.length === 0) return;
+  if (savedIds.length === 0) return;
 
   try {
-    const url = `${SCRIPT_URL}?action=getStatuses&ids=${savedIds.join(",")}`;
-    const res = await fetch(url);
-    const data = await res.json();
+    const response = await fetch(
+      `${SCRIPT_URL}?action=getStatuses&ids=${savedIds.join(",")}`
+    );
 
-    if (data?.success && data.orders) {
-      const state = getState();
-      const currentActive = state.orders?.active || [];
-      const serverOrdersObj = data.orders; // Đây là Object { "ID": {status:...} }
-
-      const updatedActive = currentActive.map(localOrder => {
-        // Lấy thông tin cập nhật từ server dựa trên ID
-        const serverUpdate = serverOrdersObj[localOrder.id];
-
-        if (serverUpdate) {
-          // QUAN TRỌNG: 
-          // Trả về toàn bộ localOrder (để giữ lại items có đa ngôn ngữ)
-          // Chỉ cập nhật status và thời gian từ serverUpdate
-          return {
-            ...localOrder,
-            status: serverUpdate.status || localOrder.status,
-            updatedAt: Date.now()
-          };
-        }
-        
-        // Nếu server không trả về (có thể đơn chưa lên kịp Sheets), giữ nguyên local
-        return localOrder;
-      });
-
-      setState({
-        orders: { ...state.orders, active: updatedActive }
-      });
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
     }
+
+    const updates = await response.json();
+
+    const currentActive = state.orders?.active || [];
+    const currentInactive = state.orders?.inactive || [];
+    const currentMap = new Map(
+      [...currentActive, ...currentInactive].map(order => [order.id, order])
+    );
+
+    const rebuilt = savedIds.map(id => {
+      const existing = currentMap.get(id);
+      const incoming = updates[id];
+
+      if (typeof incoming === "string") {
+        return normalizeOrder({
+          ...existing,
+          id,
+          status: incoming,
+          createdAt: existing?.createdAt,
+          updatedAt: Date.now(),
+          syncedAt: Date.now()
+        });
+      }
+
+      if (incoming && typeof incoming === "object") {
+        return normalizeOrder({
+          ...existing,
+          ...incoming,
+          id,
+          createdAt: existing?.createdAt ?? incoming.createdAt ?? incoming.timestamp,
+          updatedAt: Date.now(),
+          syncedAt: Date.now()
+        });
+      }
+
+      return normalizeOrder({
+        ...existing,
+        id,
+        status: existing?.status || "SYNCING",
+        createdAt: existing?.createdAt || Date.now(),
+        updatedAt: existing?.updatedAt || Date.now(),
+        syncedAt: existing?.syncedAt || 0
+      });
+    });
+
+    const next = splitOrders([
+      ...currentInactive.filter(order => !savedIds.includes(order.id)),
+      ...rebuilt
+    ]);
+
+    setState({
+      orders: {
+        ...state.orders,
+        active: next.active,
+        inactive: next.inactive
+      }
+    });
+
+    persistActiveIds(next.active);
+    clearCompletedOrders();
   } catch (error) {
-    console.error("Haven Sync Error:", error);
+    console.error("Haven Service Error [Sync]:", error);
   }
 }
+
 export function clearCompletedOrders() {
   const state = getState();
   const inactive = state.orders?.inactive || [];
