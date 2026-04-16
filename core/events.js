@@ -73,7 +73,7 @@ function buildPayload(state, action) {
   const { totalQty, totalPrice } = getTotals(items);
   const timestamp = new Date().toISOString();
   const { placeId, placeName, mode } = getLocationInfo();
-
+  if (!placeId) return null;
   return {
     id: `H-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
     type: getOrderType(action),
@@ -111,7 +111,6 @@ function setOrderStatus(status) {
 
   setState(next);
 }
-
 export async function submitOrder(action) {
   const state = getState();
   const payload = buildPayload(state, action);
@@ -135,7 +134,10 @@ export async function submitOrder(action) {
     setOrderStatus("success");
 
     try {
-      addOrderToTracking(payload);
+      addOrderToTracking({
+        ...payload,
+        status: "SYNCING"
+      });
     } catch (error) {
       console.error("addOrderToTracking failed:", error);
     }
