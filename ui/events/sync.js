@@ -61,12 +61,12 @@ function syncUI(state) {
     if (view === "placePicker") renderPlacePicker(state);
     if (view === "itemDetail") renderItemDetail(state); // Nhận ID từ state.overlay.value
     if (view === "orderTrackerPage") openOrderTracker();
-    syncOverlay(state.overlay?.view);
   
     if (isOrdersChanged) {
       renderStatusBar(state);
       openOrderTracker();
     }
+    syncOverlay(state.overlay?.view);
   }
   // 3. CÁC THÀNH PHẦN LUÔN HIỆN HỮU
   if (isCartChanged || isLangChanged || isViewChanged) {
