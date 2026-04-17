@@ -1,34 +1,6 @@
 /* styles/cartBar.css */
 
 /* =========================
-   PICKER / DRAWER BASICS
-========================= */
-
-.no-context-hint::after {
-  opacity: .55;
-  font-size: .9em;
-}
-
-.picker-group {
-  margin-bottom: var(--space-3);
-}
-
-.picker-panel {
-  position: relative;
-  background: var(--bg-card);
-  padding: var(--space-2);
-  border-radius: 14px;
-  width: 100%;
-}
-
-.picker-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: center;
-}
-
-/* =========================
    DRAWER
 ========================= */
 
@@ -286,7 +258,11 @@
 }
 
 /* Đảm bảo các panel có trạng thái chuẩn bị để trượt */
-.drawer-panel, .picker-panel {
+.drawer-panel {
+  will-change: transform, opacity;
+  transform: translateY(100%); /* Bắt đầu từ dưới cùng */
+}
+.picker-panel {
   will-change: transform, opacity;
   transform: translateY(100%); /* Bắt đầu từ dưới cùng */
 }
