@@ -17,7 +17,10 @@ export function showPanel(state) {
   }
   container.querySelectorAll("[data-panel]").forEach(el => {
     if (el.dataset.panel === panelId) return;
-    el.classList.add("animate-fade-out");
+    setTimeout(() => {
+      el.classList.remove("animate-fade-out", "animate-fade-in");
+      el.classList.add("animate-fade-out");
+    }, 500);
   });
     
 }
@@ -29,7 +32,7 @@ export function renderPanel(state) {
   if (!panelId) return;
   const panel = document.createElement("div");
   panel.dataset.panel = panelId;
-  panel.className = "category-panel";
+  panel.className = "category-panel animate-fade-in";
 
   panel.innerHTML =
     ui === "article"
