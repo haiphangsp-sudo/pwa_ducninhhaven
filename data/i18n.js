@@ -39,8 +39,9 @@ export const STRINGS = {
     success_cart: { vi: "Đơn hàng đã được gửi", en: "The order has been shipped." },
     success_instant: { vi: "Yêu cầu đã được gửi", en: "The request has been submitted." },
     added_cart: { vi: "Đã thêm vào giỏ hàng", en: "Added to cart" },
-    error_cart: { vi: "Chưa gửi được", en: "Failed to send" }
-
+    error_cart: { vi: "Chưa gửi được", en: "Failed to send" },
+    queued: { vi: "Đã lưu, chờ gửi...", en: "Saved, waiting to send..."},
+    offline_retry: { vi: "Mất mạng, sẽ tự gửi lại", en: "Offline, will retry automatically"}
   },
   menu: {
     detail: { vi: "Chi tiết", en: "Details" }

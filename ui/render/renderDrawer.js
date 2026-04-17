@@ -70,29 +70,55 @@ export function renderDrawer(state) {
   if (panel && !panel.classList.contains("transform-animated")) {
     panel.classList.add("transform-animated");
   }
+  const deliveryState = state?.delivery?.state;
+const { hasPlace, placeName } = getLocationInfo();
 
-  // 1. SENDING (ưu tiên cao nhất)
-  if (isSending) {
-    sendBtn.textContent = translate("cart_bar.sending");
-    sendBtn.classList.add("is-loading", "is-disabled");
-    sendBtn.dataset.value = "sending";
-    return;
-  }
-  const { hasPlace, placeName } = getLocationInfo();
-  if (!hasPlace) {
-    sendBtn.textContent = translate("cart_bar.place_prompt");
-    sendBtn.classList.add("is-warning");
-    sendBtn.dataset.value = "placePicker";
-    sendBtn.dataset.action = "open-overlay";
-    sendBtn.dataset.extra = "cartDrawer";
-    return;
-  }
+// reset base
+sendBtn.classList.remove("is-loading", "is-warning", "is-disabled");
 
-  // 3. NORMAL
-  sendBtn.textContent = translate("cart_bar.send_request");
-  sendBtn.dataset.action = "send_cart";
-  sendBtn.classList.remove("is-warning", "is-disabled");
-  sendBtn.dataset.value = "cart";
-  sendBtn.dataset.extra = "";
-  namePlace.textContent = placeName;
+// ===== 1. SENDING =====
+if (deliveryState === "sending") {
+  sendBtn.textContent = translate("cart_bar.sending");
+  sendBtn.classList.add("is-loading", "is-disabled");
+  sendBtn.dataset.value = "sending";
+  sendBtn.dataset.action = "";
+  return;
+}
+
+// ===== 2. QUEUED (đã lưu, đang chờ gửi) =====
+if (deliveryState === "queued") {
+  sendBtn.textContent = translate("cart_bar.queued"); // thêm key
+  sendBtn.classList.add("is-loading", "is-disabled");
+  sendBtn.dataset.value = "queued";
+  sendBtn.dataset.action = "";
+  return;
+}
+
+// ===== 3. FAILED (mất mạng nhưng còn queue) =====
+if (deliveryState === "failed") {
+  sendBtn.textContent = translate("cart_bar.offline_retry"); // thêm key
+  sendBtn.classList.add("is-warning", "is-disabled");
+  sendBtn.dataset.value = "retry";
+  sendBtn.dataset.action = "";
+  return;
+}
+
+// ===== 4. CHƯA CHỌN PLACE =====
+if (!hasPlace) {
+  sendBtn.textContent = translate("cart_bar.place_prompt");
+  sendBtn.classList.add("is-warning");
+  sendBtn.dataset.value = "placePicker";
+  sendBtn.dataset.action = "open-overlay";
+  sendBtn.dataset.extra = "cartDrawer";
+  return;
+}
+
+// ===== 5. NORMAL =====
+sendBtn.textContent = translate("cart_bar.send_request");
+sendBtn.dataset.action = "send_cart";
+sendBtn.classList.remove("is-warning", "is-disabled");
+sendBtn.dataset.value = "cart";
+sendBtn.dataset.extra = "";
+
+namePlace.textContent = placeName;
 }
