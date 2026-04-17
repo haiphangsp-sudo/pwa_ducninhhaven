@@ -21,7 +21,7 @@ const COMMAND_MAP = {
     animateFlyToCart(target);
   },
   "send_cart": (cmd) => {
-    setState({ order: { action: cmd.action,line: null, status: "idle", at: Date.now() } });
+    setState({ order: { action: cmd.action,line: null, at: Date.now() } });
   },
   "buy_now": (cmd) => {
     setState({ order: { action: cmd.action, line: cmd.value, at: Date.now() } });
