@@ -32,7 +32,7 @@ export function showPanel(state) {
   panel.classList.add("animate-panel-in");
 }
 
-export function renderPanel(state) {
+function renderPanel(state) {
   const panelId = state.panel.view;
   const ui = state.panel.option;
   if (!panelId) return;
