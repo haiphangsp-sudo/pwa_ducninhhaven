@@ -16,21 +16,20 @@ export function renderCartBar(state) {
   const btn = document.getElementById("cartOpen");
   const countEl = document.getElementById("cartCount");
   if (!cartBar || !btn || !countEl) return;
-  
+  btn.textContent = translate("cart_bar.cart_title");
   
   
   if (isEmpty) {
     cartBar.classList.add("cart-bar--hidden");
   } else {
     cartBar.classList.remove("cart-bar--hidden");
-    btn.textContent = translate("cart_bar.cart_title");
     countEl.textContent = cart.totalQtyFormat;
   }
   
 }
 
 /* =========================
-   EFFECT
+   EFFECT chưa dùng
 ========================= */
 
 export function bounceCartBar() {
