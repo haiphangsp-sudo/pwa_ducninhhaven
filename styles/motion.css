@@ -85,6 +85,21 @@
   animation: fadeOut 0.3s cubic-bezier(0.4, 0, 1, 1) forwards;
 }
 
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-panel-in {
+  animation: panelIn 0.18s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
 @keyframes slide-up {
   from {
     opacity: 0;

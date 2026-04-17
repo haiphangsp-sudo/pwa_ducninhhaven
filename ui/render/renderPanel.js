@@ -13,7 +13,7 @@ export function showPanel(state) {
   // Ẩn tất cả panel trước
   container.querySelectorAll("[data-panel]").forEach(el => {
     el.classList.add("hidden");
-    el.classList.remove("animate-fade-in");
+    el.classList.remove("animate-panel-in");
   });
 
   let panel = container.querySelector(`[data-panel="${panelId}"]`);
@@ -29,7 +29,7 @@ export function showPanel(state) {
   // Hiện panel và animate nhẹ
   panel.classList.remove("hidden");
   void panel.offsetWidth;
-  panel.classList.add("animate-fade-in");
+  panel.classList.add("animate-panel-in");
 }
 
 export function renderPanel(state) {
