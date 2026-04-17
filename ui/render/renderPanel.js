@@ -18,7 +18,7 @@ export function showPanel(state) {
   container.querySelectorAll("[data-panel]").forEach(el => {
     if (el.dataset.panel === panelId) return;
     setTimeout(() => {
-      el.classList.remove("animate-fade-out", "animate-fade-in");
+      el.classList.remove("animate-fade-in");
       el.classList.add("animate-fade-out");
     }, 500);
   });
