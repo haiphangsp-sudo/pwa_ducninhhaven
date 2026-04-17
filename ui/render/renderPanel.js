@@ -43,5 +43,5 @@ export function renderPanel(state) {
 export function eventPanelLang(state) {
   const container = document.querySelector(".page-container");
   if (container) container.innerHTML = "";
-  renderPanel(state);
+  showPanel(state);
 }
