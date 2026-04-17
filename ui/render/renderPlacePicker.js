@@ -71,4 +71,9 @@ function renderGroup(groupData) {
       `).join("")}
     </div>
   `;
+  const panel = document.querySelector(".picker-panel");
+  if (panel && !panel.classList.contains("transform-animated")) {
+    panel.classList.add("transform-animated");
+  }
+  
 }

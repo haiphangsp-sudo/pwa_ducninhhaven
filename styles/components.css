@@ -29,6 +29,8 @@
   padding: var(--space-2);
   border-radius: 14px;
   box-shadow: var(--shadow-card);
+  will-change: transform, opacity;
+  transform: translateY(100%);
 }
 
 .picker-group {

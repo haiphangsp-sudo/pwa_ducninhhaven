@@ -122,7 +122,7 @@
   }
 }
 
-@keyframes drawerUp {
+@keyframes transformUp {
   0% { 
     transform: translateY(100%); 
     opacity: 0.5;

@@ -67,8 +67,8 @@ export function renderDrawer(state) {
 
   // reset class về base trước
   sendBtn.classList.remove("is-loading", "is-warning", "is-disabled");
-  if (panel && !panel.classList.contains("drawer-animated")) {
-    panel.classList.add("drawer-animated");
+  if (panel && !panel.classList.contains("transform-animated")) {
+    panel.classList.add("transform-animated");
   }
 
   // 1. SENDING (ưu tiên cao nhất)
