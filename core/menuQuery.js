@@ -2,12 +2,22 @@
 
 import { getState } from "./state.js";
 import { translate } from "../ui/utils/translate.js";
-import { formatPrice } from "../ui/utils/formatPrice.js"
+import { formatPrice } from "../ui/utils/formatPrice.js";
+
 /* =======================================================
    PUBLIC
 ======================================================= */
+
 function getMenuData() {
   return getState().menu?.data || {};
+}
+
+function resolvePlaceType(state) {
+  return (
+    state?.context?.active?.type ||
+    state?.context?.anchor?.type ||
+    "table"
+  );
 }
 
 export function getCategory(key) {
@@ -15,10 +25,11 @@ export function getCategory(key) {
   return menuData[key] || {};
 }
 
-
 export function getVariants(categoryKey, productKey) {
   const menuData = getMenuData();
-  const product = menuData[categoryKey].products?.[productKey];
+  const category = menuData?.[categoryKey];
+  const product = category?.products?.[productKey];
+
   if (!product || product.active === false) return [];
 
   return Object.entries(product.variants || {})
@@ -26,10 +37,12 @@ export function getVariants(categoryKey, productKey) {
     .map(([key, variant]) => ({
       key,
       ...variant,
-      price: variant.price > 0
-                ? formatPrice(variant.price)
-                : variant.price === 0 ? translate("cart_bar.free")
-                : translate("cart_bar.instant"),
+      price:
+        variant.price > 0
+          ? formatPrice(variant.price)
+          : variant.price === 0
+            ? translate("cart_bar.free")
+            : translate("cart_bar.instant"),
       recommend: (product.recommend || []).includes(key)
     }));
 }
@@ -37,12 +50,13 @@ export function getVariants(categoryKey, productKey) {
 /**
  * Lấy danh sách sản phẩm trong một Category
  */
-
 export function getProducts(categoryKey) {
   if (!categoryKey) return [];
+
   const menuData = getMenuData();
   const category = menuData[categoryKey];
   if (!category || category.active === false) return [];
+
   const products = category.products || {};
 
   return Object.entries(products)
@@ -54,7 +68,7 @@ export function getProducts(categoryKey) {
 }
 
 /**
- * TRÍ TRÍ QUAN TRỌNG: Truy tìm thông tin chi tiết từ một ID duy nhất
+ * Truy tìm thông tin chi tiết từ một ID duy nhất
  * Dùng cho Giỏ hàng và Mua ngay
  */
 export function getVariantById(id) {
@@ -62,10 +76,10 @@ export function getVariantById(id) {
 
   for (const [catKey, cat] of Object.entries(menuData)) {
     const products = cat.products || {};
-    
+
     for (const [prodKey, prod] of Object.entries(products)) {
       const variants = prod.variants || {};
-      
+
       for (const [varKey, variant] of Object.entries(variants)) {
         if (variant.id === id) {
           return {
@@ -73,13 +87,10 @@ export function getVariantById(id) {
             categoryKey: catKey,
             productKey: prodKey,
             variantKey: varKey,
-            // Đã dịch sẵn để UI chỉ việc hiển thị
             productLabel: translate(prod.label),
             variantLabel: translate(variant.label),
-            
             objProLab: prod.label,
             objVarLab: variant.label,
-            
             price: Number(variant.price || 0),
             priceFormat: formatPrice(variant.price),
             unit: variant.unit,
@@ -89,8 +100,10 @@ export function getVariantById(id) {
       }
     }
   }
+
   return null;
 }
+
 export function getVariantDetailById(id) {
   const menuData = getMenuData();
 
@@ -130,58 +143,59 @@ export function getVariantDetailById(id) {
 
   return null;
 }
+
 /**
- * BIẾN ĐỔI GIỎ HÀNG: Từ mảng {id, qty} thành dữ liệu hiển thị Drawer
+ * Biến đổi giỏ hàng: từ mảng {id, qty} thành dữ liệu hiển thị Drawer
  */
-export function getDrawerExtended(state) {
-  if(!state) state = getState();
+export function getDrawerExtended(state = getState()) {
   const items = state.cart?.items || [];
   let totalP = 0;
   let totalQ = 0;
 
-  const detailedItems = items.map(cartItem => {
-    const info = getVariantById(cartItem.id);
-    if (!info) return null;
+  const detailedItems = items
+    .map(cartItem => {
+      const info = getVariantById(cartItem.id);
+      if (!info) return null;
 
-    const linePrice = info.price * cartItem.qty;
-    totalP += linePrice;
-    totalQ += cartItem.qty;
+      const linePrice = info.price * cartItem.qty;
+      totalP += linePrice;
+      totalQ += cartItem.qty;
 
-    return { 
-        ...cartItem, 
-        ...info, 
+      return {
+        ...cartItem,
+        ...info,
         linePrice,
         linePriceFormat: formatPrice(linePrice)
-    };
-  }).filter(Boolean);
+      };
+    })
+    .filter(Boolean);
 
   return {
     items: detailedItems,
     isEmpty: totalQ === 0,
     itemUnique: `${detailedItems.length} ${translate("cart_bar.unique")}`,
     totalQty: totalQ,
-    totalQtyFormat: totalQ > 1
-      ? `${totalQ} ${translate("cart_bar.items")}`
-      : `${totalQ} ${translate("cart_bar.item")}`,
+    totalQtyFormat:
+      totalQ > 1
+        ? `${totalQ} ${translate("cart_bar.items")}`
+        : `${totalQ} ${translate("cart_bar.item")}`,
     totalPrice: totalP,
     totalPriceFormat: formatPrice(totalP)
   };
 }
+
 /* =======================================================
    MENU FILTER
 ======================================================= */
 
-export function getCategoriesForCurrentPlace() {
+export function getCategoriesForCurrentPlace(inputState) {
   const menuData = getMenuData();
-  const state = getState();
-  
-  // Lấy thẳng placeType đã được tính toán sẵn và validate thời gian
-  const placeType = state.context?.current?.type || "table"; 
+  const state = inputState || getState();
+  const placeType = resolvePlaceType(state);
 
   return Object.entries(menuData)
     .filter(([, cat]) => {
       if (!cat || cat.active === false) return false;
-      // Chỉ hiện danh mục nếu nó cho phép loại vị trí hiện tại
       return !cat.allow || cat.allow.includes(placeType);
     })
     .map(([key, cat]) => ({

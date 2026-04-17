@@ -1,5 +1,3 @@
-// core/context.js
-
 import { CONFIG } from "../config.js";
 import { getState, setState } from "./state.js";
 import { resolvePlace, getAllowedPlaceTypes } from "./placesStore.js";
@@ -20,11 +18,6 @@ export function getContext() {
   return getState().context || {
     anchor: null,
     active: null,
-    current: {
-      id: null,
-      type: "table",
-      isGuest: true
-    },
     updatedAt: null
   };
 }
@@ -112,25 +105,20 @@ export function normalizeContext() {
     _ctx.anchor = null;
   }
 
-  // Nếu anchor hết hạn thì active cũng không nên giữ như một room context cũ
+  // Nếu anchor hết hạn thì không giữ room active cũ
   if (!_ctx.anchor && _ctx.active && _ctx.active.type === "room") {
     _ctx.active = null;
   }
 }
 
 export function syncContextToState() {
-  const current = _ctx.active || _ctx.anchor;
+  const current = _ctx.active || _ctx.anchor || null;
 
   setState({
     context: {
       anchor: _ctx.anchor,
       active: _ctx.active,
-      current: {
-        id: current?.id || null,
-        type: current?.type || "table",
-        isGuest: !_ctx.anchor
-      },
-      updatedAt: Date.now()
+      updatedAt: current?.at || Date.now()
     }
   });
 
@@ -234,12 +222,10 @@ export function applyPlaceById(placeId) {
 
   const anchorType = _ctx.anchor?.type;
 
-  // Có anchor => phải tôn trọng rule allow
   if (anchorType && !canSelectPlace(anchorType, resolved.type)) {
     return false;
   }
 
-  // Chưa có anchor => coi như chọn active đơn lẻ của guest
   _ctx.active = {
     id: resolved.id,
     type: resolved.type,
@@ -261,7 +247,6 @@ export function reconcileContextAfterPlacesRefresh() {
   const resolvedAnchor = anchorId ? resolvePlace(anchorId) : null;
   const resolvedActive = activeId ? resolvePlace(activeId) : null;
 
-  // 1. Không còn gì hợp lệ
   if (!resolvedAnchor && !resolvedActive) {
     const hadContext = !!(_ctx.anchor || _ctx.active);
     _ctx = createEmptyContext();
@@ -274,7 +259,6 @@ export function reconcileContextAfterPlacesRefresh() {
     return { changed: false, mode: "none" };
   }
 
-  // 2. Có anchor hợp lệ nhưng active mất => fallback về anchor
   if (resolvedAnchor && !resolvedActive) {
     _ctx.anchor = {
       id: resolvedAnchor.id,
@@ -292,7 +276,6 @@ export function reconcileContextAfterPlacesRefresh() {
     return { changed: true, mode: "fallback-anchor" };
   }
 
-  // 3. Không có anchor nhưng active vẫn hợp lệ => guest vẫn giữ active
   if (!resolvedAnchor && resolvedActive) {
     _ctx.anchor = null;
     _ctx.active = {
@@ -305,8 +288,6 @@ export function reconcileContextAfterPlacesRefresh() {
     return { changed: false, mode: "keep-active" };
   }
 
-  // 4. Cả anchor và active đều còn hợp lệ
-  // Nếu active không còn được phép theo anchor mới thì fallback về anchor
   if (
     resolvedAnchor &&
     resolvedActive &&
@@ -328,7 +309,6 @@ export function reconcileContextAfterPlacesRefresh() {
     return { changed: true, mode: "fallback-anchor" };
   }
 
-  // 5. Đồng bộ lại type/id sạch sẽ theo dữ liệu mới
   _ctx.anchor = {
     id: resolvedAnchor.id,
     type: resolvedAnchor.type,

@@ -1,5 +1,5 @@
-// core/bootstrap.js
 
+// core/context.js
 import { getState, setState } from "./state.js";
 import { getCategoriesForCurrentPlace, getVariantById } from "./menuQuery.js";
 import { CONFIG } from "../config.js";
@@ -57,11 +57,12 @@ function resolveLangState(state) {
 
 function resolveContext(state) {
   const current = state.context || {};
-  const cached = readStorage("haven_context");
+  const cached = readStorage(CONFIG.STORAGE_KEY);
 
   return {
-    ...current,
-    current: cached?.current || current.current || null
+    anchor: cached?.anchor || current.anchor || null,
+    active: cached?.active || current.active || null,
+    updatedAt: cached?.updatedAt || current.updatedAt || null
   };
 }
 
@@ -130,9 +131,14 @@ function isSamePanel(a, b) {
          (a?.option || null) === (b?.option || null);
 }
 
+function isSameRef(a, b) {
+  return (a?.id || null) === (b?.id || null) &&
+         (a?.type || null) === (b?.type || null);
+}
+
 function isSameContext(a, b) {
-  return (a?.current?.id || null) === (b?.current?.id || null) &&
-         (a?.current?.type || null) === (b?.current?.type || null);
+  return isSameRef(a?.anchor, b?.anchor) &&
+         isSameRef(a?.active, b?.active);
 }
 
 function isSameCart(a, b) {
