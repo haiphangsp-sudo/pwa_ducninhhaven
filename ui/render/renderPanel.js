@@ -7,9 +7,9 @@ export function showPanel(state) {
   const container = document.querySelector(".page-container");
   if (!container) return;
   const panelId = state.panel.view;
-  if (!panelId) renderPanel(state);
+  if (!panelId) return;
   const panel = container.querySelector(`[data-panel="${panelId}"]`);
-  if (!panel) return;
+  if (!panel) renderPanel(state);
   // ẩn tất cả
   container.querySelectorAll("[data-panel]").forEach(el => {
     el.classList.add("hidden");
