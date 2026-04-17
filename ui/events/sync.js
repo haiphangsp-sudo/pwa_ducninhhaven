@@ -8,7 +8,7 @@ import { renderNavBar } from "../render/renderNavBar.js";
 import { renderCartBar } from "../render/renderCartBar.js";
 import { renderStatusBar } from "../render/renderStatusBar.js";
 import { renderHub, eventHub } from "../render/renderHub.js";
-import { renderPanel, eventPanelLang, showPanel } from "../render/renderPanel.js";
+import { eventPanelLang, showPanel } from "../render/renderPanel.js";
 import { submitOrder, addToCart } from "../../core/events.js";
 import { renderAck, showToast } from "../render/renderAck.js";
 import { openOrderTracker } from "../components/orderTracker.js";
@@ -122,7 +122,6 @@ function syncContextIfNeeded(state, contextChanged) {
 function syncPanelIfNeeded(state, panelChanged) {
   if (!panelChanged) return;
   eventHub(state);
-  renderPanel(state);
   showPanel(state);
 }
 
