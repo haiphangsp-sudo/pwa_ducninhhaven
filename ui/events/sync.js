@@ -1,4 +1,3 @@
-// ui/sync.js
 import { subscribe, getState } from "../../core/state.js";
 import { CONFIG } from "../../config.js";
 import { syncOverlay } from "../interactions/backdropManager.js";
@@ -16,7 +15,6 @@ import { renderItemDetail } from "../render/renderItemDetail.js";
 import { bootstrapOrderTracker, startOrderPolling } from "./appFlow.js";
 import { setupEventListeners } from "./globalEvents.js";
 
-
 let lastState = null;
 let isProcessingOrder = false;
 let lastHandledOrderAt = null;
@@ -24,7 +22,7 @@ let uiAttached = false;
 
 function createPrevState() {
   return {
-    overlay: { view: null },
+    overlay: { view: null, value: null },
     context: {},
     panel: { view: null, option: null },
     cart: { items: [] },
@@ -47,6 +45,7 @@ function getPrevState() {
 
 export function attachUI() {
   if (uiAttached) return;
+
   uiAttached = true;
   setupEventListeners();
   bootstrapOrderTracker();
@@ -56,23 +55,41 @@ export function attachUI() {
 
 async function syncUI(state) {
   const prevState = getPrevState();
+
   const overlayChanged =
-    state.overlay.view !== prevState.overlay?.view ||
-    state.overlay.value !== prevState.overlay?.value;
+    state.overlay?.view !== prevState.overlay?.view ||
+    state.overlay?.value !== prevState.overlay?.value;
+
   const contextChanged = !isEqual(state.context, prevState.context);
+
   const panelChanged =
-    state.panel.view !== prevState.panel?.view ||
-    state.panel.option !== prevState.panel?.option;
-  const cartChanged = !isEqual(state.cart?.items || [], prevState.cart?.items || []);
+    state.panel?.view !== prevState.panel?.view ||
+    state.panel?.option !== prevState.panel?.option;
+
+  const cartChanged = !isEqual(
+    state.cart?.items || [],
+    prevState.cart?.items || []
+  );
+
   const langChanged = state.lang?.current !== prevState.lang?.current;
+
   const ackChanged =
-    state.ack.visible !== prevState.ack?.visible ||
-    state.ack.message !== prevState.ack?.message ||
-    state.ack.status !== prevState.ack?.status;
-  const ordersChanged = !isEqual(state.orders?.active || [], prevState.orders?.active || []);
+    state.ack?.visible !== prevState.ack?.visible ||
+    state.ack?.message !== prevState.ack?.message ||
+    state.ack?.status !== prevState.ack?.status;
+
+  const ordersChanged = !isEqual(
+    state.orders?.active || [],
+    prevState.orders?.active || []
+  );
+
+  const inactiveChanged = !isEqual(
+    state.orders?.inactive || [],
+    prevState.orders?.inactive || []
+  );
+
   const statusBarExpandedChanged =
     state.orders?.isBarExpanded !== prevState.orders?.isBarExpanded;
-  //const isOrdersChanged = JSON.stringify(state.orders?.active) !== JSON.stringify(prevState.orders?.active);
 
   syncOverlayIfNeeded(state, overlayChanged);
   syncContextIfNeeded(state, contextChanged);
@@ -80,7 +97,13 @@ async function syncUI(state) {
   syncCartIfNeeded(state, cartChanged);
   syncLanguageIfNeeded(state, langChanged);
   syncAckIfNeeded(state, ackChanged);
-  syncStatusBarIfNeeded(state, ordersChanged, statusBarExpandedChanged, overlayChanged);
+  syncStatusBarIfNeeded(
+    state,
+    ordersChanged,
+    inactiveChanged,
+    statusBarExpandedChanged,
+    overlayChanged
+  );
 
   await handleOrderLogic(state);
   syncOrderFeedback(state, prevState);
@@ -91,7 +114,7 @@ async function syncUI(state) {
 function syncOverlayIfNeeded(state, overlayChanged) {
   if (!overlayChanged) return;
 
-  switch (state.overlay.view) {
+  switch (state.overlay?.view) {
     case "cartDrawer":
       renderDrawer(state);
       break;
@@ -99,7 +122,7 @@ function syncOverlayIfNeeded(state, overlayChanged) {
       renderPlacePicker(state);
       break;
     case "orderTrackerPage":
-      openOrderTracker(state);
+      openOrderTracker();
       break;
     case "itemDetail":
       renderItemDetail(state);
@@ -107,11 +130,10 @@ function syncOverlayIfNeeded(state, overlayChanged) {
     default:
       break;
   }
-  syncOverlay(state.overlay.view || null);
-  
+
+  syncOverlay(state.overlay?.view || null);
 }
 
-  
 function syncContextIfNeeded(state, contextChanged) {
   if (!contextChanged) return;
 
@@ -121,6 +143,7 @@ function syncContextIfNeeded(state, contextChanged) {
 
 function syncPanelIfNeeded(state, panelChanged) {
   if (!panelChanged) return;
+
   eventHub(state);
   showPanel(state);
 }
@@ -132,15 +155,27 @@ function syncCartIfNeeded(state, cartChanged) {
   renderDrawer(state);
   localStorage.setItem(CONFIG.CART_KEY, JSON.stringify(state.cart?.items || []));
 }
+
 function syncLanguageIfNeeded(state, langChanged) {
   if (!langChanged) return;
 
   localStorage.setItem(CONFIG.LANG_KEY, state.lang.current);
+
   renderNavBar(state);
   renderCartBar(state);
   renderStatusBar(state);
   renderHub(state);
   eventPanelLang(state);
+
+  if (state.overlay?.view === "cartDrawer") {
+    renderDrawer(state);
+  } else if (state.overlay?.view === "placePicker") {
+    renderPlacePicker(state);
+  } else if (state.overlay?.view === "orderTrackerPage") {
+    openOrderTracker();
+  } else if (state.overlay?.view === "itemDetail") {
+    renderItemDetail(state);
+  }
 }
 
 function syncAckIfNeeded(state, ackChanged) {
@@ -148,17 +183,29 @@ function syncAckIfNeeded(state, ackChanged) {
   renderAck(state);
 }
 
-function syncStatusBarIfNeeded(state, ordersChanged, statusBarExpandedChanged, overlayChanged) {
+function syncStatusBarIfNeeded(
+  state,
+  ordersChanged,
+  inactiveChanged,
+  statusBarExpandedChanged,
+  overlayChanged
+) {
   const trackerOpen = state.overlay?.view === "orderTrackerPage";
+
   const shouldRenderStatusBar =
     ordersChanged ||
+    inactiveChanged ||
     statusBarExpandedChanged ||
     (trackerOpen && overlayChanged);
 
   if (!shouldRenderStatusBar) return;
-  startOrderPolling(); 
+
+  startOrderPolling();
   renderStatusBar(state);
-  openOrderTracker(state);
+
+  if (trackerOpen || ordersChanged || inactiveChanged) {
+    openOrderTracker();
+  }
 }
 
 async function handleOrderLogic(state) {
@@ -191,10 +238,10 @@ async function handleOrderLogic(state) {
 
 function syncOrderFeedback(state, prevState) {
   const orderChanged =
-    state.order.status !== prevState.order?.status ||
-    state.order.action !== prevState.order?.action ||
-    state.order.line !== prevState.order?.line ||
-    state.order.at !== prevState.order?.at;
+    state.order?.status !== prevState.order?.status ||
+    state.order?.action !== prevState.order?.action ||
+    state.order?.line !== prevState.order?.line ||
+    state.order?.at !== prevState.order?.at;
 
   if (!orderChanged) return;
 
@@ -220,9 +267,6 @@ function syncOrderFeedback(state, prevState) {
       break;
 
     case "idle":
-      //showToast({ type: "idle", message: "cart_bar.idle" });
-      break;
-
     default:
       break;
   }

@@ -4,11 +4,13 @@ import { renderHub } from "./renderHub.js";
 import { renderNavBar } from "./renderNavBar.js";
 import { renderCartBar } from "./renderCartBar.js";
 import { showPanel } from "./renderPanel.js";
+import { renderStatusBar } from "./renderStatusBar.js";
 
 export function renderApp(state) {
   renderNavBar(state);
   renderHub(state);
   showPanel(state);
-  renderCartBar(state);
+    renderCartBar(state);
+    renderStatusBar(state);
 }
 
