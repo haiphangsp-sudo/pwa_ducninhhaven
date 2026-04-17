@@ -311,8 +311,8 @@ function syncOrderFeedback(state, prevState) {
 
     case "queued":
       showToast({
-        type: "sending",
-        message: "cart_bar.sending"
+        type: "queued",
+        message: "cart_bar.queued"
       });
       break;
 
