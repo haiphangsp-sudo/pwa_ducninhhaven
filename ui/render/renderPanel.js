@@ -11,11 +11,14 @@ export function showPanel(state) {
   const panel = container.querySelector(`[data-panel="${panelId}"]`);
   if (!panel) {
     renderPanel(state);
-  }
-    container.querySelectorAll("[data-panel]").forEach(el => {
-      el.classList.add("hidden");
-    });
+  } else {
     panel.classList.remove("hidden");
+  }
+  container.querySelectorAll("[data-panel]").forEach(el => {
+    if (el.dataset.panel === panelId) return;
+    el.classList.add("hidden");
+  });
+    
 }
 
 export function renderPanel(state) {
