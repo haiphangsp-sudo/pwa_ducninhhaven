@@ -3,25 +3,21 @@
 import { renderArticle } from "./renderArticle.js";
 import { renderMenu } from "./renderMenu.js";
 
-const container = document.querySelector(".page-container");
 
 export function showPanel(state) {
+  const container = getPanelContainer();
   if (!container) return;
 
   const panelId = state.panel.view;
   if (!panelId) return;
 
-  // Ẩn tất cả panel trước
-  showHide("panel",container);
-
-  let panel = container.querySelector(`[data-panel="${panelId}"]`);
+  hidePanels("panel",container);
 
   // Nếu chưa có thì render mới
-  if (!panel) {
+  if (!container.querySelector(`[data-panel="${panelId}"]`)) {
     renderPanel(state,container);
-    panel = container.querySelector(`[data-panel="${panelId}"]`);
   }
-
+  const panel = container.querySelector(`[data-panel="${panelId}"]`);
   if (!panel) return;
 
   // Hiện panel và animate nhẹ
@@ -30,7 +26,7 @@ export function showPanel(state) {
   panel.classList.add("animate-panel-in");
 }
 
-function renderPanel(state, dom) {
+function renderPanel(state, dom=getPanelContainer()) {
   if (!dom) return;
   const panelId = state.panel.view;
   const ui = state.panel.option;
@@ -49,14 +45,14 @@ function renderPanel(state, dom) {
 }
 
 export function eventPanelLang(state) {
-  
+  const container = getPanelContainer();
   if (!container) return;
 
-  showHide("lang",container);
+  hidePanels("lang",container);
   showPanel(state);
 }
 
-function showHide(action,dom) {
+function hidePanels(action,dom) {
   dom.querySelectorAll("[data-panel]").forEach(el => {
     if (action === "lang") {
       el.remove();
@@ -67,4 +63,7 @@ function showHide(action,dom) {
   
   });
 
+}
+function getPanelContainer() {
+  return document.querySelector(".page-container");
 }
