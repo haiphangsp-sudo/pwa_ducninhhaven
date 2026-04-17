@@ -18,7 +18,7 @@ export function renderPanel(state) {
 
   // nếu chưa có thì render
   if (!panel) {
-    panel = document.createElement("section");
+    panel = document.createElement("div");
     panel.dataset.panel = panelId;
     panel.className = "category-panel";
 
