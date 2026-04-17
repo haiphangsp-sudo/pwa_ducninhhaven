@@ -9,12 +9,14 @@ export function showPanel(state) {
   const panelId = state.panel.view;
   if (!panelId) return;
   const panel = container.querySelector(`[data-panel="${panelId}"]`);
-  if (!panel) renderPanel(state);
-  // ẩn tất cả
-  container.querySelectorAll("[data-panel]").forEach(el => {
-    el.classList.add("hidden");
-  });
-  panel.classList.remove("hidden");
+  if (!panel) {
+    renderPanel(state);
+  } else {
+    container.querySelectorAll("[data-panel]").forEach(el => {
+      el.classList.add("hidden");
+    });
+    panel.classList.remove("hidden");
+  }
 }
 
 export function renderPanel(state) {
