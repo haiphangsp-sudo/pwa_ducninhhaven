@@ -12,11 +12,12 @@ export function showPanel(state) {
   if (!panel) {
     renderPanel(state);
   } else {
-    panel.classList.remove("hidden");
+    panel.classList.remove("animate-fade-out");
+    panel.classList.add("animate-fade-in");
   }
   container.querySelectorAll("[data-panel]").forEach(el => {
     if (el.dataset.panel === panelId) return;
-    el.classList.add("hidden");
+    el.classList.add("animate-fade-out");
   });
     
 }
