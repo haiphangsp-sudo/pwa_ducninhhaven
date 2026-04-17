@@ -18,17 +18,18 @@ export function showPanel(state) {
   container.querySelectorAll("[data-panel]").forEach(el => {
     if (el.dataset.panel === panelId) return;
     el.classList.remove("animate-fade-in");
-    el.classList.add("hidden");
+    el.classList.add("hidden","animate-fade-out");
   
   });
   
   
 }
 function anmate(el) {
-   el.classList.remove("hidden");
+   
   setTimeout(() => {
     el.classList.remove("animate-fade-out");
     el.classList.add("animate-fade-in");
+    el.classList.remove("hidden");
     }, 500);
   
 }
