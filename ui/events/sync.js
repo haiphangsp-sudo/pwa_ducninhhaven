@@ -1,3 +1,4 @@
+
 import { subscribe, getState, setState } from "../../core/state.js";
 import { CONFIG } from "../../config.js";
 import { syncOverlay } from "../interactions/backdropManager.js";
@@ -9,17 +10,13 @@ import { renderStatusBar } from "../render/renderStatusBar.js";
 import { renderHub, eventHub } from "../render/renderHub.js";
 import { eventPanelLang, showPanel } from "../render/renderPanel.js";
 import { addToCart, buildOrderPayload } from "../../core/events.js";
-import { addOrderToTracking } from "../../core/orders.js";
-import { sendRequest } from "../../services/api.js";
 import { renderAck, showToast } from "../render/renderAck.js";
 import { openOrderTracker } from "../components/orderTracker.js";
 import { renderItemDetail } from "../render/renderItemDetail.js";
 import { bootstrapOrderTracker, startOrderPolling } from "./appFlow.js";
 import { setupEventListeners } from "./globalEvents.js";
 import { getLocationInfo } from "../../core/placesQuery.js";
-
-
-
+import { enqueue } from "../../core/queue.js";
 
 let lastState = null;
 let isProcessingOrder = false;
@@ -35,7 +32,8 @@ function createPrevState() {
     lang: { current: "vi" },
     ack: { visible: false, status: null, message: "" },
     orders: { active: [], inactive: [], isBarExpanded: false },
-    order: { action: null, line: null, status: "idle", at: null }
+    order: { action: null, line: null, status: "idle", at: null },
+    delivery: { state: "idle", retries: 0 }
   };
 }
 
@@ -227,6 +225,15 @@ async function handleOrderLogic(state) {
     switch (action) {
       case "add_cart":
         addToCart();
+
+        setState({
+          order: {
+            action: null,
+            line: null,
+            status: "added",
+            at: null
+          }
+        });
         break;
 
       case "buy_now":
@@ -242,41 +249,6 @@ async function handleOrderLogic(state) {
   }
 }
 
-function syncOrderFeedback(state, prevState) {
-  const orderChanged =
-    state.order?.status !== prevState.order?.status ||
-    state.order?.action !== prevState.order?.action ||
-    state.order?.line !== prevState.order?.line ||
-    state.order?.at !== prevState.order?.at;
-
-  if (!orderChanged) return;
-
-  switch (state.order?.status) {
-    case "error":
-      showToast({ type: "error", message: "cart_bar.error", duration: 2500 });
-      break;
-
-    case "duplicate":
-      showToast({ type: "info", message: "cart_bar.duplicate", duration: 2500 });
-      break;
-
-    case "success":
-      showToast({ type: "success", message: "cart_bar.success", duration: 2500 });
-      break;
-
-    case "sending":
-      showToast({ type: "sending", message: "cart_bar.sending" });
-      break;
-
-    case "added":
-      showToast({ type: "success", message: "cart_bar.added" });
-      break;
-
-    case "idle":
-    default:
-      break;
-  }
-}
 async function processOrder(state, action) {
   if (getState().delivery?.state === "sending") return;
 
@@ -292,58 +264,98 @@ async function processOrder(state, action) {
   }
 
   const payload = buildOrderPayload(state, action);
-  if (!payload) return;
-
-  setState({
-    delivery: { state: "sending", retries: 0 },
-    order: { ...state.order, status: "sending" }
-  });
-
-  try {
-    const res = await sendRequest(payload);
-
-    if (res?.duplicate) {
-      setState({
-        delivery: { state: "idle", retries: 0 },
-        order: {
-          action: null,
-          line: null,
-          status: "duplicate",
-          at: null
-        },
-        cart: { items: [] }
-      });
-      return;
-    }
-
-    if (!res?.success) {
-      throw new Error(res?.message || "API_FAIL");
-    }
-
+  if (!payload) {
     setState({
-      delivery: { state: "idle", retries: 0 },
       order: {
-        action: null,
-        line: null,
-        status: "success",
-        at: null
-      },
-      cart: { items: [] }
-    });
-
-    addOrderToTracking(payload);
-
-  } catch (err) {
-    console.error("processOrder failed:", err);
-
-    setState({
-      delivery: { state: "failed", retries: 1 },
-      order: {
-        action: null,
-        line: null,
-        status: "error",
-        at: null
+        ...state.order,
+        status: "error"
       }
     });
+    return;
+  }
+
+  await enqueue(payload);
+
+  setState({
+    delivery: {
+      ...getState().delivery,
+      state: "queued",
+      retries: 0
+    },
+    order: {
+      action: null,
+      line: null,
+      status: "queued",
+      at: null
+    }
+  });
+}
+
+function syncOrderFeedback(state, prevState) {
+  const orderChanged =
+    state.order?.status !== prevState.order?.status ||
+    state.order?.action !== prevState.order?.action ||
+    state.order?.line !== prevState.order?.line ||
+    state.order?.at !== prevState.order?.at;
+
+  if (!orderChanged) return;
+
+  switch (state.order?.status) {
+    case "waiting_place":
+      showToast({
+        type: "info",
+        message: "cart_bar.place_prompt",
+        duration: 2500
+      });
+      break;
+
+    case "queued":
+      showToast({
+        type: "sending",
+        message: "cart_bar.sending"
+      });
+      break;
+
+    case "error":
+      showToast({
+        type: "error",
+        message: "cart_bar.error",
+        duration: 2500
+      });
+      break;
+
+    case "duplicate":
+      showToast({
+        type: "info",
+        message: "cart_bar.duplicate",
+        duration: 2500
+      });
+      break;
+
+    case "success":
+      showToast({
+        type: "success",
+        message: "cart_bar.success",
+        duration: 2500
+      });
+      break;
+
+    case "sending":
+      showToast({
+        type: "sending",
+        message: "cart_bar.sending"
+      });
+      break;
+
+    case "added":
+      showToast({
+        type: "success",
+        message: "cart_bar.added"
+      });
+      break;
+
+    case "idle":
+    default:
+      break;
   }
 }

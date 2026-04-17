@@ -1,25 +1,132 @@
 // core/queue.js
 
+import { getState, setState } from "./state.js";
 import { sendRequest } from "../services/api.js";
 import { getRetryDelay } from "../services/retryPolicy.js";
-import { setDeliveryState } from "../ui/render/renderDelivery.js";
-import { setRecoveryState } from "../ui/render/renderRecovery.js";
+import { addOrderToTracking } from "./orders.js";
 
 /* ---------- CONSTANTS ---------- */
 
 const STORAGE_KEY = "haven_queue";
 const MAX_QUEUE = 50;
 const MAX_RETRIES = 3;
+
 let processing = false;
 
 /* ---------- STORAGE ---------- */
 
 function loadQueue() {
-  return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+  try {
+    const raw = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+    return Array.isArray(raw) ? raw : [];
+  } catch {
+    return [];
+  }
 }
 
-function saveQueue(q) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(q));
+function saveQueue(queue) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(queue));
+}
+
+/* ---------- STATE HELPERS ---------- */
+
+function mergeState(patch = {}) {
+  const state = getState();
+
+  setState({
+    ...(patch.delivery
+      ? {
+          delivery: {
+            ...state.delivery,
+            ...patch.delivery
+          }
+        }
+      : {}),
+    ...(patch.recovery
+      ? {
+          recovery: {
+            ...state.recovery,
+            ...patch.recovery
+          }
+        }
+      : {}),
+    ...(patch.order
+      ? {
+          order: {
+            ...state.order,
+            ...patch.order
+          }
+        }
+      : {}),
+    ...(patch.cart
+      ? {
+          cart: {
+            ...state.cart,
+            ...patch.cart
+          }
+        }
+      : {})
+  });
+}
+
+function setQueuedState(retries = 0) {
+  mergeState({
+    delivery: { state: "queued", retries },
+    recovery: { state: "found" }
+  });
+}
+
+function setSendingState(retries = 0) {
+  mergeState({
+    delivery: { state: "sending", retries },
+    recovery: { state: "sending" },
+    order: { status: "sending" }
+  });
+}
+
+function setIdleState() {
+  mergeState({
+    delivery: { state: "idle", retries: 0 },
+    recovery: { state: "idle" }
+  });
+}
+
+function setFailedState(retries = 0) {
+  mergeState({
+    delivery: { state: "failed", retries },
+    recovery: { state: "found" },
+    order: {
+      action: null,
+      line: null,
+      status: "error",
+      at: null
+    }
+  });
+}
+
+function setSuccessState(status = "success") {
+  mergeState({
+    delivery: { state: "sent", retries: 0 },
+    recovery: { state: "idle" },
+    order: {
+      action: null,
+      line: null,
+      status,
+      at: null
+    },
+    cart: { items: [] }
+  });
+}
+
+function clearSentStateLater() {
+  setTimeout(() => {
+    if (loadQueue().length === 0) {
+      const state = getState();
+      if (state.delivery?.state === "sent") {
+        setIdleState();
+      }
+    }
+  }, 2500);
 }
 
 /* ---------- ENQUEUE ---------- */
@@ -39,9 +146,11 @@ export async function enqueue(payload) {
   });
 
   saveQueue(queue);
-  setDeliveryState("queued");
+  setQueuedState(0);
 
-  if (!processing) processQueue();
+  if (!processing) {
+    await processQueue();
+  }
 }
 
 /* ---------- PROCESS ---------- */
@@ -51,100 +160,118 @@ export async function processQueue() {
 
   const queue = loadQueue();
   if (queue.length === 0) {
-    processing = false;
+    setIdleState();
     return;
   }
 
   processing = true;
 
-  while (queue.length > 0) {
-    const req = queue[0];
-    const job = req.payload;
+  try {
+    while (queue.length > 0) {
+      const job = queue[0];
+      const payload = job?.payload;
 
-    try {
-      // Gọi API gửi đơn
-      const result = await sendRequest(job);
-
-      // Xử lý Thành công: Bao gồm cả status "success" và "duplicate"
-      // Vì duplicate nghĩa là dữ liệu đã nằm an toàn trên Google Sheets
-      if (result?.success || result?.duplicate) {
-        
-        // 1. Xóa đơn hàng đầu tiên khỏi hàng đợi
+      if (!payload) {
         queue.shift();
         saveQueue(queue);
-
-        // 2. Nếu đã gửi xong xuôi toàn bộ hàng đợi
-        if (queue.length === 0) {
-          setDeliveryState("sent"); // Hiển thị trạng thái Đã gửi thành công
-          
-          // Phản hồi rung nhẹ trên thiết bị di động nếu hỗ trợ
-          if (navigator.vibrate) navigator.vibrate(50);
-
-          // 3. Đưa UI về trạng thái nghỉ sau khi khách đã thấy thông báo thành công
-          setTimeout(() => {
-            setDeliveryState("idle");
-            setRecoveryState("idle");
-          }, 3000); 
-        }
-
-        // Tiếp tục vòng lặp để xử lý đơn tiếp theo (nếu có)
         continue;
       }
 
-      // Nếu API trả về lỗi logic (không phải success/duplicate)
-      throw new Error(result?.message || "server_logic_error");
+      setSendingState(job.retries || 0);
 
-    } catch (e) {
-      console.error("Queue Processing Error:", e);
+      try {
+        const result = await sendRequest(payload);
 
-      // Xử lý lỗi Mạng/Ngoại tuyến: Dừng hàng đợi và báo Failed
-      if (e.message === "offline" || e.message === "network" || !navigator.onLine) {
-        setDeliveryState("failed");
-        processing = false;
-        return; // Thoát hàm để chờ mạng ổn định lại
-      }
+        if (result?.success || result?.duplicate) {
+          queue.shift();
+          saveQueue(queue);
 
-      // Xử lý lỗi Server/Logic: Thử lại (Retry)
-      req.retries = (req.retries || 0) + 1;
+          try {
+            addOrderToTracking(payload);
+          } catch (error) {
+            console.error("addOrderToTracking failed:", error);
+          }
 
-      if (req.retries > MAX_RETRIES) {
-        // Quá số lần thử lại: Xóa đơn lỗi để không làm nghẽn hàng đợi
-        queue.shift();
+          setSuccessState(result?.duplicate ? "duplicate" : "success");
+
+          if (queue.length > 0) {
+            mergeState({
+              delivery: { state: "queued", retries: 0 },
+              recovery: { state: "sending" }
+            });
+          } else {
+            clearSentStateLater();
+          }
+
+          continue;
+        }
+
+        throw new Error(result?.message || "server_logic_error");
+      } catch (error) {
+        console.error("Queue processing failed:", error);
+
+        const isOfflineLike =
+          error?.message === "offline" ||
+          error?.message === "network" ||
+          !navigator.onLine;
+
+        if (isOfflineLike) {
+          saveQueue(queue);
+          setFailedState(job.retries || 0);
+          return;
+        }
+
+        job.retries = Number(job.retries || 0) + 1;
+
+        if (job.retries > MAX_RETRIES) {
+          queue.shift();
+          saveQueue(queue);
+          setFailedState(job.retries);
+
+          if (queue.length === 0) {
+            return;
+          }
+
+          continue;
+        }
+
         saveQueue(queue);
-        setDeliveryState("failed");
-      } else {
-        // Lưu lại số lần đã thử và tạm dừng để thử lại sau
-        saveQueue(queue);
-        setDeliveryState("queued");
-        
-        const delay = (typeof getRetryDelay === 'function') ? getRetryDelay(req.retries) : 2000;
-        await new Promise(res => setTimeout(res, delay));
+        setQueuedState(job.retries);
+
+        const delay =
+          typeof getRetryDelay === "function"
+            ? getRetryDelay(job.retries)
+            : 2000;
+
+        await new Promise(resolve => setTimeout(resolve, delay));
       }
-      
-      // Dừng vòng lặp hiện tại để không gây quá tải khi đang lỗi
-      break;
     }
-  }
 
-  processing = false;
+    setIdleState();
+  } finally {
+    processing = false;
+  }
 }
+
 /* ---------- RECOVERY ---------- */
 
 export function detectRecovery() {
-  const q = loadQueue();
-  if (q.length > 0) {
-    setRecoveryState("found");
-  }
+  const queue = loadQueue();
+  if (queue.length === 0) return;
+
+  setQueuedState(0);
 }
 
 /* ---------- EVENTS ---------- */
 
 window.addEventListener("resumeQueue", () => {
-  if (!processing) processQueue();
+  if (!processing && loadQueue().length > 0) {
+    processQueue();
+  }
 });
 
 window.addEventListener("online", () => {
-  if (loadQueue().length > 0) {
+  if (!processing && loadQueue().length > 0) {
     processQueue();
   }
 });

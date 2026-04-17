@@ -1,3 +1,5 @@
+// core/events.js
+
 import { getState } from "./state.js";
 import { getVariantById } from "./menuQuery.js";
 import { updateCartQuantity } from "./action.js";
