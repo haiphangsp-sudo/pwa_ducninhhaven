@@ -7,7 +7,7 @@ export function showPanel(state) {
   const container = document.querySelector(".page-container");
   if (!container) return;
   const panelId = state.panel.view;
-  if (!panelId) return;
+  if (!panelId) renderPanel(state);
   const panel = container.querySelector(`[data-panel="${panelId}"]`);
   if (!panel) return;
   // ẩn tất cả
