@@ -7,7 +7,6 @@ export function renderDrawer(state) {
   const drawer = document.getElementById("cartDrawer");
   if (!drawer) return;
 
-  // Lấy các element con
   const panel = drawer.querySelector(".drawer-panel");
   const drawerHeader = drawer.querySelector(".drawer__header-title");
   const namePlace = document.getElementById("namePlace");
@@ -18,36 +17,55 @@ export function renderDrawer(state) {
   const summaryEl = drawer.querySelector(".drawer-summary");
   const sendBtn = document.getElementById("drawerSend");
 
-  const { items, totalQtyFormat, itemUnique, isEmpty, totalPriceFormat } = getDrawerExtended(state);
+  if (!itemsEl || !sendBtn) return;
+
+  const {
+    items,
+    totalQtyFormat,
+    itemUnique,
+    isEmpty,
+    totalPriceFormat
+  } = getDrawerExtended(state);
+
+  const deliveryState = state?.delivery?.state || "idle";
+  const { hasPlace, placeName } = getLocationInfo();
+
+  if (panel && !panel.classList.contains("transform-animated")) {
+    panel.classList.add("transform-animated");
+  }
+
+  drawerHeader.textContent = translate("cart_bar.cart_title");
 
   if (isEmpty) {
     if (summaryEl) summaryEl.classList.add("hidden");
+
     itemsEl.innerHTML = `
-    <div class="center text-muted stack items-center">
+      <div class="center text-muted stack items-center">
         <div class="text-xxl">🛒</div>
         <p>${translate("cart_bar.empty")}</p>
-    </div>
-    `
+      </div>
+    `;
+
     if (totalEl) totalEl.textContent = "0 đ";
     if (countEl) countEl.textContent = "0";
     if (uniqueEl) uniqueEl.textContent = "0";
+    if (namePlace) namePlace.textContent = hasPlace ? placeName : translate("place.button_nav");
+
+    resetSendButton(sendBtn);
     sendBtn.textContent = translate("cart_bar.close");
     sendBtn.dataset.action = "close-overlay";
     sendBtn.dataset.value = "";
-    sendBtn.classList.remove("is-loading", "is-warning");
+    sendBtn.dataset.option = "";
+    sendBtn.dataset.extra = "";
     return;
   }
 
-  sendBtn.dataset.option = "";
-  
-  drawerHeader.textContent = translate("cart_bar.cart_title");
-  
   if (summaryEl) summaryEl.classList.remove("hidden");
-  totalEl.textContent = totalPriceFormat;
-  countEl.textContent = totalQtyFormat;
-  uniqueEl.textContent = itemUnique;
+  if (totalEl) totalEl.textContent = totalPriceFormat;
+  if (countEl) countEl.textContent = totalQtyFormat;
+  if (uniqueEl) uniqueEl.textContent = itemUnique;
+  if (namePlace) namePlace.textContent = hasPlace ? placeName : translate("place.button_nav");
 
-  // 3. Vẽ danh sách món
   itemsEl.innerHTML = items.map(item => `
     <div class="drawer__item drawer-item" data-id="${item.id}">
       <div class="drawer__info">
@@ -56,69 +74,97 @@ export function renderDrawer(state) {
         <span class="text-s font-bold">${item.priceFormat}</span>
       </div>
       <div class="drawer-qty row items-center gap-s">
-        <button class="qty-btn" data-action="update-qty" data-value="${item.id}" data-option="-1">-</button>
+        <button
+          class="qty-btn"
+          data-action="update-qty"
+          data-value="${item.id}"
+          data-option="-1"
+          ${isQtyLocked(deliveryState) ? "disabled" : ""}
+        >-</button>
         <span class="qty-val" data-qty-id="${item.id}">${item.qty}</span>
-        <button class="qty-btn" data-action="update-qty" data-value="${item.id}" data-option="1">+</button>
+        <button
+          class="qty-btn"
+          data-action="update-qty"
+          data-value="${item.id}"
+          data-option="1"
+          ${isQtyLocked(deliveryState) ? "disabled" : ""}
+        >+</button>
       </div>
     </div>
   `).join("");
 
-  const isSending = state?.order?.status === "sending";
+  resetSendButton(sendBtn);
 
-  // reset class về base trước
-  sendBtn.classList.remove("is-loading", "is-warning", "is-disabled");
-  if (panel && !panel.classList.contains("transform-animated")) {
-    panel.classList.add("transform-animated");
+  // 1. chưa có place
+  if (!hasPlace) {
+    sendBtn.textContent = translate("cart_bar.place_prompt");
+    sendBtn.classList.add("is-warning");
+    sendBtn.dataset.action = "open-overlay";
+    sendBtn.dataset.value = "placePicker";
+    sendBtn.dataset.option = "";
+    sendBtn.dataset.extra = "cartDrawer";
+    return;
   }
-  const deliveryState = state?.delivery?.state;
-const { hasPlace, placeName } = getLocationInfo();
 
-// reset base
-sendBtn.classList.remove("is-loading", "is-warning", "is-disabled");
+  // 2. queued
+  if (deliveryState === "queued") {
+    sendBtn.textContent = translate("cart_bar.queued");
+    sendBtn.classList.add("is-loading", "is-disabled");
+    sendBtn.dataset.action = "";
+    sendBtn.dataset.value = "queued";
+    sendBtn.dataset.option = "";
+    sendBtn.dataset.extra = "";
+    return;
+  }
 
-// ===== 1. SENDING =====
-if (deliveryState === "sending") {
-  sendBtn.textContent = translate("cart_bar.sending");
-  sendBtn.classList.add("is-loading", "is-disabled");
-  sendBtn.dataset.value = "sending";
-  sendBtn.dataset.action = "";
-  return;
+  // 3. sending
+  if (deliveryState === "sending") {
+    sendBtn.textContent = translate("cart_bar.sending");
+    sendBtn.classList.add("is-loading", "is-disabled");
+    sendBtn.dataset.action = "";
+    sendBtn.dataset.value = "sending";
+    sendBtn.dataset.option = "";
+    sendBtn.dataset.extra = "";
+    return;
+  }
+
+  // 4. sent
+  if (deliveryState === "sent") {
+    sendBtn.textContent = translate("cart_bar.sent");
+    sendBtn.classList.add("is-disabled");
+    sendBtn.dataset.action = "";
+    sendBtn.dataset.value = "sent";
+    sendBtn.dataset.option = "";
+    sendBtn.dataset.extra = "";
+    return;
+  }
+
+  // 5. failed
+  if (deliveryState === "failed") {
+    sendBtn.textContent = translate("cart_bar.offline_retry");
+    sendBtn.classList.add("is-warning", "is-disabled");
+    sendBtn.dataset.action = "";
+    sendBtn.dataset.value = "failed";
+    sendBtn.dataset.option = "";
+    sendBtn.dataset.extra = "";
+    return;
+  }
+
+  // 6. idle / default
+  sendBtn.textContent = translate("cart_bar.send_request");
+  sendBtn.dataset.action = "send_cart";
+  sendBtn.dataset.value = "cart";
+  sendBtn.dataset.option = "";
+  sendBtn.dataset.extra = "";
 }
 
-// ===== 2. QUEUED (đã lưu, đang chờ gửi) =====
-if (deliveryState === "queued") {
-  sendBtn.textContent = translate("cart_bar.queued"); // thêm key
-  sendBtn.classList.add("is-loading", "is-disabled");
-  sendBtn.dataset.value = "queued";
-  sendBtn.dataset.action = "";
-  return;
+function resetSendButton(button) {
+  button.classList.remove("is-loading", "is-warning", "is-disabled");
+  button.removeAttribute("disabled");
 }
 
-// ===== 3. FAILED (mất mạng nhưng còn queue) =====
-if (deliveryState === "failed") {
-  sendBtn.textContent = translate("cart_bar.offline_retry"); // thêm key
-  sendBtn.classList.add("is-warning", "is-disabled");
-  sendBtn.dataset.value = "retry";
-  sendBtn.dataset.action = "";
-  return;
-}
-
-// ===== 4. CHƯA CHỌN PLACE =====
-if (!hasPlace) {
-  sendBtn.textContent = translate("cart_bar.place_prompt");
-  sendBtn.classList.add("is-warning");
-  sendBtn.dataset.value = "placePicker";
-  sendBtn.dataset.action = "open-overlay";
-  sendBtn.dataset.extra = "cartDrawer";
-  return;
-}
-
-// ===== 5. NORMAL =====
-sendBtn.textContent = translate("cart_bar.send_request");
-sendBtn.dataset.action = "send_cart";
-sendBtn.classList.remove("is-warning", "is-disabled");
-sendBtn.dataset.value = "cart";
-sendBtn.dataset.extra = "";
-
-namePlace.textContent = placeName;
+function isQtyLocked(deliveryState) {
+  return deliveryState === "queued" ||
+         deliveryState === "sending" ||
+         deliveryState === "sent";
 }
