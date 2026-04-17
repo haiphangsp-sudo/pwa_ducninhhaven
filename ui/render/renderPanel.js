@@ -2,39 +2,42 @@
 import { renderArticle } from "./renderArticle.js";
 import { renderMenu } from "./renderMenu.js";
 
-export function renderPanel(state) {
-  const panelId = state.panel.view;
-  const ui = state.panel.option;
+export function showPanel(state) {
+  
   const container = document.querySelector(".page-container");
-  if (!container || !panelId) return;
-
+  if (!container) return;
+  const panelId = state.panel.view;
+  if (!panelId) return;
   // tìm panel đã tồn tại
-  let panel = container.querySelector(`[data-panel="${panelId}"]`);
+  const panel = container.querySelector(`[data-panel="${panelId}"]`);
 
   // ẩn tất cả
   container.querySelectorAll("[data-panel]").forEach(el => {
     el.classList.add("hidden");
   });
-
-  // nếu chưa có thì render
-  if (!panel) {
-    panel = document.createElement("div");
-    panel.dataset.panel = panelId;
-    panel.className = "category-panel";
-
-    panel.innerHTML =
-      ui === "article"
-        ? renderArticle(panelId)
-        : renderMenu(panelId, ui);
-
-    container.appendChild(panel);
-  }
-
-  // hiện panel
   panel.classList.remove("hidden");
 }
 
-export function eventPanelLang() {
+export function renderPanel(state) {
+  const panelId = state.panel.view;
+  const ui = state.panel.option;
+
+  if (!panelId) return;
+  const panel = document.createElement("div");
+  panel.dataset.panel = panelId;
+  panel.className = "category-panel";
+
+  panel.innerHTML =
+    ui === "article"
+      ? renderArticle(panelId)
+      : renderMenu(panelId, ui);
+  const container = document.querySelector(".category-panel");
+  container.appendChild(panel);
+    
+}
+
+export function eventPanelLang(state) {
   const container = document.querySelector(".category-panel");
   if (container) container.innerHTML = "";
+  renderPanel(state);
 }
