@@ -2,7 +2,6 @@
 
 import { getProducts} from "../../core/menuQuery.js";
 import { translate } from "../utils/translate.js";
-//import { categoryOpt } from "../components/categoryOption.js";
 import { categoryOpt } from "../components/categoryCard.js";
 
 
@@ -12,7 +11,6 @@ export function renderMenu(categoryKey,ui) {
   if (!products.length ) return "";
 
   return products.map(product => {
-    const productKey = product.key;
     const optionsHtml = categoryOpt(categoryKey, product.key, ui);
     if(!optionsHtml) return "";
     return `
