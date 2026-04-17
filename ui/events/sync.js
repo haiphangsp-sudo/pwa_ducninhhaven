@@ -223,23 +223,17 @@ async function handleOrderLogic(state) {
 
   try {
     switch (action) {
-      case "added":
-        showToast({
-          type: "success",
-          message: "cart_bar.added"
-        });
+      case "add_cart":
+        addToCart();
 
-        setTimeout(() => {
-          const current = getState().order || {};
-          if (current.status === "added") {
-            setState({
-              order: {
-                ...current,
-                status: "idle"
-              }
-            });
+        setState({
+          order: {
+            action: null,
+            line: null,
+            status: "added",
+            at: null
           }
-        }, 0);
+        });
         break;
 
       case "buy_now":
@@ -358,8 +352,19 @@ function syncOrderFeedback(state, prevState) {
         type: "success",
         message: "cart_bar.added"
       });
-      break;
 
+      setTimeout(() => {
+        const current = getState().order || {};
+        if (current.status === "added") {
+          setState({
+            order: {
+              ...current,
+              status: "idle"
+            }
+          });
+        }
+      }, 0);
+      break;
     case "idle":
     default:
       break;
