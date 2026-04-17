@@ -23,6 +23,11 @@ const COMMAND_MAP = {
   "send_cart": (cmd) => {
     setState({ order: { action: cmd.action, at: Date.now() } });
   },
+  "buy_now": (cmd) => {
+    setState({ 
+      order: { action: cmd.action, line: cmd.value, at: Date.now(),status: "sending" } 
+    });
+  },
   "toggle_status": (cmd) => setState(UI_ACTIONS.toggleOrderStatus(cmd.value)),
   "open-panel": (cmd) => setState(UI_ACTIONS.togglePanel(cmd)),
   "change-lang": (cmd) => setState(UI_ACTIONS.changeLanguage(cmd.value))
