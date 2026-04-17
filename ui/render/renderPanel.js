@@ -32,6 +32,7 @@ export function renderPanel(state) {
       ? renderArticle(panelId)
       : renderMenu(panelId, ui);
   const container = document.querySelector(".category-panel");
+  if (!container) return;
   container.appendChild(panel);
     
 }
