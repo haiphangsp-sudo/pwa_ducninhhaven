@@ -9,12 +9,7 @@ export function showPanel(state) {
   const panelId = state.panel.view;
   if (!panelId) return;
   const panel = container.querySelector(`[data-panel="${panelId}"]`);
-  if (!panel) {
-    renderPanel(state);
-  } else {
-    panel.classList.remove("animate-fade-out");
-    panel.classList.add("animate-fade-in");
-  }
+  
   container.querySelectorAll("[data-panel]").forEach(el => {
     if (el.dataset.panel === panelId) return;
     setTimeout(() => {
@@ -22,7 +17,13 @@ export function showPanel(state) {
       el.classList.add("animate-fade-out");
     }, 500);
   });
-    
+  
+  if (!panel) {
+    renderPanel(state);
+  } else {
+    panel.classList.remove("animate-fade-out");
+    panel.classList.add("animate-fade-in");
+  }
 }
 
 export function renderPanel(state) {
