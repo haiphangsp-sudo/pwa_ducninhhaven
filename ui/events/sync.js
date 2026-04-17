@@ -223,17 +223,23 @@ async function handleOrderLogic(state) {
 
   try {
     switch (action) {
-      case "add_cart":
-        addToCart();
-
-        setState({
-          order: {
-            action: null,
-            line: null,
-            status: "added",
-            at: null
-          }
+      case "added":
+        showToast({
+          type: "success",
+          message: "cart_bar.added"
         });
+
+        setTimeout(() => {
+          const current = getState().order || {};
+          if (current.status === "added") {
+            setState({
+              order: {
+                ...current,
+                status: "idle"
+              }
+            });
+          }
+        }, 0);
         break;
 
       case "buy_now":
