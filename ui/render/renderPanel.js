@@ -9,18 +9,20 @@ export function showPanel(state) {
   const panelId = state.panel.view;
   if (!panelId) return;
   const panel = container.querySelector(`[data-panel="${panelId}"]`);
-  
-  container.querySelectorAll("[data-panel]").forEach(el => {
-    if (el.dataset.panel === panelId) return;
-     
-      el.classList.add("animate-fade-out");
-  });
-  
+
   if (!panel) {
     renderPanel(state);
   } else {
     anmate(panel)
   }
+  container.querySelectorAll("[data-panel]").forEach(el => {
+    if (el.dataset.panel === panelId) return;
+    el.classList.remove("animate-fade-in");
+    el.classList.add("animate-fade-out");
+    
+  });
+  
+  
 }
 function anmate(el) {
   setTimeout(() => {
