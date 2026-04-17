@@ -1,10 +1,11 @@
-import { getState, setState } from "./state.js";
-import { sendRequest } from "../services/api.js";
+import { getState } from "./state.js";
 import { getVariantById } from "./menuQuery.js";
-import { getAnchorId, getLocationInfo } from "./placesQuery.js";
-import { addOrderToTracking } from "./orders.js";
 import { updateCartQuantity } from "./action.js";
+import { getAnchorId, getLocationInfo } from "./placesQuery.js";
 
+/* =========================
+   ACTION
+========================= */
 
 export function addToCart() {
   const itemId = getState().order?.line;
@@ -12,6 +13,10 @@ export function addToCart() {
 
   updateCartQuantity(itemId, 1);
 }
+
+/* =========================
+   PAYLOAD BUILDER
+========================= */
 
 function getRawItems(state, action) {
   if (action === "send_cart") {
@@ -30,17 +35,16 @@ function normalizeItems(rawItems) {
 
       const quantity = Number(qty || 1);
       const price = Number(info.price || 0);
+
       return {
         id,
         qty: quantity,
         price,
         subtotal: quantity * price,
 
-        // GIỮ cho GAS / Sheets
-        item: info.objProLab["vi"] || "",
-        option: info.objVarLab["vi"] || "",
+        item: info.objProLab?.["vi"] || "",
+        option: info.objVarLab?.["vi"] || "",
 
-        // GIỮ cho tracking đa ngôn ngữ / fallback
         itemLabel: info.objProLab || "",
         optionLabel: info.objVarLab || "",
         categoryKey: info.categoryKey || "",
@@ -66,14 +70,20 @@ function getOrderType(action) {
   return action === "send_cart" ? "cart" : "instant";
 }
 
+/* =========================
+   MAIN BUILDER
+========================= */
+
 function buildPayload(state, action) {
   const items = normalizeItems(getRawItems(state, action));
   if (!items.length) return null;
 
   const { totalQty, totalPrice } = getTotals(items);
   const timestamp = new Date().toISOString();
+
   const { placeId, placeName, mode } = getLocationInfo();
   if (!placeId) return null;
+
   return {
     id: `H-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
     type: getOrderType(action),
@@ -92,59 +102,6 @@ function buildPayload(state, action) {
   };
 }
 
-function setOrderStatus(status) {
-  const state = getState();
-
-  const next = {
-    order: {
-      ...state.order,
-      status
-    }
-  };
-
-  if (status === "success" || status === "duplicate") {
-    next.cart = {
-      ...state.cart,
-      items: []
-    };
-  }
-
-  setState(next);
-}
-export async function submitOrder(action) {
-  const state = getState();
-  const payload = buildPayload(state, action);
-
-  if (!payload) return false;
-
-  setOrderStatus("sending");
-
-  try {
-    const res = await sendRequest(payload);
-
-    if (res?.duplicate) {
-      setOrderStatus("duplicate");
-      return true;
-    }
-
-    if (!res?.success) {
-      throw new Error(res?.message || "API_FAIL");
-    }
-
-    setOrderStatus("success");
-
-    try {
-      addOrderToTracking({
-        ...payload
-      });
-    } catch (error) {
-      console.error("addOrderToTracking failed:", error);
-    }
-
-    return true;
-  } catch (error) {
-    console.error("submitOrder failed:", error);
-    setOrderStatus("error");
-    return false;
-  }
+export function buildOrderPayload(state, action) {
+  return buildPayload(state, action);
 }

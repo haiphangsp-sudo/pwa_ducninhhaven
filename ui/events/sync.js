@@ -1,4 +1,4 @@
-import { subscribe, getState } from "../../core/state.js";
+import { subscribe, getState, setState } from "../../core/state.js";
 import { CONFIG } from "../../config.js";
 import { syncOverlay } from "../interactions/backdropManager.js";
 import { renderPlacePicker } from "../render/renderPlacePicker.js";
@@ -8,12 +8,18 @@ import { renderCartBar } from "../render/renderCartBar.js";
 import { renderStatusBar } from "../render/renderStatusBar.js";
 import { renderHub, eventHub } from "../render/renderHub.js";
 import { eventPanelLang, showPanel } from "../render/renderPanel.js";
-import { submitOrder, addToCart } from "../../core/events.js";
+import { addToCart, buildOrderPayload } from "../../core/events.js";
+import { addOrderToTracking } from "../../core/orders.js";
+import { sendRequest } from "../../services/api.js";
 import { renderAck, showToast } from "../render/renderAck.js";
 import { openOrderTracker } from "../components/orderTracker.js";
 import { renderItemDetail } from "../render/renderItemDetail.js";
 import { bootstrapOrderTracker, startOrderPolling } from "./appFlow.js";
 import { setupEventListeners } from "./globalEvents.js";
+import { getLocationInfo } from "../../core/placesQuery.js";
+
+
+
 
 let lastState = null;
 let isProcessingOrder = false;
@@ -225,7 +231,7 @@ async function handleOrderLogic(state) {
 
       case "buy_now":
       case "send_cart":
-        await submitOrder(action);
+        await processOrder(state, action);
         break;
 
       default:
@@ -269,5 +275,75 @@ function syncOrderFeedback(state, prevState) {
     case "idle":
     default:
       break;
+  }
+}
+async function processOrder(state, action) {
+  if (getState().delivery?.state === "sending") return;
+
+  const { placeId } = getLocationInfo();
+  if (!placeId) {
+    setState({
+      order: {
+        ...state.order,
+        status: "waiting_place"
+      }
+    });
+    return;
+  }
+
+  const payload = buildOrderPayload(state, action);
+  if (!payload) return;
+
+  setState({
+    delivery: { state: "sending", retries: 0 },
+    order: { ...state.order, status: "sending" }
+  });
+
+  try {
+    const res = await sendRequest(payload);
+
+    if (res?.duplicate) {
+      setState({
+        delivery: { state: "idle", retries: 0 },
+        order: {
+          action: null,
+          line: null,
+          status: "duplicate",
+          at: null
+        },
+        cart: { items: [] }
+      });
+      return;
+    }
+
+    if (!res?.success) {
+      throw new Error(res?.message || "API_FAIL");
+    }
+
+    setState({
+      delivery: { state: "idle", retries: 0 },
+      order: {
+        action: null,
+        line: null,
+        status: "success",
+        at: null
+      },
+      cart: { items: [] }
+    });
+
+    addOrderToTracking(payload);
+
+  } catch (err) {
+    console.error("processOrder failed:", err);
+
+    setState({
+      delivery: { state: "failed", retries: 1 },
+      order: {
+        action: null,
+        line: null,
+        status: "error",
+        at: null
+      }
+    });
   }
 }
