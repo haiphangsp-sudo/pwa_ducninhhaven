@@ -2,6 +2,7 @@
 
 import { getState, setState } from "./state.js";
 import { getCategoriesForCurrentPlace, getVariantById } from "./menuQuery.js";
+import { CONFIG } from "../config.js";
 
 export function bootstrapApp() {
   const state = getState();
@@ -47,7 +48,7 @@ function resolveLangState(state) {
   return {
     ...(state.lang || {}),
     current: normalizeLang(
-      readStorage("haven_lang") ||
+      readStorage(CONFIG.LANG_KEY) ||
       state.lang?.current ||
       "vi"
     )
