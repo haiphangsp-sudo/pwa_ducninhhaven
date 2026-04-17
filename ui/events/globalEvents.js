@@ -24,9 +24,7 @@ const COMMAND_MAP = {
     setState({ order: { action: cmd.action, at: Date.now() } });
   },
   "buy_now": (cmd) => {
-    setState({ 
-      order: { action: cmd.action, line: cmd.value, at: Date.now(),status: "sending" } 
-    });
+    setState({ order: { action: cmd.action, line: cmd.value, at: Date.now(),status: "idle" } });
   },
   "toggle_status": (cmd) => setState(UI_ACTIONS.toggleOrderStatus(cmd.value)),
   "open-panel": (cmd) => setState(UI_ACTIONS.togglePanel(cmd)),
