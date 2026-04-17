@@ -8,9 +8,8 @@ export function showPanel(state) {
   if (!container) return;
   const panelId = state.panel.view;
   if (!panelId) return;
-  // tìm panel đã tồn tại
   const panel = container.querySelector(`[data-panel="${panelId}"]`);
-
+  if (!panel) return;
   // ẩn tất cả
   container.querySelectorAll("[data-panel]").forEach(el => {
     el.classList.add("hidden");
