@@ -227,12 +227,7 @@ async function handleOrderLogic(state) {
         addToCart();
 
         setState({
-          order: {
-            action: null,
-            line: null,
-            status: "added",
-            at: null
-          }
+          order: {action: null,line: null,status: "added",at: null}
         });
         break;
 
@@ -254,40 +249,21 @@ async function processOrder(state, action) {
 
   const { placeId } = getLocationInfo();
   if (!placeId) {
-    setState({
-      order: {
-        ...state.order,
-        status: "waiting_place"
-      }
-    });
+    setState({order: { ...state.order,status: "waiting_place"}});
     return;
   }
 
   const payload = buildOrderPayload(state, action);
   if (!payload) {
-    setState({
-      order: {
-        ...state.order,
-        status: "error"
-      }
-    });
+    setState({order: {...state.order,status: "error"}});
     return;
   }
 
   await enqueue(payload);
 
   setState({
-    delivery: {
-      ...getState().delivery,
-      state: "queued",
-      retries: 0
-    },
-    order: {
-      action: null,
-      line: null,
-      status: "queued",
-      at: null
-    }
+    delivery: {...getState().delivery,state: "queued",retries: 0},
+    order: { action: null, line: null, status: "queued", at: null }
   });
 }
 
@@ -302,66 +278,36 @@ function syncOrderFeedback(state, prevState) {
 
   switch (state.order?.status) {
     case "waiting_place":
-      showToast({
-        type: "info",
-        message: "cart_bar.place_prompt",
-        duration: 2500
-      });
+      showToast({type: "info",message: "cart_bar.place_prompt",duration: 2500});
       break;
 
     case "queued":
-      showToast({
-        type: "queued",
-        message: "cart_bar.queued"
-      });
+      showToast({type: "queued", message: "cart_bar.queued"});
       break;
 
     case "error":
-      showToast({
-        type: "error",
-        message: "cart_bar.error",
-        duration: 2500
-      });
+      showToast({type: "error",message: "cart_bar.error",duration: 2500});
       break;
 
     case "duplicate":
-      showToast({
-        type: "info",
-        message: "cart_bar.duplicate",
-        duration: 2500
-      });
+      showToast({type: "info",message: "cart_bar.duplicate",duration: 2500});
       break;
 
     case "success":
-      showToast({
-        type: "success",
-        message: "cart_bar.success",
-        duration: 2500
-      });
+      showToast({type: "success",message: "cart_bar.success",duration: 2500});
       break;
 
     case "sending":
-      showToast({
-        type: "sending",
-        message: "cart_bar.sending"
-      });
+      showToast({type: "sending",message: "cart_bar.sending"});
       break;
 
     case "added":
-      showToast({
-        type: "success",
-        message: "cart_bar.added"
-      });
+      showToast({type: "success",message: "cart_bar.added"});
 
       setTimeout(() => {
         const current = getState().order || {};
         if (current.status === "added") {
-          setState({
-            order: {
-              ...current,
-              status: "idle"
-            }
-          });
+          setState({order: { ...current,status: "idle"}});
         }
       }, 0);
       break;
