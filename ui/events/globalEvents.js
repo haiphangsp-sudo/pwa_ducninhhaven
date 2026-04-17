@@ -17,14 +17,14 @@ const COMMAND_MAP = {
     if (!isNaN(delta)) updateCartQuantity(cmd.value, delta);
   },
   "add_cart": (cmd, target) => {
-    setState({ order: { action: cmd.action, line: cmd.value, at: Date.now(), status: "idle" } });
+    setState({ order: { action: cmd.action, line: cmd.value, at: Date.now() } });
     animateFlyToCart(target);
   },
   "send_cart": (cmd) => {
     setState({ order: { action: cmd.action,line: null, status: "idle", at: Date.now() } });
   },
   "buy_now": (cmd) => {
-    setState({ order: { action: cmd.action, line: cmd.value, at: Date.now(),status: "idle" } });
+    setState({ order: { action: cmd.action, line: cmd.value, at: Date.now() } });
   },
   "toggle_status": (cmd) => setState(UI_ACTIONS.toggleOrderStatus(cmd.value)),
   "open-panel": (cmd) => setState(UI_ACTIONS.togglePanel(cmd)),
