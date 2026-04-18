@@ -21,56 +21,8 @@ const COMMAND_MAP = {
     animateFlyToCart(target);
     setState(UI_ACTIONS.addCart(cmd));
   },
-  "send_cart": (cmd) => {
-  const { placeId } = getLocationInfo();
-
-  if (!placeId) {
-    setState({
-      order: { status: "waiting_place" },
-      overlay: {
-        view: "placePicker",
-        value: null,
-        source: "cart"
-      }
-    });
-    return;
-  }
-
-  setState({
-    order: {
-      action: "send_cart",
-      line: null,
-      at: Date.now()
-    }
-  });
-  },
-
-  "buy_now": (cmd) => {
-  const { placeId } = getLocationInfo();
-
-  if (!placeId) {
-    setState({
-      order: {
-        status: "waiting_place",
-        line: cmd.value
-      },
-      overlay: {
-        view: "placePicker",
-        value: null,
-        source: "buy_now"
-      }
-    });
-    return;
-  }
-
-  setState({
-    order: {
-      action: "buy_now",
-      line: cmd.value,
-      at: Date.now()
-    }
-  });
-  },
+  "send_cart": (cmd) => setState(UI_ACTIONS.addCart(cmd)),
+  "buy_now": (cmd) => setState(UI_ACTIONS.buyNow(cmd)),
   "toggle_status": (cmd) => setState(UI_ACTIONS.toggleOrderStatus(cmd.value)),
   "open-panel": (cmd) => setState(UI_ACTIONS.togglePanel(cmd)),
   "change-lang": (cmd) => setState(UI_ACTIONS.changeLanguage(cmd.value))
@@ -102,4 +54,22 @@ function handleScroll() {
     applyScrollUI();
     handleScroll.ticking = false;
   });
+}
+function hasPlace() {
+  const { placeId } = getLocationInfo();
+
+  if (!placeId) {
+    setState({
+      order: {
+        status: "waiting_place",
+        line: cmd.value
+      },
+      overlay: {
+        view: "placePicker",
+        value: null,
+        source: "buy_now"
+      }
+    });
+    return;
+  }
 }

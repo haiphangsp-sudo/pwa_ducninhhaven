@@ -37,5 +37,11 @@ export const UI_ACTIONS = {
   }),
   addCart: (cmd) => ({
     order: { action: cmd.action, line: cmd.value, status: cmd.option, at: Date.now() }
+  }),
+  buyNow: (cmd) => ({
+    order: { action: cmd.action, line: cmd.value, at: Date.now() }
+  }),
+  sendCart: (cmd) => ({
+    order: { action: cmd.action, line: null, at: Date.now() }
   })
 }
