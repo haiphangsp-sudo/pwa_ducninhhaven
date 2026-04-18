@@ -215,9 +215,11 @@ function syncStatusBarIfNeeded(
 
 async function handleOrderLogic(state) {
   const { action, at } = state.order || {};
+  const isNewCommand = !!action && !!at && at !== lastHandledOrderAt;
 
-  const isNewCommand = action && at && at !== lastHandledOrderAt;
-  if (!isNewCommand || isProcessingOrder) return;
+  if (!isNewCommand) return;
+  if (isProcessingOrder) return;
+  if (getState().delivery?.state === "sending") return;
 
   lastHandledOrderAt = at;
   isProcessingOrder = true;
@@ -228,7 +230,12 @@ async function handleOrderLogic(state) {
         addToCart();
 
         setState({
-          order: {action: null,line: null,status: "added",at: null}
+          order: {
+            action: null,
+            line: null,
+            status: "added",
+            at: null
+          }
         });
         break;
 
@@ -370,24 +377,28 @@ function syncOrderFeedback(state, prevState) {
 
 async function resumePendingOrderAfterPlace(state, prevState) {
   const waitingBefore = prevState.order?.status === "waiting_place";
-  const waitingNow = state.order?.status === "waiting_place";
   const sameAction =
     state.order?.action === "buy_now" ||
     state.order?.action === "send_cart";
+
   const hasPlaceNow = !!getLocationInfo().placeId;
+
   const overlayClosed =
     prevState.overlay?.view === "placePicker" &&
     state.overlay?.view !== "placePicker";
-  const isNewCommand = action && at && at !== lastHandledOrderAt;
-  if (
-    waitingBefore &&
-    sameAction &&
-    hasPlaceNow &&
-    overlayClosed
-  ) {
-    await processOrder(state, state.order.action);
-  }
 
-if (!isNewCommand || isProcessingOrder || getState().delivery?.state === "sending") return;
-  await processOrder(state, state.order.action);
+  if (!waitingBefore) return;
+  if (!sameAction) return;
+  if (!hasPlaceNow) return;
+  if (!overlayClosed) return;
+  if (isProcessingOrder) return;
+  if (getState().delivery?.state === "sending") return;
+
+  isProcessingOrder = true;
+
+  try {
+    await processOrder(state, state.order.action);
+  } finally {
+    isProcessingOrder = false;
+  }
 }
