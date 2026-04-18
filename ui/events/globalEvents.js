@@ -20,7 +20,7 @@ const COMMAND_MAP = {
     animateFlyToCart(target);
     setState(UI_ACTIONS.addCart(cmd));
   },
-  "send_cart": (cmd) => setState(UI_ACTIONS.addCart(cmd)),
+  "send_cart": (cmd) => setState(UI_ACTIONS.sendCart(cmd)),
   "buy_now": (cmd) => setState(UI_ACTIONS.buyNow(cmd)),
   "toggle_status": (cmd) => setState(UI_ACTIONS.toggleOrderStatus(cmd.value)),
   "open-panel": (cmd) => setState(UI_ACTIONS.togglePanel(cmd)),
