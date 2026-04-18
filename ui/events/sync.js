@@ -256,6 +256,7 @@ async function processOrder(state, action) {
   if (getState().delivery?.state === "sending") return;
 
   const { placeId } = getLocationInfo();
+
   if (!placeId) {
     setState({
       order: {
@@ -272,6 +273,7 @@ async function processOrder(state, action) {
   }
 
   const payload = buildOrderPayload(state, action);
+
   if (!payload) {
     setState({
       order: {
@@ -287,42 +289,45 @@ async function processOrder(state, action) {
     undoMs: action === "buy_now" ? 2500 : 3000
   });
 
-  if (result?.ok) {
+  if (!result?.ok) return;
+
   const isBuyNow = action === "buy_now";
 
-    showToast({
-      type: "info",
-      message: isBuyNow
-        ? "Đã lưu yêu cầu"
-        : "Đã lưu đơn từ giỏ",
-      duration: result.undoMs || 3000,
-      action: {
-        label: "Hoàn tác",
-        onClick: () => {
-          const undoResult = undoLastQueuedOrder();
+  showToast({
+    type: "info",
+    message: isBuyNow
+      ? "Đã lưu yêu cầu"
+      : "Đã lưu đơn từ giỏ",
+    duration: result.undoMs || 3000,
+    action: {
+      label: "Hoàn tác",
+      onClick: () => {
+        const undoResult = undoLastQueuedOrder();
 
-          if (undoResult?.ok) {
-            showToast({
-              type: "info",
-              message: "Đã thu hồi yêu cầu",
-              duration: 2000
-            });
-          }
+        if (undoResult?.ok) {
+          showToast({
+            type: "info",
+            message: "Đã thu hồi yêu cầu",
+            duration: 2000
+          });
         }
       }
-    });
-  }
-  
-  if (result?.ok) {
-    setState({
-      order: {
-        action: null,
-        line: null,
-        status: "queued",
-        at: null
-      }
-    });
-  }
+    }
+  });
+
+  setState({
+    overlay: {
+      view: null,
+      value: null,
+      source: null
+    },
+    order: {
+      action: null,
+      line: null,
+      status: "queued",
+      at: null
+    }
+  });
 }
 
 function syncOrderFeedback(state, prevState) {
