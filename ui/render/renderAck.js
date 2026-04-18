@@ -72,8 +72,11 @@ export function showToast({
   container.classList.remove("hidden");
 
   toastTimer = setTimeout(() => {
-    container.classList.add("hidden");
-    container.innerHTML = "";
+    container.classList.remove("is-visible");
+    setTimeout(() => {
+        container.classList.add("hidden");
+        container.innerHTML = "";
+    }, 300);
   }, duration);
 
   if (action) {
