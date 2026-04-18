@@ -1,6 +1,5 @@
 // ui/actions/uiActions.js
 import { applyPlaceById } from "../../core/context.js";
-import { getState } from "../../core/state.js";
 
 export const UI_ACTIONS = {
   toggleOverlay: (cmd) => ({
@@ -10,25 +9,23 @@ export const UI_ACTIONS = {
       source: cmd.extra || null  // Nguồn để quay lại (nếu có)
     }
   }),
-    selectPlace: (cmd) => {
-    const success = applyPlaceById(cmd.value);
-    if (!success) return null;
+  selectPlace: (cmd) => {
+  const success = applyPlaceById(cmd.value);
+  if (!success) return null;
 
-    const nextView = cmd.extra || null; 
-        if (nextView === "cartDrawer") {
-            return {
-                overlay: { view: nextView, source: null, value: null }
-            };
-        } else {
-            return {
-                overlay: { view: null, source: null, value: null }
-            };
-        }
-    },
-  
-
+  const nextView = cmd.extra || null; 
+      if (nextView === "cartDrawer") {
+          return {
+              overlay: { view: nextView, source: null, value: null }
+          };
+      } else {
+          return {
+              overlay: { view: null, source: null, value: null }
+          };
+      }
+  },
   toggleOrderStatus: (currentValue) => ({
-    orders: { ...getState().orders, isBarExpanded: currentValue !== "true" }
+    orders: { isBarExpanded: currentValue !== "true" }
   }),
 
   togglePanel: (cmd) => ({
@@ -37,5 +34,8 @@ export const UI_ACTIONS = {
 
   changeLanguage: (langCode) => ({
     lang: { current: langCode }
+  }),
+  addCart: (cmd) => ({
+    order: { action: cmd.action, line: cmd.value, status: "added", at: Date.now() }
   })
-};
+}

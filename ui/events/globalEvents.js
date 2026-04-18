@@ -18,9 +18,8 @@ const COMMAND_MAP = {
     if (!isNaN(delta)) updateCartQuantity(cmd.value, delta);
   },
   "add_cart": (cmd, target) => {
-    
-    setState({ order: { action: cmd.action, line: cmd.value, at: Date.now() } });
     animateFlyToCart(target);
+    setState(UI_ACTIONS.addCart(cmd));
   },
   "send_cart": (cmd) => {
   const { placeId } = getLocationInfo();
@@ -44,9 +43,9 @@ const COMMAND_MAP = {
       at: Date.now()
     }
   });
-},
+  },
 
-"buy_now": (cmd) => {
+  "buy_now": (cmd) => {
   const { placeId } = getLocationInfo();
 
   if (!placeId) {
@@ -71,7 +70,7 @@ const COMMAND_MAP = {
       at: Date.now()
     }
   });
-},
+  },
   "toggle_status": (cmd) => setState(UI_ACTIONS.toggleOrderStatus(cmd.value)),
   "open-panel": (cmd) => setState(UI_ACTIONS.togglePanel(cmd)),
   "change-lang": (cmd) => setState(UI_ACTIONS.changeLanguage(cmd.value))

@@ -228,15 +228,6 @@ async function handleOrderLogic(state) {
     switch (action) {
       case "add_cart":
         addToCart();
-
-        setState({
-          order: {
-            action: null,
-            line: null,
-            status: "added",
-            at: null
-          }
-        });
         break;
 
       case "buy_now":
