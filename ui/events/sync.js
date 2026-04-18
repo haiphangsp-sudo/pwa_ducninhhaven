@@ -10,14 +10,13 @@ import { renderCartBar } from "../render/renderCartBar.js";
 import { renderStatusBar } from "../render/renderStatusBar.js";
 import { renderHub, eventHub } from "../render/renderHub.js";
 import { eventPanelLang, showPanel } from "../render/renderPanel.js";
-import { addToCart, buildOrderPayload } from "../../core/events.js";
+import { addToCart, processOrder } from "../../core/events.js";
 import { renderAck, showToast } from "../render/renderAck.js";
 import { openOrderTracker } from "../components/orderTracker.js";
 import { renderItemDetail } from "../render/renderItemDetail.js";
 import { bootstrapOrderTracker, startOrderPolling } from "./appFlow.js";
 import { setupEventListeners } from "./globalEvents.js";
 import { getLocationInfo } from "../../core/placesQuery.js";
-import { enqueue, undoLastQueuedOrder} from "../../core/queue.js";
 
 let lastState = null;
 let isProcessingOrder = false;
@@ -251,96 +250,6 @@ async function handleOrderLogic(state) {
   } finally {
     isProcessingOrder = false;
   }
-}
-
-async function processOrder(state, action) {
-  if (getState().delivery?.state === "sending") return;
-
-  const payload = buildOrderPayload(state, action);
-
-  if (!payload) {
-    setState({
-      order: {
-        ...state.order,
-        status: "error"
-      }
-    });
-    return;
-  }
-
-  const result = await enqueue(payload, {
-    sourceAction: action,
-    undoMs: action === "buy_now" ? 2500 : 3000
-  });
-
-  if (!result?.ok) return;
-
-  const isBuyNow = action === "buy_now";
-
-  showToast({
-    type: "info",
-    message: isBuyNow
-      ? "Đã lưu yêu cầu"
-      : "Đã lưu đơn từ giỏ",
-    duration: result.undoMs || 3000,
-    action: {
-      label: "Hoàn tác",
-      onClick: () => {
-        const undoResult = undoLastQueuedOrder();
-
-        if (undoResult?.ok) {
-          showToast({
-            type: "info",
-            message: isBuyNow
-              ? "Đã thu hồi yêu cầu"
-              : "Đã thu hồi đơn từ giỏ",
-            duration: 2000
-          });
-
-          setState({
-            order: {
-              action: null,
-              line: null,
-              status: "idle",
-              at: null
-            }
-          });
-        }
-      }
-    }
-  });
-
-  if (isBuyNow) {
-    setState({
-      overlay: {
-        view: "orderTrackerPage",
-        value: null,
-        source: null
-      },
-      order: {
-        action: null,
-        line: null,
-        status: "queued",
-        at: null
-      }
-    });
-    return;
-  }
-
-  // send_cart
-  setState({
-    overlay: {
-      view: null,
-      value: null,
-      source: null
-    },
-    order: {
-      action: null,
-      line: null,
-      status: "queued",
-      at: null
-    }
-  });
 }
 
 function syncOrderFeedback(state, prevState) {
