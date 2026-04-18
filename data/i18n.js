@@ -10,6 +10,7 @@ export const STRINGS = {
   },
   delivery: {
     pending: { vi: "Đang gửi...", en: "Sending..." },
+    order_pending: {vi: "Đơn hàng đang được gửi, vui lòng đợi trong giây lát!",en: "Your order is being sent, please wait!"},
     ack_success: { vi: "Đã ghi nhận", en: "Received" },
     sent: { vi: "Đã gửi tới bếp", en: "Sent to kitchen" },
     delivered: { vi: "Đã hoàn tất", en: "Completed" },
@@ -37,6 +38,7 @@ export const STRINGS = {
     sending: { vi: "Đang gửi...", en: "Sending..." },
     success: { vi: "Đã gửi thành công", en: "Sent successfully" },
     added: { vi: "Đã thêm vào giỏ hàng", en: "Added to cart" },
+    pending: { vi: "Đang gửi...", en: "Sending..." },
     error: { vi: "Chưa gửi được", en: "Failed to send" },
     success_cart: { vi: "Đơn hàng đã được gửi", en: "The order has been shipped." },
     success_instant: { vi: "Yêu cầu đã được gửi", en: "The request has been submitted." },

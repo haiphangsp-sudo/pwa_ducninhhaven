@@ -107,6 +107,7 @@ function buildPayload(state, action) {
 }
 export async function processOrder(state, action) {
   if (state.delivery.state === "sending") {
+    showToast({ type: "info", message: "delivery.order_pending", duration: 1000 });
     return { ok: false, reason: "already_sending" };
   }
 
