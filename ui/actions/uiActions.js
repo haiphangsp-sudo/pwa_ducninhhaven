@@ -36,6 +36,6 @@ export const UI_ACTIONS = {
     lang: { current: langCode }
   }),
   addCart: (cmd) => ({
-    order: { action: cmd.action, line: cmd.value, status: "added", at: Date.now() }
+    order: { action: cmd.action, line: cmd.value, status: cmd.option, at: Date.now() }
   })
 }
