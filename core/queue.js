@@ -246,7 +246,9 @@ export async function processQueue() {
   if (processing) return;
 
   const queue = loadQueue();
-  if (queue.length === 0) {
+
+  // --- EMPTY QUEUE ---
+  if (!queue.length) {
     clearProcessTimer();
     setIdleState();
     return;
@@ -261,18 +263,19 @@ export async function processQueue() {
 
   const now = Date.now();
 
-  // Còn trong thời gian cho phép Undo
+  // --- PHASE 1: WAIT (UNDO WINDOW) ---
   if (job.undoUntil && now < job.undoUntil) {
     setQueuedState(job.retries || 0);
     scheduleQueueProcessing(job.undoUntil - now);
     return;
   }
 
+  // --- INVALID JOB ---
   if (!job.payload) {
     queue.shift();
     saveQueue(queue);
 
-    if (queue.length > 0) {
+    if (queue.length) {
       scheduleQueueProcessing(0);
     } else {
       clearProcessTimer();
@@ -281,6 +284,7 @@ export async function processQueue() {
     return;
   }
 
+  // --- PHASE 2: SEND ---
   processing = true;
   clearProcessTimer();
 
@@ -289,6 +293,7 @@ export async function processQueue() {
 
     const result = await sendRequest(job.payload);
 
+    // --- PHASE 3: SUCCESS ---
     if (result?.success || result?.duplicate) {
       const nextQueue = loadQueue();
       nextQueue.shift();
@@ -296,24 +301,24 @@ export async function processQueue() {
 
       try {
         addOrderToTracking(job.payload);
-      } catch (error) {
-        console.error("addOrderToTracking failed:", error);
+      } catch (e) {
+        console.error("tracking failed:", e);
       }
 
-      setSuccessState(result?.duplicate ? "duplicate" : "success", job.payload);
+      setSuccessState(
+        result?.duplicate ? "duplicate" : "success",
+        job.payload
+      );
 
-      if (nextQueue.length > 0) {
-        const nextJob = nextQueue[0];
+      // --- CONTINUE QUEUE ---
+      if (nextQueue.length) {
+        const next = nextQueue[0];
         const delay = Math.max(
           0,
-          Number((nextJob?.undoUntil || Date.now()) - Date.now())
+          Number((next?.undoUntil || Date.now()) - Date.now())
         );
 
-        mergeState({
-          delivery: { state: "queued", retries: 0 },
-          recovery: { state: "found" }
-        });
-
+        setQueuedState(0);
         scheduleQueueProcessing(delay);
       } else {
         clearSentStateLater();
@@ -322,14 +327,10 @@ export async function processQueue() {
       return;
     }
 
-    throw new Error(result?.message || "server_logic_error");
-  } catch (error) {
-    console.error("Queue processing failed:", error);
+    throw new Error(result?.message || "server_error");
 
-    const isOfflineLike =
-      error?.message === "offline" ||
-      error?.message === "network" ||
-      !navigator.onLine;
+  } catch (error) {
+    console.error("Queue error:", error);
 
     const currentQueue = loadQueue();
     const currentJob = currentQueue[0];
@@ -340,26 +341,33 @@ export async function processQueue() {
       return;
     }
 
-    if (isOfflineLike) {
-      saveQueue(currentQueue);
+    const isOffline =
+      !navigator.onLine ||
+      error?.message === "offline" ||
+      error?.message === "network";
+
+    // --- PHASE 4A: OFFLINE ---
+    if (isOffline) {
       setQueuedState(currentJob.retries || 0);
       return;
     }
 
-    currentJob.retries = Number(currentJob.retries || 0) + 1;
+    // --- PHASE 4B: RETRY ---
+    currentJob.retries = (currentJob.retries || 0) + 1;
 
     if (currentJob.retries > MAX_RETRIES) {
       currentQueue.shift();
       saveQueue(currentQueue);
-      
+
       setFailedState(currentJob.retries, {
         action: currentJob.sourceAction,
-        line: currentJob.payload?.items?.length === 1
-        ? currentJob.payload.items[0]?.id || null
-        : null
+        line:
+          currentJob.payload?.items?.length === 1
+            ? currentJob.payload.items[0]?.id
+            : null
       });
-      
-      if (currentQueue.length > 0) {
+
+      if (currentQueue.length) {
         scheduleQueueProcessing(300);
       }
 
@@ -375,6 +383,7 @@ export async function processQueue() {
         : 2000;
 
     scheduleQueueProcessing(delay);
+
   } finally {
     processing = false;
   }

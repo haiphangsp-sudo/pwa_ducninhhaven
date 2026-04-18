@@ -23,22 +23,55 @@ const COMMAND_MAP = {
     animateFlyToCart(target);
   },
   "send_cart": (cmd) => {
-    const { placeId } = getLocationInfo();
-    
-    if (!placeId) {
-      setState({
-        order: {status: "waiting_place"},
-        overlay: {view: "placePicker",value: null,
-        source: cmd.extra}
-      });
-    }else{      
-      setState({ order: { action: cmd.action, line: null, at: Date.now() } });
+  const { placeId } = getLocationInfo();
+
+  if (!placeId) {
+    setState({
+      order: { status: "waiting_place" },
+      overlay: {
+        view: "placePicker",
+        value: null,
+        source: "cart"
+      }
+    });
+    return;
+  }
+
+  setState({
+    order: {
+      action: "send_cart",
+      line: null,
+      at: Date.now()
     }
-  },
-  "buy_now": (cmd) => {
-    
-    setState({ order: { action: cmd.action, line: cmd.value, at: Date.now() } });
-  },
+  });
+},
+
+"buy_now": (cmd) => {
+  const { placeId } = getLocationInfo();
+
+  if (!placeId) {
+    setState({
+      order: {
+        status: "waiting_place",
+        line: cmd.value
+      },
+      overlay: {
+        view: "placePicker",
+        value: null,
+        source: "buy_now"
+      }
+    });
+    return;
+  }
+
+  setState({
+    order: {
+      action: "buy_now",
+      line: cmd.value,
+      at: Date.now()
+    }
+  });
+},
   "toggle_status": (cmd) => setState(UI_ACTIONS.toggleOrderStatus(cmd.value)),
   "open-panel": (cmd) => setState(UI_ACTIONS.togglePanel(cmd)),
   "change-lang": (cmd) => setState(UI_ACTIONS.changeLanguage(cmd.value))
