@@ -125,7 +125,7 @@ export async function processOrder(state, action) {
   }
   showToast({
           type: "info",
-          message: isBuyNow ? "Đã lưu yêu cầu" : "Đã lưu đơn từ giỏ",
+          message: "cart_bar.queued",
           duration: result.undoMs,
           action: {
             label: "Hoàn tác",
@@ -135,20 +135,15 @@ export async function processOrder(state, action) {
               if (undoResult?.ok) {
                 showToast({
                   type: "info",
-                  message: isBuyNow
-                    ? "Đã thu hồi yêu cầu"
-                    : "Đã thu hồi đơn từ giỏ",
+                  message: "cart_bar.undo_success",
                   duration: 2000
                 });
-
-                setState({
-                  order: {
-                    action: null,
-                    line: null,
-                    status: "idle",
-                    at: null
-                  }
-                });
+              } else {
+                showToast({
+                  type: "error",
+                  message: "cart_bar.undo_failed",
+                  duration: 2000
+                });        
               }
             }
           }
