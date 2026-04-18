@@ -283,42 +283,39 @@ async function processOrder(state, action) {
   if (result?.ok) {
   const isBuyNow = action === "buy_now";
 
-  showToast({
-    type: "info",
-    message: isBuyNow
-      ? "Đã lưu yêu cầu"
-      : "Đã lưu đơn từ giỏ",
-    duration: result.undoMs || 3000,
-    action: {
-      label: "Hoàn tác",
-      onClick: () => {
-        const undoResult = undoLastQueuedOrder();
+    showToast({
+      type: "info",
+      message: isBuyNow
+        ? "Đã lưu yêu cầu"
+        : "Đã lưu đơn từ giỏ",
+      duration: result.undoMs || 3000,
+      action: {
+        label: "Hoàn tác",
+        onClick: () => {
+          const undoResult = undoLastQueuedOrder();
 
-        if (undoResult?.ok) {
-          showToast({
-            type: "info",
-            message: "Đã thu hồi yêu cầu",
-            duration: 2000
-          });
+          if (undoResult?.ok) {
+            showToast({
+              type: "info",
+              message: "Đã thu hồi yêu cầu",
+              duration: 2000
+            });
+          }
         }
       }
-    }
-  });
-}
+    });
+  }
   
-  setState({
-    delivery: {
-      ...getState().delivery,
-      state: "queued",
-      retries: 0
-    },
-    order: {
-      action: null,
-      line: null,
-      status: "queued",
-      at: null
-    }
-  });
+  if (result?.ok) {
+    setState({
+      order: {
+        action: null,
+        line: null,
+        status: "queued",
+        at: null
+      }
+    });
+  }
 }
 
 function syncOrderFeedback(state, prevState) {
@@ -381,12 +378,16 @@ async function resumePendingOrderAfterPlace(state, prevState) {
   const overlayClosed =
     prevState.overlay?.view === "placePicker" &&
     state.overlay?.view !== "placePicker";
-
-  if (!waitingBefore || !waitingNow || !sameAction || !hasPlaceNow || !overlayClosed) {
-    return;
+  const isNewCommand = action && at && at !== lastHandledOrderAt;
+  if (
+    waitingBefore &&
+    sameAction &&
+    hasPlaceNow &&
+    overlayClosed
+  ) {
+    await processOrder(state, state.order.action);
   }
 
-  if (getState().delivery?.state === "sending") return;
-
+if (!isNewCommand || isProcessingOrder || getState().delivery?.state === "sending") return;
   await processOrder(state, state.order.action);
 }

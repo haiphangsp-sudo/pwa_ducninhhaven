@@ -369,9 +369,9 @@ export function detectRecovery() {
   const queue = loadQueue();
   if (queue.length === 0) return false;
 
-  const last = getLastQueuedJob(queue);
+  const first = queue[0];
   const now = Date.now();
-  const delay = Math.max(0, Number((last?.undoUntil || now) - now));
+  const delay = Math.max(0, Number((first?.undoUntil || now) - now));
 
   setQueuedState(0);
   scheduleQueueProcessing(delay);
@@ -388,6 +388,15 @@ export function clearQueue() {
   clearProcessTimer();
   saveQueue([]);
   setIdleState();
+
+  mergeState({
+    order: {
+      action: null,
+      line: null,
+      status: "idle",
+      at: null
+    }
+  });
 }
 
 /* ---------- EVENTS ---------- */
