@@ -1,5 +1,5 @@
+/* ---------- IMPORTS ---------- */
 // core/queue.js
-
 import { getState, setState } from "./state.js";
 import { sendRequest } from "../services/api.js";
 import { getRetryDelay } from "../services/retryPolicy.js";
@@ -10,8 +10,10 @@ import { addOrderToTracking } from "./orders.js";
 const STORAGE_KEY = "haven_queue";
 const MAX_QUEUE = 50;
 const MAX_RETRIES = 3;
+const DEFAULT_UNDO_MS = 3000;
 
 let processing = false;
+let processTimer = null;
 
 /* ---------- STORAGE ---------- */
 
@@ -129,28 +131,108 @@ function clearSentStateLater() {
   }, 2500);
 }
 
+/* ---------- TIMER / SCHEDULER ---------- */
+
+function clearProcessTimer() {
+  if (!processTimer) return;
+  clearTimeout(processTimer);
+  processTimer = null;
+}
+
+function scheduleQueueProcessing(delay = 0) {
+  clearProcessTimer();
+
+  processTimer = setTimeout(() => {
+    processTimer = null;
+    processQueue();
+  }, Math.max(0, Number(delay || 0)));
+}
+
+function getLastQueuedJob(queue = loadQueue()) {
+  if (!queue.length) return null;
+  return queue[queue.length - 1] || null;
+}
+
 /* ---------- ENQUEUE ---------- */
 
-export async function enqueue(payload) {
+export async function enqueue(payload, meta = {}) {
   const queue = loadQueue();
 
   if (queue.length >= MAX_QUEUE) {
     queue.shift();
   }
 
+  const undoMs = Number(meta.undoMs || DEFAULT_UNDO_MS);
+
   queue.push({
     id: crypto.randomUUID(),
     payload,
     retries: 0,
-    createdAt: Date.now()
+    createdAt: Date.now(),
+    sourceAction: meta.sourceAction || "unknown",
+    undoUntil: Date.now() + undoMs
   });
 
   saveQueue(queue);
   setQueuedState(0);
 
-  if (!processing) {
-    await processQueue();
+  scheduleQueueProcessing(undoMs);
+
+  return {
+    ok: true,
+    undoMs
+  };
+}
+
+/* ---------- UNDO ---------- */
+
+export function undoLastQueuedOrder() {
+  const queue = loadQueue();
+  if (!queue.length) {
+    return { ok: false, reason: "empty" };
   }
+
+  const last = getLastQueuedJob(queue);
+  if (!last) {
+    return { ok: false, reason: "missing" };
+  }
+
+  const now = Date.now();
+
+  if (processing || getState().delivery?.state === "sending") {
+    return { ok: false, reason: "already_sending" };
+  }
+
+  if (last.undoUntil && now > last.undoUntil) {
+    return { ok: false, reason: "expired" };
+  }
+
+  queue.pop();
+  saveQueue(queue);
+  clearProcessTimer();
+
+  if (queue.length === 0) {
+    setIdleState();
+    mergeState({
+      order: {
+        action: null,
+        line: null,
+        status: "idle",
+        at: null
+      }
+    });
+  } else {
+    const nextLast = getLastQueuedJob(queue);
+    const delay = Math.max(0, Number((nextLast?.undoUntil || now) - now));
+    setQueuedState(0);
+    scheduleQueueProcessing(delay);
+  }
+
+  return {
+    ok: true,
+    sourceAction: last.sourceAction || "unknown",
+    payload: last.payload || null
+  };
 }
 
 /* ---------- PROCESS ---------- */
@@ -160,11 +242,22 @@ export async function processQueue() {
 
   const queue = loadQueue();
   if (queue.length === 0) {
+    clearProcessTimer();
     setIdleState();
     return;
   }
 
+  const firstJob = queue[0];
+  const now = Date.now();
+
+  if (firstJob?.undoUntil && now < firstJob.undoUntil) {
+    scheduleQueueProcessing(firstJob.undoUntil - now);
+    setQueuedState(firstJob.retries || 0);
+    return;
+  }
+
   processing = true;
+  clearProcessTimer();
 
   try {
     while (queue.length > 0) {
@@ -175,6 +268,15 @@ export async function processQueue() {
         queue.shift();
         saveQueue(queue);
         continue;
+      }
+
+      const currentNow = Date.now();
+
+      if (job.undoUntil && currentNow < job.undoUntil) {
+        saveQueue(queue);
+        setQueuedState(job.retries || 0);
+        scheduleQueueProcessing(job.undoUntil - currentNow);
+        return;
       }
 
       setSendingState(job.retries || 0);
@@ -195,14 +297,22 @@ export async function processQueue() {
           setSuccessState(result?.duplicate ? "duplicate" : "success");
 
           if (queue.length > 0) {
+            const nextJob = queue[0];
+            const nextDelay = Math.max(
+              0,
+              Number((nextJob?.undoUntil || Date.now()) - Date.now())
+            );
+
             mergeState({
               delivery: { state: "queued", retries: 0 },
-              recovery: { state: "sending" }
+              recovery: { state: "found" }
             });
-          } else {
-            clearSentStateLater();
+
+            scheduleQueueProcessing(nextDelay);
+            return;
           }
 
+          clearSentStateLater();
           continue;
         }
 
@@ -217,7 +327,7 @@ export async function processQueue() {
 
         if (isOfflineLike) {
           saveQueue(queue);
-          setFailedState(job.retries || 0);
+          setQueuedState(job.retries || 0);
           return;
         }
 
@@ -228,11 +338,10 @@ export async function processQueue() {
           saveQueue(queue);
           setFailedState(job.retries);
 
-          if (queue.length === 0) {
-            return;
+          if (queue.length > 0) {
+            scheduleQueueProcessing(300);
           }
-
-          continue;
+          return;
         }
 
         saveQueue(queue);
@@ -243,7 +352,8 @@ export async function processQueue() {
             ? getRetryDelay(job.retries)
             : 2000;
 
-        await new Promise(resolve => setTimeout(resolve, delay));
+        scheduleQueueProcessing(delay);
+        return;
       }
     }
 
@@ -257,21 +367,57 @@ export async function processQueue() {
 
 export function detectRecovery() {
   const queue = loadQueue();
-  if (queue.length === 0) return;
+  if (queue.length === 0) return false;
+
+  const last = getLastQueuedJob(queue);
+  const now = Date.now();
+  const delay = Math.max(0, Number((last?.undoUntil || now) - now));
 
   setQueuedState(0);
+  scheduleQueueProcessing(delay);
+  return true;
+}
+
+/* ---------- DEBUG / INFO ---------- */
+
+export function getQueuedJobs() {
+  return loadQueue();
+}
+
+export function clearQueue() {
+  clearProcessTimer();
+  saveQueue([]);
+  setIdleState();
 }
 
 /* ---------- EVENTS ---------- */
 
 window.addEventListener("resumeQueue", () => {
-  if (!processing && loadQueue().length > 0) {
-    processQueue();
+  if (loadQueue().length === 0) return;
+
+  const queue = loadQueue();
+  const first = queue[0];
+  const delay = Math.max(
+    0,
+    Number((first?.undoUntil || Date.now()) - Date.now())
+  );
+
+  if (!processing) {
+    scheduleQueueProcessing(delay);
   }
 });
 
 window.addEventListener("online", () => {
-  if (!processing && loadQueue().length > 0) {
-    processQueue();
+  const queue = loadQueue();
+  if (!queue.length) return;
+
+  const first = queue[0];
+  const delay = Math.max(
+    0,
+    Number((first?.undoUntil || Date.now()) - Date.now())
+  );
+
+  if (!processing) {
+    scheduleQueueProcessing(delay);
   }
 });

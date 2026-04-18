@@ -49,39 +49,37 @@ function getAckIcon(status) {
 
 let toastTimer = null;
 
-export function showToast({
-  type = "info",
-  title = "",
-  message = "",
-  duration = 2000
-}) {
-  if (toastTimer) {
-    clearTimeout(toastTimer);
-    toastTimer = null;
-  }
+export function showToast({ type = "info", message = "", action = null, duration = 3000 }) {
+  const container = document.getElementById("ackOverlay");
+  if (!container) return;
 
-  setState({
-    ack: {
-      visible: true,
-      status: type,
-      title,
-      message,
-      at: Date.now()
+  container.innerHTML = `
+    <div class="toast toast--${type}">
+      <span class="toast__message">${message}</span>
+      ${action ? `<button class="toast__action">${action.label}</button>` : ""}
+    </div>
+  `;
+
+  container.classList.remove("hidden");
+
+  // clear timer cũ
+  if (toastTimer) clearTimeout(toastTimer);
+
+  // auto hide
+  toastTimer = setTimeout(() => {
+    container.classList.add("hidden");
+    container.innerHTML = "";
+  }, duration);
+
+  // action handler
+  if (action) {
+    const btn = container.querySelector(".toast__action");
+    if (btn) {
+      btn.onclick = () => {
+        action.onClick?.();
+        container.classList.add("hidden");
+        container.innerHTML = "";
+      };
     }
-  });
-
-  if (duration > 0) {
-    toastTimer = setTimeout(() => {
-      setState({
-        ack: {
-          visible: false,
-          status: null,
-          title: "",
-          message: "",
-          at: Date.now()
-        }
-      });
-      toastTimer = null;
-    }, duration);
   }
 }

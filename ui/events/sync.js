@@ -16,7 +16,7 @@ import { renderItemDetail } from "../render/renderItemDetail.js";
 import { bootstrapOrderTracker, startOrderPolling } from "./appFlow.js";
 import { setupEventListeners } from "./globalEvents.js";
 import { getLocationInfo } from "../../core/placesQuery.js";
-import { enqueue } from "../../core/queue.js";
+import { enqueue, undoLastQueuedOrder} from "../../core/queue.js";
 
 let lastState = null;
 let isProcessingOrder = false;
@@ -275,8 +275,37 @@ async function processOrder(state, action) {
     return;
   }
 
-  await enqueue(payload);
+  const result = await enqueue(payload, {
+    sourceAction: action,
+    undoMs: action === "buy_now" ? 2500 : 3000
+  });
 
+  if (result?.ok) {
+  const isBuyNow = action === "buy_now";
+
+  showToast({
+    type: "info",
+    message: isBuyNow
+      ? "Đã lưu yêu cầu"
+      : "Đã lưu đơn từ giỏ",
+    duration: result.undoMs || 3000,
+    action: {
+      label: "Hoàn tác",
+      onClick: () => {
+        const undoResult = undoLastQueuedOrder();
+
+        if (undoResult?.ok) {
+          showToast({
+            type: "info",
+            message: "Đã thu hồi yêu cầu",
+            duration: 2000
+          });
+        }
+      }
+    }
+  });
+}
+  
   setState({
     delivery: {
       ...getState().delivery,
@@ -307,7 +336,7 @@ function syncOrderFeedback(state, prevState) {
       break;
 
     case "queued":
-      showToast({type: "queued", message: "cart_bar.queued"});
+      //showToast({type: "queued", message: "cart_bar.queued"});
       break;
 
     case "error":
