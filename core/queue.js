@@ -125,19 +125,6 @@ function setSuccessState(status = "success", payload = null) {
   mergeState(nextPatch);
 }
 
-function setFailedState(retries = 0, currentOrder = null) {
-  mergeState({
-    delivery: { state: "failed", retries },
-    recovery: { state: "found" },
-    order: {
-      action: currentOrder?.action || null,
-      line: currentOrder?.line || null,
-      status: "error",
-      at: null
-    }
-  });
-}
-
 function clearSentStateLater() {
   setTimeout(() => {
     if (loadQueue().length === 0) {
