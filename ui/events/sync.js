@@ -258,7 +258,7 @@ function syncOrderFeedback(state, prevState) {
       break;
 
     case "queued":
-      //showToast({type: "queued", message: "cart_bar.queued"});
+      showToast({type: "queued", message: "cart_bar.queued"});
       break;
 
     case "error":
@@ -277,15 +277,11 @@ function syncOrderFeedback(state, prevState) {
       showToast({type: "sending",message: "cart_bar.sending"});
       break;
 
-    case "added":
+    case "cart":
       showToast({type: "success",message: "cart_bar.added"});
-
-      setTimeout(() => {
-        const current = getState().order || {};
-        if (current.status === "added") {
-          setState({order: { ...current,status: "idle"}});
-        }
-      }, 0);
+      break;
+    case "instant":
+      showToast({type: "success",message: "cart_bar.instant"});
       break;
     case "idle":
     default:

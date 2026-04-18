@@ -16,11 +16,11 @@ export const UI_ACTIONS = {
   const nextView = cmd.extra || null; 
       if (nextView === "cartDrawer") {
           return {
-              overlay: { view: nextView, source: null, value: null }
+              overlay: { view: nextView}
           };
       } else {
           return {
-              overlay: { view: null, source: null, value: null }
+              overlay: { view: null}
           };
       }
   },
