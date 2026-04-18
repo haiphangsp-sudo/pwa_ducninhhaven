@@ -105,19 +105,14 @@ function buildPayload(state, action) {
     device: navigator.userAgent
   };
 }
-
 export async function processOrder(state, action) {
-  if (getState().delivery?.state === "sending") return;
+  if (getState().delivery?.state === "sending") {
+    return { ok: false, reason: "already_sending" };
+  }
 
   const payload = buildPayload(state, action);
   if (!payload) {
-    setState({
-      order: {
-        ...state.order,
-        status: "error"
-      }
-    });
-    return;
+    return { ok: false, reason: "invalid_payload" };
   }
 
   const result = await enqueue(payload, {
@@ -125,67 +120,44 @@ export async function processOrder(state, action) {
     undoMs: action === "buy_now" ? 2500 : 3000
   });
 
-  if (!result?.ok) return;
-
-  const isBuyNow = action === "buy_now";
-
-  showToast({
-    type: "info",
-    message: isBuyNow ? "Đã lưu yêu cầu" : "Đã lưu đơn từ giỏ",
-    duration: result.undoMs || 3000,
-    action: {
-      label: "Hoàn tác",
-      onClick: () => {
-        const undoResult = undoLastQueuedOrder();
-
-        if (undoResult?.ok) {
-          showToast({
-            type: "info",
-            message: isBuyNow ? "Đã thu hồi yêu cầu" : "Đã thu hồi đơn từ giỏ",
-            duration: 2000
-          });
-
-          setState({
-            order: {
-              action: null,
-              line: null,
-              status: "idle",
-              at: null
-            }
-          });
-        }
-      }
-    }
-  });
-
-  if (isBuyNow) {
-    setState({
-      overlay: {
-        view: "orderTrackerPage",
-        value: null,
-        source: null
-      },
-      order: {
-        action: null,
-        line: null,
-        status: "queued",
-        at: null
-      }
-    });
-    return;
+  if (!result?.ok) {
+    return { ok: false, reason: "enqueue_failed" };
   }
+  showToast({
+          type: "info",
+          message: isBuyNow ? "Đã lưu yêu cầu" : "Đã lưu đơn từ giỏ",
+          duration: result.undoMs,
+          action: {
+            label: "Hoàn tác",
+            onClick: () => {
+              const undoResult = undoLastQueuedOrder();
 
-  setState({
-    overlay: {
-      view: null,
-      value: null,
-      source: null
-    },
-    order: {
-      action: null,
-      line: null,
-      status: "queued",
-      at: null
-    }
-  });
+              if (undoResult?.ok) {
+                showToast({
+                  type: "info",
+                  message: isBuyNow
+                    ? "Đã thu hồi yêu cầu"
+                    : "Đã thu hồi đơn từ giỏ",
+                  duration: 2000
+                });
+
+                setState({
+                  order: {
+                    action: null,
+                    line: null,
+                    status: "idle",
+                    at: null
+                  }
+                });
+              }
+            }
+          }
+        });
+
+  return {
+    ok: true,
+    action,
+    payload,
+    undoMs: result.undoMs
+  };
 }
