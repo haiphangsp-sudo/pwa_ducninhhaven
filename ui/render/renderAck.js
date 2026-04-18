@@ -49,29 +49,34 @@ function getAckIcon(status) {
 
 let toastTimer = null;
 
-export function showToast({ type = "info", message = "", action = null, duration = 3000 }) {
+export function showToast({
+  type = "info",
+  message = "",
+  action = null,
+  duration = 3000
+}) {
   const container = document.getElementById("ackOverlay");
   if (!container) return;
 
+  const msg = translate(message || "");
+
+  // clear trước
+  if (toastTimer) clearTimeout(toastTimer);
+
   container.innerHTML = `
     <div class="toast toast--${type}">
-      <span class="toast__message">${message}</span>
+      <span class="toast__message">${msg}</span>
       ${action ? `<button class="toast__action">${action.label}</button>` : ""}
     </div>
   `;
 
   container.classList.remove("hidden");
 
-  // clear timer cũ
-  if (toastTimer) clearTimeout(toastTimer);
-
-  // auto hide
   toastTimer = setTimeout(() => {
     container.classList.add("hidden");
     container.innerHTML = "";
   }, duration);
 
-  // action handler
   if (action) {
     const btn = container.querySelector(".toast__action");
     if (btn) {
