@@ -88,3 +88,40 @@ export function showToast({
     }
   }
 }
+export function switchToast(status) {
+  switch (status) {
+    case "waiting_place":
+      showToast({type: "info",message: "cart_bar.place_prompt",duration: 2500});
+      break;
+
+    case "queued":
+      showToast({type: "queued", message: "cart_bar.queued"});
+      break;
+
+    case "error":
+      showToast({type: "error",message: "cart_bar.error",duration: 2500});
+      break;
+
+    case "duplicate":
+      showToast({type: "info",message: "cart_bar.duplicate",duration: 2500});
+      break;
+
+    case "success":
+      showToast({type: "success",message: "cart_bar.success",duration: 2500});
+      break;
+
+    case "sending":
+      showToast({type: "sending",message: "cart_bar.sending"});
+      break;
+
+    case "cart":
+      showToast({type: "success",message: "cart_bar.added"});
+      break;
+    case "instant":
+      showToast({type: "success",message: "cart_bar.instant"});
+      break;
+    case "idle":
+    default:
+      break;
+  }
+}

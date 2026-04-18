@@ -1,6 +1,6 @@
 
 
-import { subscribe, getState, setState } from "../../core/state.js";
+import { subscribe, getState } from "../../core/state.js";
 import { CONFIG } from "../../config.js";
 import { syncOverlay } from "../interactions/backdropManager.js";
 import { renderPlacePicker } from "../render/renderPlacePicker.js";
@@ -11,7 +11,7 @@ import { renderStatusBar } from "../render/renderStatusBar.js";
 import { renderHub, eventHub } from "../render/renderHub.js";
 import { eventPanelLang, showPanel } from "../render/renderPanel.js";
 import { addToCart, processOrder } from "../../core/events.js";
-import { renderAck, showToast } from "../render/renderAck.js";
+import { renderAck, switchToast } from "../render/renderAck.js";
 import { openOrderTracker } from "../components/orderTracker.js";
 import { renderItemDetail } from "../render/renderItemDetail.js";
 import { bootstrapOrderTracker, startOrderPolling } from "./appFlow.js";
@@ -61,34 +61,34 @@ async function syncUI(state) {
   const prevState = getPrevState();
 
   const overlayChanged =
-    state.overlay?.view !== prevState.overlay?.view ||
-    state.overlay?.value !== prevState.overlay?.value;
+    state.overlay.view !== prevState.overlay?.view ||
+    state.overlay.value !== prevState.overlay?.value;
 
   const contextChanged = !isEqual(state.context, prevState.context);
 
   const panelChanged =
-    state.panel?.view !== prevState.panel?.view ||
-    state.panel?.option !== prevState.panel?.option;
+    state.panel.view !== prevState.panel?.view ||
+    state.panel.option !== prevState.panel?.option;
 
   const cartChanged = !isEqual(
-    state.cart?.items || [],
-    prevState.cart?.items || []
+    state.cart.items || [],
+    prevState.cart.items || []
   );
 
   const langChanged = state.lang?.current !== prevState.lang?.current;
 
   const ackChanged =
-    state.ack?.visible !== prevState.ack?.visible ||
-    state.ack?.message !== prevState.ack?.message ||
-    state.ack?.status !== prevState.ack?.status;
+    state.ack.visible !== prevState.ack?.visible ||
+    state.ack.message !== prevState.ack?.message ||
+    state.ack.status !== prevState.ack?.status;
 
   const ordersChanged = !isEqual(
-    state.orders?.active || [],
+    state.orders.active || [],
     prevState.orders?.active || []
   );
 
   const inactiveChanged = !isEqual(
-    state.orders?.inactive || [],
+    state.orders.inactive || [],
     prevState.orders?.inactive || []
   );
 
@@ -119,7 +119,7 @@ async function syncUI(state) {
 function syncOverlayIfNeeded(state, overlayChanged) {
   if (!overlayChanged) return;
 
-  switch (state.overlay?.view) {
+  switch (state.overlay.view) {
     case "cartDrawer":
       renderDrawer(state);
       break;
@@ -136,7 +136,7 @@ function syncOverlayIfNeeded(state, overlayChanged) {
       break;
   }
 
-  syncOverlay(state.overlay?.view || null);
+  syncOverlay(state.overlay.view || null);
 }
 
 function syncContextIfNeeded(state, contextChanged) {
@@ -172,13 +172,13 @@ function syncLanguageIfNeeded(state, langChanged) {
   renderHub(state);
   eventPanelLang(state);
 
-  if (state.overlay?.view === "cartDrawer") {
+  if (state.overlay.view === "cartDrawer") {
     renderDrawer(state);
-  } else if (state.overlay?.view === "placePicker") {
+  } else if (state.overlay.view === "placePicker") {
     renderPlacePicker(state);
-  } else if (state.overlay?.view === "orderTrackerPage") {
+  } else if (state.overlay.view === "orderTrackerPage") {
     openOrderTracker();
-  } else if (state.overlay?.view === "itemDetail") {
+  } else if (state.overlay.view === "itemDetail") {
     renderItemDetail(state);
   }
 }
@@ -195,7 +195,7 @@ function syncStatusBarIfNeeded(
   statusBarExpandedChanged,
   overlayChanged
 ) {
-  const trackerOpen = state.overlay?.view === "orderTrackerPage";
+  const trackerOpen = state.overlay.view === "orderTrackerPage";
 
   const shouldRenderStatusBar =
     ordersChanged ||
@@ -245,48 +245,13 @@ async function handleOrderLogic(state) {
 
 function syncOrderFeedback(state, prevState) {
   const orderChanged =
-    state.order?.status !== prevState.order?.status ||
-    state.order?.action !== prevState.order?.action ||
-    state.order?.line !== prevState.order?.line ||
-    state.order?.at !== prevState.order?.at;
+    state.order.status !== prevState.order?.status ||
+    state.order.action !== prevState.order?.action ||
+    state.order.line !== prevState.order?.line ||
+    state.order.at !== prevState.order?.at;
 
   if (!orderChanged) return;
-
-  switch (state.order?.status) {
-    case "waiting_place":
-      showToast({type: "info",message: "cart_bar.place_prompt",duration: 2500});
-      break;
-
-    case "queued":
-      showToast({type: "queued", message: "cart_bar.queued"});
-      break;
-
-    case "error":
-      showToast({type: "error",message: "cart_bar.error",duration: 2500});
-      break;
-
-    case "duplicate":
-      showToast({type: "info",message: "cart_bar.duplicate",duration: 2500});
-      break;
-
-    case "success":
-      showToast({type: "success",message: "cart_bar.success",duration: 2500});
-      break;
-
-    case "sending":
-      showToast({type: "sending",message: "cart_bar.sending"});
-      break;
-
-    case "cart":
-      showToast({type: "success",message: "cart_bar.added"});
-      break;
-    case "instant":
-      showToast({type: "success",message: "cart_bar.instant"});
-      break;
-    case "idle":
-    default:
-      break;
-  }
+  switchToast(state.order.status);
 }
 
 async function resumePendingOrderAfterPlace(state, prevState) {
