@@ -1,4 +1,5 @@
 
+
 import { subscribe, getState, setState } from "../../core/state.js";
 import { CONFIG } from "../../config.js";
 import { syncOverlay } from "../interactions/backdropManager.js";
@@ -254,23 +255,6 @@ async function handleOrderLogic(state) {
 
 async function processOrder(state, action) {
   if (getState().delivery?.state === "sending") return;
-
-  const { placeId } = getLocationInfo();
-
-  if (!placeId) {
-    setState({
-      order: {
-        ...state.order,
-        status: "waiting_place"
-      },
-      overlay: {
-        view: "placePicker",
-        value: null,
-        source: action === "buy_now" ? "buy_now" : "cartDrawer"
-      }
-    });
-    return;
-  }
 
   const payload = buildOrderPayload(state, action);
 

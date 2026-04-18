@@ -4,6 +4,7 @@ import { updateCartQuantity } from "../../core/action.js";
 import { UI_ACTIONS } from "../actions/uiActions.js";
 import { animateFlyToCart } from "../../ui/interactions/animateFlyToCart.js";
 import { applyScrollUI } from "./scrollBehavior.js";
+import { getLocationInfo } from "../../core/placesQuery.js";
 
 const COMMAND_MAP = {
   "open-overlay": (cmd) => setState(UI_ACTIONS.toggleOverlay(cmd)),
@@ -17,13 +18,25 @@ const COMMAND_MAP = {
     if (!isNaN(delta)) updateCartQuantity(cmd.value, delta);
   },
   "add_cart": (cmd, target) => {
+    
     setState({ order: { action: cmd.action, line: cmd.value, at: Date.now() } });
     animateFlyToCart(target);
   },
   "send_cart": (cmd) => {
-    setState({ order: { action: cmd.action,line: null, at: Date.now() } });
+    const { placeId } = getLocationInfo();
+    
+    if (!placeId) {
+      setState({
+        order: {status: "waiting_place"},
+        overlay: {view: "placePicker",value: null,
+        source: cmd.extra}
+      });
+    }else{      
+      setState({ order: { action: cmd.action, line: null, at: Date.now() } });
+    }
   },
   "buy_now": (cmd) => {
+    
     setState({ order: { action: cmd.action, line: cmd.value, at: Date.now() } });
   },
   "toggle_status": (cmd) => setState(UI_ACTIONS.toggleOrderStatus(cmd.value)),

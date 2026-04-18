@@ -1,5 +1,6 @@
 
-// core/context.js
+// core/bootstrap.js
+
 import { getState, setState } from "./state.js";
 import { getCategoriesForCurrentPlace, getVariantById } from "./menuQuery.js";
 import { CONFIG } from "../config.js";
