@@ -307,14 +307,43 @@ async function processOrder(state, action) {
         if (undoResult?.ok) {
           showToast({
             type: "info",
-            message: "Đã thu hồi yêu cầu",
+            message: isBuyNow
+              ? "Đã thu hồi yêu cầu"
+              : "Đã thu hồi đơn từ giỏ",
             duration: 2000
+          });
+
+          setState({
+            order: {
+              action: null,
+              line: null,
+              status: "idle",
+              at: null
+            }
           });
         }
       }
     }
   });
 
+  if (isBuyNow) {
+    setState({
+      overlay: {
+        view: "orderTrackerPage",
+        value: null,
+        source: null
+      },
+      order: {
+        action: null,
+        line: null,
+        status: "queued",
+        at: null
+      }
+    });
+    return;
+  }
+
+  // send_cart
   setState({
     overlay: {
       view: null,
