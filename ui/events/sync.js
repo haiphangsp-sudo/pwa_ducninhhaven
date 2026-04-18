@@ -257,14 +257,14 @@ function syncOrderFeedback(state, prevState) {
 async function resumePendingOrderAfterPlace(state, prevState) {
   const waitingBefore = prevState.order?.status === "waiting_place";
   const sameAction =
-    state.order?.action === "buy_now" ||
-    state.order?.action === "send_cart";
+    state.order.action === "buy_now" ||
+    state.order.action === "send_cart";
 
   const hasPlaceNow = !!getLocationInfo().placeId;
 
   const overlayClosed =
     prevState.overlay?.view === "placePicker" &&
-    state.overlay?.view !== "placePicker";
+    state.overlay.view !== "placePicker";
 
   if (!waitingBefore) return;
   if (!sameAction) return;

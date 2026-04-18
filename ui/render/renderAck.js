@@ -114,12 +114,14 @@ export function switchToast(status) {
       showToast({type: "sending",message: "cart_bar.sending"});
       break;
 
-    case "cart":
-      showToast({type: "success",message: "cart_bar.added"});
+    case "added":
+      showToast({ type: "success", message: "cart_bar.added" });
       break;
-    case "instant":
-      showToast({type: "success",message: "cart_bar.instant"});
+
+    case "pending":
+      showToast({ type: "info", message: "cart_bar.pending" });
       break;
+
     case "idle":
     default:
       break;
