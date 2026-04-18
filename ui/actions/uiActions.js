@@ -1,5 +1,6 @@
 // ui/actions/uiActions.js
 import { applyPlaceById } from "../../core/context.js";
+import { getLocationInfo } from "../../core/placesQuery.js";
 
 export const UI_ACTIONS = {
   toggleOverlay: (cmd) => ({
@@ -15,13 +16,9 @@ export const UI_ACTIONS = {
 
   const nextView = cmd.extra || null; 
       if (nextView === "cartDrawer") {
-          return {
-              overlay: { view: nextView}
-          };
+          return {overlay: { view: nextView}};
       } else {
-          return {
-              overlay: { view: null}
-          };
+          return {overlay: { view: null}};
       }
   },
   toggleOrderStatus: (currentValue) => ({
@@ -38,10 +35,21 @@ export const UI_ACTIONS = {
   addCart: (cmd) => ({
     order: { action: cmd.action, line: cmd.value, status: cmd.option, at: Date.now() }
   }),
-  buyNow: (cmd) => ({
-    order: { action: cmd.action, line: cmd.value, at: Date.now() }
-  }),
+  buyNow: (cmd) => {
+    const { placeId } = getLocationInfo();
+    
+    if (!placeId) {
+      return {
+        order: { status: "waiting_place" },
+        overlay: { view: "placePicker" }
+      };
+    } else {
+      return {
+        order: { action: cmd.action, line: cmd.value, at: Date.now() }
+      };
+    }
+  },
   sendCart: (cmd) => ({
-    order: { action: cmd.action, line: null, at: Date.now() }
+    order: { action: cmd.action, at: Date.now() }
   })
 }
