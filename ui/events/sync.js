@@ -110,7 +110,7 @@ async function syncUI(state) {
   );
 
   await handleOrderLogic(state);
-  await resumePendingOrderAfterPlace(state, prevState);
+  //await resumePendingOrderAfterPlace(state, prevState);
   syncOrderFeedback(state, prevState);
 
   lastState = JSON.parse(JSON.stringify(getState()));
