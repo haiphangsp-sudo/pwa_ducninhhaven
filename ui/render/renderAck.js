@@ -1,12 +1,11 @@
 // ui/render/renderAck.js
-import { setState } from "../../core/state.js"
 import { translate } from "../utils/translate.js";
 
 export function renderAck(state) {
   const el = document.getElementById("ackOverlay");
   if (!el) return;
 
-  const ack = state?.ack;
+  const ack = state.ack;
   if (!ack?.visible) {
     el.classList.add("hidden");
     el.classList.remove("show");

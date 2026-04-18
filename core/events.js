@@ -24,7 +24,7 @@ export function addToCart() {
 
 function getRawItems(state, action) {
   if (action === "send_cart") {
-    return state.cart?.items || [];
+    return state.cart.items || [];
   }
 
   const line = state.order?.line;
@@ -106,7 +106,7 @@ function buildPayload(state, action) {
   };
 }
 export async function processOrder(state, action) {
-  if (getState().delivery?.state === "sending") {
+  if (state.delivery.state === "sending") {
     return { ok: false, reason: "already_sending" };
   }
 
@@ -124,30 +124,30 @@ export async function processOrder(state, action) {
     return { ok: false, reason: "enqueue_failed" };
   }
   showToast({
-          type: "info",
-          message: "cart_bar.queued",
-          duration: result.undoMs,
-          action: {
-            label: "Hoàn tác",
-            onClick: () => {
-              const undoResult = undoLastQueuedOrder();
+    type: "info",
+    message: "cart_bar.queued",
+    duration: result.undoMs,
+    action: {
+      label: "Hoàn tác",
+      onClick: () => {
+        const undoResult = undoLastQueuedOrder();
 
-              if (undoResult?.ok) {
-                showToast({
-                  type: "info",
-                  message: "cart_bar.undo_success",
-                  duration: 2000
-                });
-              } else {
-                showToast({
-                  type: "error",
-                  message: "cart_bar.undo_failed",
-                  duration: 2000
-                });        
-              }
-            }
-          }
-        });
+        if (undoResult?.ok) {
+          showToast({
+            type: "info",
+            message: "cart_bar.undo_success",
+            duration: 2000
+          });
+        } else {
+          showToast({
+            type: "error",
+            message: "cart_bar.undo_failed",
+            duration: 2000
+          });        
+        }
+      }
+    }
+  });
 
   return {
     ok: true,
