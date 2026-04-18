@@ -94,7 +94,6 @@
 
 .order-status-bar.is-expanded .toggle-arrow {
   color: #2f5d46;
-  background: rgba(47, 93, 70, 0.08);
   transform: rotate(0deg);
 }
 
