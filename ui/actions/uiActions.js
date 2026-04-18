@@ -3,7 +3,6 @@ import { applyPlaceById } from "../../core/context.js";
 import { getState } from "../../core/state.js";
 
 export const UI_ACTIONS = {
-  // Lấy data từ button (cmd) và nhét vào State Overlay
   toggleOverlay: (cmd) => ({
     overlay: { 
       view: cmd.value || null,   // Ví dụ: "cartDrawer" hoặc "orderTrackerPage"
