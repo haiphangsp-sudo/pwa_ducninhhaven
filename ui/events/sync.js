@@ -110,6 +110,7 @@ async function syncUI(state) {
   );
 
   await handleOrderLogic(state);
+  await resumePendingOrderAfterPlace(state, prevState);
   syncOrderFeedback(state, prevState);
 
   lastState = JSON.parse(JSON.stringify(getState()));
@@ -249,21 +250,45 @@ async function processOrder(state, action) {
 
   const { placeId } = getLocationInfo();
   if (!placeId) {
-    setState({order: { ...state.order,status: "waiting_place"}});
+    setState({
+      order: {
+        ...state.order,
+        status: "waiting_place"
+      },
+      overlay: {
+        view: "placePicker",
+        value: null,
+        source: action === "buy_now" ? "buy_now" : "cartDrawer"
+      }
+    });
     return;
   }
 
   const payload = buildOrderPayload(state, action);
   if (!payload) {
-    setState({order: {...state.order,status: "error"}});
+    setState({
+      order: {
+        ...state.order,
+        status: "error"
+      }
+    });
     return;
   }
 
   await enqueue(payload);
 
   setState({
-    delivery: {...getState().delivery,state: "queued",retries: 0},
-    order: { action: null, line: null, status: "queued", at: null }
+    delivery: {
+      ...getState().delivery,
+      state: "queued",
+      retries: 0
+    },
+    order: {
+      action: null,
+      line: null,
+      status: "queued",
+      at: null
+    }
   });
 }
 
@@ -315,4 +340,24 @@ function syncOrderFeedback(state, prevState) {
     default:
       break;
   }
+}
+
+async function resumePendingOrderAfterPlace(state, prevState) {
+  const waitingBefore = prevState.order?.status === "waiting_place";
+  const waitingNow = state.order?.status === "waiting_place";
+  const sameAction =
+    state.order?.action === "buy_now" ||
+    state.order?.action === "send_cart";
+  const hasPlaceNow = !!getLocationInfo().placeId;
+  const overlayClosed =
+    prevState.overlay?.view === "placePicker" &&
+    state.overlay?.view !== "placePicker";
+
+  if (!waitingBefore || !waitingNow || !sameAction || !hasPlaceNow || !overlayClosed) {
+    return;
+  }
+
+  if (getState().delivery?.state === "sending") return;
+
+  await processOrder(state, state.order.action);
 }
