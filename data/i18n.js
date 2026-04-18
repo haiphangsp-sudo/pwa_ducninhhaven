@@ -72,55 +72,19 @@ export const STRINGS = {
     check_detail: { vi: "Kiểm tra", en: "Check" },
     no_active_order: { vi: "Bạn không có đơn hàng nào đang xử lý.", en: "No active orders at the moment." }
   },
-  status: {
-  NEW: {
-    vi: "Tiếp nhận",
-    en: "Received"
-  },
-  COOKING: {
-    vi: "Chuẩn bị",
-    en: "Preparing"
-  },
-  DELIVERING: {
-    vi: "Đang tới",
-    en: "Delivering"
-  },
-  DONE: {
-    vi: "Hoàn tất",
-    en: "Completed"
-  },
-  RECOVERING: {
-    vi: "Khôi phục",
-    en: "Recovering"
-  },
-  SYNCING: {
-    vi: "Đang đồng bộ",
-    en: "Syncing"
-  },
-  msg_NEW: {
-    vi: "Tiếp nhận yêu cầu...",
-    en: "Receiving your request..."
-  },
-  msg_COOKING: {
-    vi: "Đang chuẩn bị...",
-    en: "Preparing your request..."
-  },
-  msg_DELIVERING: {
-    vi: "Đang mang tới...",
-    en: "On the way..."
-  },
-  msg_DONE: {
-    vi: "Đã hoàn tất",
-    en: "Completed"
-  },
-  msg_RECOVERING: {
-    vi: "Đang khôi phục...",
-    en: "Restoring..."
-    },
-  msg_SYNCING: {
-    vi: "Đang đồng bộ trạng thái...",
-    en: "Syncing status..."
-  },
+status: {
+  NEW: {vi: "Tiếp nhận",en: "Received"},
+  COOKING: {vi: "Chuẩn bị",en: "Preparing"},
+  DELIVERING: {vi: "Đang tới",en: "Delivering"},
+  DONE: {vi: "Hoàn tất",en: "Completed"},
+  RECOVERING: {vi: "Khôi phục",en: "Recovering"},
+  SYNCING: {vi: "Đang đồng bộ",en: "Syncing"},
+  msg_NEW: {vi: "Tiếp nhận yêu cầu...",en: "Receiving your request..."},
+  msg_COOKING: {vi: "Đang chuẩn bị...",en: "Preparing your request..."},
+  msg_DELIVERING: {vi: "Đang mang tới...",en: "On the way..."},
+  msg_DONE: {vi: "Đã hoàn tất",en: "Completed"},
+  msg_RECOVERING: {vi: "Đang khôi phục...",en: "Restoring..."},
+  msg_SYNCING: {vi: "Đang đồng bộ trạng thái...",en: "Syncing status..."},
   
   msg_long_NEW: {
     vi: "Yêu cầu của bạn đã được ghi nhận và đang được chuyển tới bộ phận phụ trách.",
@@ -175,16 +139,7 @@ export const STRINGS = {
     area_guest: { vi: "Khách khu vực", en: "Area guest" }
   },
   
-    received: {
-      vi: "Chúng tôi đã nhận yêu cầu",
-      en: "We’ve received your request"
-    },
-    connection_lost: {
-      vi: "Mất kết nối. Yêu cầu sẽ được gửi sớm",
-      en: "Connection lost. We’ll deliver your request shortly"
-    },
-    unable_send: {
-      vi: "Không thể gửi. Vui lòng thử lại",
-      en: "Unable to send. Please try again"
-    }
-  }
+  received: {vi: "Chúng tôi đã nhận yêu cầu",en: "We’ve received your request"},
+  connection_lost: {vi: "Mất kết nối. Yêu cầu sẽ được gửi sớm",en: "Connection lost. We’ll deliver your request shortly"},
+  unable_send: {vi: "Không thể gửi. Vui lòng thử lại",en: "Unable to send. Please try again"}
+}
