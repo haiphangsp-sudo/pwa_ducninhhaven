@@ -37,57 +37,73 @@ export function renderAck(state) {
   });
 }
 
-function getAckIcon(status) {
-  switch (status) {
-    case "success": return "✓";
-    case "error": return "!";
-    case "sending": return "↻";
-    default: return "i";
-  }
-}
-
 let toastTimer = null;
+let isShowing = false;
 
 export function showToast({
   type = "info",
   message = "",
-  action = null,
-  duration = 3000
+  duration = 2000
 }) {
-  const container = document.getElementById("ackOverlay");
-  if (!container) return;
+  const el = document.getElementById("ackOverlay");
+  if (!el) return;
 
   const msg = translate(message || "");
 
-  // clear trước
-  if (toastTimer) clearTimeout(toastTimer);
+  // Nếu đang hiển thị → reset timer + update nội dung
+  if (isShowing) {
+    clearTimeout(toastTimer);
+  }
 
-  container.innerHTML = `
-    <div class="toast toast--${type}">
-      <span class="toast__message">${msg}</span>
-      ${action ? `<button class="toast__action">${action.label}</button>` : ""}
+  // Render nội dung
+  el.innerHTML = `
+    <div class="ack__inner">
+      <div class="ack__icon">${getIcon(type)}</div>
+      <div class="ack__content">
+        <div class="ack__message">${msg}</div>
+      </div>
     </div>
   `;
 
-  container.classList.remove("hidden");
+  // Reset class
+  el.className = "overlay__ack";
 
+  // Gắn theme
+  el.classList.add(`ack--${type}`);
+
+  // Hiện toast
+  el.classList.remove("hidden");
+
+  // Force reflow để animation chạy đúng
+  el.offsetHeight;
+
+  el.classList.add("show");
+
+  isShowing = true;
+
+  // Auto hide
   toastTimer = setTimeout(() => {
-    container.classList.remove("is-visible");
-    setTimeout(() => {
-        container.classList.add("hidden");
-        container.innerHTML = "";
-    }, 300);
+    hideToast(el);
   }, duration);
+}
 
-  if (action) {
-    const btn = container.querySelector(".toast__action");
-    if (btn) {
-      btn.onclick = () => {
-        action.onClick?.();
-        container.classList.add("hidden");
-        container.innerHTML = "";
-      };
-    }
+function hideToast(el) {
+  el.classList.remove("show");
+
+  setTimeout(() => {
+    el.classList.add("hidden");
+    el.innerHTML = "";
+    isShowing = false;
+  }, 220); // khớp CSS transition
+}
+
+function getIcon(type) {
+  switch (type) {
+    case "success": return "✓";
+    case "error": return "!";
+    case "sending": return "⟳";
+    case "warning": return "!";
+    default: return "i";
   }
 }
 export function switchToast(status) {
@@ -97,7 +113,7 @@ export function switchToast(status) {
       break;
 
     case "queued":
-      showToast({type: "queued", message: "cart_bar.queued"});
+      //showToast({type: "queued", message: "cart_bar.queued"});
       break;
 
     case "error":
