@@ -34,8 +34,8 @@ export function renderItemDetail(state) {
 
   const actionLabel =
     detail.ui === "cart"
-      ? `+ ${translate("cart_bar.add_to_order")}`
-      : `⚡ ${translate("cart_bar.send_request")}`;
+      ? `+ ${translate("menu.add_to_order")}`
+      : `⚡ ${translate("menu.send_request")}`;
 
   host.innerHTML = `
     <div class="item-detail">
