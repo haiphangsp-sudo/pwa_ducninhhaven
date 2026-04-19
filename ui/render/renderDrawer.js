@@ -51,7 +51,7 @@ export function renderDrawer(state) {
     if (uniqueEl) uniqueEl.textContent = "0";
     if (namePlace) namePlace.textContent = hasPlace ? placeName : translate("place.button_nav");
 
-    drawerSend(null, null, null, isEmpty)
+    drawerSend(sendBtn, null, null, isEmpty)
   }
 
   if (summaryEl) summaryEl.classList.remove("hidden");
