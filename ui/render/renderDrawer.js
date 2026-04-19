@@ -94,8 +94,22 @@ export function renderDrawer(state) {
   `).join("");
 
   resetSendButton(sendBtn);
+  drawerSend(sendBtn, deliveryState, hasPlace);
+ 
+}
 
-  // 1. chưa có place
+function resetSendButton(button) {
+  button.classList.remove("is-loading", "is-warning", "is-disabled");
+  button.removeAttribute("disabled");
+}
+
+function isQtyLocked(deliveryState) {
+  return deliveryState === "queued" ||
+         deliveryState === "sending" ||
+         deliveryState === "sent";
+}
+function drawerSend(sendBtn, deliveryState, hasPlace) {
+   // 1. chưa có place
   if (!hasPlace) {
     sendBtn.textContent = translate("button.place_prompt");
     sendBtn.classList.add("is-warning");
@@ -156,15 +170,4 @@ export function renderDrawer(state) {
   sendBtn.dataset.value = "cart";
   sendBtn.dataset.option = "";
   sendBtn.dataset.extra = "";
-}
-
-function resetSendButton(button) {
-  button.classList.remove("is-loading", "is-warning", "is-disabled");
-  button.removeAttribute("disabled");
-}
-
-function isQtyLocked(deliveryState) {
-  return deliveryState === "queued" ||
-         deliveryState === "sending" ||
-         deliveryState === "sent";
 }
