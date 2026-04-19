@@ -1,6 +1,6 @@
 // core/events.js
 
-import { getState, setState } from "./state.js";
+import { getState } from "./state.js";
 import { getVariantById } from "./menuQuery.js";
 import { updateCartQuantity } from "./action.js";
 import { getAnchorId, getLocationInfo } from "./placesQuery.js";

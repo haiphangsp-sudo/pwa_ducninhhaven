@@ -45,11 +45,11 @@ export const UI_ACTIONS = {
       };
     } else {
       return {
-        order: { action: cmd.action, line: cmd.value, at: Date.now() }
+        order: { action: cmd.action, status: cmd.option,line: cmd.value, at: Date.now() }
       };
     }
   },
   sendCart: (cmd) => ({
-    order: { action: cmd.action, at: Date.now() }
+    order: { action: cmd.action, status: null, line: null, at: Date.now() }
   })
 }
