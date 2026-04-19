@@ -34,36 +34,6 @@
   max-height: 70vh;
 }
 
-/* =====================
-   BANNERS (Delivery & Recovery)
-===================== */
-
-.delivery-banner, 
-.recovery-banner {
-    position: fixed;
-    top: 160px;
-    left: 0;
-    width: 100%;
-    z-index: 9999;
-    padding: 12px 16px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--text-invert);
-    box-shadow: var(--shadow);
-    transition: transform 0.3s ease, opacity 0.3s ease;
-    transform: translateY(0);
-}
-
-.delivery-banner.hidden, 
-.recovery-banner.hidden {
-    transform: translateY(-100%);
-    opacity: 0;
-    pointer-events: none;
-}
-
 .banner-content {
     display: flex;
     align-items: center;
