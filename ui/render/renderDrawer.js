@@ -27,7 +27,7 @@ export function renderDrawer(state) {
     totalPriceFormat
   } = getDrawerExtended(state);
 
-  const deliveryState = state?.delivery?.state || "idle";
+  const deliveryState = state.delivery.state || "idle";
   const { hasPlace, placeName } = getLocationInfo();
 
   if (panel && !panel.classList.contains("transform-animated")) {
@@ -141,7 +141,7 @@ export function renderDrawer(state) {
 
   // 5. failed
   if (deliveryState === "failed") {
-    sendBtn.textContent = translate("button.offline_retry");
+    sendBtn.textContent = translate("button.failed");
     sendBtn.classList.add("is-warning", "is-disabled");
     sendBtn.dataset.action = "";
     sendBtn.dataset.value = "failed";
