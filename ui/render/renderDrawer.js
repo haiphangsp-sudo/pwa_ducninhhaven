@@ -51,7 +51,7 @@ export function renderDrawer(state) {
     if (uniqueEl) uniqueEl.textContent = "0";
     if (namePlace) namePlace.textContent = hasPlace ? placeName : translate("place.button_nav");
 
-    drawerSend(sendBtn, null, null, isEmpty)
+    drawerSend(sendBtn, deliveryState, hasPlace, isEmpty)
   }
 
   if (summaryEl) summaryEl.classList.remove("hidden");
@@ -87,7 +87,7 @@ export function renderDrawer(state) {
     </div>
   `).join("");
 
-  drawerSend(sendBtn, deliveryState, hasPlace, null)
+  drawerSend(sendBtn, deliveryState, hasPlace, isEmpty)
 }
 
 function isQtyLocked(deliveryState) {
