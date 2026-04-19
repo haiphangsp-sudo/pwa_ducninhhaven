@@ -8,14 +8,7 @@ export const STRINGS = {
     done: { vi: "Đã gửi thành công", en: "Sent successfully" },
     discarded: { vi: "Đã huỷ yêu cầu", en: "Request discarded" }
   },
-  delivery: {
-    pending: { vi: "Đang gửi...", en: "Sending..." },
-    order_pending: {vi: "Đơn hàng đang được gửi, vui lòng đợi trong giây lát!",en: "Your order is being sent, please wait!"},
-    ack_success: { vi: "Đã ghi nhận", en: "Received" },
-    sent: { vi: "Đã gửi tới bếp", en: "Sent to kitchen" },
-    delivered: { vi: "Đã hoàn tất", en: "Completed" },
-    failed: { vi: "Không gửi được — sẽ thử lại", en: "Failed — will retry" }
-  },
+    
   button: {
     place_prompt: { vi: "Chọn vị trí", en: "Select a place" },
     offline_retry: { vi: "Mất mạng, sẽ tự gửi lại", en: "Offline, will retry automatically"},
@@ -24,7 +17,6 @@ export const STRINGS = {
     close: { vi: "Đóng", en: "Close" },
     empty: { vi: "Giỏ hàng đang trống", en: "Your cart is empty" },
     sending: { vi: "Đang gửi...", en: "Sending..." },
-    pending: { vi: "Đang gửi...", en: "Pending..." },
     confirm_changes: { vi: "XÁC NHẬN THAY ĐỔI", en: "CONFIRM CHANGES" },
 
   },
@@ -37,7 +29,12 @@ export const STRINGS = {
     idle:{ vi: "Giỏ hàng trống", en: "Cart is empty"},
     undo_success: { vi: "Thu hồi thành công", en: "Successful recall" },
     undo_failed: { vi: "Thu hồi thất bại", en: "Recall failed" },
-
+    order_pending: {vi: "Đơn hàng đang được gửi, vui lòng đợi trong giây lát!",en: "Your order is being sent, please wait!"},
+    sent: { vi: "Đã gửi tới bếp", en: "Sent to kitchen" },
+    failed: { vi: "Không gửi được — sẽ thử lại", en: "Failed — will retry" },
+    sending: { vi: "Đang gửi...", en: "Sending..." },
+    pending: { vi: "Đang xử lý...", en: "Processing..." },
+    queued: { vi: "Đã lưu, chờ gửi", en: "Saved, waiting to send" }
   },
   cart_bar: {
     cart_title: { vi: "Giỏ hàng", en: "View cart" },

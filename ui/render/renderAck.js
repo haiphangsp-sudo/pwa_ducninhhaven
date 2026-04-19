@@ -109,35 +109,35 @@ function getIcon(type) {
 export function switchToast(status) {
   switch (status) {
     case "waiting_place":
-      showToast({type: "info",message: "cart_bar.place_prompt",duration: 2500});
+      showToast({type: "info",message: "toast.place_prompt",duration: 2500});
       break;
 
     case "queued":
-      //showToast({type: "queued", message: "cart_bar.queued"});
+      showToast({type: "queued", message: "toast.queued"});
       break;
 
     case "error":
-      showToast({type: "error",message: "cart_bar.error",duration: 2500});
+      showToast({type: "error",message: "toast.error",duration: 2500});
       break;
 
     case "duplicate":
-      showToast({type: "info",message: "cart_bar.duplicate",duration: 2500});
+      showToast({type: "info",message: "toast.duplicate",duration: 2500});
       break;
 
     case "success":
-      showToast({type: "success",message: "cart_bar.success",duration: 2500});
+      showToast({type: "success",message: "toast.success",duration: 2500});
       break;
 
     case "sending":
-      showToast({type: "sending",message: "cart_bar.sending"});
+      showToast({type: "sending",message: "toast.sending"});
       break;
 
     case "added":
-      showToast({ type: "success", message: "cart_bar.added" });
+      showToast({ type: "success", message: "toast.added" });
       break;
 
     case "pending":
-      showToast({ type: "info", message: "cart_bar.pending" });
+      showToast({ type: "info", message: "toast.pending" });
       break;
 
     case "idle":
