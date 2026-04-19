@@ -16,7 +16,19 @@ export const STRINGS = {
     delivered: { vi: "Đã hoàn tất", en: "Completed" },
     failed: { vi: "Không gửi được — sẽ thử lại", en: "Failed — will retry" }
   },
-  
+  button: {
+    send_request: { vi: "Gửi yêu cầu", en: "Send request" },
+    place_prompt: { vi: "Chọn vị trí", en: "Select a place" },
+    offline_retry: { vi: "Mất mạng, sẽ tự gửi lại", en: "Offline, will retry automatically"},
+    queued: { vi: "Đã lưu, chờ gửi...", en: "Saved, waiting to send..."},
+    send_order: { vi: "GỬI YÊU CẦU NGAY", en: "SEND ORDER NOW" },
+    close: { vi: "Đóng", en: "Close" },
+    empty: { vi: "Giỏ hàng đang trống", en: "Your cart is empty" },
+    sending: { vi: "Đang gửi...", en: "Sending..." },
+    pending: { vi: "Đang gửi...", en: "Pending..." },
+
+
+  },
   cart_bar: {
     idle:{ vi: "Giỏ hàng trống", en: "Cart is empty"},
     cart_title: { vi: "Giỏ hàng", en: "View cart" },
@@ -27,24 +39,15 @@ export const STRINGS = {
     free: { vi: "Miễn phí", en: "Free" },
     instant: { vi: "Dịch vụ tức thời", en: "Instant service" },
     add_to_order: { vi: "Thêm yêu cầu", en: "Add to order" },
-    send_request: { vi: "Gửi yêu cầu", en: "Send request" },
-    empty: { vi: "Giỏ hàng đang trống", en: "Your cart is empty" },
     confirm_changes: { vi: "XÁC NHẬN THAY ĐỔI", en: "CONFIRM CHANGES" },
     undo_success: { vi: "Thu hồi thành công", en: "Successful recall" },
     undo_failed: { vi: "Thu hồi thất bại", en: "Recall failed" },
-    send_order: { vi: "GỬI YÊU CẦU NGAY", en: "SEND ORDER NOW" },
-    close: { vi: "Đóng", en: "Close" },
-    place_prompt: { vi: "Chọn vị trí", en: "Select a place" },
-    sending: { vi: "Đang gửi...", en: "Sending..." },
     success: { vi: "Đã gửi thành công", en: "Sent successfully" },
     added: { vi: "Đã thêm vào giỏ hàng", en: "Added to cart" },
-    pending: { vi: "Đang gửi...", en: "Sending..." },
     error: { vi: "Chưa gửi được", en: "Failed to send" },
     success_cart: { vi: "Đơn hàng đã được gửi", en: "The order has been shipped." },
     success_instant: { vi: "Yêu cầu đã được gửi", en: "The request has been submitted." },
-    error_cart: { vi: "Chưa gửi được", en: "Failed to send" },
-    queued: { vi: "Đã lưu, chờ gửi...", en: "Saved, waiting to send..."},
-    offline_retry: { vi: "Mất mạng, sẽ tự gửi lại", en: "Offline, will retry automatically"}
+    error_cart: { vi: "Chưa gửi được", en: "Failed to send" }
   },
   menu: {
     detail: { vi: "Chi tiết", en: "Details" }

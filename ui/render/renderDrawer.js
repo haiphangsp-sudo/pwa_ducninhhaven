@@ -52,7 +52,7 @@ export function renderDrawer(state) {
     if (namePlace) namePlace.textContent = hasPlace ? placeName : translate("place.button_nav");
 
     resetSendButton(sendBtn);
-    sendBtn.textContent = translate("cart_bar.close");
+    sendBtn.textContent = translate("button.close");
     sendBtn.dataset.action = "close-overlay";
     sendBtn.dataset.value = "";
     sendBtn.dataset.option = "";
@@ -97,7 +97,7 @@ export function renderDrawer(state) {
 
   // 1. chưa có place
   if (!hasPlace) {
-    sendBtn.textContent = translate("cart_bar.place_prompt");
+    sendBtn.textContent = translate("button.place_prompt");
     sendBtn.classList.add("is-warning");
     sendBtn.dataset.action = "open-overlay";
     sendBtn.dataset.value = "placePicker";
@@ -108,7 +108,7 @@ export function renderDrawer(state) {
 
   // 2. queued
   if (deliveryState === "queued") {
-    sendBtn.textContent = translate("cart_bar.queued");
+    sendBtn.textContent = translate("button.queued");
     sendBtn.classList.add("is-loading", "is-disabled");
     sendBtn.dataset.action = "";
     sendBtn.dataset.value = "queued";
@@ -119,7 +119,7 @@ export function renderDrawer(state) {
 
   // 3. sending
   if (deliveryState === "sending") {
-    sendBtn.textContent = translate("cart_bar.sending");
+    sendBtn.textContent = translate("button.sending");
     sendBtn.classList.add("is-loading", "is-disabled");
     sendBtn.dataset.action = "";
     sendBtn.dataset.value = "sending";
@@ -130,7 +130,7 @@ export function renderDrawer(state) {
 
   // 4. sent
   if (deliveryState === "sent") {
-    sendBtn.textContent = translate("cart_bar.sent");
+    sendBtn.textContent = translate("button.sent");
     sendBtn.classList.add("is-disabled");
     sendBtn.dataset.action = "";
     sendBtn.dataset.value = "sent";
@@ -141,7 +141,7 @@ export function renderDrawer(state) {
 
   // 5. failed
   if (deliveryState === "failed") {
-    sendBtn.textContent = translate("cart_bar.offline_retry");
+    sendBtn.textContent = translate("button.offline_retry");
     sendBtn.classList.add("is-warning", "is-disabled");
     sendBtn.dataset.action = "";
     sendBtn.dataset.value = "failed";
@@ -151,7 +151,7 @@ export function renderDrawer(state) {
   }
 
   // 6. idle / default
-  sendBtn.textContent = translate("cart_bar.send_request");
+  sendBtn.textContent = translate("button.send_order");
   sendBtn.dataset.action = "send_cart";
   sendBtn.dataset.value = "cart";
   sendBtn.dataset.option = "";
