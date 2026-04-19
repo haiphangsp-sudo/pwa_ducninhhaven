@@ -45,6 +45,7 @@ export const STRINGS = {
     free: { vi: "Miễn phí", en: "Free" },
     instant: { vi: "Dịch vụ tức thời", en: "Instant service" },
     success_cart: { vi: "Đơn hàng đã được gửi", en: "The order has been shipped." },
+    empty: { vi: "Giỏ hàng đang trống", en: "Your cart is empty" },
     success_instant: { vi: "Yêu cầu đã được gửi", en: "The request has been submitted." }
   },
   menu: {
