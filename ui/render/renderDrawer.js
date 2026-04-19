@@ -51,13 +51,7 @@ export function renderDrawer(state) {
     if (uniqueEl) uniqueEl.textContent = "0";
     if (namePlace) namePlace.textContent = hasPlace ? placeName : translate("place.button_nav");
 
-    resetSendButton(sendBtn);
-    sendBtn.textContent = translate("button.close");
-    sendBtn.dataset.action = "close-overlay";
-    sendBtn.dataset.value = "";
-    sendBtn.dataset.option = "";
-    sendBtn.dataset.extra = "";
-    return;
+    drawerSend(sendBtn, isEmpty);
   }
 
   if (summaryEl) summaryEl.classList.remove("hidden");
@@ -93,14 +87,7 @@ export function renderDrawer(state) {
     </div>
   `).join("");
 
-  resetSendButton(sendBtn);
   drawerSend(sendBtn, deliveryState, hasPlace);
- 
-}
-
-function resetSendButton(button) {
-  button.classList.remove("is-loading", "is-warning", "is-disabled");
-  button.removeAttribute("disabled");
 }
 
 function isQtyLocked(deliveryState) {
@@ -108,7 +95,18 @@ function isQtyLocked(deliveryState) {
          deliveryState === "sending" ||
          deliveryState === "sent";
 }
-function drawerSend(sendBtn, deliveryState, hasPlace) {
+function drawerSend(sendBtn, deliveryState, hasPlace, isEmpty) {
+  sendBtn.classList.remove("is-loading", "is-warning", "is-disabled");
+
+  if (isEmpty) {
+    sendBtn.textContent = translate("button.close");
+    sendBtn.dataset.action = "close-overlay";
+    sendBtn.dataset.value = "";
+    sendBtn.dataset.option = "";
+    sendBtn.dataset.extra = "";
+    return;
+  }
+
    // 1. chưa có place
   if (!hasPlace) {
     sendBtn.textContent = translate("button.place_prompt");
