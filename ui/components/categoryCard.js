@@ -39,8 +39,8 @@ export function categoryOpt(categoryKey, productKey, ui) {
             data-option="${ui === "cart" ? "added" : "pending"}"
             data-value="${variant.id}">
             ${(ui === "cart")
-              ? "+ " + translate("cart_bar.add_to_order")
-              : "⚡ " + translate("cart_bar.send_request")
+              ? "+ " + translate("menu.add_to_order")
+              : "⚡ " + translate("menu.send_request")
             }
           </button>
         </div>

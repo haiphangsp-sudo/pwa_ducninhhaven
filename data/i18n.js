@@ -17,7 +17,6 @@ export const STRINGS = {
     failed: { vi: "Không gửi được — sẽ thử lại", en: "Failed — will retry" }
   },
   button: {
-    send_request: { vi: "Gửi yêu cầu", en: "Send request" },
     place_prompt: { vi: "Chọn vị trí", en: "Select a place" },
     offline_retry: { vi: "Mất mạng, sẽ tự gửi lại", en: "Offline, will retry automatically"},
     queued: { vi: "Đã lưu, chờ gửi...", en: "Saved, waiting to send..."},
@@ -26,11 +25,21 @@ export const STRINGS = {
     empty: { vi: "Giỏ hàng đang trống", en: "Your cart is empty" },
     sending: { vi: "Đang gửi...", en: "Sending..." },
     pending: { vi: "Đang gửi...", en: "Pending..." },
+    confirm_changes: { vi: "XÁC NHẬN THAY ĐỔI", en: "CONFIRM CHANGES" },
 
+  },
+  toast: {
+    success: { vi: "Đã gửi thành công", en: "Sent successfully" },
+    error: { vi: "Chưa gửi được", en: "Failed to send" },
+    duplicate: { vi: "Đã gửi trước đó", en: "Already sent" },
+    added: { vi: "Đã thêm vào giỏ hàng", en: "Added to cart" },
+    removed: { vi: "Đã xóa khỏi giỏ hàng", en: "Removed from cart" },
+    idle:{ vi: "Giỏ hàng trống", en: "Cart is empty"},
+    undo_success: { vi: "Thu hồi thành công", en: "Successful recall" },
+    undo_failed: { vi: "Thu hồi thất bại", en: "Recall failed" },
 
   },
   cart_bar: {
-    idle:{ vi: "Giỏ hàng trống", en: "Cart is empty"},
     cart_title: { vi: "Giỏ hàng", en: "View cart" },
     unique: { vi: "món", en: "dishes" },
     item: { vi: "phần", en: "item" },
@@ -38,19 +47,14 @@ export const STRINGS = {
     order: { vi: "Gửi", en: "Order" },
     free: { vi: "Miễn phí", en: "Free" },
     instant: { vi: "Dịch vụ tức thời", en: "Instant service" },
-    add_to_order: { vi: "Thêm yêu cầu", en: "Add to order" },
-    confirm_changes: { vi: "XÁC NHẬN THAY ĐỔI", en: "CONFIRM CHANGES" },
-    undo_success: { vi: "Thu hồi thành công", en: "Successful recall" },
-    undo_failed: { vi: "Thu hồi thất bại", en: "Recall failed" },
-    success: { vi: "Đã gửi thành công", en: "Sent successfully" },
-    added: { vi: "Đã thêm vào giỏ hàng", en: "Added to cart" },
-    error: { vi: "Chưa gửi được", en: "Failed to send" },
     success_cart: { vi: "Đơn hàng đã được gửi", en: "The order has been shipped." },
-    success_instant: { vi: "Yêu cầu đã được gửi", en: "The request has been submitted." },
-    error_cart: { vi: "Chưa gửi được", en: "Failed to send" }
+    success_instant: { vi: "Yêu cầu đã được gửi", en: "The request has been submitted." }
   },
   menu: {
-    detail: { vi: "Chi tiết", en: "Details" }
+    detail: { vi: "Chi tiết", en: "Details" },
+    add_to_order: { vi: "Thêm yêu cầu", en: "Add to order" },
+    send_request: { vi: "Gửi yêu cầu", en: "Send request" }
+
   },
   order: {
     other: { vi: "Đơn hàng khác", en: "Other orders" },
