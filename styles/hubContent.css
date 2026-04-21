@@ -119,7 +119,8 @@
   flex-shrink: 0;
 }
 
-[data-service].is-default::before { content: "✓"; }
+/*[data-service].is-default::before { content: "✓"; }*/
+[data-service].is-default::before { content: "🔥"; }
 [data-service="cleaning"]::before { content: "🧹"; }
 [data-service="laundry"]::before { content: "👕"; }
 [data-service="reception"]::before { content: "🔔"; }
